@@ -1,0 +1,60 @@
+# templates github.com/github/gitignore
+# test folder
+\[test\]
+# project's built/temp docs
+Changelog.html
+ReadMe.html
+ToDo.html
+ToDo.md
+
+# vim
+*~
+.*.swp
+# (macOS)
+.DS_Store
+.AppleDouble
+.LSOverride
+# (macOS)Icon must end with two \r
+Icon
+
+# (macOS)Thumbnails
+._*
+# (macOS)Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# (macOS)Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# (Windows) Thumbnails
+Thumbs.db
+
+# (Windows) Files build by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.dll
+*.lib
+*.sbr
