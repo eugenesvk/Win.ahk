@@ -265,3 +265,12 @@ GroupHasWin(GroupName, wTitle:="", wText:="", ExcludeTitle:="", ExcludeText:="")
   }
   return false
 }
+
+IsFunc(FunctionName){
+  try {
+    return %FunctionName%.MinParams+1
+  } catch {
+    return 0
+  }
+  return
+}
