@@ -128,3 +128,65 @@ add_TypES() { ; use english labels and precompute revers maps to easier match ho
   }
 }
 
+add_printModifier()
+add_printModifier() { ; Print a key symbol when this key is pressed with a modifier (e.g., ⎇›‹⎈ → ⎈)
+  ; !+sc153::msgbox('manual') ; fails with right delete+shift+alt
+  static vk	:= keyConstant._map, sc := keyConstant._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , s     	:= helperString
+   , hkf   	:= keyFunc.customHotkeyFull
+   , hkSend	:= keyFunc.hkSend, hkSendI := keyFunc.hkSendI
+
+  if isAltGr {
+    AltGr := "‹⎈"
+    dbgtxt .= '`nAltGr ' AltGr '`n'
+  } else {
+    AltGr := ""
+  }
+
+  symSubMap := Map() ; space-separated list of key symbols to insert when using same symbol as a hotkey (with symbol key)
+   , symSubMap.CaseSense	:= 0
+  symSubMap['vk'] := [ ; use virtual keys for hotkeys
+      ;    ↓insert mod symbols with the right-side symbol key and ‹left-side mod
+      Map('suffix','‹','pSelf',true ,'pRest',true ,'sym','⇧⇧ ⎈⌃ ◆❖⌘ ⎇⌥')
+      ;                  ↑ insert self    with    ⎇›
+      ;                     insert rest ↓ with ⇧›⎇›
+    , Map('suffix','' ,'pSelf',true ,'pRest',true ,'sym','⭾↹ ⇪⇪ ␠␣ ␈⌫ ⏎↩⌤␤')
+    , Map('suffix','' ,'pSelf',false,'pRest',true ,'sym','☰☰')
+    ]
+  symSubMap['sc'] := [ ; use scan codes autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
+    ; hook handles each key either by virtual key code or by scan code, not both. All keys listed in the g_key_to_sc array are handled by SC, meaning that pressing one of these keys will not trigger a hook hotkey which was registered by VK
+    ; g_key_to_sc: NumpadEnter, Del, Ins, Up, Down, Left, Right, Home, End, PgUp and PgDn.
+      Map('suffix','' ,'pSelf',true ,'pRest',true ,'sym','␡⌦ ⇞⇞ ⇟⇟ ⎀⎀ ⇤⤒↖ ⇥⤓↘')
+    , Map('suffix','' ,'pSelf',false,'pRest',true ,'sym','▼▼ ▲▲ ◀◀ ▶▶')
+    ]
+
+  registerHK(keyT, suffix, sym, pSelf, pRest) {
+    if not StrLen(sym) { ; avoid bugs with multiple spaces since each space is a separator
+      return
+    } ; msgbox(sym, StrLen(sym))
+    key := SubStr(sym,1,1), sub_rest := SubStr(sym,2)
+    if pSelf {
+      hkSendI(s.key→ahk(      '   ⎇›' suffix key,keyT), key     ) ; insert self with      ⎇
+      hkSendI(s.key→ahk(AltGr '   ⎇›' suffix key,keyT), key     ) ;
+    }
+    if pRest {
+      hkSendI(s.key→ahk(      '⇧›⎇›' suffix key,keyT), sub_rest) ; and other keys with ⇧⎇
+      hkSendI(s.key→ahk(AltGr '⇧›⎇›' suffix key,keyT), sub_rest) ;
+    }
+  }
+  for keyT, symMapArr in symSubMap { ; vk / sc
+    for symMap in symMapArr { ; Map of symbol lists with extra options like suffix/print self etc
+      suffix	:= symMap['suffix']
+      pSelf 	:= symMap['pSelf']
+      pRest 	:= symMap['pRest']
+      kt    	:= keyT ; ForEach requires a copy for some reason
+      symarr	:= StrSplit(symMap['sym'],[A_Space,A_Tab],nows:=" `t")
+      symarr.ForEach((sym, *) => registerHK(kt, suffix, sym, pSelf,pRest)) ;
+      ; for sym in symarr {
+        ; registerHK(keyT, suffix, sym, pSelf, pRest)
+      ; }
+    }
+  }
+  ; msgbox(s.key→ahk('⇧›⎇›‹⎈')) ; >!>+LCtrl ; preserves the position of the last modifier
+  ; msgbox(s.key→ahk('⇧›⎇›⇪')) ; >+>!vk14
+}
