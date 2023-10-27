@@ -251,3 +251,17 @@ WinLock() { ;requires two elevated tasks in the Task Scheduler
     Try RunWait('schtasks /Run /TN "\es\WinLock Disable"',,"Hide") ; REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 00000001 /f
   }
 }
+
+GroupHasWin(GroupName, wTitle:="", wText:="", ExcludeTitle:="", ExcludeText:="") {
+  ; Check if the specified group contains the specified window (quasi-boolean)
+  ; returns winID (HWND) if in the group, otherwise returns false (0)
+  GroupIDs	:= WinGetList("ahk_group " GroupName)
+  Window  	:= WinGetID(wTitle, wText, ExcludeTitle, ExcludeText)
+
+  Loop GroupIDs.Length {
+    if (GroupIDs[A_Index] = Window) { ;found match
+      return Window
+    }
+  }
+  return false
+}
