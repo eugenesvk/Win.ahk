@@ -77,3 +77,12 @@ class keyFunc {
     }
   }
 }
+; ————————————————————————— Functions —————————————————————————
+IsFunc(FunctionName){
+  try {
+    return %FunctionName%.MinParams+1
+  } catch {
+    return 0
+  }
+  return
+}
