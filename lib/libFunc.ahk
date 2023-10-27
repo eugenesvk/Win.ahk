@@ -221,3 +221,33 @@ OpusDir_CD(CDTo) { ; AppDOpus
   ;AppDOpusRt /dblclk=off
   ;AppDOpusRt /CMD Close PROGRAM
 }
+
+WinLock() { ;requires two elevated tasks in the Task Scheduler
+  /* https://www.autohotkey.com/boards/viewtopic.php?f=76&t=69537
+  I think there is a better way where you need neither an elevated script nor two UAC prompts.
+  The trick is creating two tasks in the Task Scheduler that would flip the bit in the registry, e.g.
+  1.
+    Name: WinLock Disable
+    Run with highest privileges check mark set
+    Actions: start a program(this is the default)
+    Program/script: REG
+    Add arguments: ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 00000001 /f
+  2.
+    Name: WinLock Enable
+    Run with highest privileges check mark set
+    Actions: start a program(this is the default)
+    Program/script: REG
+    Add arguments: ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 00000000 /f
+  */
+
+  vIsDisabled := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableLockWorkstation")
+  if (vIsDisabled) { ; enable 'lock workstation' (=Win+L) and lock
+    Try RunWait('schtasks /Run /TN "\es\WinLock Enable"',,"Hide") ; REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 00000000 /f
+    Sleep(300)
+    DllCall("user32\LockWorkStation") ; lock workstation
+  }
+  vIsDisabled := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableLockWorkstation")
+  if (!vIsDisabled) { ; disable 'lock workstation' (=Win+L)
+    Try RunWait('schtasks /Run /TN "\es\WinLock Disable"',,"Hide") ; REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 00000001 /f
+  }
+}
