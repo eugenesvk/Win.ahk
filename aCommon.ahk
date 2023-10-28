@@ -45,7 +45,6 @@ ListLines 0                                  	; Potential performance boost
 #Include <Locale>         	; Various i18n locale functions and win32 constants
 #Include <io>             	;
 #Include <cfg FileExplore>	; toggle extension/hidden files in Win File Explorer
-#Include <ToggleHidden>   	;
 #Include <constKey>       	; various key constants
 #include <str>            	; string helper functions
 #include <sys>            	;
