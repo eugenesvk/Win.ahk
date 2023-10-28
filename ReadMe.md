@@ -30,6 +30,7 @@ description continued
     - left-hand: <kbd>⎇</kbd> <kbd>1</kbd>...<kbd>5</kbd>...<kbd>z</kbd>...<kbd>b</kbd>
 #### Mouse
   - [5 Mouse](<./5 Mouse.ahk>) e.g., scroll ←→ with <kbd>⇧</kbd><kbd>🖱↑</kbd>/<kbd>🖱↓</kbd> (MouseWheel)
+  - [🖰Scroll Excel](<./🖰Scroll Excel.ahk>) horizontal scroll in Excel to be launched separately in a no-UIA Autohotkey session
   - [🖰hide on 🖮](<./🖰hide on 🖮.ahk>) hide mouse pointer while typing
 #### Others
   - [Tab](<./Tab.ahk>) convert <kbd>⭾</kbd> into a prefix key and use <kbd>⭾</kbd><kbd>1</kbd>...<kbd>8</kbd> to navigate to favorite folders in a file manager or use it as a substitute for <kbd>❖</kbd><kbd>x</kbd> shortcuts
@@ -75,6 +76,6 @@ WinLock() { ;requires two elevated tasks in the Task Scheduler
 ## Use
 
 ## Known issues
-  - Horizontal scrolling fails with 'UIA' enabled AutoHotkey and COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452)
+  - Horizontal scrolling fails with 'UIA' enabled AutoHotkey and COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452), use [🖰Scroll Excel](<./🖰Scroll Excel.ahk>)
 
 ## Credits
