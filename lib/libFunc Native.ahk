@@ -1,13 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
 
 class nativeFunc {
-  static bit(c) {
-    return 2**c - 1
-  }
-  static ɵ(c) {
-    return this.bit(8*c)
-  }
-
   static MCode(mcode) { ; http://ahkscript.org/boards/viewtopic.php?f=7&t=32
     ; create c/c++ function from mcode, and return the function address
     ; static MCode(hex) {
