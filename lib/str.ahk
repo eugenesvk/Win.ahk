@@ -81,7 +81,7 @@ class helperString {
     modi_ahk_s .= modi_ahk_arr_full[-1] ; last ‹⎈ → LCtrl
     return modi_ahk_s
   }
-  static key→ahk(key_combo,kT:="vk",sep:="",lng:='en') { ; get ahk string ⎇›‹⎈a → >!<^vk41 (or if no alpha, ⎇›‹⎈ → >!LCtrl )
+  static key→ahk(key_combo,kT:='vk',sep:='',lng:='en',isSend:=false) { ; get ahk string ⎇›‹⎈a → >!<^vk41 (or if no alpha, ⎇›‹⎈ → >!LCtrl ), isSend encloses the ending chars in {} to allow using the result in Send()
     ; sep like & is added before the last key
     static vk	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
      , sc    	:= keyConstant._mapsc
@@ -104,10 +104,17 @@ class helperString {
       } else {
         key_ahk := %kT%[     nonmod]
       }
-      return modi_ahk_s . sep . key_ahk
+      if isSend {
+        return modi_ahk_s . '{' . key_ahk . '}'
+      } else {
+        return modi_ahk_s . sep . key_ahk
+      }
     } else {
-      return modi_ahk_s
+        return modi_ahk_s
     }
+  }
+  static key→send(key_combo,kT:='vk',sep:='',lng:='en',isSend:=true) {
+    return this.key→ahk(key_combo,kT,sep,lng,isSend)
   }
   static parseModifierList(modlist) { ; convert a string of modifiers into an array list of AHK key names: ‹⇧⇧ → [LShift,Shift]
     return this.parseKeyCombo(modlist,&_s:=[],&_:=0)
