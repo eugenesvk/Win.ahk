@@ -16,16 +16,16 @@ description continued
 
 ### Scripts
   - [0 Hyper](<./0 Hyper.ahk>) <kbd>⇪</kbd> as a "Hyper" modifier key when held and open a launcher app when tapped
-  - [xReformatPrompt](<./xReformatPrompt.ahk>) avoid accidentally formatting your USB drive by autoclosing prompts with a 'Format disk' button (helpful when inserting USB drives with unrecognized formatting). Use in a separate process / compile to a standalone `exe` with `Ahk2Exe` to not block the main app
+  - [xReformatPrompt](<./xReformatPrompt.ahk>) avoid accidentally formatting your USB drive by auto-closing prompts with a 'Format disk' button (helpful when inserting USB drives with unrecognized formatting). Use in a separate process / compile to a standalone `exe` with `Ahk2Exe` to not block the main app
 #### Insert various characters and symbols
   - [char ⎇›](<./char ⎇›.ahk>) [TypES](https://github.com/eugenesvk/kbdLayout-Mac) typographical layout and easily insert modifier symbols like ⎇ when pressed with <kbd>⎇›</kbd>
-  - [char🠿](<./char🠿.ahk>) insert chars on key Hold via a Mac-like Pretss&Hold character picker:
-    ![sequential labels](./img/ch🠿Dia.png)
+  - [char🠿](<./char🠿.ahk>) insert chars on key Hold via a Mac-like Press&Hold character picker:<br/>
+    ![sequential labels](./img/ch🠿Dia.png)<br/>
     ![custom labels](./img/ch🠿Sym.png)
-  - [char-AltTT](<./char-AltTT.ahk>) add diacritics to keys by triggering an diacritic type and finshing with a key (with a tooltip hint) or insert arbitray symbols via the same mechanism
-    ![tooltip diacritics](<./img/ch⎇TT Dia.png>) <kbd>⇧</kbd><kbd>⎇</kbd><kbd>m</kbd> to insert macron
-    ![tooltip math symbols](<./img/ch⎇TT Sym.png>) <kbd>⇧</kbd><kbd>⎇</kbd><kbd>t</kbd>
-  - [6 NumPad](<./6 NumPad.ahk>) numpad with two prefix keys:
+  - [char-AltTT](<./char-AltTT.ahk>) add diacritics to keys by triggering an diacritic type and finishing with a key (with a tooltip hint) or insert arbitrary symbols via the same mechanism<br/>
+    ![tooltip diacritics](<./img/ch⎇TT Dia.png>) <kbd>⇧</kbd><kbd>⎇</kbd><kbd>m</kbd> to insert macron<br/>
+    ![tooltip math symbols](<./img/ch⎇TT Sym.png>) <kbd>⇧</kbd><kbd>⎇</kbd><kbd>t</kbd> to insert math
+  - [6 NumPad](<./6 NumPad.ahk>) NumPad with two prefix keys:
     - right-hand: <kbd>⭾</kbd> <kbd>7</kbd>...<kbd>0</kbd>...<kbd>n</kbd>...<kbd>/</kbd>
     - left-hand: <kbd>⎇</kbd> <kbd>1</kbd>...<kbd>5</kbd>...<kbd>z</kbd>...<kbd>b</kbd>
 #### Mouse
