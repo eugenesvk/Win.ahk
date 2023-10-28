@@ -131,9 +131,9 @@ class helperString {
       'Win'  	,['Win'  , '◆'  , '❖' , '⌘'	,'#']   	,
       'Alt'  	,['Alt'  , '⎇'  , '⌥'      	, '!'  ]	,
       )
-     , sideIndicTemplate	:= [Map('@L',Map('prefix','L', 'symbol',['‹',"'",'<'])) ; last values should be AHK abbreviations!
-       ,                	    Map('@R',Map('prefix','R', 'symbol',['›',"'"])
-       ,                	        '@L',Map('prefix','R', 'symbol',[        '>'])) ; Autohotkey places right modifiers at the left side >!
+     , sideIndicTemplate	:= [Map('@L',Map('prefix','L', 'symbol',['‹','<'])) ; last values should be AHK abbreviations!
+       ,                	    Map('@R',Map('prefix','R', 'symbol',['›'])
+       ,                	        '@L',Map('prefix','R', 'symbol',[    '>'])) ; Autohotkey places right modifiers at the left side >!
        ]
      , all_whitespace := '[\p{Cf}\p{Z}\h\v]' ; remove whitespace and allow & in function names (cf-invisible formatting Z-ws or invis separator \h\v horizontal/vertical whitespace)
   static fillKeyList() {
