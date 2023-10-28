@@ -85,7 +85,7 @@ class helperString {
     ; sep like & is added before the last key
     static vk	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
      , sc    	:= keyConstant._mapsc
-    if not ((kT="sc") or (kT="vk")){
+    if not ((kT="sc") or (kT="vk")) {
       throw ValueError("Parameter #2 invalid, key type should be either ‘vk’ or ‘sc’", -1)
     }
     modi_ahk_arr_full := this.parseKeyCombo(key_combo,&modi_ahk_arr_short:=[],&nonmod:="")
