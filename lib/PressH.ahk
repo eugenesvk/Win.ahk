@@ -1,15 +1,15 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
-;v0.6@20-06
+;v0.7@23-10
 
-; F7::PressH_ChPick(ChXSymbols,ChXSymbolsLab,,"H","C","noBS")
-; F8::PressH_ChPick(ChMath,,,"V","C","noBS")
-; F9::PressH_ChPick(ChMathS,,,,"C","noBS") ; uses Global
-PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:="C", pBS:="BS") { ; output→CharChoicet
-  ; pTrigger	- key that triggered this function, used to exclude it from the index
-  ; pLabel  	- key labels to use instead of the usual index (1-9a-z)
-  ; pHorV   	- Horizontal/Vertical layout of the listboxes
-  ; pBS     	- Send '{BackSpace}' before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
-  ; pCaret  	- Position CharacterPicker@Text Caret position
+#Include %A_scriptDir%\gVar\PressH.ahk
+PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis␈:=true) { ; output→CharChoicet
+  ; Arg     	Type/Val	Comment |default value|  ¦alt value¦
+  ; pChars  	array   	symbols to insert ['⎋','❖','⌽'...]
+  ; pTrigger	char    	key that triggered this function, used to exclude it from the index
+  ; pLabel  	array   	key labels to use instead of the usual index (1-9a-z)
+  ; pHorV   	|H|V    	Horizontal/Vertical layout of the listboxes
+  ; pis␈    	|true|  	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
+  ; pCaret  	|true|  	Position CharacterPicker @ Text Caret position (NOT detected in browsers in some otherapps)
   if IsSet(pLabel) { ; if passed (should be an array) create a local copy to avoid a bug:
     Labels := pLabel.Clone() ; if pTrigger='a' and matches/removes the first element of pLabel=['a','b'] subsequent calls would show pLabel as ['','b'] even when pTrigger is not 'a' anymore
   } else {
@@ -17,7 +17,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:="C", pBS:=
   }
 
   #MaxThreadsPerHotkey 1    ;;;
-  global BS  	:= pBS   	; Copy of parameter for another function
+  global is␈ 	:= pis␈  	; Copy of parameter for another function
    , Chars   	:= pChars	; Copy of a ByRef_parameter for a nested function
    , SavedGUI	:= ""    	; Arrows (trigger Events) save GUI for Enter
   ;;; , Gui  	:= ""    	; Enter (no Event trigger) can save GUI from Arrows
@@ -34,10 +34,10 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:="C", pBS:=
     FlowDir := "+" LBS_MultiColumn
   }
   pTriggerNo	:= Ord(StrLower(pTrigger))	; Numeric character code of the trigger key
-  GuiTitle  	:= "AHK: Select a special character"
+  GuiTitle  	:= "PressH: Select a special character"
   if WinExist(GuiTitle) { ; show exisitng GUI (when minimized or 2 threads)
     WinActivate
-    Return
+    return
   }
   ; HotIfWinActive   	 GuiTitle    	; Catch Arrow hotkeys while GUI is active
     ; Hotkey("~Enter"	, Nav_Pick())	; alternative solution with a button?
@@ -60,7 +60,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:="C", pBS:=
     if (A_Index <= (9+26)) { ; 9numbers+26letters=35 symbols
       symStart  	:= 97 ; start with Lowercase 'a'(#97)
       LabelChInd	:= symStart+(A_Index-1)-9 ; ... after 9numbers
-    } Else if (A_Index <= (9+26+16)) { ; +16 from 0x20–2F range = 51symbols
+    } else if (A_Index <= (9+26+16)) { ; +16 from 0x20–2F range = 51symbols
       symStart  	:= 32 ; continue with Space(32), then Shift+# (#33)
       LabelChInd	:= symStart+(A_Index-1)-35 ; ... after 35symbols
       skipLblBk 	:= skipLbl ; don't skip invoking trigger in symbols
@@ -120,7 +120,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:="C", pBS:=
     ;;;pass caret position as arguments as they are used in individual keys to check whether to call the function at all
     ; get Window position relative to cursor
     static x,y
-    if (CaretGetPos(&x, &y) & (pCaret="C")) { ; Can get Caret position and Config is set
+    if (CaretGetPos(&x, &y) & (pCaret)) { ; Can get Caret position and Config is set
       yOffP := yOffN := 0, symOff := 16
       if (y < symOff*8) { ; if too close to the top of the screen
         yOffP := symOff*3 ; move below the cursor
@@ -162,11 +162,8 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:="C", pBS:=
     LBV.OnEvent("Change", fnS)                	;   passes (GuiCtrlObj, Info), where Info has no meaning for ListBox
 
   Picker.Show(LocLB "AutoSize")	;GuiTitle a, xCenter yCenter, GuiTitle
-  if (dbg>1) {
-    Tooltip("Debug: Post Picker.Show`nPicker.Title`t" Picker.Title "`npChars[1]`t" pChars[1])
-    SetTimer () => ToolTip(), -1000*TTdelay
-  }
-  Return
+  dbgTT(2,"Debug: Post Picker.Show`nPicker.Title`t" Picker.Title "`npChars[1]`t" pChars[1],TTdelay)
+  return
 
   Nav_Pick(ThisHotkey) {  ;  <—— Keys referring here WILL trigger a selection
     if (Type(SavedGUI) = "Object") { ; avoid error when Enter pressed before selection
@@ -186,7 +183,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:="C", pBS:=
 }
 
 PressH_Select(Picker, &pChars, *) { ;t * allows extra parameters sent by OnEvents
-  global BS, TTdelay,TTx,TTy, SavedGUI := Picker.Submit(0) ; (0) doesn't hide the window
+  global is␈, TTdelay,TTx,TTy, SavedGUI := Picker.Submit(0) ; (0) doesn't hide the window
   Arrows     	:= "", AlphaThis := "", AlphaPrior := ""
   ArrowHKeys 	:= "~Down~Up~Left~Right"
   AlphaHKeys 	:= "$a$b$c$d$e$f$g$i$j$k$l$m$n$o$p"
@@ -200,25 +197,19 @@ PressH_Select(Picker, &pChars, *) { ;t * allows extra parameters sent by OnEvent
     Arrows:="Arrows"
   }
   if (Arrows=="Arrows" And A_TimeSinceThisHotkey>=0 And A_TimeSinceThisHotkey<=99)  {
-    if (dbg>0) {
-      TestTooltip(SavedGUI, pChars, "ArrowHKeys", TTdelay)
-    }
-    Return
+    dbgTT(1,SavedGUI, pChars, "ArrowHKeys", TTdelay)
+    return
   }
   if InStr(AlphaHKeys, A_ThisHotkey) {
     AlphaThis:="AlphaThis"
-    if (dbg>0) {
-      MsgBox("A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows1", "T␣0.5")
-    }
+    dbgMsg(1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows1", "T␣0.5")
   }
   if (A_PriorHotkey!="" and InStr(AlphaHKeys, A_PriorHotkey)) {
     AlphaPrior := "AlphaPrior"
   }
   if (AlphaThis=="AlphaThis" and AlphaPrior=="AlphaPrior" and A_TimeSincePriorHotkey>=0 and A_TimeSincePriorHotkey<=800)  {
-    if (dbg>0) {
-      MsgBox("A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows2", "T0.5")
-    }
-    Return
+    dbgMsg(1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows2", "T0.5")
+    return
   }
 
   if (dbg>0) {
@@ -231,12 +222,12 @@ PressH_Select(Picker, &pChars, *) { ;t * allows extra parameters sent by OnEvent
     Exit
   }
   dbgTT(2,"PreSend: KeysTimeOut`n" KeysTimeOut, TTdelay,2,TTx,TTy)
-  if (BS="BS") {
+  if is␈ {
     Send('{BackSpace}' CharChoice)	;A_TimeSincePriorHotkey (add 2nd {BackSpace})
   } else {
     Send(CharChoice)
   }
-  Return
+  return
 }
 
 TestPrint(SavedGUI, pChars, Title, Time, *) {
@@ -253,51 +244,15 @@ TestTooltip(SavedGUI, pChars, Title, Period , *) {
 
 Gui_Close(Picker) {
   Picker.Destroy()
-  Return
+  return
 }
 
-/*
-  F3::{
-    ;Binds parameters to the function and returns a BoundFunc object.
-    ;BoundFunc := Func.Bind(Parameters)
-    fn := RealFn.Bind(1)
-    %fn%(2)    ; Shows "1, 2"
-    fn.Call(3) ; Shows "1, 3"
-    RealFn(a, b) {
-      MsgBox a ", " b
-    }
-    Return
-  }
-F3:: {
-  if GetKeyState("Shift") {
-    MsgBox "At least one Shift key is down."
-  } else {
-    MsgBox "Neither Shift key is down."
-  }
-}
-*/
-
-/*
-Event      	Raised when...                       	GuiControls
-DoubleClick	The control is double-clicked        	ListBox
-Change     	The control's value changes.         	ListBox
-Focus      	The control gains the keyboard focus.	ListBox
-LoseFocus  	The control loses the keyboard focus.	ListBox
+/* Help
+Event      	Raised when...              	GuiControls
+DoubleClick	Control is double-clicked   	ListBox
+Change     	Control's value changes     	ListBox
+Focus      	Control gains keyboard focus	ListBox
+LoseFocus  	Control loses keyboard focus	ListBox
+autohotkey.com/board/topic/29362-browse-a-listbox-with-arrow-keys/
+nadeausoftware.com/articles/2010/07/java_tip_systemcolors_mac_os_x_user_interface_themes
  */
-; Help
-;autohotkey.com/board/topic/29362-browse-a-listbox-with-arrow-keys/
-;nadeausoftware.com/articles/2010/07/java_tip_systemcolors_mac_os_x_user_interface_themes
-; Test
-  ; F5::PressH_ChPick(ChXSymbols)
-  ;Auto-Execute Section (AES) begins
-    ; #Include %A_scriptDir%\gVars\var.ahk
-    ; #Include %A_scriptDir%\SpecialChars-Hold.ahk 	; Diacritics+chars on key hold
-    ; #Include %A_scriptDir%\SpecialChars-Hold2.ahk	; Diacritics+chars on key hold
-  ; ^+VK52::Reload ;[^⇧r] VK52
-  ; {
-  ;   PressH_ChPick(ChXSymbols)
-  ;   while (waitingState)
-  ;    Sleep 100
-  ;   SendInput CharChoice
-  ;   Return
-  ; }
