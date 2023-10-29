@@ -10,13 +10,16 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
   HotIfWinActive("ahk_group PressnHold")
+  ;;; 1 Define hotkeys with and without Shift
   loop parse "abce/nosuyz'" { ; ⇧🠿a​⇧🠿b​⇧🠿c​⇧🠿e​⇧🠿/​⇧🠿n​⇧🠿o​⇧🠿s​⇧🠿u​⇧🠿y​⇧🠿z​⇧🠿'​
     HotKey('$' s.key→ahk(    k[A_LoopField]), char🠿, "T2")
     HotKey('$' s.key→ahk('⇧' k[A_LoopField]), char🠿, "T2")
   }
+  ;;; 2 Define hotkeys          without Shift
   loop parse "qhxtfvg-r" { ; 🠿q​🠿h​🠿x​🠿t​🠿f​🠿v​🠿g​🠿-​🠿r​
     HotKey('$' s.key→ahk(    k[A_LoopField]), char🠿, "T2")
   }
+  ;;; 3 Define hotkeys with             Shift
   loop parse "``45" { ; ⇧🠿`​⇧🠿4​⇧🠿5​
     HotKey('$' s.key→ahk('⇧' k[A_LoopField]), char🠿, "T2")
   }
@@ -35,6 +38,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   }
   HotIf ;i
   blind_ := false
+  ;;; 4 Match hotkeys defined above to actual symbols (see symbol.ahk)
   char🠿(ThisHotkey) {
     Switch ThisHotkey  {
       default  : return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
