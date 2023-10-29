@@ -1,3 +1,4 @@
+#include <Win>
 #include <constLocale>
 #include <constWin32alt>
 wapi	:= win32Constant ; various win32 API constants
