@@ -1,4 +1,4 @@
-﻿#Requires AutoHotKey 2.1-alpha.4
+﻿#Requires AutoHotKey 2.0.10
 ; Add groups of windows,	refer with `ahk_group MyGroup`
 ; Win/Exclude Title/Text are case-sensitive except for RegEx mode "i)".
 ;GroupAdd GroupName [   	, WinTitle, WinText, ExcludeTitle, ExcludeText]

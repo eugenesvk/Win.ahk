@@ -1,4 +1,4 @@
-﻿#Requires AutoHotKey 2.1-alpha.4
+﻿#Requires AutoHotKey 2.0.10
 ;v0.7@23-10
 
 #Include %A_scriptDir%\gVar\PressH.ahk

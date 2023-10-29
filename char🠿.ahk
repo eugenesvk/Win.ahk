@@ -1,4 +1,4 @@
-﻿#Requires AutoHotKey 2.1-alpha.4
+﻿#Requires AutoHotKey 2.0.10
 ; v1.1@23-10
 ; PressH_ChPick function located in /lib, TimerHold defined in AES section of aCommon.ahk
 #MaxThreadsPerHotkey 2 ; 2 Allows A₁BA₂ fast typing, otherwise A₂ doesn't register

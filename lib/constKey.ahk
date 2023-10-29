@@ -1,4 +1,4 @@
-#Requires AutoHotKey 2.1-alpha.4
+#Requires AutoHotKey 2.0.10
 ; Various key constants for more ergonomic input or avoiding keyboard layout issues in key definition
 global ___ := 0
  , ⇧                    	     	:= "Shift"
