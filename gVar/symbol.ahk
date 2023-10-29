@@ -1,17 +1,4 @@
 #Requires AutoHotKey 2.1-alpha.4
-global Keyboard 	:=["``","1","2","3","4","5","6","7","8","9","0","-","=","q","w","e","r","t","y","u","i","o","p","[","]","\","a","s","d","f","g","h","j","k","l",";","'","z","x","c","v","b","n","m",",",".","/"] ; Keyboard array q14 a27 z38
-  ,    KeyboardR	:=["ё","1","2","3","4","5","6","7","8","9","0","-","=","й","ц","у","к","е","н","г","ш","щ","з","х","ъ","\","ф","ы","в","а","п","р","о","л","д","ж","э","я","ч","с","м","и","т","ь","б","ю","."] ; Keyboard array й14 ф27 я38
-  ; modifiers # to the left/right of spacebar (helpful var in case the keys get physically remapped in registry to custom modifiers)
-  , ‹␠1 := '‹⎈' , ‹␠2  := '‹⌥' , ‹␠3  := '‹◆'
-  ,  ␠›1:=  '⎈›',  ␠›2 :=  '⌥›',  ␠›3 := '☰'
-  , ⅋ := '&'
- ,ɵ1:=ɵ2:=ɵ3:=ɵ4:=ɵ5:=ɵ6:=ɵ7:=ɵ8:=0
-#include <libFunc Num>
-loop 8 {
-  ɵ%A_Index% := numFunc.ɵ(A_Index)
-}
-
-#include <Array>
 
 ;Custom special characters
   ;xLab - Labels, xLabR - Labels in Russian, xSp – Newline split positions
