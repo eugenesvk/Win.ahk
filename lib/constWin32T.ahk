@@ -12,10 +12,10 @@ test_winTypes() {
   )
 
 test_winTypesStruct() { ; for use with dynamically created structs using copy&pasted windows types
-  winT	:= winTypes.m ; winT types and their ahk types for DllCalls and structs
+  winT  	:= winTypes.struct ; winT types and their ahk types Calls and structs
   Point := Class(Object)  ; Specify the base class so a Prototype is created automatically
-  Point.Prototype.DefineProp 'x', {type: winT['LONG']['struct']} ; Specifies the x-coordinate of the point
-  Point.Prototype.DefineProp 'y', {type: winT['LONG']['struct']} ; Specifies the y-coordinate of the point
+  Point.Prototype.DefineProp 'x', {type: winT['LONG']]} ; Specifies the x-coordinate of the point
+  Point.Prototype.DefineProp 'y', {type: winT['LONG']]} ; Specifies the y-coordinate of the point
   ;           		typedef struct tagPOINT {
   ; 0:0, "Int"	  LONG x;
   ; 4:4, "Int"	  LONG y;
@@ -26,14 +26,17 @@ test_winTypesStruct() { ; for use with dynamically created structs using copy&pa
   GetCursorPos   	:= DllCall.Bind("GetCursorPos",    "ptr",unset) ; Use "ptr" to pass by reference
   GetCursorPos(pt)
   MsgBox(WinGetClass(WindowFromPoint(pt)))
+
+  ; alternative
+  ; winT	:= winTypes.m ; winT types and their ahk types for DllCalls and structs
+  ; Point.Prototype.DefineProp 'x', {type: winT['LONG']['struct']} ; Specifies the x-coordinate of the point
 }
 */
-
 class winTypes { ; from github.com/jNizM/AutoHotkey_MSDN_Types
   static mapNames := ['DataType1','DataType2']
   , mapAlias := Map('DataType','T')
   , DataType1 := [
-     ["ATOM"            	,"UShort"       	,""                 	,2, 2, "typedef WORD ATOM"]
+     ["ATOM"            	,"UShort"       	,""                 	,2,2  	,"typedef WORD ATOM"]
     ,["BOOL"            	,"Int"          	,""                 	,4,4  	,"typedef int BOOL"]
     ,["BOOLEAN"         	,"UChar"        	,""                 	,1,1  	,"typedef BYTE BOOLEAN"]
     ,["BYTE"            	,"UChar"        	,""                 	,1,1  	,"typedef unsigned char BYTE"]
@@ -214,8 +217,10 @@ class winTypes { ; from github.com/jNizM/AutoHotkey_MSDN_Types
   )
 
   static __new() { ; get all vars and store their values in a ‘m’ map
-    static m   	:= Map()
-    m.CaseSense	:= 0 ; make key matching case insensitive
+    static m    	:= Map()
+    , ms        	:= Map() ; store structs
+    m.CaseSense 	:= 0 ; make key matching case insensitive
+    ms.CaseSense	:= 0 ; make key matching case insensitive
 
     for i,arrTName in this.mapNames { ; DataType1
       for j,arrT in this.%arrTName% {
@@ -265,8 +270,10 @@ class winTypes { ; from github.com/jNizM/AutoHotkey_MSDN_Types
         mT['struct']  	:= (A_PtrSize = 4) ? mT['struct32'] : mT['struct64']
         mT['def']     	:= arrT[6] ; typedef ...
         m[arrT[1]]    	:= mT
+        ms[mT['win']] 	:= mT['struct']
       }
     }
     this.m := m
+    this.struct := ms
   }
 }
