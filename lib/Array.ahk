@@ -1,4 +1,4 @@
-﻿#Requires AutoHotKey 2.1-alpha.4
+﻿#Requires AutoHotKey 2.0.10
 
 HasValue(haystack, needle) { ; Checks if a value exists in an array
   ;FoundPos := HasValue(Haystack, Needle)

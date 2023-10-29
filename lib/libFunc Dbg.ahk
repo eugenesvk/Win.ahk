@@ -1,4 +1,4 @@
-#Requires AutoHotKey 2.1-alpha.4
+#Requires AutoHotKey 2.0.10
 
 ; ————————————————————————— Debugging Functions —————————————————————————
 dbgMsg(dbgMin:=0, Text:="", Title:="", Options:="") {

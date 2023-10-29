@@ -1,4 +1,4 @@
-#Requires AutoHotKey 2.1-alpha.4
+#Requires AutoHotKey 2.0.10
 
 class numFunc {
   static bit2ⁿ−1(n) {
