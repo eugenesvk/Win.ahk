@@ -39,6 +39,18 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
     WinActivate
     return
   }
+
+  static lbl_sub     	:= Map() ; map to store substitute layout-specific labels to use when trigger key matches existing labels
+  if lbl_sub.Count   	= 0 { ; can set case only on empty maps
+    lbl_sub.CaseSense	:= 0
+  }
+  if not lbl_sub.Has('en') {
+    lbl_sub['en'] := 'zyxwvutsrqponmlkjihgfedcba123456789'
+  }
+  if not lbl_sub.Has('ru') {
+    lbl_sub['ru'] := 'яюэьыъщшчцхфутсрпонмлкйизжёедгвба123456789'
+  }
+
   ; HotIfWinActive   	 GuiTitle    	; Catch Arrow hotkeys while GUI is active
     ; Hotkey("~Enter"	, Nav_Pick())	; alternative solution with a button?
   ; tooltip(A_TimeSincePriorHotkey)
@@ -86,10 +98,24 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
       Loop (pChars.Length - Labels.Length) {
         Labels.Push("")
       }
+    } else if Labels.Length > pChars.Length {
+      Labels.Capacity := pChars.Length ; cut label's array if it's longer to avoid index error
     }
     pTriggerIndex := HasValue(Labels,pTrigger)
-    if (pTriggerIndex >0 ) {      	; if Labels includes pTrigger ...
-      Labels[pTriggerIndex] := " "	; replace pTrigger with space (alt: "" since some labels use space)
+    static labelSub := ' '
+    local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
+    sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
+    label_list := lbl_sub.Has(sLng) ? lbl_sub[sLng] : lbl_sub['en']
+    if (pTriggerIndex >0 ) {	; if Labels includes pTrigger ...
+      loop parse (labelSub . label_list) { ; loop through labels to see which one is free
+        if HasValue(Labels,A_LoopField) {
+          Continue
+        } else {
+          labelSub := A_LoopField
+          Labels[pTriggerIndex] := labelSub	; replace pTrigger with space (alt: "" since some labels use space)
+          Break
+        }
+      }
     }
     colIndex := Labels
   }
