@@ -1,19 +1,19 @@
 #Requires AutoHotKey 2.0.10
 ; Various key constants for more ergonomic input or avoiding keyboard layout issues in key definition
 global ___ := 0
- , ⇧                    	     	:= "Shift"
- , ⎈ := ⌃               	     	:= "Ctrl"
- , ◆ := ❖               	:= ⌘ 	:= "LWin"
- , ⎇ := ⌥               	     	:= "Alt"
- , ‹⇧                   	     	:= "LShift"
- , ‹⎈ := ‹⌃             	     	:= "LCtrl"
- , ‹◆ := ‹❖             	:= ‹⌘	:= "LWin"
- , ‹⎇ := ‹⌥             	     	:= "LAlt"
- , ⇧›                   	     	:= "RShift"
- , ⎈› := ⌃›             	     	:= "RCtrl"
- , ◆› := ❖›             	:= ⌘›	:= "RWin"
- , ⎇› := ⌥›             	     	:= "RAlt"
- , ☰                    	     	:= "AppsKey"
+ , ⇧       	     	:= "Shift"
+ , ⎈ := ⌃  	     	:= "Ctrl"
+ , ◆ := ❖  	:= ⌘ 	:= "LWin"
+ , ⎇ := ⌥  	     	:= "Alt"
+ , ‹⇧      	     	:= "LShift"
+ , ‹⎈ := ‹⌃	     	:= "LCtrl"
+ , ‹◆ := ‹❖	:= ‹⌘	:= "LWin"
+ , ‹⎇ := ‹⌥	     	:= "LAlt"
+ , ⇧›      	     	:= "RShift"
+ , ⎈› := ⌃›	     	:= "RCtrl"
+ , ◆› := ❖›	:= ⌘›	:= "RWin"
+ , ⎇› := ⌥›	     	:= "RAlt"
+ , ☰       	     	:= "AppsKey"
 
 class keyConstant {
   ; learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
