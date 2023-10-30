@@ -246,7 +246,7 @@ PressH_Select(Picker, &pChars, *) { ;t * allows extra parameters sent by OnEvent
   }
   if InStr(AlphaHKeys, A_ThisHotkey) {
     AlphaThis:="AlphaThis"
-    dbgMsg(1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows1", "T␣0.5")
+    dbgMsg(1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows1", "T0.5")
   }
   if (A_PriorHotkey!="" and InStr(AlphaHKeys, A_PriorHotkey)) {
     AlphaPrior := "AlphaPrior"
