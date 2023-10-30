@@ -29,7 +29,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
   if IsSet(pLabel) { ; if passed (should be an array) create a local copy to avoid a bug:
     Labels := pLabel.Clone() ; if pTrigger='a' and matches/removes the first element of pLabel=['a','b'] subsequent calls would show pLabel as ['','b'] even when pTrigger is not 'a' anymore
   } else {
-    Labels := lbl_en_arr
+    Labels := lbl_en_arr.Clone() ;  clone to avoid ↓ cutting lbl_en_arr instead of just Labels
     Labels.Capacity := pChars.Length
   }
   dbgTT(3,'pTrigger=' pTrigger ' pHorV=' pHorV ' pis␈=' pis␈ ' pCaret=' pCaret,t:=1) ;
