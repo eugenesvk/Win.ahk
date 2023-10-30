@@ -11,25 +11,43 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
   ; pis␈    	|true|  	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
   ; pCaret  	|true|  	Position CharacterPicker @ Text Caret position (NOT detected in browsers in some otherapps)
 
-  static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
-   , lbl_en_arr := Array()
+  static k   	:= keyConstant._map, lyt_lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
+   , s       	:= helperString
+   , lbl_cust	:= Map()
    , lbl_en := "
       ( Join ` LTrim
-        1234567890
-        qwertyuiop
-        asdfghjkl;
-        zxcvbnm,.-=[]'\/`
-       )"
-  if lbl_en_arr.Length = 0 {
+       1234567890
+       qwertyuiop
+       asdfghjkl;
+       zxcvbnm,.-=[]'\/`
+      )"
+  local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
+  sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
+
+  if lbl_cust.Count = 0 { ; can set case only on empty maps
+    lbl_cust.CaseSense	:= 0
+  }
+  if not lbl_cust.Has('en') {
+    lbl_en_arr := Array()
     lbl_en_arr.Capacity := StrLen(lbl_en)
     loop parse lbl_en { ;
       lbl_en_arr.push(A_LoopField)
     }
+    lbl_cust['en'] := lbl_en_arr
   }
+  if not lbl_cust.Has(sLng)
+    and lyt_lbl.Has(sLng) {
+    lbl_cust[sLng] := s.convert_lyt_arr(lbl_cust['en'],sLng,&ℯ:="")
+  }
+
   if IsSet(pLabel) { ; if passed (should be an array) create a local copy to avoid a bug:
     Labels := pLabel.Clone() ; if pTrigger='a' and matches/removes the first element of pLabel=['a','b'] subsequent calls would show pLabel as ['','b'] even when pTrigger is not 'a' anymore
   } else {
-    Labels := lbl_en_arr.Clone() ;  clone to avoid ↓ cutting lbl_en_arr instead of just Labels
+    if lbl_cust.Has(sLng) {
+      Labels := lbl_cust[sLng].Clone() ;  clone to avoid ↓ cutting lbl_en_arr instead of just Labels
+    } else {
+      Labels := lbl_cust['en'].Clone() ;  clone to avoid ↓ cutting lbl_en_arr instead of just Labels
+    }
     Labels.Capacity := pChars.Length
   }
   dbgTT(3,'pTrigger=' pTrigger ' pHorV=' pHorV ' pis␈=' pis␈ ' pCaret=' pCaret,t:=1) ;
@@ -121,8 +139,6 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
     }
     pTriggerIndex := HasValue(Labels,pTrigger)
     static labelSub := ' '
-    local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
-    sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
     label_list := lbl_sub.Has(sLng) ? lbl_sub[sLng] : lbl_sub['en']
     if (pTriggerIndex >0 ) {	; if Labels includes pTrigger ...
       loop parse (labelSub . label_list) { ; loop through labels to see which one is free
