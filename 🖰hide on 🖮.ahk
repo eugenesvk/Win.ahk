@@ -194,8 +194,8 @@ getKeys() { ; Register the keys you want to listen on
     keys_m["English"] := "
       ( Join LTrim
        `1234567890-=
-        qwertyuiop[]\
-        asdfghjkl;'
+        qwertyuiop[]
+        asdfghjkl;'\
         zxcvbnm,./
        )"
     keys_def      	:= keys_m.Get("English")
