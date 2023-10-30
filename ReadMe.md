@@ -30,6 +30,6 @@ where a symbol can be inserted with a 1-key label or via cursor keys and <kbd>‚è
   - [PressH](./lib/PressH.ahk) library contains the actual `PressH_ChPick` function that creates the popup characte picker, and has `lbl_en` list of default labels used when no user defined labels are provided (non-english labels can be added to the [constKey](./lib/constKey.ahk) library)
 
 ## Known issues
-  - Caret detection fails in many apps (like Chrome) and would require a use of a UIAutomation/Accessibility library
+  - Caret detection fails in many apps (like Chrome) and would require a use of a UIAutomation/Accessibility library, but it's unfortunately not reliable enough, especially with some web pages
 
 ## Credits
