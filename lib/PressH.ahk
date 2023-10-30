@@ -10,11 +10,29 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
   ; pHorV   	|H|V    	Horizontal/Vertical layout of the listboxes
   ; pis␈    	|true|  	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
   ; pCaret  	|true|  	Position CharacterPicker @ Text Caret position (NOT detected in browsers in some otherapps)
+
+  static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
+   , lbl_en_arr := Array()
+   , lbl_en := "
+      ( Join ` LTrim
+        1234567890
+        qwertyuiop
+        asdfghjkl;
+        zxcvbnm,.-=[]'\/`
+       )"
+  if lbl_en_arr.Length = 0 {
+    lbl_en_arr.Capacity := StrLen(lbl_en)
+    loop parse lbl_en { ;
+      lbl_en_arr.push(A_LoopField)
+    }
+  }
   if IsSet(pLabel) { ; if passed (should be an array) create a local copy to avoid a bug:
     Labels := pLabel.Clone() ; if pTrigger='a' and matches/removes the first element of pLabel=['a','b'] subsequent calls would show pLabel as ['','b'] even when pTrigger is not 'a' anymore
   } else {
-    Labels := ""
+    Labels := lbl_en_arr
+    Labels.Capacity := pChars.Length
   }
+  dbgTT(3,'pTrigger=' pTrigger ' pHorV=' pHorV ' pis␈=' pis␈ ' pCaret=' pCaret,t:=1) ;
 
   #MaxThreadsPerHotkey 1    ;;;
   global is␈ 	:= pis␈  	; Copy of parameter for another function
