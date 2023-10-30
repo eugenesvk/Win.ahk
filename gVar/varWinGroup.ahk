@@ -23,6 +23,7 @@ GroupAdd "PressnHold"   	, "ahk_class XLMAIN"               	; Excel
 GroupAdd "PressnHold"   	, "ahk_exe EXCEL.EXE"              	; Excel
 GroupAdd "PressnHold"   	, "ahk_class OpusApp"              	; Word
 GroupAdd "PressnHold"   	, "ahk_class Notepad++"            	; Notepad++
+GroupAdd "PressnHold"   	, "ahk_class WordPadClass"         	; WordPad
 ; GroupAdd "PressnHold" 	, "ahk_class keypirinha_wndcls_run"	; keypirinha
 GroupAdd "Games"        	, "ahk_exe game.exe"
 GroupAdd "WinTerm"      	, "ahk_exe WindowsTerminal.exe"
