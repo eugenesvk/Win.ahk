@@ -121,6 +121,40 @@ class helperString {
   }
 
 
+  static convert_lyt_arr(arrIn, lyt_to, &ℯ, lyt_from:="en") { ;→array convert an array from one layout to anouther
+    static k              	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
+    static lbl_translit   	:= Map()
+    lbl_translit.CaseSense	:= 0
+
+    if lyt_from = lyt_to {
+      return arrIn
+    }
+    if not Type(arrIn) = "Array" {
+      throw ValueError('Argument #1 (arrIn) is not an ‘Array’!', -1)
+    }
+    if not Type(ℯ) = "String" {
+      throw ValueError('Argument #3 (error) is not an ‘Array’!', -1)
+    }
+    if not lbl.Has(lyt_from) {
+      throw ValueError('Layout ‘' lyt_from '’ is not supported!', -1)
+    }
+    if not lbl.Has(lyt_to) {
+      throw ValueError('Layout ‘' lyt_to '’ is not supported!', -1)
+    }
+    arrOut := Array()
+    arrOut.Capacity := arrIn.Length
+    for c in arrIn {
+      if (c_lbl_pos := InStr(lbl[lyt_from], c)) {
+        c_to := SubStr(lbl[lyt_to],c_lbl_pos,1)
+        arrOut.push(c_to)
+      } else { ; symbol not found, return self, but also add it to the error array
+        arrOut.push(c)
+        ℯ .= c
+      }
+    }
+    return arrOut
+  }
+
   static _ttt:=0
      , modiArr := [] ; array [‹⇧ , LShift] (preserves insertion order)
      , modiMap := Map() ; map of ‹⇧ : LShift (NOT ordered, but useful for .Has method)
