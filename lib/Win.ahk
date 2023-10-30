@@ -2,8 +2,9 @@
 
 #include <winapi Struct>
 class win {
-  static getCaret(&⎀←:='',&⎀↑:='',&⎀→:='',&⎀↓:=''
-    ,&⎀↔:='',&⎀↕:='',&⎀isVis:='') { ; autohotkey.com/boards/viewtopic.php?t=13004
+  static getCaret(&⎀←:=0,&⎀↑:=0,&⎀→:=0,&⎀↓:=0
+    ,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0) { ; autohotkey.com/boards/viewtopic.php?t=13004
+    ; ⎀isVis sets to 1 only if caret Height > 1 (it's 1 in Help app even though there is no text input)
     static ws     	:= winapi_Struct ; various win32 API structs
     static win32  	:= win32Constant ; various win32 API constants
      , gui        	:= win32.gui
@@ -19,16 +20,17 @@ class win {
     if not gotGUIThreadI {
       return ; ToolTip
     }
-    offset 	:= flags_off
-    flags  	:= NumGet(bufGUIThreadI, offset     , "uint")
-    ⎀Blink	:= flags & gui.GUI_CARETBLINKING
-    offset	:= rcCaret_off
-    ⎀←    	:= NumGet(bufGUIThreadI, offset     , "int")
-    , ⎀↑  	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀→  	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀↓  	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀↔  	:= ⎀→ - ⎀←
-    , ⎀↕  	:= ⎀↓ - ⎀↑
+    offset   	:= flags_off
+    flags    	:= NumGet(bufGUIThreadI, offset     , "uint")
+    ⎀Blink   	:= flags & gui.GUI_CARETBLINKING ; set if caret is visible(?)
+    offset   	:= rcCaret_off
+    ⎀←       	:= NumGet(bufGUIThreadI, offset     , "int")
+    , ⎀↑     	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀→     	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀↓     	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀↔     	:= ⎀→ - ⎀←
+    , ⎀↕     	:= ⎀↓ - ⎀↑
+    , ⎀isVis 	:= (⎀↕ > 1) ? 1 : 0
     ; flags_s	:= ''
     ; Switch flags {
     ;   default                   	: flags_s := 'guiFlagsUnknown'
@@ -38,13 +40,13 @@ class win {
     ;   case gui['PopupMenuMode'] 	: flags_s := 'PopupMenuMode'
     ;   case gui['SystemMenuMode']	: flags_s := 'SystemMenuMode'
     ; }
-    ; ToolTip('←' ⎀← ", ↑" ⎀↑ '`n' '↔' ⎀↔ "×↕" ⎀↕ "`n" ⎀isVis ' ⎀isVis`n' flags_s ' ' flags,,,id:=5) ;,TTx,TTy,2
+    ; ToolTip('←' ⎀← ', ↑' ⎀↑ '`n' '↔' ⎀↔ '×↕' ⎀↕ '`n' ⎀Blink ' ⎀Blink' '`n' ⎀isVis ' ⎀isVis' '`n',,,id:=5) ;,TTx,TTy,2
     return
   }
 
   static __new() {
-    static getCaret(&⎀←:='',&⎀↑:='',&⎀→:='',&⎀↓:='',&⎀↔:='',&⎀↕:='',&⎀isVis:='') {
-      win.getCaret( &⎀←:='',&⎀↑:='',&⎀→:='',&⎀↓:='',&⎀↔:='',&⎀↕:='',&⎀isVis:='')
+    static getCaret(&⎀←:=0,&⎀↑:=0,&⎀→:=0,&⎀↓:=0,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0) {
+      win.getCaret( &⎀←:=0,&⎀↑:=0,&⎀→:=0,&⎀↓:=0,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0)
     }
   }
 }
