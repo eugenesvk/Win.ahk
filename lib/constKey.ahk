@@ -32,8 +32,8 @@ class keyConstant {
     labels['en'] := "
       ( Join ` LTrim
        `1234567890-=
-        qwertyuiop[]\
-        asdfghjkl;'
+        qwertyuiop[]
+        asdfghjkl;'\
         zxcvbnm,./
        )"
     labels['ru'] := "
