@@ -1,10 +1,6 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
 ; #HotIf WinActive("ahk_class PX_WINDOW_CLASS") ; Or WinActive("ahk_class GxWindowClass")
 
-isRu() {
-  return (lyt.GetCurLayout() = ruU) ? 'Ru' : ''
-  }
-
 ;Alt+Key adds accent to the next key. /board/topic/27801-special-characters-osx-style
 !+vkBF::	csubA(Dia["´"])      	;⌥⇧/​	vkBF ⟶ ´ acute ?(using VK + scancode)
 !+vkC0::	csubA(Dia["``"])     	;⌥⇧`​	vkC0 ⟶ ` grave ?(using VK + scancode)
