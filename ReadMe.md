@@ -24,6 +24,7 @@ and selecting from a character picker
   - [char🠿](./char🠿.ahk.ahk) contains the hotkey definitions and what set of symbols those hotkeys should use to show a symbol picker (see 4 steps marked by `;;;` to update)
   - [symbol](./gVar/symbol.ahk) contains a few Maps of symbols that can be updated to insert whatever symbols you need
   - [PressH](<./gVar/PressH.ahk>) contains a set of visual tweaks (like fonts and colors) and `TimerHold` hold threshold (0.4sec by default)
+  - [varWinGroup](./varWinGroup.ahk) contains the list of apps where this script should be enabled
 
 ## Known issues
   - Caret detection fails in many apps (like Chrome) and would require a use of a UIAutomation/Accessibility library
