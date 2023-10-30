@@ -10,6 +10,7 @@ GroupAdd "PressnHold"	, "ahk_class XLMAIN"            	; Excel
 GroupAdd "PressnHold"	, "ahk_exe EXCEL.EXE"           	; Excel
 GroupAdd "PressnHold"	, "ahk_class OpusApp"           	; Word
 GroupAdd "PressnHold"	, "ahk_class Notepad++"         	; Notepad++
+GroupAdd "PressnHold"	, "ahk_class WordPadClass"      	; WordPad
 
 ; Window group arrays/dictionaries for faster/easier match without loops
   global exe→COM := Map()    ; need COM to scroll (map ahk_exe to COM object)
