@@ -1,8 +1,38 @@
 #Requires AutoHotKey 2.0.10
 
+#include <Acc2>
 #include <winapi Struct>
 class win {
-  static getCaret(&⎀←:=0,&⎀↑:=0,&⎀→:=0,&⎀↓:=0
+  static get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
+    static ptcProp	:= ["IsTextPatternAvailable","HasKeyboardFocus"]
+     , ptcScope   	:= UIA.TreeScope.Element ; Element or Subtree (very slow on some web pages https://www.autohotkey.com/boards/viewtopic.php?f=82&t=114802&p=545176#p545176)
+     , ptcMode    	:= UIA.AutomationElementMode.None
+     , pointCache 	:= UIA.CreateCacheRequest(ptcProp,,ptcScope,ptcMode) ; (,patterns?,,,filter?)
+
+    win.get⎀GUI(&⎀←,&⎀↑,&⎀→,&⎀↓,&⎀↔,&⎀↕,&⎀Blink,&⎀isVis) ; 1 get caret via GetGUIThreadInfo
+
+    if ⎀isVis {
+          return true
+    } else {
+      if win.get⎀Acc(&⎀←,&⎀↑, &⎀↔,&⎀↕) {                  ; 2 get caret via UIA
+        isUIAEditable := 1
+        try {
+          pt           	:= UIA.SmallestElementFromPoint(⎀←,⎀↑,,pointCache) ; alt ElementFromPoint
+          isUIAEditable	:= pt.CachedIsTextPatternAvailable && pt.CachedHasKeyboardFocus
+        }
+        if isUIAEditable {
+          return true
+        } else { ; ⎀ exists, but not editable, reset to 0
+          ⎀←:=0 , ⎀↑:=0
+          return false
+        }
+      } else { ; no ⎀ from either GUIthread or Acc, reset to 0
+          ⎀←:=0 , ⎀↑:=0
+          return false
+      }
+    }
+  }
+  static get⎀GUI(&⎀←,&⎀↑,&⎀→:=0,&⎀↓:=0
     ,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0) { ; autohotkey.com/boards/viewtopic.php?t=13004
     ; ⎀isVis sets to 1 only if caret Height > 1 (it's 1 in Help app even though there is no text input)
     static ws     	:= winapi_Struct ; various win32 API structs
@@ -20,34 +50,27 @@ class win {
     if not gotGUIThreadI {
       return ; ToolTip
     }
-    offset   	:= flags_off
-    flags    	:= NumGet(bufGUIThreadI, offset     , "uint")
-    ⎀Blink   	:= flags & gui.GUI_CARETBLINKING ; set if caret is visible(?)
-    offset   	:= rcCaret_off
-    ⎀←       	:= NumGet(bufGUIThreadI, offset     , "int")
-    , ⎀↑     	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀→     	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀↓     	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀↔     	:= ⎀→ - ⎀←
-    , ⎀↕     	:= ⎀↓ - ⎀↑
-    , ⎀isVis 	:= (⎀↕ > 1) ? 1 : 0
-    ; flags_s	:= ''
-    ; Switch flags {
-    ;   default                   	: flags_s := 'guiFlagsUnknown'
-    ;   case gui['CaretBlinking'] 	: flags_s := 'CaretBlinking'
-    ;   case gui['InMenuMode']    	: flags_s := 'InMenuMode'
-    ;   case gui['InmoveSize']    	: flags_s := 'InmoveSize'
-    ;   case gui['PopupMenuMode'] 	: flags_s := 'PopupMenuMode'
-    ;   case gui['SystemMenuMode']	: flags_s := 'SystemMenuMode'
-    ; }
-    ; ToolTip('←' ⎀← ', ↑' ⎀↑ '`n' '↔' ⎀↔ '×↕' ⎀↕ '`n' ⎀Blink ' ⎀Blink' '`n' ⎀isVis ' ⎀isVis' '`n',,,id:=5) ;,TTx,TTy,2
-    return
+    offset  	:= flags_off
+    flags   	:= NumGet(bufGUIThreadI, offset     , "uint")
+    ⎀Blink  	:= flags & gui.GUI_CARETBLINKING ; set if caret is visible(?)
+    offset  	:= rcCaret_off
+      ⎀←    	:= NumGet(bufGUIThreadI, offset     , "int")
+    , ⎀↑    	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀→    	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀↓    	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀↔    	:= ⎀→ - ⎀←
+    , ⎀↕    	:= ⎀↓ - ⎀↑
+    , ⎀isVis	:= (⎀↕ > 1) ? 1 : 0 ; fix an issue with Help showing a caret of Height=1 even when there is none
+    return ⎀← || ⎀↑ ;;; todo: what if 0,0 is a valid caret position?
   }
-
-  static __new() {
-    static getCaret(&⎀←:=0,&⎀↑:=0,&⎀→:=0,&⎀↓:=0,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0) {
-      win.getCaret( &⎀←:=0,&⎀↑:=0,&⎀→:=0,&⎀↓:=0,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0)
-    }
+  static get⎀Acc(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
+    static OBJID_CARET := 0xFFFFFFF8
+    ; CoordMode('Caret','Client')
+    AccObject	:= Acc_ObjectFromWindow(WinExist('A'), OBJID_CARET)
+    Pos      	:= Acc_Location(AccObject)
+    try ⎀← := Pos.x, ⎀↑ := Pos.y
+      , ⎀↔ := Pos.w, ⎀↕ := Pos.h
+    return ⎀← || ⎀↑ ;;; todo: what if 0,0 is a valid caret position?
   }
 }
 
