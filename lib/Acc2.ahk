@@ -342,20 +342,14 @@ Acc_Location(Acc, ChildId:=0) { ; adapted from Sean's code
   com	:= win32Constant.comT ; various COM win32 API constants
   xb:=Buffer(4), yb:=Buffer(4), wb:=Buffer(4), hb:=Buffer(4)
   try {
-    Acc.accLocation(
-      ComValue(com.pi32, xb.Ptr)
-    , ComValue(com.pi32, yb.Ptr)
-    , ComValue(com.pi32, wb.Ptr)
-    , ComValue(com.pi32, hb.Ptr)
-    , ChildId)
+    Acc.accLocation(ComValue(com.pi32, xb.Ptr), ComValue(com.pi32, yb.Ptr)
+      ,             ComValue(com.pi32, wb.Ptr), ComValue(com.pi32, hb.Ptr), ChildId)
   } catch {
     return
   }
   retObj:= Object()
-    retObj.x   := NumGet(xb, 0, "Int")
-  , retObj.y   := NumGet(yb, 0, "Int")
-  , retObj.w   := NumGet(wb, 0, "Int")
-  , retObj.h   := NumGet(hb, 0, "Int")
+    retObj.x := NumGet(xb, 0, "Int"), retObj.y := NumGet(yb, 0, "Int")
+  , retObj.w := NumGet(wb, 0, "Int"), retObj.h := NumGet(hb, 0, "Int")
     retObj.pos := "x" retObj.x " y" retObj.y " w" retObj.w " h" retObj.h
   return retObj
 }
