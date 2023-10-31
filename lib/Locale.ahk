@@ -3,10 +3,6 @@
 #include <constWin32alt>
 wapi	:= win32Constant ; various win32 API constants
 
-isRu() {
-  return (lyt.GetCurLayout() = ruU) ? 'Ru' : ''
-  }
-
 class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
   static INPUTLANGCHANGE_FORWARD	:= 0x0002
    , INPUTLANGCHANGE_BACKWARD   	:= 0x0004

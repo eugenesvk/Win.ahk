@@ -8,6 +8,10 @@
 ; ru	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
 enU 	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1)
 ruU 	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1)
+isRu() {
+  return (lyt.GetCurLayout() = ruU) ? 'Ru' : ''
+  }
+
 ^CapsLock::
 !CapsLock::{
   ; SetCapsLockState "AlwaysOff"	;[CapsLock] disable
@@ -20,7 +24,6 @@ LayoutSwitch() {
    , kbdCountry	:= "sEnCountryNm"	;
    , kbdDisplay	:= "sEnDisplayNm"	;
   ; SendInput '{LWin Down}{Space}{LWin Up}'
-  global enU,ruU
   local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
   local targetWin := "A" ; Active window to PostMessage to, need to be changed for '#32770' class (dialog window)
 
