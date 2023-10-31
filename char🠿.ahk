@@ -97,8 +97,10 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
 global keyOnHold := ''
 char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,blind_:=true) { ;
   global keyOnHold ; store info on which key is being held to avoid repeating it
-  static k                	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
-   , s                    	:= helperString
+  static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
+   , get⎀ 	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
+   , s    	:= helperString
+
   static lbl_translit     	:= Map()
   if lbl_translit.Count   	= 0 { ; can set case only on empty maps
     lbl_translit.CaseSense	:= 0
@@ -113,7 +115,8 @@ char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,blind_:=true) { ;
   keyOnHold := hk
   lyt_from := 'en'
   if (KeyWait(vkC,TimerHold) = 0) {
-    if keyOnHold == hk { ; (likely) no other key was pressed while this key was on hold
+    if keyOnHold == hk  ; (likely) no other key was pressed while this key was on hold
+      and get⎀(&⎀←,&⎀↑) { ; editable text (no point in showing a picker if the picked char can't be inserted
       if    IsSet(lblMap)           	; Ch
         and IsSet(lblKey)           	; 'ArrowsLab'
         and   %lblMap%.Has(lblKey) {	; 1a arguments are set and map has labels
