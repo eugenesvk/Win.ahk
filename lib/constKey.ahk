@@ -18,6 +18,32 @@ global ___ := 0
  , ∗       	     	:= '*'
  , ˜       	     	:= '~'
  , ＄       	     	:= '$'
+set_vk_global()
+set_vk_global() { ; register global variables in the format of q⃣  to a virtual key format for later use to avoid lookups and have shorter codes. When syntax doesn't allow, use v+unicode like v〔
+  static k := helperString.key→ahk.Bind(helperString)
+  global q⃣:=k('q'),w⃣:=k('w'),e⃣:=k('e'),r⃣:=k('r'),t⃣:=k('t'),y⃣:=k('y')
+    , u⃣:=k('u'),i⃣:=k('i'),o⃣:=k('o'),p⃣:=k('p')
+    , a⃣:=k('a'),s⃣:=k('s'),d⃣:=k('d'),f⃣:=k('f'),g⃣:=k('g')
+    , h⃣:=k('h'),j⃣:=k('j'),k⃣:=k('k'),l⃣:=k('l'),v︔:=k(';'),v‘:=k("'"),v⧵:=k('\')
+    , z⃣:=k('z'),x⃣:=k('x'),c⃣:=k('c'),v⃣:=k('v'),b⃣:=k('b')
+    , n⃣:=k('n'),m⃣:=k('m'),v⸴:=k(','),v．:=k('.'),v⁄:=k('/')
+    , vˋ:=k('``')
+    , v1⃣:=k('1'),v2⃣:=k('2'),v3⃣:=k('3'),v4⃣:=k('4'),v5⃣:=k('5')
+    , v6⃣:=k('6'),v7⃣:=k('7'),v8⃣:=k('8'),v9⃣:=k('9'),v0⃣:=k('0'),v‐:=k('-'),v₌:=k('=')
+    , v〔:=k('['),v〕:=k(']')
+    , ⇧q:=k('⇧q'),⇧w:=k('⇧w'),⇧e:=k('⇧e'),⇧r:=k('⇧r'),⇧t:=k('⇧t'),⇧y:=k('⇧y')
+    , ⇧u:=k('⇧u'),⇧i:=k('⇧i'),⇧o:=k('⇧o'),⇧p:=k('⇧p')
+    , ⇧a:=k('⇧a'),⇧s:=k('⇧s'),⇧d:=k('⇧d'),⇧f:=k('⇧f'),⇧g:=k('⇧g')
+    , ⇧h:=k('⇧h'),⇧j:=k('⇧j'),⇧k:=k('⇧k'),⇧l:=k('⇧l'),⇧︔:=k('⇧;'),⇧‘:=k("'"),⇧⧵:=k('⇧\')
+    , ⇧z:=k('⇧z'),⇧x:=k('⇧x'),⇧c:=k('⇧c'),⇧v:=k('⇧v'),⇧b:=k('⇧b')
+    , ⇧n:=k('⇧n'),⇧m:=k('⇧m'),⇧⸴:=k('⇧,'),⇧．:=k('⇧.'),⇧⁄:=k('⇧/')
+    , ⇧ˋ:=k('⇧``')
+    , ⇧1:=k('⇧1'),⇧2:=k('⇧2'),⇧3:=k('⇧3'),⇧4:=k('⇧4'),⇧5:=k('⇧5')
+    , ⇧6:=k('⇧6'),⇧7:=k('⇧7'),⇧8:=k('⇧8'),⇧9:=k('⇧9'),⇧0:=k('⇧0'),⇧‐:=k('⇧-'),v₌:=k('⇧=')
+    , ⇧〔:=k('⇧['),⇧〕:=k('⇧]')
+}
+; msgbox('q⃣ →' q⃣  ' 1→' v1⃣  ' ``→' vˋ ' `'→' v‘ ' =→' v₌ '⇧a→' ⇧a ' v‐→' v‐)
+
 
 class keyConstant {
   ; learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
