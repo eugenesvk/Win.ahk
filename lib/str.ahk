@@ -69,6 +69,13 @@ class helperString {
   }
 
 
+  static getKeyFlag(hk) { ; get prefix bitflags for a key combo (~$vk41 → f＄|f˜ = 6)
+    flag := 0
+    flag	|= InStr(hk,'$') ? f＄ : 0	; keyboard hook on
+    flag	|= InStr(hk,'~') ? f˜ : 0	; passthru native key
+    flag	|= InStr(hk,'*') ? f∗ : 0	; any modifiers allowed
+    return flag
+  }
   static modis→ahk(key_combo) { ; get ahk string with the last modifier considered a non-mod key: ⎇›‹⎈ → >!LCtrl
     static vk	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
     modi_ahk_arr_full := this.parseKeyCombo(key_combo,&modi_ahk_arr_short:=[],&nonmod:="") ; ⎇›‹⎈ → >! >^
