@@ -28,6 +28,31 @@
     , smSzFrame_Ypx   	:= 33 ;
     , smEdge_Xpx      	:= 45 ; Dimensions of a 3-D border, in pixels. These are the 3-D counterparts of SM_CXBORDER and SM_CYBORDER
     , smEdge_Ypx      	:= 46 ;
+  ;bitflags           	;
+    , f∗              	:=    1	;                1 any modifiers allowed
+    , f˜              	:=    2	;             10 passthru native key
+    , f＄              	:=    4	;            100 keyboard hook on
+  ;bitflags           	modifier
+    , f‹⇧             	:=    1   	;              1 left shift
+    , f‹⎇             	:=    2   	;             10 left alt
+    , f‹⎈             	:=    4   	;            100 left ctrl
+    , f‹◆             	:=    8   	;           1000 left super ❖◆ (win ⊞)
+    , f⇧›             	:=   16   	;          10000 right shift
+    , f⎇›             	:=   32   	;         100000 right alt
+    , f⎈›             	:=   64   	;        1000000 right ctrl
+    , f◆›             	:=  128   	;       10000000 right super ❖◆ (win ⊞)
+    , f‹👍             	:=  256   	;      100000000 left Oyayubi 親指
+    , f👍›             	:=  512   	;     1000000000 right Oyayubi 親指
+    , fkana           	:= 1024   	;    10000000000 kana fかな
+    , f⇧              	:= f‹⇧|f⇧›	;          1   1 any  shift
+    , f⎇              	:= f‹⎇|f⎇›	;         10  10 any  alt
+    , f⎈              	:= f‹⎈|f⎈›	;        100 100 any  ctrl
+    , f◆              	:= f‹◆|f◆›	;       10001000 any  super
+    , f👍              	:= f‹👍|f👍›	;   1100000000 any  Oyayubi
+    ; , fzz›          	:= 2048   	;   100000000000 z
+    ; , f⇪            	:= 4096   	;  1000000000000 caps lock
+    ; , f🔢            	:= 8192   	; 10000000000000 num  lock
+    ; fかな kana
 
   global tDTap	:= 200	;  ms time to wait till a second duplicate key is considered a double tap vs two separate key presses
 
