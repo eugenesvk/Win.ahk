@@ -15,6 +15,9 @@ global ___ := 0
  , ◆› := ❖›	:= ⌘›	:= "RWin"
  , ⎇› := ⌥›	     	:= "RAlt"
  , ☰       	     	:= "AppsKey"
+ , ∗       	     	:= '*'
+ , ˜       	     	:= '~'
+ , ＄       	     	:= '$'
 
 class keyConstant {
   ; learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
