@@ -1,105 +1,4 @@
 #Requires AutoHotKey 2.1-alpha.4
-; —————————— ↓ To limit script to windows with visible Text caret ——————————
-; requires UIA library https://github.com/Descolada/UIA-v2
-#Include <UIA> ; assumes the library is at ‘Lib/uia.ahk’
-get🖮⎀() {
-  static isInit := false, is⎀ := 0
-  if isInit {
-    return is⎀
-  } else {
-    is⎀ := false
-    return registerUIAEventHandler()
-  }
-  registerUIAEventHandler() {
-    isInit    	:= true
-    focusCache	:= UIA.CreateCacheRequest(["IsTextPatternAvailable","HasKeyboardFocus","IsValuePatternAvailable","ValueIsReadOnly",'ClassName'],,,UIA.AutomationElementMode.None)
-    h         	:= UIA.CreateFocusChangedEventHandler(EventHandler)
-    UIA.AddFocusChangedEventHandler(h, focusCache) ; Automatically deregistered on exit
-    return is⎀
-  }
-  EventHandler(el) {
-    isUIAEditable := 0, is🖮⎀ := 0, isUIA⎀ := 0
-    static pointCache := UIA.CreateCacheRequest(["IsTextPatternAvailable","HasKeyboardFocus"],,UIA.TreeScope.Subtree,UIA.AutomationElementMode.None)
-
-    if (is🖮⎀ := CaretGetPos(&x, &y)) { ;;; may have false positives autohotkey.com/boards/viewtopic.php?f=82&t=121230
-      is⎀ := true        ; return tooltip('is⎀ caret x' x 'y' y) ; is⎀ := 'is⎀'
-    } else {
-      try isUIAEditable := el.CachedIsTextPatternAvailable
-        &&                (el.CachedIsValuePatternAvailable ? not el.CachedValueIsReadOnly : 1)
-      if not isUIAEditable {
-        if not is🖮⎀ {
-         isUIA⎀ := uia⎀Exists(&x:=0, &y:=0)
-        }
-        if (is🖮⎀ or isUIA⎀) {
-          isUIAEditable	:= 1
-          if not (el.CachedClassName = "Scintilla") {
-            try {
-              pt	:= UIA.SmallestElementFromPoint(x,y,,pointCache)
-              isUIAEditable := pt.CachedIsTextPatternAvailable && pt.CachedHasKeyboardFocus
-            }
-          }
-        }
-      }
-      if        isUIAEditable {
-        is⎀ := true       ; return tooltip('is⎀ editable') ; is⎀ := 'is⎀'
-      } else {
-        is⎀ := false      ; return tooltip('no⎀') ; is⎀ := 'no⎀'
-      }
-    }
-    if IsSet(x) && IsSet(y)
-       &&    x  && y {
-      xy := ' x' x ' y' y
-    } else {
-      xy := ''
-    }
-    ; dbgTT(0,'returning is⎀=' is⎀ xy, t:=5,i:=19, 50,50)
-    return is⎀
-  }
-  uia⎀Exists(&x, &y) {
-    static OBJID_CARET := 0xFFFFFFF8
-    AccObject	:= AccObjectFromWindow(WinExist('A'), OBJID_CARET)
-    Pos      	:= AccLocation(AccObject)
-    try x    	:= Pos.x
-     ,  y    	:= Pos.y
-    ; dbgTT(0,"found ACC",t:=1,i:=15,10,10)
-    return x && y
-  }
-  AccObjectFromWindow(hWnd, idObject := 0) {
-    static win32:=win32Constant, com:=win32.comT, IID:=win32.IID ; win32 API COM/IID constants
-    static OBJID_NATIVEOM   := 0xFFFFFFF0, F_OWNVALUE := 1
-      , h := DllCall('LoadLibrary', 'Str', 'Oleacc', 'Ptr')
-    idObject &= 0xFFFFFFFF, AccObject := 0
-    DllCall('Ole32\CLSIDFromString'
-      , 'Str', idObject = OBJID_NATIVEOM ? IID.IDispatch : IID.IAccessible
-      , 'Ptr', CLSID := Buffer(16))
-    if DllCall('Oleacc\AccessibleObjectFromWindow'
-        , 'Ptr' , hWnd
-        , 'UInt', idObject
-        , 'Ptr' , CLSID
-        , 'PtrP', &pAcc := 0) = 0 {
-      AccObject := ComObjFromPtr(pAcc)
-      , ComObjFlags(AccObject, F_OWNVALUE, F_OWNVALUE)
-    }
-    return AccObject
-  }
-  AccLocation(Acc, ChildId := 0, &Position := '') {
-    static win32:=win32Constant, com:=win32.comT, IID:=win32.IID ; win32 API COM/IID constants
-    static type := com.pi32
-      x  := Buffer(4,0), y := Buffer(4,0)
-    , w  := Buffer(4,0), h := Buffer(4,0)
-    try {
-      Acc.accLocation(ComValue(type, x.Ptr), ComValue(type, y.Ptr),
-                      ComValue(type, w.Ptr), ComValue(type, h.Ptr), ChildId)
-    } catch {
-      return
-    }
-    return {
-      x:NumGet(x,'int'), y:NumGet(y,'int')
-     ,w:NumGet(w,'int'), h:NumGet(h,'int')}
-  }
-}
-; —————————— ↑ To limit script to windows with visible Text caret ——————————
-
 ; —————————— User configuration ——————————
 global ucfg🖰hide := Map(
    'enableModifiers' 	, true  	; register hotkeys with *, i.e. fire if any modifier is held down (false: only hide on typing unmodified alpha keys)
@@ -162,14 +61,15 @@ global Init        	:= -2
  , is🖰PointerHidden	:= false
 
 hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
-  static modAllow🖰Pointer := cfg🖰hide['modAllow🖰Pointer']
+  static get⎀	:= win.get⎀.Bind(win)
+   , modAllow🖰Pointer := cfg🖰hide['modAllow🖰Pointer']
    , limit2text := cfg🖰hide['limit2text']
   if isAnyUserModiPressed(modAllow🖰Pointer) {
     ; dbgTT(0,'modAllow🖰Pointer pressed, skipping hide')
     return
   }
   if limit2text {
-    if not get🖮⎀() {
+    if not get⎀(&⎀←,&⎀↑) {
       return
     }
   }
