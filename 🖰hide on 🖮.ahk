@@ -130,7 +130,12 @@ GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per
 
 ; —————————— Script ——————————
 #include <OnMouseEvent>
-#include <constWin32alt>
+; ↓ standalone
+#include %A_scriptDir%\gVar\var.ahk	; Global variables
+#include <UIA>                     	; allows limiting script to windows with visible Text caret; assumes the library is at ‘Lib/uia.ahk’
+#include <libFunc Dbg>             	; Functions: Debug
+#include <Locale>                  	; Various i18n locale functions and win32 constants
+#include <constKey>                	; various key constants
 #include <str>
 #include <sys>
 
