@@ -119,10 +119,12 @@ global ucfg🖰hide := Map(
 GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_1.exe") ; case sensitive!
 GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per autohotkey.com/docs/v2/lib/WinActive.htm
 
-; Non-English layouts: AutoHotkey registers hotkeys in the system layout, so if you have nonEnlish layout you might  get errors trying to register keys like [ if they're missing from your layout (a-z alpha keys work fine)
-; To fix it add your layout to the regWatchers function similar to ‘keys_m["English"] := "’ in the script below
-  ; the name of the key should match the value of sKbdSys variable, which can be shown on script load by changing dbgMin to 0 in dbgTT(dbgMin:=4...)
-
+; Add non-English layouts:
+  ; get the name of the layout to be used in scripts (a two-letter abbreviation like ‘en’)
+    ; switch to the layout
+    ; uncomment ‘dbgMsg(0,sKbdCurrent,'Current language name')’ line below
+    ; relaunch the script and get the result in the popped up message box
+  ; add your layout to the ‘regWatchers’ function similar to ‘keys_m["en"] := "’ in the script below, letter positions must match that of the 'en' layout
 ; —————————— Test ——————————
 ; !1::sys🖰Btn(Off)
 ; !2::sys🖰Btn(On)
