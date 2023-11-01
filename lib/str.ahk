@@ -101,14 +101,14 @@ class helperString {
       if not lng = 'en'
         and %kT%.Has(lng)
         and %kT%[lng].Has(nonmod) { ; localize last key if a local map exists not to treat . as always english
-        key_ahk := %kT%[lng][nonmod]
+        key_ahk := %kT%[lng].Get(nonmod,'')
       } else {
-        key_ahk := %kT%[     nonmod]
+        key_ahk := %kT%.Get(     nonmod,'')
       }
       if isSend {
-        return modi_ahk_s . '{' . key_ahk . '}'
+        return key_ahk='' ? '' : modi_ahk_s . '{' . key_ahk . '}'
       } else {
-        return modi_ahk_s . sep . key_ahk
+        return key_ahk='' ? '' : modi_ahk_s . sep . key_ahk
       }
     } else {
         return modi_ahk_s
