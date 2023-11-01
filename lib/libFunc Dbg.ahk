@@ -35,19 +35,16 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   if (yFlag="o") {
     stepY := SubStr(Y, 2), Y := -1
   }
-  if (dbg>2) {
-    msgbox("X=" X " | xFlag=" xFlag " | stepX=" stepX "`n"
+  dbgMsg(6,"X=" X " | xFlag=" xFlag " | stepX=" stepX "`n"
            "Y=" Y " | yFlag=" yFlag " | stepY=" stepY "`n"
-           "SubStr:" SubStr("o200", 2) ) ;
-  }
-
+           "SubStr:" SubStr("o200", 2) )
   if        (X>=0
           && Y>=0) {
-    ToolTip(Text,X,Y,id)
+    ToolTip(Text, X,Y,id)
   } else if (X>=0) {
-    ToolTip(Text,X,mY+stepY*(id-1),id)
+    ToolTip(Text, X             ,mY+stepY*(id-1),id)
   } else if (Y>=0) {
-    ToolTip(Text,mX+stepX*(id-1),Y,id)
+    ToolTip(Text,mX+stepX*(id-1), Y             ,id)
   } else {
     ToolTip(Text,mX+stepX*(id-1),mY+stepY*(id-1),id)
   }
