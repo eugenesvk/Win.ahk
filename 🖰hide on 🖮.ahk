@@ -129,14 +129,16 @@ GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per
 ; !q::sys🖰Pointer(Toggle) ; manual cursor toggle
 
 ; —————————— Script ——————————
-; —————————— Add if script is a standalone app ——————————
-; SendMode("Input")  ; Recommended for new scripts due to its superior speed and reliability
-; Persistent ; Ensure the cursor is made visible when the script exits.
-; ——————————
 #include <OnMouseEvent>
 #include <constWin32alt>
 #include <str>
 #include <sys>
+
+if (isStandAlone := (A_ScriptFullPath = A_LineFile)) {
+  dbg := 4         	; Level of debug verbosity (0-none)
+  SendMode("Input")	; Recommended for new scripts due to its superior speed and reliability
+  Persistent       	; Ensure the cursor is made visible when the script exits.
+}
 
 ; convert user config into a case-insensitive map
 global cfg🖰hide := Map()
