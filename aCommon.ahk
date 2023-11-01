@@ -36,43 +36,43 @@ ListLines 0                                  	; Potential performance boost
 #DllLoad "Imm32" ; Enables getting layout for consoles
 
 ; lib functions not autoloaded anymore in v2.a128
-#Include <libFunc>        	; General set of functions
-#Include <libFunc Scroll> 	; Functions: Scrolling
-#Include <libFunc Num>    	; Functions: Numeric
-#Include <libFunc Dbg>    	; Functions: Debug
-#Include <libFunc Native> 	; Functions: Native
-#Include <Unicode>        	; Unicode text functions
-#Include <Locale>         	; Various i18n locale functions and win32 constants
-#Include <io>             	;
-#Include <cfg FileExplore>	; toggle extension/hidden files in Win File Explorer
-#Include <constKey>       	; various key constants
+#include <libFunc>        	; General set of functions
+#include <libFunc Scroll> 	; Functions: Scrolling
+#include <libFunc Num>    	; Functions: Numeric
+#include <libFunc Dbg>    	; Functions: Debug
+#include <libFunc Native> 	; Functions: Native
+#include <Unicode>        	; Unicode text functions
+#include <Locale>         	; Various i18n locale functions and win32 constants
+#include <io>             	;
+#include <cfg FileExplore>	; toggle extension/hidden files in Win File Explorer
+#include <constKey>       	; various key constants
 #include <str>            	; string helper functions
 #include <sys>            	;
-#Include <Win>            	; Remove window borders
-#Include <PressH>         	; Special Char Selection
+#include <Win>            	; Remove window borders
+#include <PressH>         	; Special Char Selection
 
-; #Include <SelectCharGUI>                 	;
-; #Include <GetLocaleInfo>                 	;
-#Include %A_scriptDir%\gVar\varWinGroup.ahk	; App groups for window matching
-#Include %A_scriptDir%\8 Language.ahk      	; Alt-CapsLock switch layout Ru-En only
-#Include %A_scriptDir%\Hotstring.ahk       	;
-#Include %A_scriptDir%\5 App Switcher.ahk  	; Awitch app windows (e.g., only within an app)
-#Include %A_scriptDir%\9 ‹␠1 as ⎇.ahk      	; physical ⎇ (mapped to ⎈) as ⎇ restore
-#Include %A_scriptDir%\QuickSwitch.ahk     	; Listary Quick Switch alternative
-#Include %A_scriptDir%\🖰hide on 🖮.ahk      	; Hide idle mouse cursor when typing
-;#Include %A_scriptDir%\xReformatPrompt.ahk	; (use exe for another thread) Auto✗ prompts with a ‘Format disk’ button
+; #include <SelectCharGUI>                 	;
+; #include <GetLocaleInfo>                 	;
+#include %A_scriptDir%\gVar\varWinGroup.ahk	; App groups for window matching
+#include %A_scriptDir%\8 Language.ahk      	; Alt-CapsLock switch layout Ru-En only
+#include %A_scriptDir%\Hotstring.ahk       	;
+#include %A_scriptDir%\5 App Switcher.ahk  	; Awitch app windows (e.g., only within an app)
+#include %A_scriptDir%\9 ‹␠1 as ⎇.ahk      	; physical ⎇ (mapped to ⎈) as ⎇ restore
+#include %A_scriptDir%\QuickSwitch.ahk     	; Listary Quick Switch alternative
+#include %A_scriptDir%\🖰hide on 🖮.ahk      	; Hide idle mouse cursor when typing
+;#include %A_scriptDir%\xReformatPrompt.ahk	; (use exe for another thread) Auto✗ prompts with a ‘Format disk’ button
 
-#Include %A_scriptDir%\test\test.ahk	; Test
+#include %A_scriptDir%\test\test.ahk	; Test
 
-; #Include %A_scriptDir%\Game\init_game.ahk	; Games
+; #include %A_scriptDir%\Game\init_game.ahk	; Games
 
 ;Win10 switch between desktops
 ; LWin & LCtrl::SendInput('{LWin down}{LCtrl down}{Left down}{Lwin up}{LCtrl up}{Left up}')
 ; LWin & LAlt::SendInput('{LWin down}{LCtrl down}{Right down}{LWin up}{LCtrl up}{Right up}')
 
 ; ————————————————————————— Key changes —————————————————————————————
-  #Include %A_scriptDir%\char🠿.ahk     	; Diacritics+chars on key hold
-  #Include %A_scriptDir%\Char-AltTT.ahk	; Diacritics+chars@Tooltip on Alt+Shift+?+3rd, e.g. ⌥⇧u+e=ë (Umlaut on e)
+  #include %A_scriptDir%\char🠿.ahk     	; Diacritics+chars on key hold
+  #include %A_scriptDir%\Char-AltTT.ahk	; Diacritics+chars@Tooltip on Alt+Shift+?+3rd, e.g. ⌥⇧u+e=ë (Umlaut on e)
 
 ; !!!!!TOO slow, check why
 ; $Shift:: { ; One Shot Shift. Don't hold down ⇧ to Cap! Tap ⇧ and forget, it expires in 1 second or capitalizes the next letter. No more typing ‘THe’! Frees up the pinky and is a better than Sticky Keys
@@ -99,7 +99,7 @@ ListLines 0                                  	; Potential performance boost
   #HotIf
 
   ; ————— Make Tab into a custom prefix key
-  #Include %A_scriptDir%\Tab.ahk	; Tab → prefix key
+  #include %A_scriptDir%\Tab.ahk	; Tab → prefix key
   ; $`;:: Send('`:')
   ; $+`;::Send('`;')
 
@@ -318,11 +318,11 @@ ListLines 0                                  	; Potential performance boost
   ; F20 & 1:: TT("F20 & 1", 3)
 
 ; ————————————————————————— Cursor changes ———————————————————————————
-  #Include %A_scriptDir%\4 Cursor.ahk
-  #Include %A_scriptDir%\6 NumPad.ahk
+  #include %A_scriptDir%\4 Cursor.ahk
+  #include %A_scriptDir%\6 NumPad.ahk
 
 ; ————————————————————————— Mouse changes ———————————————————————————
-  #Include %A_scriptDir%\5 Mouse.ahk
+  #include %A_scriptDir%\5 Mouse.ahk
 
 ;—————————————————————————— Quick Launch ————————————————————————————
   ; #s::RunActivMin(App.ST*)            	;s​ vk53 ⟶ ?	(U+?)
@@ -341,7 +341,7 @@ ListLines 0                                  	; Potential performance boost
   #w::RunActivMin(AppWord)              	;❖w​        		vk57 ⟶ ...
   ;#o::RunActivMin(AppOutlook)          	;❖o​        		vk4F ⟶ ...
   ; HyperKeys bindings
-  #Include %A_scriptDir%\0 Hyper.ahk
+  #include %A_scriptDir%\0 Hyper.ahk
 
   ; vk2C::  ;PrntScr​	vk2C ⟶ Launch SnagIt or pass PrintScreen if it's launched
   ;   SplitPath(AppSnagit, &ExeFileName)
@@ -520,7 +520,7 @@ ListLines 0                                  	; Potential performance boost
   #Esc::Suspend -1 ;#⎋
 
   ; !z:: ;;; temporary fast reloads
-  <^<!<+r::{	;Left^⌥⇧r​	vk52 ⟶ Reload this AutoHotKey script
+  <^<!<+r::{	;‹⎈‹⎇‹⇧r​	vk52 ⟶ Reload this AutoHotKey script
     Tooltip "AutoHotKey Reloading!"
     sleep(500)
     SetTimer () => ToolTip(), -500 ; killed on Reload, but helpful if reload fails
