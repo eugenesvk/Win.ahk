@@ -1,4 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.4
+#include <str>	; string helper functions
 class lytTypES { ; Typographic layout
   static __new() { ; store all layers in a Map, TypES['base']['en'] would be base qwerty labels
     static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
