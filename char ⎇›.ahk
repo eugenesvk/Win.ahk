@@ -1,4 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.4
+#include <libFunc>	; General set of functions
 ; TypES Typographic Layout via ⎇› or ‹⎈⎇›AltGr
   ; [Guide](superuser.com/questions/592970/can-i-make-ctrlalt-not-act-like-altgr-on-windows)
   ; Unicode codepoints unicode-table.com
