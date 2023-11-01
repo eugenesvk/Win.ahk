@@ -24,7 +24,8 @@ GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per
     ; switch to the layout
     ; uncomment ‘dbgMsg(0,sKbdCurrent,'Current language name')’ line below
     ; relaunch the script and get the result in the popped up message box
-  ; add your layout to the ‘regWatchers’ function similar to ‘keys_m["en"] := "’ in the script below, letter positions must match that of the 'en' layout
+  ; add labels in your layout to the ‘regWatchers’ function similar to ‘keys_m["en"] := "’ in the script below, letter positions must match that of the 'en' layout
+  ; add your full layout to the ‘keyConstant’ class in ‘constKey’ library similar to ‘labels['en'] := "’
 ; —————————— Test ——————————
 ; !1::sys🖰Btn(Off)
 ; !2::sys🖰Btn(On)
@@ -62,33 +63,43 @@ global Init        	:= -2
  , is🖰PointerHidden	:= false
 
 hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
-  static get⎀	:= win.get⎀.Bind(win)
-   , modAllow🖰Pointer := cfg🖰hide['modAllow🖰Pointer']
-   , limit2text := cfg🖰hide['limit2text']
+  dbgTT(4,'hk🖰P ' ThisHotkey, t:=1)
+  🖰PointerHide()
+}
+🖰PointerHide() {
+  static get⎀        	:= win.get⎀.Bind(win)
+   , modAllow🖰Pointer	:= cfg🖰hide['modAllow🖰Pointer']
+   , limit2text      	:= cfg🖰hide['limit2text']
+  dbgtxt := ''
   if isAnyUserModiPressed(modAllow🖰Pointer) {
-    ; dbgTT(0,'modAllow🖰Pointer pressed, skipping hide')
-    return
-  }
-  if limit2text {
-    if not get⎀(&⎀←,&⎀↑) {
-      return
+    ; dbgtxt .= 'modAllow🖰Pointer pressed, skipping hide'
+  } else if limit2text {
+    if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
+      dbgtxt .= 'SystemCursor 0'
+      sys🖰Pointer(Off)
+    } else {
+      ; dbgtxt .= 'outside a text field, skipping hide'
     }
+  } else {
+    dbgtxt .= 'SystemCursor 0'
+    sys🖰Pointer(Off)
   }
-  dbgTT(dbgMin:=3, Text:="SystemCursor 0" , Time:=1,id:=1,X:=0,Y:=850)
-  sys🖰Pointer(Off)
+  dbgTT(3,dbgtxt,t:=1,i:=1,x:=0,y:=850)
 }
 exitShow🖰Pointer(A_ExitReason, ExitCode) { ; Show 🖰 pointer
   sys🖰Pointer(On)
   ExitApp()
 }
 
-getKeys() { ; Register the keys you want to listen on
+getKeys🖰hide(&lbl:='') { ; Register the keys you want to listen on
   static locInf	:= localeInfo.m  ; Constants Used in the LCType Parameter of lyt.getLocaleInfo, lyt.getLocaleInfoEx, and SetLocaleInfo
+   , s         	:= helperString
    ; , sKbdSys 	:= lyt.getLocaleInfo("SEnLngNm",) ; system layout
    , keys_m    	:= Map()
    , isInit    	:= false
    , keys_def  	:= ""
-   , scKeys    	:= []
+   , vkKeys    	:= []
+   , lblEnKeys 	:= '' ; store english labels of successfully registered hotkeys to match against dupe hotkeys in PressH
   ; dbgTT(4, Text:='System language name`n' sKbdSys, Time:=4)
 
   if not isInit {
@@ -117,12 +128,15 @@ getKeys() { ; Register the keys you want to listen on
     ; _dbg .= 'sKbdCurrent ' sKbdCurrent '`n'
     ; dbgMsg(0,sKbdCurrent,'Current language name')
     loop parse keys {
-      if (raw_sc := GetKeySC(A_LoopField)) = 0 {
-        ; _dbg0 .= A_LoopField, _dbgid += 1
-        ; dbgTT(0,A_Index . " " A_LoopField " ",t:=4,id:=Mod(_dbgid,20),x:=_dbgid*50,y:=_dbgid*50)
-        continue
-      } else {
-        scKeys.Push("sc" . format("{1:X}",GetKeySC(A_LoopField)))
+      ; if (raw_vk := GetKeyVK(A_LoopField)) = 0 { ;
+        ; ; _dbg0 .= A_LoopField, _dbgid += 1
+        ; ; dbgTT(0,A_Index . " " A_LoopField " ",t:=4,id:=Mod(_dbgid,20),x:=_dbgid*50,y:=_dbgid*50)
+        ; continue
+      ; } else {
+        ; vkKeys.Push(format("vk{1:X}",raw_vk))
+      if (vkC := s.key→ahk(A_LoopField)) { ; vkC := Format("vk{:X}",GetKeyVK(c)) bugs with locale
+        vkKeys.Push(vkC)
+        lblEnKeys .= SubStr(keys_m["en"],A_Index,1)
         ; _dbg .= A_LoopField . "=" . format("{1:X}",GetKeySC(A_LoopField))
           ; . " " . format("{1:X}",GetKeyVK(A_LoopField))
           ; . "`t"
@@ -132,7 +146,8 @@ getKeys() { ; Register the keys you want to listen on
     ; dbgTT(0, StrLen(_dbg0)    . " zeroes and " . StrLen(keys) . "∑ in sys " . sKbdCurrent . " = " . _dbg0    . "`n" . _dbg, t:=3)
     isInit	:= true
   }
-  return scKeys
+  lbl := lblEnKeys
+  return vkKeys
 }
 
 
@@ -217,9 +232,10 @@ if cfg🖰hide['enableModifiers'] = true {
 ; NB!!! wrapping Hotkey function in another fails: Unlike v1, the Hotkey function in v2 defaults to acting on global hotkeys, unless you call it from within a hotkey, in which case it defaults to the same criteria as the hotkey autohotkey.com/boards/viewtopic.php?f=82&t=118616&p=526495&hilit=hotkey+within+another+hotkey#p526495
 HotIfWinNotActive("ahk_group no🖰HideOnType") ; turn on context sensitivity
 ; _dbgregistered_list := ""
-for _scKey in getKeys() { ; for every defined key, register a call to hide the mouse cursor
-  Hotkey("~" cfg🖰hide['hkModPrefix'] GetKeyName(_scKey), hk🖰PointerHide)
-  ; _dbgregistered_list .= GetKeyName("sc" _scKey) . " "
+__∗ := cfg🖰hide['hkModPrefix']
+for _vkKey in getKeys🖰hide() { ; for every defined key, register a call to hide the mouse cursor
+  Hotkey(˜ __∗ _vkKey, hk🖰PointerHide)
+  ; Hotkey(˜ __∗ GetKeyName(_scKey), hk🖰PointerHide)
   ; _dbgregistered_list .= GetKeyName("sc" . format("{1:X}",_scKey)) . " "
 }
 ; _dbgout() {
@@ -237,8 +253,8 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   if not is🖰PointerHidden { ; nothing to restore, pointer is not hidden
     return
   }
-  for scKey in getKeys() { ; for every defined key, check if user is still holding a key while moving the mouse
-    if (IsDown := GetKeyState(scKey,"P")) { ; still typing, don't flash a pointer
+  for vkKey in getKeys🖰hide() { ; for every defined key, check if user is still holding a key while moving the mouse
+    if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
       return
     }
   }
