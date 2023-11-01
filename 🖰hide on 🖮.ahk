@@ -181,36 +181,34 @@ exitShow🖰Pointer(A_ExitReason, ExitCode) { ; Show 🖰 pointer
 
 getKeys() { ; Register the keys you want to listen on
   static locInf	:= localeInfo.m  ; Constants Used in the LCType Parameter of lyt.getLocaleInfo, lyt.getLocaleInfoEx, and SetLocaleInfo
-   , sKbdSys   	:= lyt.getLocaleInfo("SEnLngNm",) ; system layout
+   ; , sKbdSys 	:= lyt.getLocaleInfo("SEnLngNm",) ; system layout
    , keys_m    	:= Map()
    , isInit    	:= false
    , keys_def  	:= ""
    , scKeys    	:= []
-
-  dbgTT(dbgMin:=4, Text:='System language name`n' sKbdSys, Time:=4)
+  ; dbgTT(4, Text:='System language name`n' sKbdSys, Time:=4)
 
   if not isInit {
     keys_m.CaseSense := 0 ; make key matching case insensitive
-    keys_m["Russian"] := "
-      ( Join LTrim
-       ё1234567890-=
-        йцукенгшщзхъ
-        фывапролджэ\
-        ячсмитьбю.
-       )"
-    keys_m["English"] := "
+    keys_m["en"] := "
       ( Join LTrim
        `1234567890-=
         qwertyuiop[]
         asdfghjkl;'\
         zxcvbnm,./
        )"
-    keys_def      	:= keys_m.Get("English")
-    keys          	:= keys_m.Get(sKbdSys,keys_def) ; if continues to bug
-    ; keys        	:= keys_m.Get(sKbdCurrent,keys_def) ; use ←↑ to register instead (and throw out 0 keys, use ↓ first)
-     ; curlayout  	:= lyt.GetCurLayout(&hDevice, &idLang)
-     ; sKbdCurrent	:= lyt.getLocaleInfo("SEnLngNm",idLang)
-    ; _dbg := "", _dbg0 := "", _dbgid := 1
+    keys_m["ru"] := "
+      ( Join LTrim
+       ё1234567890-=
+        йцукенгшщзхъ
+        фывапролджэ\
+        ячсмитьбю.
+       )"
+    keys_def   	:= keys_m.Get("en")
+    ; keys     	:= keys_m.Get(sKbdSys,keys_def) ; if continues to bug
+    curlayout  	:= lyt.GetCurLayout(&hDevice, &idLang)
+    sKbdCurrent	:= lyt.getLocaleInfo("en",idLang)
+    keys       	:= keys_m.Get(sKbdCurrent,keys_def) ; use ←↑ to register instead (and throw out 0 keys, use ↓ first)
     _dbg := "", _dbg0 := "", _dbgid := 1
     ; _dbg .= 'sKbdSys ' sKbdSys '`n'
     ; _dbg .= 'sKbdCurrent ' sKbdCurrent '`n'
