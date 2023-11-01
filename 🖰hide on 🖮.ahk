@@ -204,6 +204,10 @@ getKeys() { ; Register the keys you want to listen on
      ; curlayout  	:= lyt.GetCurLayout(&hDevice, &idLang)
      ; sKbdCurrent	:= lyt.getLocaleInfo("SEnLngNm",idLang)
     ; _dbg := "", _dbg0 := "", _dbgid := 1
+    _dbg := "", _dbg0 := "", _dbgid := 1
+    ; _dbg .= 'sKbdSys ' sKbdSys '`n'
+    ; _dbg .= 'sKbdCurrent ' sKbdCurrent '`n'
+    ; dbgMsg(0,sKbdCurrent,'Current language name')
     loop parse keys {
       if (raw_sc := GetKeySC(A_LoopField)) = 0 {
         ; _dbg0 .= A_LoopField, _dbgid += 1
@@ -211,13 +215,13 @@ getKeys() { ; Register the keys you want to listen on
         continue
       } else {
         scKeys.Push("sc" . format("{1:X}",GetKeySC(A_LoopField)))
-        _dbg .= A_LoopField . "=" . format("{1:X}",GetKeySC(A_LoopField))
+        ; _dbg .= A_LoopField . "=" . format("{1:X}",GetKeySC(A_LoopField))
           ; . " " . format("{1:X}",GetKeyVK(A_LoopField))
-          . "`t"
+          ; . "`t"
       }
     }
-    ; msgbox(StrLen(_dbg0)    . " zeroes = " . _dbg0    . "`n" . _dbg   , sKbdSys)
-    ; dbgTT(0, StrLen(_dbg0)    . " zeroes and " . StrLen(keys) . "∑ in sys " . sKbdSys . " = " . _dbg0    . "`n" . _dbg, t:=3)
+    ; msgbox(StrLen(_dbg0) " skipped keys = " _dbg0 "`n" _dbg   , sKbdCurrent)
+    ; dbgTT(0, StrLen(_dbg0)    . " zeroes and " . StrLen(keys) . "∑ in sys " . sKbdCurrent . " = " . _dbg0    . "`n" . _dbg, t:=3)
     isInit	:= true
   }
   return scKeys
@@ -307,10 +311,11 @@ HotIfWinNotActive("ahk_group no🖰HideOnType") ; turn on context sensitivity
 ; _dbgregistered_list := ""
 for _scKey in getKeys() { ; for every defined key, register a call to hide the mouse cursor
   Hotkey("~" cfg🖰hide['hkModPrefix'] GetKeyName(_scKey), hk🖰PointerHide)
+  ; _dbgregistered_list .= GetKeyName("sc" _scKey) . " "
   ; _dbgregistered_list .= GetKeyName("sc" . format("{1:X}",_scKey)) . " "
 }
 ; _dbgout() {
-;   dbgTT(0,_dbgregistered_list,t:=3,id:=15,x:=1500,y:=600)
+  ; dbgTT(0,_dbgregistered_list,t:=3,id:=15,x:=1500,y:=600)
 ; }
 ; _dbgout()
 
@@ -345,7 +350,6 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
     🖰y_ := 🖰y
   }
 }
-
 sys🖰Pointer(OnOff := On) {
   global is🖰PointerHidden
   static C := win32Constant.Misc ; various win32 API constants
