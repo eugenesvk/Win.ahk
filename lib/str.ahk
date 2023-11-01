@@ -1,4 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.4
+#Include <constKey>	; various key constants
 ; —————————— String functions ——————————
 class helperString {
   static __new() { ; fill the map
