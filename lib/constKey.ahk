@@ -1,4 +1,5 @@
 #Requires AutoHotKey 2.0.10
+#include <Locale>	; Various i18n locale functions and win32 constants
 ; Various key constants for more ergonomic input or avoiding keyboard layout issues in key definition
 global ___ := 0
  , ⇧       	     	:= "Shift"
