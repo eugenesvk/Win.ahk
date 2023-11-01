@@ -1,18 +1,19 @@
 #Requires AutoHotKey 2.1-alpha.4
 ; —————————— User configuration ——————————
 global ucfg🖰hide := Map(
-   'enableModifiers' 	, true  	; register hotkeys with *, i.e. fire if any modifier is held down (false: only hide on typing unmodified alpha keys)
+   'enableModifiers' 	, true  	; true : modifiers like ‘⇧a’ hide the pointer just like ‘a’ (register hotkeys with ‘*’, i.e. fire if any modifier is held down)
+   ;                 	        	  false: only ‘a’ hides the pointer
  , 'modAllow🖰Pointer'	, "‹⎈⇧›"	; list of modifiers that do NOT hide    🖰 pointer, can be in AHK format like >! for Right Alt or
-   ; ‹⎈  for Left  Control
-   ;  ⇧› for Right Shift
- ; restore 🖰 pointer	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
- , 'minΔ🖰x'         	, 25    	;
- , 'minΔ🖰y'         	, 25    	;
- ; disable 🖰 buttons	        	while the pointer is hidden
- , 'cfgDisable🖰Btn' 	, "LMR" 	; clicks          , string of L/M/R for Left/Middle/Right button
- , 'cfgDisable🖱'    	, "UDLR"	; wheel scrolling , string of U/D/L/R for directions Up/Down/Left/Right
- , 'limit2text'     	, false 	; hide only in text fields (don't hide when using alpha keys to execute commands)
- ;                  	        	 (might be unreliable)
+   ;                 	   ‹⎈   	  for Left  Control
+   ;                 	    ⇧›  	  for Right Shift
+ ; disable 🖰 buttons 	        	while the pointer is hidden
+ , 'cfgDisable🖰Btn'  	, "LMR" 	; clicks          , string of L/M/R for Left/Middle/Right button
+ , 'cfgDisable🖱'     	, "UDLR"	; wheel scrolling , string of U/D/L/R for directions Up/Down/Left/Right
+ ;                   	        	;
+ , 'limit2text'      	, true  	; hide only in text fields (don't hide when using alpha keys to execute commands)
+ ; restore 🖰 pointer 	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
+ , 'minΔ🖰x'          	, 0     	;
+ , 'minΔ🖰y'          	, 0     	;
   )
 ; do NOT hide 🖰 pointer in the following apps
 GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_1.exe") ; case sensitive!
