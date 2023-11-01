@@ -1,7 +1,9 @@
 #Requires AutoHotKey 2.0.10
 
+#include <UIA>
 #include <Acc2>
 #include <winapi Struct>
+#include <libFunc Dbg>	; Functions: Debug
 class win {
   static get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
     static ptcProp	:= ["IsTextPatternAvailable","HasKeyboardFocus"]
