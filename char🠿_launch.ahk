@@ -20,3 +20,6 @@ dbgT	:= 2	; Timer for dbg messages (seconds)
 
 #Include %A_scriptDir%\char🠿.ahk	; Diacritics+chars on key hold
 ; ^+r::Reload ;[^⇧r] VK52
+if (isStandAlone := (A_ScriptFullPath = A_LineFile)) {
+  TraySetIcon("./img/char🠿.ico",0)
+}
