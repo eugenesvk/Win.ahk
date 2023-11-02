@@ -34,35 +34,43 @@ class win {
       }
     }
   }
-  static get⎀GUI(&⎀←,&⎀↑,&⎀→:=0,&⎀↓:=0
+  static get⎀GUI(&⎀←,&⎀↑,&⎀→:=0,&⎀↓:=0 ; returned in Screen coordinates to match ACC, also avoids an issue where Active top window for some reson isn't the same dimensions as the window that holds the caret, so converting x,y to screen coordinates later results in the wrong outcome
     ,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0) { ; autohotkey.com/boards/viewtopic.php?t=13004
     ; ⎀isVis sets to 1 only if caret Height > 1 (it's 1 in Help app even though there is no text input)
-    static ws     	:= winapi_Struct ; various win32 API structs
-    static win32  	:= win32Constant ; various win32 API constants
-     , gui        	:= win32.gui
-     , bufSize    	:=24+6*A_PtrSize ; 72
-     , rcCaret_off	:= 8+6*A_PtrSize ; 56
-     , flags_off  	:= 4
-     , flagsSz    	:= 4 ; dword uint
-    bufGUIThreadI 	:= Buffer(bufSize)
+    static ws        	:= winapi_Struct ; various win32 API structs
+    static win32     	:= win32Constant ; various win32 API constants
+     , gui           	:= win32.gui
+     , bufSize       	:=24+6*A_PtrSize ; 72
+     , winIDCaret_off	:= 8+5*A_PtrSize ; 48
+     , rcCaret_off   	:= 8+6*A_PtrSize ; 56
+     , flags_off     	:= 4
+     , flagsSz       	:= 4 ; dword uint
+     , coordClient→Screen := win.coordClient→Screen.Bind(win)
+    bufGUIThreadI	:= Buffer(bufSize)
     NumPut("uint",bufSize, bufGUIThreadI, 0)
+    ; winID := getWinID()
+    ; winID_fg	:= DllCall("GetForegroundWindow") ; Get handle (HWND) to the foreground window docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow
+    ; threadID	:= DllCall("GetWindowThreadProcessId"	,  "Ptr",winID_fg, "Ptr",0) ; DWORD GetWindowThreadProcessId(HWND hWnd, LPDWORD lpdwProcessId) docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid
     gotGUIThreadI := DllCall("GetGUIThreadInfo" ; bool 0 fail, use GetLastError for error info ; learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguithreadinfo
       , "uint",0            	;i  DWORD         	idThread, use the GetWindowThreadProcessId function to get it, NULL=foreground thread
       , "ptr",bufGUIThreadI)	;io PGUITHREADINFO	pgui pointer to a GUITHREADINFO structure that receives information describing the thread. Note that you must set the cbSize member to sizeof(GUITHREADINFO) before calling this function
     if not gotGUIThreadI {
       return ; ToolTip
     }
-    offset  	:= flags_off
-    flags   	:= NumGet(bufGUIThreadI, offset     , "uint")
-    ⎀Blink  	:= flags & gui.GUI_CARETBLINKING ; set if caret is visible(?)
-    offset  	:= rcCaret_off
-      ⎀←    	:= NumGet(bufGUIThreadI, offset     , "int")
-    , ⎀↑    	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀→    	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀↓    	:= NumGet(bufGUIThreadI, offset += 4, "int")
-    , ⎀↔    	:= ⎀→ - ⎀←
-    , ⎀↕    	:= ⎀↓ - ⎀↑
-    , ⎀isVis	:= (⎀↕ > 1) ? 1 : 0 ; fix an issue with Help showing a caret of Height=1 even when there is none
+    offset    	:= flags_off
+    flags     	:= NumGet(bufGUIThreadI, offset     , "uint")
+    ⎀Blink    	:= flags & gui.GUI_CARETBLINKING ; set if caret is visible(?)
+    offset    	:= rcCaret_off
+    winIDCaret	:= NumGet(bufGUIThreadI, winIDCaret_off, "int")
+    , ⎀←      	:= NumGet(bufGUIThreadI, offset     , "int")
+    , ⎀↑      	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀→      	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , ⎀↓      	:= NumGet(bufGUIThreadI, offset += 4, "int")
+    , _       	:= coordClient→Screen(⎀←,⎀↑,&⎀←,&⎀↑,winIDCaret)
+    , _       	:= coordClient→Screen(⎀→,⎀↓,&⎀→,&⎀↓,winIDCaret)
+    , ⎀↔      	:= ⎀→ - ⎀←
+    , ⎀↕      	:= ⎀↓ - ⎀↑
+    , ⎀isVis  	:= (⎀↕ > 1) ? 1 : 0 ; fix an issue with Help showing a caret of Height=1 even when there is none
     return ⎀← || ⎀↑ ;;; todo: what if 0,0 is a valid caret position?
   }
   static get⎀Acc(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
