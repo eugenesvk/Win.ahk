@@ -3,6 +3,18 @@
 #include <constKey>	; various key constants
 #include <str>     	; string helper functions
 
+perf_getFreq() {
+  DllCall("QueryPerformanceFrequency","Int64*",&frequency:=0)
+  return frequency
+}
+perfT() { ; QueryPerformanceCounter learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
+  static count0	:= 0
+   , frequency 	:= perf_getFreq()
+  return DllCall(QPerfC_proc,"Int64*",&count1:=0)
+    ? ((count1 - count0) / frequency * 1000) + ((count0 := count1) & 0)
+    : (count0 := 0)
+}
+
 class keyFunc {
   static __new() { ; get all vars and store their values in this .Varname as well ‘m’ map, and add aliases
 
