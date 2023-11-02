@@ -7,6 +7,7 @@ GroupAdd "WinTabSwitch" 	, "ahk_exe chrome.exe"
 GroupAdd "WinTabSwitch" 	, "ahk_exe sublime_text.exe"
 GroupAdd "Browser"      	, "ahk_exe chrome.exe"
 GroupAdd "Browser"      	, "ahk_exe vivaldi.exe"
+GroupAdd "Browser"      	, "ahk_exe firefox.exe"
 GroupAdd "ScrollH"      	, "ahk_class WordPadClass"
 GroupAdd "Explorer"     	, "ahk_class dopus.lister"
 GroupAdd "Explorer"     	, "ahk_exe TOTALCMD64.EXE"
@@ -24,8 +25,12 @@ GroupAdd "PressnHold"   	, "ahk_exe EXCEL.EXE"              	; Excel
 GroupAdd "PressnHold"   	, "ahk_class OpusApp"              	; Word
 GroupAdd "PressnHold"   	, "ahk_class Notepad++"            	; Notepad++
 GroupAdd "PressnHold"   	, "ahk_class WordPadClass"         	; WordPad
+GroupAdd "PressnHold"   	, "ahk_group Browser"              	;
 ; GroupAdd "PressnHold" 	, "ahk_class keypirinha_wndcls_run"	; keypirinha
-GroupAdd "Games"        	, "ahk_exe game.exe"
+GroupAdd "Games"        	, "ahk_exe EoCApp.exe"
+GroupAdd "Games"        	, "ahk_exe BloodstainedRotN-Win64-Shipping.exe"
+GroupAdd "Games"        	, "ahk_exe SpaceChem.exe"
+GroupAdd "Games"        	, "ahk_exe C:\Games\Steam\SteamApps\common\Duskers\Duskers.exe"
 GroupAdd "WinTerm"      	, "ahk_exe WindowsTerminal.exe"
 ; Apps that auto double 	  brackets                                              	;
 GroupAdd "BracketDouble"	, "ahk_exe sublime_text.exe"                            	; SublimeText
