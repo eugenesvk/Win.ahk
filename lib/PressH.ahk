@@ -1,18 +1,20 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
 ;v0.7@23-10
 
-#Include %A_scriptDir%\gVar\PressH.ahk
-PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis␈:=true) { ; output→CharChoicet
-  ; Arg     	Type/Val	Comment |default value|  ¦alt value¦
-  ; pChars  	array   	symbols to insert ['⎋','❖','⌽'...]
-  ; pTrigger	char    	key that triggered this function, used to exclude it from the index
-  ; pLabel  	array   	key labels to use instead of the usual index (1-9a-z)
-  ; pHorV   	|H|V    	Horizontal/Vertical layout of the listboxes
-  ; pis␈    	|true|  	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
-  ; pCaret  	|true|  	Position CharacterPicker @ Text Caret position (NOT detected in browsers in some otherapps)
+#include <Win>
+#include %A_scriptDir%\gVar\PressH.ahk
+PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:=true) { ; output→CharChoicet
+  ; Arg     	Type/Val      	Comment |default value|  ¦alt value¦
+  ; pChars  	array         	symbols to insert ['⎋','❖','⌽'...]
+  ; pTrigger	char          	key that triggered this function, used to exclude it from the index
+  ; pLabel  	array         	key labels to use instead of the usual index (1-9a-z)
+  ; pHorV   	|H|V          	Horizontal/Vertical layout of the listboxes
+  ; pis␈    	|true|        	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
+  ; pCaret  	|1,uia¦2¦[0,0]	Position CharacterPicker @ Text Caret position 1 or 'uia' UIA/Accessibility, 2 no UIA, [x,y] use explicit coords
 
   static k   	:= keyConstant._map, lyt_lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
    , s       	:= helperString
+   , get⎀    	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
    , lbl_cust	:= Map()
    , lbl_en := "
       ( Join ` LTrim
@@ -50,7 +52,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
     }
     Labels.Capacity := pChars.Length
   }
-  dbgTT(3,'pTrigger=' pTrigger ' pHorV=' pHorV ' pis␈=' pis␈ ' pCaret=' pCaret,t:=1) ;
+  dbgTT(3,'pTrigger=' pTrigger ' pHorV=' pHorV ' pis␈=' pis␈ ' pCaret=' ((type(pCaret)='Array') ? (pCaret[1] '¦' pCaret[2]) : pCaret) ,t:=2) ;
 
   #MaxThreadsPerHotkey 1    ;;;
   global is␈ 	:= pis␈  	; Copy of parameter for another function
@@ -177,22 +179,20 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
     VXtra  	:= " "
     DllIW  	:= DllVW := CharGUIWidthColH*DPI ; column width passed via DllCall adjusted for DPI
     BoxWDPI	:= CharGUIWidthColH * NuChars * DPI ; actual Box width
-    ;;;pass caret position as arguments as they are used in individual keys to check whether to call the function at all
     ; get Window position relative to cursor
     static x,y
-    if (CaretGetPos(&x, &y) & (pCaret)) { ; Can get Caret position and Config is set
-      yOffP := yOffN := 0, symOff := 16
-      if (y < symOff*8) { ; if too close to the top of the screen
-        yOffP := symOff*3 ; move below the cursor
-      } else {
-        yOffN := symOff*5 ; otherwise move above the cursor
+    if             pCaret = 1
+      or           pCaret = 'uia' { ; use UIA/Accessibility library to get caret position even in apps that don't report it
+      if get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
+        LocLB := PressH_getPickerLoc(⎀←     ,⎀↑      ,BoxWDPI)
       }
-      if (BoxWDPI > (A_ScreenWidth-x)) { ; too wide to fully fit to the right of cursor
-        xOffN := BoxWDPI - (A_ScreenWidth-x) ; move to the left the cursor until it fits fully
-      } else {
-        xOffN := symOff ; move slightly to the left of the cursor
+    } else if      pCaret = 2 { ; get Caret position using the default AHK function
+      if (CaretGetPos(&x, &y)) { ; Can get Caret position
+        LocLB := PressH_getPickerLoc(x      ,y        ,BoxWDPI)
       }
-      LocLB := " x" x-xOffN " y" y+yOffP-yOffN " "
+    } else if Type(pCaret) = 'Array'
+      and          pCaret.Length = 2 {
+      LocLB := PressH_getPickerLoc(pCaret[1],pCaret[2],BoxWDPI)
     }
     ; show Index row second to match macOS style
     Picker.SetFont(CharGUIFontColV " s" CharGUIFontSize " w400", CharGUIFontName)
@@ -240,6 +240,25 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=true, pis�
   Nav_Exit(ThisHotkey) {  ; <—— Keys referring here will exit
     Gui_Close(Picker)
   }
+}
+
+PressH_getPickerLoc(x,y,BoxWDPI) { ; giver caret coordinates and picker box width, adjust the position of the picker to fit the screen and not overlap screen edges
+  yOffP := yOffN := 0, symOff := 16
+  dbgTT(0,BoxWDPI ' of ' A_ScreenWidth,t:=2)
+  if (y    < symOff*8) { ; if too close to the top of the screen
+    yOffP := symOff*3 ; move below the cursor
+  } else {
+    yOffN := symOff*5 ; otherwise move above the cursor
+  }
+  if        (BoxWDPI >  A_ScreenWidth   ) { ; too wide to fully fit the screen
+    xOffN := x ; move to the left (still won't fit, but oh well)
+  } else if (BoxWDPI > (A_ScreenWidth-x)) { ; too wide to fully fit to the right of cursor
+    xOffN := BoxWDPI - (A_ScreenWidth-x) ; move to the left the cursor until it fits fully
+  } else {
+    xOffN := symOff ; move slightly to the left of the cursor
+  }
+  LocLB := " x" x-xOffN " y" y+yOffP-yOffN " "
+  return LocLB
 }
 
 PressH_Select(Picker, &pChars, *) { ;t * allows extra parameters sent by OnEvents
