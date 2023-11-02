@@ -74,6 +74,25 @@ class win {
       , ⎀↔ := Pos.w, ⎀↕ := Pos.h
     return ⎀← || ⎀↑ ;;; todo: what if 0,0 is a valid caret position?
   }
+
+  static coordClient→Screen(cx,cy,&x,&y,winID) { ; convert client coordinates to screen
+    bPoint := Buffer(8,0)
+      NumPut("int",cx,bPoint,0)
+    , NumPut("int",cy,bPoint,4)
+    , res := DllCall("User32.dll\ClientToScreen","Ptr",winID,"Ptr",bPoint) ; learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen
+    , x:=NumGet(bPoint,0,"int")
+    , y:=NumGet(bPoint,4,"int")
+    return res
+  }
+  static coordScreen→Client(cx,cy,&x,&y,winID) { ; convert screen coordinates to client
+    bPoint := Buffer(8,0)
+      NumPut("int",cx,bPoint,0)
+    , NumPut("int",cy,bPoint,4)
+    , res := DllCall("User32.dll\ScreenToClient","Ptr",winID,"Ptr",bPoint) ; learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen
+    , x:=NumGet(bPoint,0,"int")
+    , y:=NumGet(bPoint,4,"int")
+    return res
+  }
 }
 
 getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to active window
