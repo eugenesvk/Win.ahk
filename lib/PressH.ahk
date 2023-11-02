@@ -244,7 +244,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
 
 PressH_getPickerLoc(x,y,BoxWDPI) { ; giver caret coordinates and picker box width, adjust the position of the picker to fit the screen and not overlap screen edges
   yOffP := yOffN := 0, symOff := 16
-  dbgTT(0,BoxWDPI ' of ' A_ScreenWidth,t:=2)
+  dbgTT(4,BoxWDPI ' of ' A_ScreenWidth,t:=2)
   if (y    < symOff*8) { ; if too close to the top of the screen
     yOffP := symOff*3 ; move below the cursor
   } else {
