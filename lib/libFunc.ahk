@@ -1,4 +1,4 @@
-#Requires AutoHotKey 2.1-alpha.4
+#Requires AutoHotKey 2.0
 
 #include <constKey>	; various key constants
 #include <str>     	; string helper functions
