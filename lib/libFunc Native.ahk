@@ -1,6 +1,24 @@
 #Requires AutoHotKey 2.1-alpha.4
 
 class nativeFunc {
+  static GetSystemTimePreciseAsFileTime() {
+    /* learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimepreciseasfiletime
+    retrieves the current system date and time with the highest possible level of precision (<1us)
+    FILETIME structure contains a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 (UTC)
+    100 ns  ->  0.1 µs  ->  0.001 ms  ->  0.00001 s
+    1     sec  ->  1000 ms  ->  1000000 µs
+    0.1   sec  ->   100 ms  ->   100000 µs
+    0.001 sec  ->    10 ms  ->    10000 µs
+    */
+    static interval2sec := (10 * 1000 * 1000) ; 100ns * 10 → µs * 1000 → ms * 1000 → sec
+    DllCall("GetSystemTimePreciseAsFileTime", "int64*",&ft:=0)
+    return ft / interval2sec
+  }
+
+  static QueryPerformanceFrequency() {
+    DllCall("QueryPerformanceFrequency","Int64*",&frequency:=0)
+    return frequency
+  }
   static MCode(mcode) { ; http://ahkscript.org/boards/viewtopic.php?f=7&t=32
     ; create c/c++ function from mcode, and return the function address
     ; static MCode(hex) {
