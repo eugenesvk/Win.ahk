@@ -48,7 +48,7 @@ todo:
 */
 
 ⌂f := {nm:'f',vk:helperString.key→ahk('f'), pos:'↑', t:A_TickCount, mod:false}
-⌂tHold := 1 ; treat ⌂ as a modifier if it's held for longer than this many seconds
+⌂tHold := 0.5 ; treat ⌂ as a modifier if it's held for longer than this many seconds
 
 ; #HotIf ⌂f.mod
 ; ;;; todo set all keys to output their shifted states? maybe will be less buggy that using input hooks?
