@@ -36,10 +36,14 @@ a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the 
 Other options:
   - (✗ need sequence info to set properly) OR just do layers and set global vars like in KE : ⌂f := ['↑',A_TickCount]
 todo:
+  - try setting the modifier directly instead of (in addition to?) setting the var, could be simpler SendInput("{LShift down}")
+  - fix handling of cursor keys (add special logic), set ⌂f.mod is true on cursor key↓
+  - add cursor hider
+  - add asd to immediately set on key↓ other mods?
   - add xz) 0a) labels to source
   - add a diagram
-  - track only the opposite half of the layout? would it help with any bugs?
-  - set all keys to output their shifted states if ⌂f.mod is true? Maybe will be less buggy that using input hooks?
+  - ? track only the opposite half of the layout? would it help with any bugs?
+  - ? set all keys to output their shifted states if ⌂f.mod is true? Maybe will be less buggy that using input hooks?
   - convert everything into a char-by-char state machine for each down/up event with input hooks instead that would only set/unset vars?
 */
 
