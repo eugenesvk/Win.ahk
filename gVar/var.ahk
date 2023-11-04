@@ -1,4 +1,4 @@
-#Requires AutoHotKey 2.1-alpha.4
+#Requires AutoHotKey 2.0
 ;Window management
   global Monitor_DefaultToNearest	:= 0x00000002
   ;List of styles https://www.autoitscript.com/autoit3/docs/appendix/GUIStyles.htm
