@@ -27,6 +27,9 @@ GroupAdd "PressnHold"   	, "ahk_class Notepad++"            	; Notepad++
 GroupAdd "PressnHold"   	, "ahk_class WordPadClass"         	; WordPad
 GroupAdd "PressnHold"   	, "ahk_group Browser"              	;
 ; GroupAdd "PressnHold" 	, "ahk_class keypirinha_wndcls_run"	; keypirinha
+GroupAdd "ScrollH"      	, "ahk_group MSOffice"             	;
+GroupAdd "ScrollH"      	, "ahk_class WindowsForms10.Window"	;
+GroupAdd "ScrollH"      	, "ahk_exe paintdotnet.exe"        	;
 GroupAdd "Games"        	, "ahk_exe EoCApp.exe"
 GroupAdd "Games"        	, "ahk_exe BloodstainedRotN-Win64-Shipping.exe"
 GroupAdd "Games"        	, "ahk_exe SpaceChem.exe"

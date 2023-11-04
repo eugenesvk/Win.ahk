@@ -24,7 +24,7 @@
   #HotIf
 
 ; Scroll Left/Right with Shift+MouseWheel Up/Down
-  #HotIf not WinActive("ahk_group MSOffice") ; avoid conflict with non-UIA version
+  #HotIf not WinActive("ahk_group ScrollH") ; avoid conflict with non-UIA version
   ~LShift & WheelUp::{   ; Scroll left (on Hover), ["Default"] parameters, |V|alues
     ; Clarification on ~and& autohotkey.com/boards/viewtopic.php?f=82&t=97264
       ; ~ doesn't block (hide from the system) key's native function

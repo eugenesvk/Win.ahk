@@ -28,7 +28,7 @@ CoordMode "Mouse",   "Screen"	; Mouse cursor: get absolute scren coordinates
 SetMouseDelay -1             	; [10]ms Delay after each mouse movement/click, -1=none
 
 ; Scroll Left/Right with Shift+MouseWheel Up/Down
-#HotIf WinActive("ahk_group MSOffice")
+#HotIf WinActive("ahk_group ScrollH")
 vk05:: SendInput '{LWin Down}'	;🖰G6​	vk05 ⟶ ❖ when down
 ~LShift & WheelUp::{          	;⌥🖱↑​	Scroll← (on Hover), ["Default"] parameters, |V|alues
   ; Clarification on ~and& autohotkey.com/boards/viewtopic.php?f=82&t=97264
