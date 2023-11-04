@@ -3,13 +3,15 @@
 #include <constKey>	; various key constants
 #include <str>     	; string helper functions
 
-perf_getFreq() {
-  DllCall("QueryPerformanceFrequency","Int64*",&frequency:=0)
-  return frequency
+preciseTΔ(n:=3) {
+  static start := nativeFunc.GetSystemTimePreciseAsFileTime()
+  t := round(nativeFunc.GetSystemTimePreciseAsFileTime() - start,n)
+  return t
 }
+
 perfT() { ; QueryPerformanceCounter learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
   static count0	:= 0
-   , frequency 	:= perf_getFreq()
+   , frequency 	:= nativeFunc.QueryPerformanceFrequency()
   return DllCall(QPerfC_proc,"Int64*",&count1:=0)
     ? ((count1 - count0) / frequency * 1000) + ((count0 := count1) & 0)
     : (count0 := 0)
