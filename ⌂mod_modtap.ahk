@@ -219,12 +219,13 @@ modtap(hk,c,is↓) { ;
     ; dbgtt(0,'down',t:=) ;
     ; SendEvent('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
     ih := InputHook("L1000 I1") ;;; I1 sendlevel (allows sending keys at level 0), L0 disables collection of text and the length limit, but does not affect which keys are counted as producing text (see VisibleText), can be useful in combination with OnChar, OnKeyDown, KeyOpt or the EndKeys parameter
-    ih.KeyOpt("{LWin}{RWin}{LAlt}{RAlt}{LCtrl}{RCtrl}{Esc}", "ES")  ; EndKeys (terminate the input) and Suppress (blocks) the key after processing
-    ih.KeyOpt("{Left}{Up}{Right}{Down}{BackSpace}", "E")  ; EndKeys (terminate the input)
+    ; ih.KeyOpt("{LWin}{RWin}{LAlt}{RAlt}{LCtrl}{RCtrl}{Esc}", "ES")  ; EndKeys (terminate the input) and Suppress (blocks) the key after processing
+    ; ih.KeyOpt("{Left}{Up}{Right}{Down}{BackSpace}", "E")  ; EndKeys (terminate the input)
     ; ih.KeyOpt(breaks, "E")  ; EndKeys (terminate the input)
     ;;; todo ↑ remove terminators?
     ; ih.KeyOpt("{vk57}{vk44}{vk32}", "N")  ;w N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
     ih.KeyOpt(cbkeys, "N")  ;w N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
+    ih.KeyOpt('{Left}{Up}{Right}{Down}', "N")  ;w N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
     ; ih.KeyOpt("{vk57}", "S")  ;w doesn't work for self, S also doesn't help
     ih.OnKeyUp := MyCallbackOnKey↑
     ih.OnKeyDown := MyCallbackOnKey↓
