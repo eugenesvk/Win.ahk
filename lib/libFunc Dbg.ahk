@@ -53,6 +53,8 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   } else {
     ToolTip(Text,mX+stepX*(id-1),mY+stepY*(id-1),id)
   }
-  SetTimer () => ToolTip(,,,id), -Time*1000
+  if not Time = '∞' {
+    SetTimer () => ToolTip(,,,id), -Time*1000
+  }
 }
 
