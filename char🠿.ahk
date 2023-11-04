@@ -19,10 +19,10 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
-  loop parse "qhxtfvg-r" { ; 🠿q​🠿h​🠿x​🠿t​🠿f​🠿v​🠿g​🠿-​🠿r​
+  loop parse "qhxtvg-r" { ; 🠿q​🠿h​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
   }
-  loop parse "``45" { ; ⇧🠿`​⇧🠿4​⇧🠿5​
+  loop parse "``45f" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
   HotIf
@@ -82,6 +82,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       case ＄ ˜  h⃣ 	: char→sym(hk,'h',Ch['Currency'   	],'Ch','CurrLab',InStr(lbl🖰hide,'h'))
       case ＄ ˜  x⃣ 	: char→sym(hk,'x',Ch['Tech'       	],'Ch','TechLab',InStr(lbl🖰hide,'x'))
       case ＄ ˜  t⃣ 	: char→sym(hk,'t',Ch['Math'       	],'Ch','MathLab',InStr(lbl🖰hide,'t'))
+      case ＄ ˜ ⇧f  	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset,InStr(lbl🖰hide,'f'))
       case ＄ ˜  f⃣ 	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset,InStr(lbl🖰hide,'f'))
       case ＄ ˜  v⃣ 	: char→sym(hk,'v',Ch['Subscript'  	],'Ch','SubLab',InStr(lbl🖰hide,'v'))
       case ＄ ˜  g⃣ 	: char→sym(hk,'g',Ch['Superscript'	],'Ch','SupLab',InStr(lbl🖰hide,'g'))
