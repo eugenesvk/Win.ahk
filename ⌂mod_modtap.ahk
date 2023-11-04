@@ -79,7 +79,8 @@ MyCallbackOnKey↓(ih, vk, sc) {
   if ⌂f.pos = '↓' { ; 0) should always be true? otherwise we won't get a callback
     if (t⌂f := A_TickCount - ⌂f.t) > ⌂ΔH { ; 🠿0c)
       ; dbgtt(0,'🠿0c) ⌂f🠿(' t⌂f ') Key↓ ⇧vk' hex(vk) ' sc' hex(sc),t:=2) ; vk57 sc11
-      SendInput('+' '{' Format("vk{:x}sc{:x}",vk,sc) '}') ;
+      SendInput("{LShift Down}")
+      SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}') ;
     } else { ; ?0b)
       prionm := kr['en'].Get([s.key→ahk(A_PriorKey)],'✗')
       keynm := kr[ 'en'].Get([Format("vk{:x}",vk)],'✗')
@@ -98,13 +99,15 @@ MyCallbackOnKey↑(ih, vk, sc) { ;
       ; dbgtt(0,'✗ 🠿1ab) ⌂f🠿 Key↑ vk' hex(vk) ' sc' hex(sc),t:=2,,x:=1300,y:=950) ;
       ; SendInput('+' '{' Format("vk{:x}sc{:x}",vk,sc) '}') ;
       ⌂f.mod := true
+      SendInput("{LShift Down}")
     ; } else if ((kn:=GetKeyName(Format("vk{:x}",vk))) = A_PriorKey) { ; 🠿1aa)
     } else if ⌂f.vk = s.key→ahk(A_PriorKey) { ; xx)
       ; dbgtt(0,'xx  ⌂f↓ Key↑ ⇧vk' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '=' ⌂f.nm ' ' preciseTΔ(),t:=4,,x:=50) ;
     } else { ; 🠿1aa)
       ; dbgtt(0,'🠿1aa) ⌂f↓ Key↑ ⇧vk' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '≠' ⌂f.nm ' ' preciseTΔ(),t:=4,,x:=50) ;
-      SendInput('+' '{' Format("vk{:x}sc{:x}",vk,sc) '}') ;
+      SendInput("{LShift Down}")
       ⌂f.mod := true
+      SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}') ;IJJKJJKJKJJK
     }
   } else { ; 2b ??? unreachable since ⌂f↑ cancels input hook?
     dbgMsg(0,'2b ⌂f↑ Key↑ vk' hex(vk) ' sc' hex(sc)) ;
@@ -171,6 +174,7 @@ modtap(hk,c,is↓) { ;
   static ih := ''
   global ⌂f
   if not is↓ {
+    SendInput("{LShift Up}")
     ; dbgtt(0,'up',t:=1) ; ;
     ih_input := ''
     if type(ih) = 'InputHook' { ;
