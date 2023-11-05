@@ -557,12 +557,12 @@ dbgGetSysMonVars() {
   winSzFrame_Ypx   	:= SysGet(smSzFrame_Ypx)
   taskbar_Title    	:= "ahk_exe explorer.exe ahk_class Shell_TrayWnd"
   monAct_i         	:= getFocusWindowMonitorIndex()
-  isMon            	:= MonitorGetWorkArea(monAct_i, &monWork←,&monWork↑,&monWork→,&monWork↓)
-  monWork_W        	:= monWork→-monWork←
-  monWork_H        	:= monWork↓-monWork↑
+  isMon            	:= MonitorGetWorkArea(monAct_i, &🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓)
+  🖥️w↔             	:= 🖥️w→-🖥️w←
+  🖥️w↕             	:= 🖥️w↓-🖥️w↑
   WinGetPos(&taskbar_X,&taskbar_Y,&taskbar_W,&taskbar_H,taskbar_Title)
 
-  dbgTT(0,Text:=monAct_i "=monAct_i`n" monWork_W "monWork_W" "`t" monWork↓-monWork↑ "=mon↑-mon↓`n" winMax_Xpx "=winMax_Xpx"  "`t" winMax_Ypx "=winMax_Ypx=" "`n" winFullscreen_Xpx "=smFullscreen_Xpx="  "`t" winFullscreen_Ypx "=smFullscreen_Ypx"  "`n" winMaxTrack_Xpx "=winMaxTrack_Xpx" "`t" winMaxTrack_Ypx "=winMaxTrack_Ypx"  "`n`t" taskbar_H "=taskbar_H" "`n" winFrameFixed_Xpx "=winFrameFixed_Xpx" "`t" winFrameFixed_Ypx "=winFrameFixed_Ypx"
+  dbgTT(0,Text:=monAct_i "=monAct_i`n" 🖥️w↔ "🖥️w↔" "`t" 🖥️w↕ "=🖥️w↕`n" winMax_Xpx "=winMax_Xpx"  "`t" winMax_Ypx "=winMax_Ypx=" "`n" winFullscreen_Xpx "=smFullscreen_Xpx="  "`t" winFullscreen_Ypx "=smFullscreen_Ypx"  "`n" winMaxTrack_Xpx "=winMaxTrack_Xpx" "`t" winMaxTrack_Ypx "=winMaxTrack_Ypx"  "`n`t" taskbar_H "=taskbar_H" "`n" winFrameFixed_Xpx "=winFrameFixed_Xpx" "`t" winFrameFixed_Ypx "=winFrameFixed_Ypx"
     "`n" winBorder_Xpx "=winBorder_Xpx" "`t" winBorder_Ypx "=winBorder_Ypx"
     "`n" winSzFrame_Xpx "=winSzFrame_Xpx" "`t" winSzFrame_Ypx "=winSzFrame_Ypx"
     , Time:=5,id:=3,X:=1550,Y:=850)
