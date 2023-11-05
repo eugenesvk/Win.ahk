@@ -10,6 +10,9 @@
 #Include <libFunc>
 #Include <libFunc Native>
 
+CoordMode "ToolTip", "Screen"	; Place ToolTips at absolute screen coordinates
+CoordMode "Mouse",   "Screen"	; Mouse cursor: get absolute scren coordinates
+
 dbg 	:= 0	; Level of debug verbosity (0-none)
 dbgT	:= 2	; Timer for dbg messages (seconds)
 
