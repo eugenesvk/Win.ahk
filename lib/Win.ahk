@@ -214,6 +214,13 @@ class win {
     , y:=NumGet(bPoint,4,"int")
     return res
   }
+
+  static getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) { ; get active monitor's working area (excluding bottom taskbar)
+    monAct_i	:= getFocusWindowMonitorIndex()
+    isMon   	:= MonitorGetWorkArea(monAct_i, &🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓)
+    🖥️w↔    	:= 🖥️w→-🖥️w←
+    🖥️w↕    	:= 🖥️w↓-🖥️w↑
+  }
 }
 
 getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to active window
