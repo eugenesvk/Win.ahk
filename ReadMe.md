@@ -78,7 +78,7 @@ Download all the files in this branch and double click `⌂mod_modtap_launch.ahk
 
 ## Known issues
 
-- arrow keys aren't handled
 - only <kbd>f</kbd> as ⌂<kbd>⇧</kbd>
+- tapping same-side real modifier (e.g., <kbd>‹⇧</kbd>) resets the status of the homerow modifier, and the latter doesn't track&reset itself
 
 ## Credits
