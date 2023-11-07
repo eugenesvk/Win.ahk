@@ -41,7 +41,9 @@ class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
   Set(arg := "switch"	;[opt] |switch| forward ¦ backward ¦ locale indicator name (EN, usually 2-letter) ¦ # of layout in system loaded layout list ¦ language id e.g. HKL (0x04090409)
     , win := "" 	;[opt] ahk format WinTitle ¦ hWnd ¦ "global" (def: active window)
     ) { ; return value: empty or description of error
-    winID := getWinID(win)
+    if not (winID := getWinID(win)) {
+      return
+    }
     if        (arg = "forward" ) {
       return this.ChangeCommon(, this.INPUTLANGCHANGE_FORWARD, winID)
     } else if (arg = "backward") {
