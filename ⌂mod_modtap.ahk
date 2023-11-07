@@ -161,7 +161,85 @@ hkDoNothing(ThisHotkey) {
   return
 }
 
-cb⌂_Key↓(ih, vk, sc) {
+;;; todo: make this dynamic instead of a repeated list?
+; callback for unregister⌂
+cb⌂a_hotif(HotkeyName) {
+  return ⌂a.is
+}
+cb⌂s_hotif(HotkeyName) {
+  return ⌂s.is
+}
+cb⌂d_hotif(HotkeyName) {
+  return ⌂d.is
+}
+cb⌂f_hotif(HotkeyName) {
+  return ⌂f.is
+}
+cb⌂j_hotif(HotkeyName) {
+  return ⌂j.is
+}
+cb⌂k_hotif(HotkeyName) {
+  return ⌂k.is
+}
+cb⌂l_hotif(HotkeyName) {
+  return ⌂l.is
+}
+cb⌂︔_hotif(HotkeyName) {
+  return ⌂︔.is
+}
+
+; callback for ↑
+cb⌂a_Key↓(ih, vk, sc) {
+  Key↓_⌂(ih, vk, sc, ⌂a)
+}
+cb⌂s_Key↓(ih, vk, sc) {
+  Key↓_⌂(ih, vk, sc, ⌂s)
+}
+cb⌂d_Key↓(ih, vk, sc) {
+  Key↓_⌂(ih, vk, sc, ⌂d)
+}
+cb⌂f_Key↓(ih, vk, sc) {
+  dbgtt(4,'cb⌂f_Key↓',t:=1)
+  Key↓_⌂(ih, vk, sc, ⌂f)
+}
+cb⌂j_Key↓(ih, vk, sc) {
+  Key↓_⌂(ih, vk, sc, ⌂j)
+}
+cb⌂k_Key↓(ih, vk, sc) {
+  Key↓_⌂(ih, vk, sc, ⌂k)
+}
+cb⌂l_Key↓(ih, vk, sc) {
+  Key↓_⌂(ih, vk, sc, ⌂l)
+}
+cb⌂︔_Key↓(ih, vk, sc) {
+  Key↓_⌂(ih, vk, sc, ⌂︔)
+}
+; callback for ↑
+cb⌂a_Key↑(ih, vk, sc) {
+  Key↑_⌂(ih, vk, sc, ⌂a)
+}
+cb⌂s_Key↑(ih, vk, sc) {
+  Key↑_⌂(ih, vk, sc, ⌂s)
+}
+cb⌂d_Key↑(ih, vk, sc) {
+  Key↑_⌂(ih, vk, sc, ⌂d)
+}
+cb⌂f_Key↑(ih, vk, sc) {
+  dbgtt(4,'cb⌂f_Key↑',t:=1) ;
+  Key↑_⌂(ih, vk, sc, ⌂f)
+}
+cb⌂j_Key↑(ih, vk, sc) {
+  Key↑_⌂(ih, vk, sc, ⌂j)
+}
+cb⌂k_Key↑(ih, vk, sc) {
+  Key↑_⌂(ih, vk, sc, ⌂k)
+}
+cb⌂l_Key↑(ih, vk, sc) {
+  Key↑_⌂(ih, vk, sc, ⌂l)
+}
+cb⌂︔_Key↑(ih, vk, sc) {
+  Key↑_⌂(ih, vk, sc, ⌂︔)
+}
   static k	:= keyConstant._map, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
   if ⌂f.pos = '↓' { ; ?0b) should always be true? otherwise we won't get a callback
