@@ -45,6 +45,14 @@ if ⌂🠿
        •     _2)  reset
 */
 
+; —————————— User configuration ——————————
+global ucfg⌂mod := Map(
+   'tooltip⎀' 	, true 	;|true| 	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
+ , 'holdTimer'	, 0.5  	;|.5|   	seconds of holding a modtap key after which it becomes a hold modifier
+ ; Debugging  	       	        	;
+ , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
+  )
+i↗ := 19 ; ttdbg index, top right position of the empty status of our home row mod
 ⌂f := {nm:'f',vk:helperString.key→ahk('f'), pos:'↑', t:A_TickCount, mod:false}
 ⌂tHold := 0.5 ; treat ⌂ as a modifier if it's held for longer than this many seconds
 
