@@ -11,11 +11,11 @@ Legend:
   ↕ key tap
   🠿 key hold
   • perform action at this point
-  •<ΔH perform action at this point only if ⌂tHold seconds has NOT passed
+  •>ΔH perform action at this point only after ⌂tHold seconds
   ⌂ home row modtap key (e.g., f⃣ types ‘f’ with a single tap, but becomes ⇧ on hold)
   a any regular key (not modtap)
 ⌂↓ always activates our modtap input handler, so won't be marked as •
-Key sequences and how to treat them:
+Key sequences and how to treat them (labels are also added to the script in linecomments):
 Sequence    Label Comment
 a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the prior key finish
       •      xx)  print nothing (a is printed outside of this script)
@@ -39,23 +39,10 @@ a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the 
          •  🠿1bb) print nothing, 1a handles key, ⌂ is a mod
 
 if ⌂🠿
-  a↓...      __)  not tracked, regular typing with
+  a↓...      __)  not tracked, regular typing with modtap enabled
   ⌂↓   ⌂↑
   •          _1)  do nothing, block repeat of the
        •     _2)  reset
-
-Other options:
-  - (✗ need sequence info to set properly) OR just do layers and set global vars like in KE : ⌂f := ['↑',A_TickCount]
-todo:
-  - simplify logic and set a timeout to inputhandler, if held longer just pass Shift Down, then wouldn't need to track any time in the later checks
-  - fix handling of cursor keys (add special logic), set ⌂f.mod is true on cursor key↓
-  - add cursor hider
-  - add asd to immediately set on key↓ other mods?
-  - add xz) 0a) labels to source
-  - add a diagram
-  - ? track only the opposite half of the layout? would it help with any bugs?
-  - ? set all keys to output their shifted states if ⌂f.mod is true? Maybe will be less buggy that using input hooks?
-  - convert everything into a char-by-char state machine for each down/up event with input hooks instead that would only set/unset vars?
 */
 
 ⌂f := {nm:'f',vk:helperString.key→ahk('f'), pos:'↑', t:A_TickCount, mod:false}
