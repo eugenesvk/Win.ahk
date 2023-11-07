@@ -89,6 +89,9 @@ get⌂Status() {
   } ; dbgtt(0,'bitflags ' dec→bin(bitflags) ' ‹' isAny‹ ' ›' isAny›,t:=5)
   return {isAny‹:bitflags & bit‹, isAny›:bitflags & bit›, bit:bitflags}
 }
+
+; #HotIf ⌂f.is
+; 3::msgbox('⌂f.is') ;
 ; #HotIf
 
 preciseTΔ() ; start timer for debugging
