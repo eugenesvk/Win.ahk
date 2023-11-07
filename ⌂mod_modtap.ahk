@@ -93,43 +93,73 @@ get⌂Status() {
 
 preciseTΔ() ; start timer for debugging
 
-⌂ΔH := ⌂tHold * 1000
-reg_f()
-reg_f() { ; f=⌂⇧
-  static k   	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
-   , s       	:= helperString
-   , pre     	:= '$' ; use $kbd hook and don't ~block input to avoid typing lag
-  HotKey(＄ f⃣	     , hkModTapF) ;
-  HotKey(＄ f⃣	' UP', hkModTapF) ;
+reg⌂map := Map() ; store registered keypairs 'vk46'='f'
+register⌂()
+register⌂() {
+  static k	:= keyConstant._map, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
+   , s    	:= helperString
+  global reg⌂map
+  loop parse 'fj' {
+    vk := s.key→ahk(A_LoopField)
+    hkreg1	:= ＄ vk
+    hkreg2	:= ＄ vk ' UP' ; $kbd hook
+    HotKey(hkreg1, hkModTap,'I1') ;
+    HotKey(hkreg2, hkModTap,'I1') ;
+    reg⌂map[hkreg1]     	:= {lbl:A_LoopField, is↓:1}
+    reg⌂map[hkreg2]     	:= {lbl:A_LoopField, is↓:0}
+    reg⌂map[A_LoopField]	:= {down:hkreg1, up:hkreg2}
+  }
+  ; HotKey(＄ f⃣	     , hkModTap) ;
+  ; HotKey(＄ f⃣	' UP', hkModTap) ;
 }
-hkModTapF(ThisHotkey) {
+hkModTap(ThisHotkey) {
+  static _ := 0
+  , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
+  , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
   hk := ThisHotkey
-  ; dbgtt(0,ThisHotkey ' ThisHotkey',t:=1) ;
-  Switch ThisHotkey, 0 {
-    default  : return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
-    case ＄ f⃣	     	: modtap(hk,'f',1) ;
-    case ＄ f⃣	' UP'	: modtap(hk,'f',0) ;
+  ; dbgtt(0,ThisHotkey ' lvl' A_SendLevel ' ThisHotkey@hkModTap',t:=2,,🖥️w↔,🖥️w↕*0.3)
+  if reg⌂map.Has(ThisHotkey) {
+    hk_reg := reg⌂map[ThisHotkey] ; f,↓or↑ for $vk46
+    setup⌂mod(hk,hk_reg.lbl,hk_reg.is↓)
+  } else {
+    return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
   }
 }
-#HotIf ⌂f.mod = true
-+vk46::Return	;⌂f f​	vk46 ⟶ do nothing while home row mod is active _1)
-+vk46 Up::{  	;⌂f f​	vk46 ⟶ reset home row mod _2)
-  t⌂f := A_TickCount - ⌂f.t ;;; ←delete↓
-  _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area
-  dbgtt(1,'🠿1bb) ⌂f↑ after timed ⌂f🠿(' t⌂f (t⌂f<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ(),t:=2,,x:=🖥️w↔,y:=900)
-  SendInput("{LShift Up}"), ; 🠿1bb)
-  ⌂f.pos := '↑', ⌂f.t := A_TickCount, ⌂f.mod := false, dbgTT(0,'`n',t:='∞',i↗,🖥️w↔ - 40, 20)
+unregister⌂()
+unregister⌂() {
+  static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
+   , s    	:= helperString
+  global  reg⌂map
+  loop parse 'fj' {
+    pre_ahk := ⌂%A_LoopField%.🔣ahk ; <+ for f and >+ for j
+    hk_reg := reg⌂map[A_LoopField]
+    , hkreg1	:= pre_ahk hk_reg.down ; >+ ＄ vk       for j
+    , hkreg2	:= pre_ahk hk_reg.up   ; >+ ＄ vk ' UP'
+    HotIf cb⌂%A_LoopField%_hotif
+    HotKey(hkreg1, hkDoNothing) ; do nothing while home row mod is active _1)
+    HotKey(hkreg2, hkModTap_up) ; reset home row mod _2)
+    HotIf
+    reg⌂map[hkreg1]     	:= {lbl:A_LoopField, is↓:1}
+    reg⌂map[hkreg2]     	:= {lbl:A_LoopField, is↓:0}
+    reg⌂map[A_LoopField]	:= {down:hkreg1, up:hkreg2}
+  }
 }
-;;; todo convert ↑ to ↓ ?
-; reg_f_🠿()
-; reg_f_🠿() { ; f=⌂⇧
-;   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
-;    , s    	:= helperString
-;    , pre  	:= '$' ; use $kbd hook and don't ~block input to avoid typing lag
-;   ; HotKey(pre f⃣       , hkModTapF) ;
-;   ; HotKey(pre f⃣  ' UP', hkModTapF) ;
-; }
-#HotIf
+hkModTap_up(ThisHotkey) {
+  hk_reg := reg⌂map[ThisHotkey]
+  ⌂_ := ⌂%hk_reg.lbl%
+  dbgtt(3,ThisHotkey ' hk_reg' hk_reg.lbl ' @hkModTap_up',t:=5) ;
+  static ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := ucfg⌂mod.Get('ttdbg',0)
+  , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
+  , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+  t⌂ := A_TickCount - ⌂f.t ;;; ←delete↓
+  dbgtt(1,'🠿1bb) ⌂↑ after timed ⌂🠿(' t⌂ (t⌂<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ(),t:=2,,x:=🖥️w↔,y:=900)
+  SendInput(⌂_.send↑), ; 🠿1bb)
+  ⌂_.pos := '↑', ⌂_.t := A_TickCount, ⌂_.is := false, dbgTT(0,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
+}
+hkDoNothing(ThisHotkey) {
+  dbgtt(4,'hkDoNothing ' preciseTΔ())
+  return
+}
 
 cb⌂_Key↓(ih, vk, sc) {
   static k	:= keyConstant._map, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
