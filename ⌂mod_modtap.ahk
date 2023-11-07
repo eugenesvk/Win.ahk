@@ -53,16 +53,33 @@ global ucfg⌂mod := Map(
  , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
   )
 i↗ := 19 ; ttdbg index, top right position of the empty status of our home row mod
-⌂f := {nm:'f',vk:helperString.key→ahk('f'), pos:'↑', t:A_TickCount, mod:false}
-⌂tHold := 0.5 ; treat ⌂ as a modifier if it's held for longer than this many seconds
 
-; dbg tooltip indices
-i↗ := 19 ; top right position of the status of our home row mod
-;
-; #HotIf ⌂f.mod
-; ;;; todo set all keys to output their shifted states? maybe will be less buggy that using input hooks?
-; ;;; but then need to add a standalone timer to each ⌂f and make sure it's only activated if it's continuously being held down without any interrupts. How?
-; 3::msgbox('⌂f.mod') ;
+;;; ONLY ⌂f ⌂j is working ;;;
+
+; ‹
+⌂a := {k:'a',mod:'LControl'}
+⌂s := {k:'s',mod:'LWin'    }
+⌂d := {k:'d',mod:'LAlt'    }
+⌂f := {k:'f',mod:'LShift'  }
+; ›
+⌂j := {k:'j',mod:'RShift'   }
+⌂k := {k:'k',mod:'RAlt'     }
+⌂︔ := {k:';',mod:'RControl'}
+⌂l := {k:'l',mod:'RWin'     }
+; setup info and status fields for all the homerow mods
+⌂map := Map()
+for _modtapp in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
+  _modtapp.t       	:= A_TickCount
+  _modtapp.vk      	:= helperString.key→ahk(_modtapp.k) ; vk21 for f
+  _modtapp.pos     	:= '↑'
+  _modtapp.is      	:= false
+  _modtapp.send↓   	:= '{' _modtapp.mod ' Down' '}'
+  _modtapp.send↑   	:= '{' _modtapp.mod ' Up'   '}'
+  _modtapp.🔣       	:= helperString.modi_ahk→sym(    _modtapp.mod) ; ‹⇧
+  _modtapp.🔣ahk    	:= helperString.modi_ahk→sym_ahk(_modtapp.mod) ; <+
+  _modtapp.flag    	:= f%_modtapp.🔣%
+  ⌂map[_modtapp.vk]	:= _modtapp
+}
 ; #HotIf
 
 preciseTΔ() ; start timer for debugging
