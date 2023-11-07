@@ -240,33 +240,50 @@ cb⌂l_Key↑(ih, vk, sc) {
 cb⌂︔_Key↑(ih, vk, sc) {
   Key↑_⌂(ih, vk, sc, ⌂︔)
 }
+
+Key↓_⌂(ih, vk, sc, ⌂_) {
   static k	:= keyConstant._map, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
-  if ⌂f.pos = '↓' { ; ?0b) should always be true? otherwise we won't get a callback
-    prionm := kr['en'].Get([s.key→ahk(A_PriorKey)],'✗')
-    keynm := kr[ 'en'].Get([Format("vk{:x}",vk)],'✗')
-    t⌂f := A_TickCount - ⌂f.t
-    dbgtt(2,'✗ ?0b) ⌂f↓(' t⌂f ') Key↓ ' keynm ' prio ‘' prionm '’ vk' hex(vk) ' sc' hex(sc),t:=5 ,,x:=1100,y:=950) ; vk57 sc11
-  } else { ; should never get here?;
-    dbgMsg(0,'⌂f↑ Key↓ vk' hex(vk) ' sc' hex(sc))
+    , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
+    , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+  dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ;
+  if ⌂_.pos = '↓' { ; ?0b) should always be true? otherwise we won't get a callback
+    if dbg >= 2 {
+      keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
+      prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗')
+      t⌂_   	:= A_TickCount - ⌂_.t
+      dbgtt(2,'✗ ?0b) ' dbg⌂ '↓(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ vk' hex(vk) ' sc' hex(sc),t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
+    }
+  } else { ; should never get here?
+    dbgMsg(0,dbg⌂ '↑ vk↓' hex(vk) ' sc' hex(sc) ' ' preciseTΔ()) ;
   }
 }
-cb⌂_Key↑(ih, vk, sc) { ;
+Key↑_⌂(ih, vk, sc, ⌂_) { ;
   static k	:= keyConstant._map, lbl := keyConstant._labels, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
-  if ⌂f.pos = '↓' { ; 1a)
-    global ⌂f
-    if ⌂f.vk = s.key→ahk(A_PriorKey) { ; xx)
-      dbgtt(3,'xx  ⌂f↓ Key↑ ⇧vk' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '=' ⌂f.nm ' ' preciseTΔ(),t:=4,i:=12,x:=50) ;
-    } else { ; 🠿1aa)
-      dbgtt(2,'🠿1aa) ⌂f↓ Key↑ ⇧vk' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '≠' ⌂f.nm ' ' preciseTΔ(),t:=4,i:=12,x:=50,y:=200) ;
-      SendInput("{LShift Down}"), ⌂f.mod := true ;, dbgTT(0,'⇧',t:='∞',i↗,A_ScreenWidth - 40, 20)
-      win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) ;;; comment
-      dbgTT(0,'⇧',t:='∞',i↗,⎀←-9,⎀↑-30) ;;; comment out
-      SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}') ;
+    , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
+    , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+   , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1), ttdbg := ucfg⌂mod.Get('ttdbg',0)
+  global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
+  dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ;
+  if ⌂_.pos = '↓' { ; 1a)
+    if ⌂_.vk = s.key→ahk(A_PriorKey) { ; xx) a↓ ⌂↓ •a↑ ⌂↑
+      dbgtt(2,'xx) a↓ ⌂↓ •a↑ ⌂↑`n' dbg⌂ '↓ vk↑' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '=' ⌂_.k ' ' preciseTΔ(),t:=4,i:=12,A_ScreenWidth - 40) ;
+    } else { ; 🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑
+      if dbg >= 2 { ;
+        keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
+        prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗')
+        t⌂_   	:= A_TickCount - ⌂_.t
+        dbgtt(2,'🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑`n' dbg⌂ '↓(' t⌂_ ') ' keynm '↑(vk' hex(vk) 'sc' hex(sc) ') prio ‘' prionm '’ ≠' ⌂_.k ' ' preciseTΔ(),t:=4,i:=13,0,🖥️w↕//2) ;
+      }
+      SendInput(⌂_.send↓), ⌂_.is := true ;, dbgTT(0,⌂_.🔣,t:='∞',i↗,A_ScreenWidth - 40, 20)
+      if tooltip⎀ {
+        win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
+      }
+      SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}')
     }
-  } else { ; 2b) ??? unreachable since ⌂f↑ cancels input hook?
-    dbgMsg(0,'2b) ⌂f↑ Key↑ vk' hex(vk) ' sc' hex(sc) ' do nothing') ;
+  } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook?
+    dbgMsg(0,'2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑`n' dbg⌂ '↓ vk↑' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '≠' ⌂_.k ' ' preciseTΔ() ' do nothing')
   }
 }
 set_modtap_labels() { ; set key labels to monitor for home row mods
