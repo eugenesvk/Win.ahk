@@ -76,6 +76,44 @@ class helperString {
     flag	|= InStr(hk,'*') ? f∗ : 0	; any modifiers allowed
     return flag
   }
+  static modi_ahk→sym_ahk(modi) { ; get ahk symbolic string for a modifier: LShift → <+
+    return helperString.modi_ahk→sym_any(modi,'ahk')
+  }
+  static modi_ahk→sym(modi) { ; get symbolic string for a modifier: LShift → ‹⇧
+    return helperString.modi_ahk→sym_any(modi)
+  }
+  static modi_ahk→sym_any(modi,fmt:='') { ; get symbolic string for a modifier: LShift → ‹⇧
+    static modiSym := Map( ; helps generating the full map
+      'Shift'  	,{sym:'⇧'	,ahk:'+'},
+      'Ctrl'   	,{sym:'⎈'	,ahk:'^'},
+      'Control'	,{sym:'⎈'	,ahk:'^'},
+      'Win'    	,{sym:'◆'	,ahk:'#'},
+      'Alt'    	,{sym:'⎇'	,ahk:'!'},
+      )
+    if not type(modi) = 'String'
+      or not modi
+      or StrLen(modi) < 2 {
+      throw ValueError("Input modifier should be a string of 2+ chars", -1, modi)
+    }
+    side_in   	:= SubStr(modi,1,1)
+    , mod_in  	:= SubStr(modi,2)
+    , side_outL	:= ''
+    , side_outR	:= ''
+    , mod_out 	:= ''
+    if        side_in = 'L' {
+      side_outL	.= fmt = 'ahk' ? '<' : '‹'
+    } else if side_in = 'R' {
+      side_outL	.= fmt = 'ahk' ? '>' : ''
+      side_outR	.= fmt = 'ahk' ? '' : '›'
+    }
+    mod_out_arr	:= modiSym.Get(mod_in,['',''])
+    mod_out    	:= fmt = 'ahk' ? mod_out_arr.ahk : mod_out_arr.sym
+    if (side_outL || side_outR) && mod_out {
+      return side_outL . mod_out . side_outR
+    } else {
+      return ''
+    }
+  }
   static modis→ahk(key_combo) { ; get ahk string with the last modifier considered a non-mod key: ⎇›‹⎈ → >!LCtrl
     static vk	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
     modi_ahk_arr_full := this.parseKeyCombo(key_combo,&modi_ahk_arr_short:=[],&nonmod:="") ; ⎇›‹⎈ → >! >^
