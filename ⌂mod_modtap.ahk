@@ -80,6 +80,15 @@ for _modtapp in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
   _modtapp.flag    	:= f%_modtapp.🔣%
   ⌂map[_modtapp.vk]	:= _modtapp
 }
+
+get⌂Status() {
+  static bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
+  bitflags := 0
+  for modtap in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
+    bitflags |= GetKeyState(modtap.vk,"P") ? modtap.flag : 0 ; modtap.is ? modtap.flag : 0
+  } ; dbgtt(0,'bitflags ' dec→bin(bitflags) ' ‹' isAny‹ ' ›' isAny›,t:=5)
+  return {isAny‹:bitflags & bit‹, isAny›:bitflags & bit›, bit:bitflags}
+}
 ; #HotIf
 
 preciseTΔ() ; start timer for debugging
