@@ -26,6 +26,8 @@
     ; , f⇪            	:= 4096   	;  1000000000000 caps lock
     ; , f🔢            	:= 8192   	; 10000000000000 num  lock
     ; fかな kana
+    ,  bit‹ := f‹⇧ | f‹⎇ | f‹⎈ | f‹◆
+    ,  bit› := f⇧› | f⎇› | f⎈› | f◆›
 
   global TTx          	:= 2100	; Alt ToolTip X coordinates
     , TTy             	:= 1275	;             Y coordinates
