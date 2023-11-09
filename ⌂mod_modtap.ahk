@@ -28,9 +28,9 @@ a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the 
 ⌂↓ a↓ ⌂↑ a↑ ↕     should be ⌂,a as that's just fast typing
 •            0a)  print nothing, don't know the future yet, just activate input hook
 <ΔH•         ?0b) print nothing, don't know whether to print ⇧A or ⌂,a, the hold depends on the next key sequence
->ΔH•        🠿0c) print ⇧A (⇧⌂ enabled on timer 🠿0t), A is printed outside of the scripts purview)
       •     ↕2a)  print ⌂,a
          •  ↕2b)  print nothing, 2a handle it
+>ΔH•        🠿0c) print ⇧A (⇧⌂ enabled on timer 🠿0t), A is printed outside of the scripts purview)
 ⌂↓ a↓ a↑ ⌂↑ 🠿    should be ⇧A, not ⌂
    •              same as above
    <ΔH•     🠿1aa) print ⇧A, also set ⌂ var as a modifier since we know it's not quick typing
@@ -279,7 +279,7 @@ Key↑_⌂(ih, vk, sc, ⌂_) { ;
         keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
         prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗')
         t⌂_   	:= A_TickCount - ⌂_.t
-        dbgtt(2,'🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑`n' dbg⌂ '↓(' t⌂_ ') ' keynm '↑(vk' hex(vk) 'sc' hex(sc) ') prio ‘' prionm '’ ≠' ⌂_.k ' ' preciseTΔ(),t:=4,i:=13,0,🖥️w↕//2) ;
+        dbgtt(2,'🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ '↓(' t⌂_ ') ' keynm '↑(vk' hex(vk) 'sc' hex(sc) ') prio ‘' prionm '’ ≠' ⌂_.k '`n' ⌂_.send↓ ' ' keynm,t:=4,i:=13,0,🖥️w↕//2) ;
       }
       SendInput(⌂_.send↓), ⌂_.is := true ;, dbgTT(0,⌂_.🔣,t:='∞',i↗,A_ScreenWidth - 40, 20)
       if tooltip⎀ {
@@ -350,24 +350,23 @@ set_modtap_labels() { ; set key labels to monitor for home row mods
 }
 
 setup⌂mod(hk,c,is↓) { ;
-  static k 	:= keyConstant._map, kr := keyConstant._mapr, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
-   , get⎀  	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
-   , s     	:= helperString
-   , breaks	:= '' ; break ↑ with these keys
-   , _lbl := set_modtap_labels() ;
-   , labels := _lbl.labels
-   , cbkeys := _lbl.cbkeys ; use callbacks when these keys are used during inputhook (;;; not needed?)
+  static k  	:= keyConstant._map, kr := keyConstant._mapr, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
+   , bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
+   , get⎀   	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
+   , s      	:= helperString
+   , breaks 	:= '' ; break ↑ with these keys
    , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
-   , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-   , ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5) ;
-   , ⌂ΔH := ⌂tHold * 1000
-   , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1) ;
-   , ttdbg := ucfg⌂mod.Get('ttdbg',0) ;
-   , d3    	:= 3 ; custom dbg level for testing selected commands
-   , d4    	:= 4 ;
-   , isInit	:= false ;
-   , ih    	:= InputHook("I2 T" ⌂tHold) ; static so that there is only 1 active and multiple ⌂ don't conflict ;;; todo how to coop with f and j
-   , ihID  	:= {⌂:'',dbg:''}	;
+   , _       	:= win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+   , ⌂tHold  	:= ucfg⌂mod.Get('holdTimer',0.5) ;
+   , ⌂ΔH     	:= ⌂tHold * 1000
+   , tooltip⎀	:= ucfg⌂mod.Get('tooltip⎀',1) ;
+   , ttdbg   	:= ucfg⌂mod.Get('ttdbg',0) ;
+   , d3      	:= 3 ; custom dbg level for testing selected commands
+   , d4      	:= 0 ;
+   , isInit  	:= false ;
+   , ih      	:= InputHook("I2 T" ⌂tHold) ; static so that there is only 1 active and multiple ⌂ don't conflict ;;; todo how to coop with f and j
+   , ⌂ih     	:= {} ; modtap that triggered the unique inputhook
+   , dbg⌂ih  	:= ''
       ; I1 sendlevel (ignore regular keys sent at level 0)
       ; L1024 def don't need many since after a short hold timer a permanent mode will set, the hoook will reset
 
@@ -386,44 +385,35 @@ setup⌂mod(hk,c,is↓) { ;
   }
   dbgorder := Map('a',[1,4], 's',[1,3], 'd',[1,2], 'f',[1,1]
                  ,';',[0,4], 'l',[0,3], 'k',[0,2], 'j',[0,1])
-  dbg⌂ := '⌂' ⌂_.k ' ' ⌂_.🔣 ;
-  dbgtt(2, c ' ' vkC ' ' (is↓ ? '↓' : '↑') ' ' preciseTΔ() ' @setup⌂mod',t:=2,
+  dbg⌂       	:= '⌂' ⌂_.k ' ' ⌂_.🔣 ;
+  modtapflags	:= get⌂Status() ; {isAny‹,isAny›,bit}
+  bit⌂       	:= modtapflags.bit
+  isAny‹     	:= modtapflags.isAny‹
+  isAny›     	:= modtapflags.isAny›
+  isThis‹    	:= ⌂_.flag & bit‹
+  isThis›    	:= ⌂_.flag & bit›
+  isOpp      	:= (isThis‹ and isAny›)
+    or     (isThis› and isAny‹)
+    ; dbgtt(d4,isOpp ' isOpp`n' isThis‹ ' ' isAny› '`n' isThis› ' ' isAny‹,5)
+  static tmpid := 2
+  if tmpid > 5 {
+    tmpid := 2
+  }
+  dbgtt(4, c ' ' vkC ' ' (is↓ ? '↓' : '↑') ' isOpp' isOpp ' ' preciseTΔ() '`n@setup⌂mod',t:=4,tmpid
    ,🖥️w↔*(1  - dbgorder.Get(c,0)[1]*.24)
    ,🖥️w↕*(.5 + dbgorder.Get(c,0)[2]*.05 + is↓ * .05) ) ;
-  modtapflags := get⌂Status() ; {isAny‹,isAny›,bit}
-  isAny‹ := modtapflags.isAny‹
-  isAny› := modtapflags.isAny›
-  isThis‹ := ⌂_.flag & bit‹
-  isThis› := ⌂_.flag & bit›
-  isOpp := (isThis‹ and isAny›)
-    or     (isThis› and isAny‹)
-    ; dbgtt(0,isOpp ' isOpp`n' isThis‹ ' ' isAny› '`n' isThis› ' ' isAny‹,5)
+  tmpid += 1 ;
 
   is↑ := not is↓ ;
 
-  if ih.InProgress and isOpp { ; another ⌂ has an active inputhook, act as a regular key
-    SendLevel 2 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activated
-    vk_d := GetKeyVK(vkC) ; decimal value
-    , sc_d := GetKeySC(vkC) ;
-    if is↓ { ;
-      dbgtt(3,ihID.dbg ' hook active`n' dbg⌂ '↓ send ' vkC '(vk₁₀' vk_d 'sc₁₀' sc_d ')J lvl' A_SendLevel ' ihlvl' ih.MinSendLevel ' ' preciseTΔ(),t:=2,id:=16,🖥️w↔,🖥️w↕*.8)
-      ; SendEvent('{' vkC ' Down}') ;;; ih catches Send↓, but for some reason the on↑↓ callbacks aren't called...
-      Key↓_⌂(ih, vk_d, sc_d, ihID.⌂) ;;; ...so try to invoke Key↓_⌂(ih, vk, sc, ⌂_) directly
-    } else {
-      dbgtt(3,ihID.dbg ' hook active`n' dbg⌂ '↑ send ' vkC '(vk₁₀' vk_d 'sc₁₀' sc_d ')J lvl' A_SendLevel ' ihlvl' ih.MinSendLevel ' ' preciseTΔ(),t:=2,id:=17,🖥️w↔,🖥️w↕*.86) ;
-      ; SendEvent('{' vkC ' Up}') ;
-      Key↑_⌂(ih, vk_d, sc_d, ihID.⌂) ;
-    }
-    SendLevel 0
-  } else if is↑ { ;
+  handle⌂↑(&⌂_,&ih,&⌂ih,&dbg⌂ih,&ihID,t⌂_) { ; allows calling called either when a single ⌂ or combined
     _tprio := A_PriorKey
     ih_input := ''
     if ih.InProgress { ;
       ih_input := ih.Input
       dbgtt(d4,'InputHook stopped input=' ih.Input,t:=2) ;
-      ih.Stop(), ihID := {⌂:'',dbg:''}	;
+      ih.Stop(), ⌂ih:={}, dbg⌂ih:='', ihID := {⌂:'',dbg:''}	;
     }
-    t⌂_ := A_TickCount - ⌂_.t
     if ⌂_.is { ; 🠿1ba)
       SendInput(⌂_.send↑), dbgtt(d4,'⇧↑',t:='∞',i:=18,🖥️w↔,🖥️w↕)
       ⌂_.pos := '↑', ⌂_.t := A_TickCount, ⌂_.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
@@ -432,44 +422,75 @@ setup⌂mod(hk,c,is↓) { ;
       if (prio := s.key→ahk(A_PriorKey)) = vkC {
         if ⌂_.pos = '↓' { ; ↕xz) ↕01)
           ⌂_.pos := '↑', ⌂_.t := A_TickCount, ⌂_.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
-          dbgtt(1,'↕xz) ↕01) ⌂_↑ alone ⌂_↓(' t⌂_ ' < ' ⌂ΔH ') PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ ⌂_.is=' ⌂_.is ' ⌂_.pos=' ⌂_.pos,t:=2,,x:=0,y:=850)
+          dbgtt(d4,'↕xz) ↕01) ⌂_↑ alone ⌂_↓(' t⌂_ ' < ' ⌂ΔH ') PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ ⌂_.is=' ⌂_.is ' ⌂_.pos=' ⌂_.pos,t:=2,,x:=0,y:=850)
           SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
         } else { ; 00) haven't been activated, no need to send self
           ⌂_.pos := '↑', ⌂_.t := A_TickCount, ⌂_.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
           dbgtt(d3,'00) ⌂_↑ alone ⌂_↓(' t⌂_ ' < ' ⌂ΔH ') PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ ⌂_.is=' ⌂_.is ' ⌂_.pos=' ⌂_.pos,t:=2,,x:=🖥️w↔,y:=850)
         }
-      } else { ; ↕2a)
+      } else { ; ↕2a) ⌂↓ a↓ •⌂↑ a↑   fast typing ⌂,a
         ⌂_.pos := '↑', ⌂_.t := A_TickCount, ⌂_.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
         keynm := kr['en'].Get(prio,'✗') ;
-        dbgtt(1,'↕2a) ' keynm ' (' A_PriorKey ') A_PriorKey, print prio ' prio ' input=‘' ih_input '’',t:=2,,x:=0)  ;
-        ; SendEvent('{' . prio . ' down}{' . prio . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
+        dbgtt(d3,'↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' A_PriorKey ') A_PriorKey, print self ‘' c '’‘' ih_input '’=input',t:=4,,x:=0)  ;
+        SendLevel 1 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activated
         SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
         SendInput(ih_input) ;
+        SendLevel 0 ;
       }
     }
+  }
+
+  if ih.InProgress and isOpp { ; another ⌂ has an active inputhook, act as a regular key
+    SendLevel 2 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activated
+    vk_d := GetKeyVK(vkC) ; decimal value
+    , sc_d := GetKeySC(vkC) ;
+    if is↓ { ;is↓ get⌂Status
+      if ⌂ih.flag & bit⌂ { ; the original ⌂ is also down
+        dbgtt(1,dbg⌂ih ' hook active`n' dbg⌂ '↓ ' dbg⌂ih '↓ send ' vkC '(vk₁₀' vk_d 'sc₁₀' sc_d ')J lvl' A_SendLevel ' ihlvl' ih.MinSendLevel ' ' preciseTΔ(),t:=2,id:=16,🖥️w↔,🖥️w↕*.8)
+        ; SendEvent('{' vkC ' Down}') ;;; ih catches Send↓, but for some reason the on↑↓ callbacks aren't called...
+        Key↓_⌂(ih, vk_d, sc_d, ⌂ih) ;;; ...so try to invoke Key↓_⌂(ih, vk, sc, ⌂_) directly
+      } else { ; the original ⌂ is up, so
+        dbgtt(1,dbg⌂ih ' hook active`n' dbg⌂ '↓ ' dbg⌂ih '↑ send ' vkC '(vk₁₀' vk_d 'sc₁₀' sc_d ')J lvl' A_SendLevel ' ihlvl' ih.MinSendLevel ' ' preciseTΔ(),t:=2,id:=16,🖥️w↔,🖥️w↕*.8)
+        Key↓_⌂(ih, vk_d, sc_d, ⌂ih) ;
+      }
+    } else { ;is↑
+      if ⌂ih.flag & bit⌂ { ; the original ⌂ is also down
+        dbgtt(d4,dbg⌂ih ' hook active`n' dbg⌂ '↑' dbg⌂ih '↑ send ' vkC '(vk₁₀' vk_d 'sc₁₀' sc_d ')J lvl' A_SendLevel ' ihlvl' ih.MinSendLevel ' ' preciseTΔ(),t:=2,id:=17,🖥️w↔,🖥️w↕*.86) ;
+        ; SendEvent('{' vkC ' Up}') ;
+        Key↑_⌂(ih, vk_d, sc_d, ⌂ih) ;
+      } else { ; the original ⌂ is up, so
+        t⌂_ := A_TickCount - ⌂_.t
+        handle⌂↑(&⌂_,&ih,&⌂ih,&dbg⌂ih,&ihID,t⌂_) ;fjffjjjjjjj
+        dbgtt(d4,ih.InProgress '✗' dbg⌂ih ' hook active`n' dbg⌂ '↑ ' dbg⌂ih '↑ send ' vkC '(vk₁₀' vk_d 'sc₁₀' sc_d ')J lvl' A_SendLevel ' ihlvl' ih.MinSendLevel ' ' preciseTΔ(),t:=4,id:=17,🖥️w↔,🖥️w↕*.86) ;
+      }
+    }
+    SendLevel 0
+  } else if is↑ { ;
+    t⌂_ := A_TickCount - ⌂_.t
+    handle⌂↑(&⌂_,&ih,&⌂ih,&dbg⌂ih,&ihID,t⌂_) ;
   } else { ; is↓
     ; dbgtt(d4,'is↓' is↓ ' ' preciseTΔ(),t:=3,i:=13,x:=🖥️w↔,y:=300) ;
     ⌂_.pos := '↓', ⌂_.t := A_TickCount
-    , dbgTT(2,'⇧↓',t:='∞',i:=18,🖥️w↔,🖥️w↕)
-    ih.OnKeyUp  	:= cb⌂%⌂_.k%_Key↑ 	;
-    ih.OnKeyDown	:= cb⌂%⌂_.k%_Key↓ 	;
-    ih.Start()  	                  	; 0a) •⌂↓ do nothing yet, just activate inputhook
-    ihID        	:= {⌂:⌂_,dbg:dbg⌂}	;
-    dbgtt(2,'started IH for ' dbg⌂ ' with callback cb⌂' ⌂_.k '_Key↓ ↑ ' preciseTΔ(),t:=2,,🖥️w↔//2,400) ;
+    , dbgtt(d4,'⇧↓',t:='∞',i:=18,🖥️w↔,🖥️w↕)
+    ih.OnKeyUp  	:= cb⌂%⌂_.k%_Key↑	;
+    ih.OnKeyDown	:= cb⌂%⌂_.k%_Key↓	;
+    ih.Start()  	                 	; 0a) •⌂↓ do nothing yet, just activate inputhook
+    ⌂ih         	:= ⌂_            	;
+    dbg⌂ih      	:= dbg⌂          	;
+    dbgtt(d4,dbg⌂ '¦' dbg⌂ih '`nIH with callback cb⌂' ⌂_.k '_Key↓ ↑ ' preciseTΔ(),t:=2,,🖥️w↔//2) ;
     ih.Wait()		; Waits until the Input is terminated (InProgress is false)
 
     if (ih.EndReason  = "Timeout") { ;0t) Timed out after ⌂tHold
-      SendInput(⌂_.send↓), ⌂_.is := true ;, dbgTT(0,⌂_.🔣,t:='∞',i↗,🖥️w↔ - 40, 20)
+      SendInput(⌂_.send↓), ⌂_.is := true ;, dbgtt(d4,⌂_.🔣,t:='∞',i↗,🖥️w↔ - 40, 20)
       if tooltip⎀ {
         win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0)
-        dbgTT(0,⌂_.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
-      }
-      dbgtt(d4,'Timeout, Input=' ih.Input ' ih.InProgress=' ih.InProgress,t:=2,,🖥️w↔,650) ;
+        dbgtt(d4,⌂_.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
+      } ;
+      dbgtt(d4,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH Timeout, Input=' ih.Input ' ih.InProgress=' ih.InProgress,t:=4,,🖥️w↔//2,)
     } else if (ih.EndReason != "Max") { ; Timed out/Stopped without reaching typed char limit
-      dbgtt(d4,'Nonmax ' ih.EndReason ', Input=' ih.Input ' ih.InProgress=' ih.InProgress,t:=2) ;
-      ; return False ;
-    } else {
-      dbgtt(d4,'else, Input=' ih.Input ' ih.InProgress=' ih.InProgress,t:=2) ;
+      dbgtt(d4,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH Nonmax ' ih.EndReason ', Input=' ih.Input ' ih.InProgress=' ih.InProgress,t:=4,,🖥️w↔//2) ;
+    } else { ;
+      dbgtt(d4,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH else, Input=' ih.Input ' ih.InProgress=' ih.InProgress,t:=4,,🖥️w↔//2,) ;
       ; return ih.Input ; Returns any text collected since the last time Input was started
     }
   }
