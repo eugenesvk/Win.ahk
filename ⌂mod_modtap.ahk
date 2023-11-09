@@ -288,65 +288,8 @@ Key↑_⌂(ih, vk, sc, ⌂_) { ;
       SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}')
     }
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook?
-    dbgMsg(0,'2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑`n' dbg⌂ '↓ vk↑' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '≠' ⌂_.k ' ' preciseTΔ() ' do nothing')
+    dbgMsg(0,'2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑`n' dbg⌂ '↓ vk↑' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '≠' ⌂_.k ' ' preciseTΔ() ' do nothing','Key↑_⌂')
   }
-}
-set_modtap_labels() { ; set key labels to monitor for home row mods
-  static k	:= keyConstant._map, kr := keyConstant._mapr, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
-   , get⎀ 	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
-   , s    	:= helperString
-   , labels := Map()
-   , cbkeys := '' ; inputhook key lists that use callbacks
-  if labels.Count   	= 0 { ; can set case only on empty maps
-    labels.CaseSense	:= 0
-    labels['en'] := "
-    ( Join ` LTrim
-     `1234567890-=
-      qwertyuiop[]
-      asdfghjkl;'\
-      zxcvbnm,./
-     )"
-    labels['en_no⌂'] := "
-    ( Join ` LTrim
-     `1234567890-=
-      qwertyuiop[]
-          gh    '\
-      zxcvbnm,./
-     )"
-    labels['en_no‹⌂'] := "
-    ( Join ` LTrim
-     `1234567890-=
-      qwertyuiop[]
-          ghjkl;'\
-      zxcvbnm,./
-     )"
-    labels['‹en'] := "
-    ( Join ` LTrim
-     `12345
-      qwert
-      asdfg
-      zxcvb
-     )"
-    labels['en›'] := "
-    ( Join ` LTrim
-           67890-=
-           yuiop[]
-           hjkl;'\
-           nm,./
-     )"
-  }
-
-  if cbkeys = '' {
-    ; loop parse labels['en›'] { ; track half of the layout (right half for left home row mods) to avoid issues
-    loop parse labels['en_no‹⌂'] { ; track layout except for same side home row
-      cbkeys .= '{' s.key→ahk(A_LoopField) '}'
-    }
-    ; loop parse labels['‹en'] { ; break on the other half
-    ;   breaks .= '{' s.key→ahk(A_LoopField) '}'
-    ; } ;;; todo: useless? since anyway it has to be processed, so just not adding callbacks from ↑ is enough?
-  }
-
-  return {labels:labels, cbkeys:cbkeys}
 }
 
 setup⌂mod(hk,c,is↓) { ;
