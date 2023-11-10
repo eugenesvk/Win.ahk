@@ -128,7 +128,19 @@ class helperString {
     return this.parseKeyCombo(modlist,&_s:=[],&_:=0)
   }
 
-
+  static key→token(key_lbl) { ; key ; → ︔ token to be used in var names, leave other home row modes intact
+    static K     	:= keyConstant , lbl := K._labels, token := K._ahk_token  ; various key name constants, gets vk code to avoid issues with another layout
+      , lbl_token	:= Map()
+      , isInit   	:= false
+    if not isInit {
+      lbl_token.CaseSense := 0 ; make key matching case insensitive
+      loop Parse lbl['en'] {
+        lbl_token[A_LoopField]  := SubStr(token['en'],A_Index,1)
+      }
+      isInit := true
+    }
+    return lbl_token.Get(key_lbl,key_lbl)
+  }
   static convert_lyt_arr(arrIn, lyt_to, &ℯ, lyt_from:="en") { ;→array convert an array from one layout to anouther
     static k              	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
     static lbl_translit   	:= Map()
