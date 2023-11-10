@@ -56,7 +56,7 @@ class keyConstant {
     ; k.a → vk41
     ; k	:= keyConstant._map
     ; k['a'] → vk41
-    static vk := Map(), sc := Map(), vkrev := Map(), labels := Map()
+    static vk := Map(), sc := Map(), vkrev := Map(), labels := Map(), ahk_token := Map()
      , isInit := false
     if isInit {
       return
@@ -67,6 +67,7 @@ class keyConstant {
     vkrev.CaseSense    	:= 0 ; reverse, vk → key
     sc.CaseSense       	:= 0
     labels.CaseSense   	:= 0
+    ahk_token.CaseSense	:= 0 ; key tokens that can be used in var/function names like a︔ := ';'
     labels['en'] := "
       ( Join ` LTrim
        `1234567890-=
@@ -81,7 +82,13 @@ class keyConstant {
         фывапролджэ\
         ячсмитьбю.
        )"
-
+    ahk_token['en'] := "
+      ( Join ` LTrim
+       ˋ1234567890‐₌
+        qwertyuiop〔〕
+        asdfghjkl︔’⧵
+        zxcvbnm ⸴．⁄
+       )"
     ; Get dynamically actual VKs for the labels from ↑ for each active system layout
     ; though store it only in simplified 'en'/'ru' (are IDs needed?)
     ;;; add non alpha? just use the currently mapped ones, don't depend on a layout
@@ -440,5 +447,6 @@ class keyConstant {
     this._mapr     	:= vkrev
     this._mapsc    	:= sc
     this._labels   	:= labels
+    this._ahk_token	:= ahk_token
   }
 }
