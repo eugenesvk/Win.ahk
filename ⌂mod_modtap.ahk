@@ -271,8 +271,13 @@ Key↑_⌂(ih, vk, sc, ⌂_) { ;
       }
       SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}')
     }
-  } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook?
-    dbgMsg(0,'2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑`n' dbg⌂ '↓ vk↑' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '≠' ⌂_.k ' ' preciseTΔ() ' do nothing','Key↑_⌂')
+  } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
+    if dbg >= 2 { ;
+      keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
+      prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗') ;
+      t⌂_   	:= A_TickCount - ⌂_.t
+      dbgMsg(2,'✗do nothing`n' '2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ '↓ 🕐' t⌂_ ' ' keynm '↑(vk' hex(vk) ' sc' hex(sc) ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑_⌂')
+    }
   }
 }
 
