@@ -48,17 +48,25 @@ set_vk_global() { ; register global variables in the format of q⃣  to a virtua
 class keyConstant {
   ; learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
   ; kbdedit.com/manual/low_level_vk_list.html
-  static __new() { ; get all vars and store their values in this .Varname as well ‘vk’ map, and add aliases
+  static __new() { ; fill the map
+    this.fillKeyList()
+  }
+  static fillKeyList() { ; get all vars and store their values in this .Varname as well ‘vk’ map, and add aliases
     ; k	:= keyConstant ; various key name constants
     ; k.a → vk41
     ; k	:= keyConstant._map
     ; k['a'] → vk41
     static vk := Map(), sc := Map(), vkrev := Map(), labels := Map()
-    vk.CaseSense    	:= 0 ; make key matching case insensitive
-    vkrev.CaseSense 	:= 0 ; reverse, vk → key
-    sc.CaseSense    	:= 0
-    labels.CaseSense	:= 0
-
+     , isInit := false
+    if isInit {
+      return
+    } else {
+      isInit := true
+    }
+    vk.CaseSense       	:= 0 ; make key matching case insensitive
+    vkrev.CaseSense    	:= 0 ; reverse, vk → key
+    sc.CaseSense       	:= 0
+    labels.CaseSense   	:= 0
     labels['en'] := "
       ( Join ` LTrim
        `1234567890-=
@@ -106,7 +114,7 @@ class keyConstant {
     vk['🖱←']	:= 'vk9C'	; WheelLeft 	0x9C	078
 
 
-    ; "Mappable" codes, to which Unicode characters can be assigned in the High-level editor
+      ; "Mappable" codes, to which Unicode characters can be assigned in the High-level editor
     ;              	         	Name          	#Value	Description
     vk['ABNT_C1']  	:= 'vkC1'	; VK_ABNT_C1  	0xC1  	Abnt C1
     vk['ABNT_C2']  	:= 'vkC2'	; VK_ABNT_C2  	0xC2  	Abnt C2
@@ -120,7 +128,7 @@ class keyConstant {
     vk['ICO_CLEAR']	:= 'vkE6'	; VK_ICO_CLEAR	0xE6  	IcoClr
     vk['ICO_HELP'] 	:= 'vkE3'	; VK_ICO_HELP 	0xE3  	IcoHlp
 
-    start	:= 0x30 ; VK_KEY_0	0x30 ('0')	0
+      start	:= 0x30 ; VK_KEY_0	0x30 ('0')	0
     end  	:= 0x39 ; VK_KEY_9	0x39 ('9')	9
     loop (end - start + 1) {
       i1           	:= A_Index
@@ -143,9 +151,9 @@ class keyConstant {
       vk[ru]         	:= 'vk' . key_val_hex
     }
 
-    vk['NONAME']  	:= 'vkFC'	; VK_NONAME  	0xFC	NoName
+      vk['NONAME']  	:= 'vkFC'	; VK_NONAME  	0xFC	NoName
 
-    for key in ['ADD','🔢+','🔢₊'] {
+      for key in ['ADD','🔢+','🔢₊'] {
       vk[key]	:= 'vk6B'	; VK_ADD	0x6B	Numpad +
       sc[key]	:= 'sc' hex(GetKeySC(vk[key]))
     }
@@ -181,7 +189,7 @@ class keyConstant {
       }
     }
 
-    vk['OEM_ATTN']      	:= 'vkF0'	; VK_OEM_ATTN      	0xF0	Oem Attn
+      vk['OEM_ATTN']      	:= 'vkF0'	; VK_OEM_ATTN      	0xF0	Oem Attn
     vk['OEM_AUTO']      	:= 'vkF3'	; VK_OEM_AUTO      	0xF3	Auto
     vk['OEM_AX']        	:= 'vkE1'	; VK_OEM_AX        	0xE1	Ax
     vk['OEM_BACKTAB']   	:= 'vkF5'	; VK_OEM_BACKTAB   	0xF5	Back Tab
@@ -208,7 +216,7 @@ class keyConstant {
     vk['SEPARATOR']     	:= 'vk6C'	; VK_SEPARATOR     	0x6C	Separator
     vk['ZOOM']          	:= 'vkFB'	; VK_ZOOM          	0xFB	Zoom
 
-    for key in ['OEM_MINUS','-','‐'] {
+      for key in ['OEM_MINUS','-','‐'] {
       vk[key]	:= 'vkBD'	; VK_OEM_MINUS	0xBD	OEM_MINUS (_ -)
     }
     for key in ['OEM_PLUS','=','₌','+','🔢=','🔢₌'] {
@@ -233,7 +241,7 @@ class keyConstant {
       vk[key]	:= 'vk06'	; VK_XBUTTON2	0x06	X Button 2 **
     }
 
-    for key in ['Tab','⭾','↹'] {
+      for key in ['Tab','⭾','↹'] {
       vk[key]	:= 'vk09'	; VK_TAB	0x09	Tab
     }
     for key in ['SPACE','␠','␣'] {
@@ -255,7 +263,7 @@ class keyConstant {
       vk[key]	:= 'vkBA'	; VK_OEM_1	0xBA	OEM_1 (: ;)
     }
 
-    for key in ['OEM_102'] {
+      for key in ['OEM_102'] {
       vk[key]	:= 'vkE2'	; VK_OEM_102	0xE2	OEM_102 (> <)
     }
     for key in ['OEM_3','ё','``','ˋ','˜'] {
@@ -280,11 +288,11 @@ class keyConstant {
       vk[key]	:= 'vk5D'	; VK_APPS	0x5D	Context Menu
     }
 
-    for key in ['CAPITAL','CapsLock','Caps','⇪'] {
+      for key in ['CAPITAL','CapsLock','Caps','⇪'] {
       vk[key]	:= 'vk14'	; VK_CAPITAL	0x14	Caps Lock
     }
 
-    ; autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
+      ; autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
     ; hook handles each key either by virtual key code or by scan code, not both. All keys listed in the g_key_to_sc array are handled by SC, meaning that pressing one of these keys will not trigger a hook hotkey which was registered by VK
       ; g_key_to_sc: NumpadEnter, Del, Ins, Up, Down, Left, Right, Home, End, PgUp and PgDn
     for key in ['DOWN','▼','↓'] {
@@ -333,7 +341,7 @@ class keyConstant {
     }
 
 
-    _left 	:= ['‹','<']
+      _left 	:= ['‹','<']
     _right	:= ['›','>']
     for key in ['SHIFT','⇧'] {
       for l in _left {
@@ -368,7 +376,7 @@ class keyConstant {
       }
     }
 
-    vk['BROWSER_HOME']     	:= 'vkAC'	; VK_BROWSER_HOME     	0xAC  	Browser Home
+      vk['BROWSER_HOME']     	:= 'vkAC'	; VK_BROWSER_HOME     	0xAC  	Browser Home
     ;                     	         	Name                  	#Value	Description
     vk['_none_']           	:= 'vkFF'	; VK__none_           	0xFF  	no VK mapping
     vk['ACCEPT']           	:= 'vk1E'	; VK_ACCEPT           	0x1E  	Accept
@@ -380,7 +388,7 @@ class keyConstant {
     vk['BROWSER_STOP']     	:= 'vkA9'	; VK_BROWSER_STOP     	0xA9  	Browser Stop
     vk['CONVERT']          	:= 'vk1C'	; VK_CONVERT          	0x1C  	Convert
 
-    start	:= 0x70 ; VK_F1 	0x70	F1
+      start	:= 0x70 ; VK_F1 	0x70	F1
     end  	:= 0x87 ; VK_F24	0x87	F24
     loop (end - start + 1) {
       i1         	:= A_Index
@@ -391,7 +399,7 @@ class keyConstant {
       }
     }
 
-    vk['FINAL']              	:= 'vk18'	; VK_FINAL              	0x18	Final
+      vk['FINAL']              	:= 'vk18'	; VK_FINAL              	0x18	Final
     vk['HELP']               	:= 'vk2F'	; VK_HELP               	0x2F	Help
     vk['ICO_00']             	:= 'vkE4'	; VK_ICO_00             	0xE4	Ico00 *
     vk['JUNJA']              	:= 'vk17'	; VK_JUNJA              	0x17	Junja
@@ -418,7 +426,7 @@ class keyConstant {
     vk['VOLUME_MUTE']        	:= 'vkAD'	; VK_VOLUME_MUTE        	0xAD	Volume Mute
     vk['VOLUME_UP']          	:= 'vkAF'	; VK_VOLUME_UP          	0xAF	Volume Up
 
-    for keyNm, vkCode in vk { ; Back , vk08
+      for keyNm, vkCode in vk { ; Back , vk08
       this.%keyNm%	:= vkCode ; convert map into object properties
     }
     for LngNm in labels { ; en / ru
@@ -428,9 +436,9 @@ class keyConstant {
       }
     }
 
-    this._map   	:= vk
-    this._mapr  	:= vkrev
-    this._mapsc 	:= sc
-    this._labels	:= labels
+      this._map    	:= vk
+    this._mapr     	:= vkrev
+    this._mapsc    	:= sc
+    this._labels   	:= labels
   }
 }
