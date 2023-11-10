@@ -43,7 +43,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   hkChar🠿(ThisHotkey) {
     hk := ThisHotkey
     dbgTT(5,ThisHotkey,t:=1) ;
-    ; flag := s.getKeyFlag(hk)
+    ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     is∗ := cfg🖰hide['enableModifiers'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
     Switch ThisHotkey, 0 {
