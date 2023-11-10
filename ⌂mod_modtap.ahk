@@ -57,28 +57,36 @@ i↗ := 19 ; ttdbg index, top right position of the empty status of our home row
 ;;; ONLY ⌂f ⌂j is working ;;;
 
 ; ‹
-⌂a := {k:'a',mod:'LControl'}
-⌂s := {k:'s',mod:'LWin'    }
-⌂d := {k:'d',mod:'LAlt'    }
-⌂f := {k:'f',mod:'LShift'  }
+⌂a := {k:'a',token:'a',mod:'LControl'} ; token can be used in function names
+⌂s := {k:'s',token:'s',mod:'LWin'    }
+⌂d := {k:'d',token:'d',mod:'LAlt'    }
+⌂f := {k:'f',token:'f',mod:'LShift'  }
 ; ›
-⌂j := {k:'j',mod:'RShift'   }
-⌂k := {k:'k',mod:'RAlt'     }
-⌂︔ := {k:';',mod:'RControl'}
-⌂l := {k:'l',mod:'RWin'     }
-; setup info and status fields for all the homerow mods
-⌂map := Map()
-for _modtapp in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
-  _modtapp.t       	:= A_TickCount
-  _modtapp.vk      	:= helperString.key→ahk(_modtapp.k) ; vk21 for f
-  _modtapp.pos     	:= '↑'
-  _modtapp.is      	:= false
-  _modtapp.send↓   	:= '{' _modtapp.mod ' Down' '}'
-  _modtapp.send↑   	:= '{' _modtapp.mod ' Up'   '}'
-  _modtapp.🔣       	:= helperString.modi_ahk→sym(    _modtapp.mod) ; ‹⇧
-  _modtapp.🔣ahk    	:= helperString.modi_ahk→sym_ahk(_modtapp.mod) ; <+
-  _modtapp.flag    	:= f%_modtapp.🔣%
-  ⌂map[_modtapp.vk]	:= _modtapp
+⌂j := {k:'j',token:'j',mod:'RShift'   }
+⌂k := {k:'k',token:'k',mod:'RAlt'     }
+⌂︔ := {k:';',token:'︔',mod:'RControl'}
+⌂l := {k:'l',token:'l',mod:'RWin'     }
+
+map⌂ := Map()
+gen_map⌂() ; setup info and status fields for all the homerow mods
+gen_map⌂(){
+  global map⌂
+  map⌂['vk→⌂'] := Map()
+  map⌂['flag→vk'] := Map()
+  for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
+    i⌂.t                    	:= A_TickCount
+    i⌂.vk                   	:= helperString.key→ahk(i⌂.k) ; vk21 for f
+    i⌂.pos                  	:= '↑'
+    i⌂.is                   	:= false
+    i⌂.send↓                	:= '{' i⌂.mod ' Down' '}'
+    i⌂.send↑                	:= '{' i⌂.mod ' Up'   '}'
+    i⌂.🔣                    	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
+    i⌂.🔣ahk                 	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
+    i⌂.flag                 	:= f%i⌂.🔣%
+    i⌂.dbg                  	:= '⌂' i⌂.k i⌂.🔣 ;
+    map⌂['vk→⌂'][i⌂.vk]     	:= i⌂
+    map⌂['flag→vk'][i⌂.flag]	:= i⌂.vk
+  }
 }
 
 get⌂Status() {
