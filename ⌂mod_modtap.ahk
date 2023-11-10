@@ -138,13 +138,16 @@ unregister⌂()
 unregister⌂() {
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
+   ; , k := helperString.key→token.Bind(helperString)
   global  reg⌂map
   loop parse 'fj' {
     pre_ahk := ⌂%A_LoopField%.🔣ahk ; <+ for f and >+ for j
     hk_reg := reg⌂map[A_LoopField]
-    , hkreg1	:= pre_ahk hk_reg.down ; >+ ＄ vk       for j
-    , hkreg2	:= pre_ahk hk_reg.up   ; >+ ＄ vk ' UP'
-    HotIf cb⌂%A_LoopField%_hotif
+    , hkreg1  	:= pre_ahk hk_reg.down ; >+ ＄ vk       for j
+    , hkreg2  	:= pre_ahk hk_reg.up   ; >+ ＄ vk ' UP'
+    , token   	:= s.key→token(A_LoopField)
+    , cbHotIf_	:= cbHotIf.Bind(token)
+    HotIf cbHotIf_
     HotKey(hkreg1, hkDoNothing) ; do nothing while home row mod is active _1)
     HotKey(hkreg2, hkModTap_up) ; reset home row mod _2)
     HotIf
@@ -153,6 +156,10 @@ unregister⌂() {
     reg⌂map[A_LoopField]	:= {down:hkreg1, up:hkreg2}
   }
 }
+cbHotIf(_token, HotkeyName) { ; callback for unregister⌂
+  return ⌂%_token%.is ; token is ︔ for ; to be used in var names
+}
+
 hkModTap_up(ThisHotkey) {
   hk_reg := reg⌂map[ThisHotkey]
   ⌂_ := ⌂%hk_reg.lbl%
@@ -168,33 +175,6 @@ hkModTap_up(ThisHotkey) {
 hkDoNothing(ThisHotkey) {
   dbgtt(4,'hkDoNothing ' preciseTΔ())
   return
-}
-
-;;; todo: make this dynamic instead of a repeated list?
-; callback for unregister⌂
-cb⌂a_hotif(HotkeyName) {
-  return ⌂a.is
-}
-cb⌂s_hotif(HotkeyName) {
-  return ⌂s.is
-}
-cb⌂d_hotif(HotkeyName) {
-  return ⌂d.is
-}
-cb⌂f_hotif(HotkeyName) {
-  return ⌂f.is
-}
-cb⌂j_hotif(HotkeyName) {
-  return ⌂j.is
-}
-cb⌂k_hotif(HotkeyName) {
-  return ⌂k.is
-}
-cb⌂l_hotif(HotkeyName) {
-  return ⌂l.is
-}
-cb⌂︔_hotif(HotkeyName) {
-  return ⌂︔.is
 }
 
 ; callback for ↑
