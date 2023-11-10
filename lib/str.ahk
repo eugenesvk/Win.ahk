@@ -69,7 +69,7 @@ class helperString {
   }
 
 
-  static getKeyFlag(hk) { ; get prefix bitflags for a key combo (~$vk41 → f＄|f˜ = 6)
+  static getKeyPrefixFlag(hk) { ; get prefix bitflags for a key combo (~$vk41 → f＄|f˜ = 6)
     flag := 0
     flag	|= InStr(hk,'$') ? f＄ : 0	; keyboard hook on
     flag	|= InStr(hk,'~') ? f˜ : 0	; passthru native key
