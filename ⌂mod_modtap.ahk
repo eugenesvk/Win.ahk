@@ -54,8 +54,6 @@ global ucfg⌂mod := Map(
   )
 i↗ := 19 ; ttdbg index, top right position of the empty status of our home row mod
 
-;;; ONLY ⌂f ⌂j is working ;;;
-
 ; ‹
 ⌂a := {k:'a',token:'a',mod:'LControl'} ; token can be used in function names
 ⌂s := {k:'s',token:'s',mod:'LWin'    }
@@ -77,7 +75,7 @@ gen_map⌂(){
     i⌂.t                    	:= A_TickCount
     i⌂.vk                   	:= helperString.key→ahk(i⌂.k) ; vk21 for f
     i⌂.pos                  	:= '↑'
-    i⌂.is                   	:= false
+    i⌂.is                   	:= false ; is down
     i⌂.send↓                	:= '{' i⌂.mod ' Down' '}'
     i⌂.send↑                	:= '{' i⌂.mod ' Up'   '}'
     i⌂.🔣                    	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
@@ -97,10 +95,6 @@ get⌂Status() {
   } ; dbgtt(0,'bitflags ' dec→bin(bitflags) ' ‹' isAny‹ ' ›' isAny›,t:=5)
   return {isAny‹:bitflags & bit‹, isAny›:bitflags & bit›, bit:bitflags}
 }
-
-; #HotIf ⌂f.is
-; 3::msgbox('⌂f.is') ;
-; #HotIf
 
 preciseTΔ() ; start timer for debugging
 
