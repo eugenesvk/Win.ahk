@@ -294,7 +294,7 @@ setup⌂mod(hk,c,is↓) { ;
    , tooltip⎀	:= ucfg⌂mod.Get('tooltip⎀',1) ;
    , ttdbg   	:= ucfg⌂mod.Get('ttdbg',0) ;
    , d3      	:= 3 ; custom dbg level for testing selected commands
-   , d4      	:= 0 ;
+   , d4      	:= 4 ;
    , isInit  	:= false ;
    , ih      	:= InputHook("I2 T" ⌂tHold) ; static so that there is only 1 active and multiple ⌂ don't conflict ;;; todo how to coop with f and j
    , ⌂ih     	:= {} ; modtap that triggered the unique inputhook
