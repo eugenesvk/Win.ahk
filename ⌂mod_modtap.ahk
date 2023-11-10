@@ -43,6 +43,10 @@ if ⌂🠿
   ⌂↓   ⌂↑
   •          _1)  do nothing, block repeat of the
        •     _2)  reset
+if alt⌂↓          another modtap key is active (but not switched to a hold yet, so inputhook is in progress)
+⌂↓       ⌂↑ ↕     single standalone tap, not hold
+     <ΔH •  _↕01)  print ⌂
+    •>ΔH    _🠿0t)  enable ⌂ (⇧⌂ enabled on timer via input hook's timeout of the alt⌂)
 */
 
 ; —————————— User configuration ——————————
