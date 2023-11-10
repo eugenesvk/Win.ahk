@@ -47,6 +47,11 @@ if alt⌂↓          another modtap key is active (but not switched to a hold y
 ⌂↓       ⌂↑ ↕     single standalone tap, not hold
      <ΔH •  _↕01)  print ⌂
     •>ΔH    _🠿0t)  enable ⌂ (⇧⌂ enabled on timer via input hook's timeout of the alt⌂)
+
+Tests:
+f↓j↓f↑w fW (f while another modtap is being held should count as a regular f key, the next W quick tap should work just like regular j↓w↓↑ quick W tap)
+f↓j↓↑f↑ fJ, not jfjfjjf
+hold f+j ~.5sec and release was bugging with unreachable 2b), though seems to be resolved with moving dbg tooltips to fire after the keypresses
 */
 
 ; —————————— User configuration ——————————
