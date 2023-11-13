@@ -207,18 +207,21 @@ unregister⌂() {
 cbHotIf(_token, HotkeyName) { ; callback for unregister⌂
   return ⌂%_token%.is ; token is ︔ for ; to be used in var names
 }
-
-hkModTap_up(ThisHotkey) {
+hkModTap_off(ThisHotkey) {
   hk_reg := reg⌂map[ThisHotkey]
   ⌂_ := ⌂%hk_reg.lbl%
-  dbgtt(3,ThisHotkey ' hk_reg' hk_reg.lbl ' @hkModTap_up',t:=5) ;
-  static ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := ucfg⌂mod.Get('ttdbg',0)
-  , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
-  , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-  t⌂ := A_TickCount - ⌂f.t ;;; ←delete↓
-  dbgtt(1,'🠿1bb) ⌂↑ after timed ⌂🠿(' t⌂ (t⌂<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ(),t:=2,,x:=🖥️w↔,y:=900)
-  SendInput(⌂_.send↑), ; 🠿1bb)
-  ⌂_.pos := '↑', ⌂_.t := A_TickCount, ⌂_.is := false, dbgTT(0,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
+  dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ;
+  static ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := ucfg⌂mod.Get('ttdbg',0), sndlvl := ucfg⌂mod.Get('sndlvl',0)
+    , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
+    , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+    , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1), ttdbg := ucfg⌂mod.Get('ttdbg',0)
+  t⌂_ := A_TickCount - ⌂f.t
+  dbgtt(3,'🠿1bb) ⌂↓ >ΔH •⌂↑ ' preciseTΔ() ' (hkModTap_off)`n' dbg⌂ ' ¦ ' hk_reg.lbl ' ¦ ' ThisHotkey ' (' t⌂_ (t⌂_<⌂ΔH?'<':'>') ⌂ΔH ') `n' ⌂_.send↑,t:=4,i:=13,0,🖥️w↕//2) ;
+  SendInput(⌂_.send↑), ⌂_.is  := false, ⌂_.pos := '↑', ⌂_.t := A_TickCount ; 🠿1bb)
+  , dbgTT(ttdbg?0:5,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
+  if tooltip⎀ { ;
+    win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgtt(0,'',t:='∞',i↗,⎀←-9,⎀↑-30)
+  }
   dbgtt_ismod('🠿1bb')
 }
 hkDoNothing(ThisHotkey) {
