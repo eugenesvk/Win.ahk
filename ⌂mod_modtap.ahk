@@ -233,14 +233,14 @@ get⌂dbg(⌂_) {
    return ⌂_.dbg ⌂_.pos (⌂_.is ? '🠿' : '') ' send‘' ⌂_.send%(⌂_.pos)% '’ flag' dec→bin(⌂_.flag)
 }
 
-cb⌂_Key↓(⌂_,&stack⌂,  ih,vk,sc) { ;
-  Key↓_⌂(ih,vk,sc,   &⌂_,&stack⌂)
+cb⌂_Key↓(⌂_,  ih,vk,sc) { ;
+  Key↓_⌂(ih,vk,sc,   &⌂_)
 }
-cb⌂_Key↑(⌂_,&stack⌂,  ih,vk,sc) {
-  Key↑_⌂(ih,vk,sc,   &⌂_,&stack⌂)
+cb⌂_Key↑(⌂_,  ih,vk,sc) {
+  Key↑_⌂(ih,vk,sc,   &⌂_)
 }
 
-Key↓_⌂(ih, vk, sc, ⌂_) {
+Key↓_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') {
   static k	:= keyConstant._map, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
@@ -257,7 +257,7 @@ Key↓_⌂(ih, vk, sc, ⌂_) {
     dbgMsg(0,dbg⌂ '↑ vk↓' hex(vk) ' sc' hex(sc) ' ' preciseTΔ()) ;
   }
 }
-Key↑_⌂(ih, vk, sc, ⌂_) { ;
+Key↑_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') { ;
   static k	:= keyConstant._map, lbl := keyConstant._labels, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
@@ -322,8 +322,8 @@ setup⌂mod(hk,c,is↓) { ;
     for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] { ; create inputhook objects for later use
       ih⌂	:= InputHook("T" ⌂tHold) ; I2 set minsendlevel individually depending on the stack order of modtap
       ih⌂.KeyOpt('{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
-      cb⌂%i⌂.token%_Key↑	:= cb⌂_Key↑.Bind(i⌂,&stack⌂) ; ih,vk,sc will be added automatically by OnKeyUp
-      cb⌂%i⌂.token%_Key↓	:= cb⌂_Key↓.Bind(i⌂,&stack⌂) ; ...                                     OnKeyDown
+      cb⌂%i⌂.token%_Key↑	:= cb⌂_Key↑.Bind(i⌂) ; ih,vk,sc will be added automatically by OnKeyUp
+      cb⌂%i⌂.token%_Key↓	:= cb⌂_Key↓.Bind(i⌂) ; ...                                     OnKeyDown
       ih⌂.OnKeyUp       	:= cb⌂%i⌂.token%_Key↑	;
       ih⌂.OnKeyDown     	:= cb⌂%i⌂.token%_Key↓	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
       map⌂hook[i⌂.vk]   	:= ih⌂
@@ -362,7 +362,7 @@ setup⌂mod(hk,c,is↓) { ;
 
   is↑ := not is↓ ;
 
-  handle⌂↑(&this⌂,&ih,&⌂ih,&dbg⌂ih,&ihID,this⌂t) { ; allows calling called either when a single ⌂ or combined
+  handle⌂↑(&this⌂,&ih,&ihID,this⌂t) { ; allows calling called either when a single ⌂ or combined
     _tprio := A_PriorKey
     ih_input := ''
     if ih⌂.InProgress { ;
