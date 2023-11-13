@@ -102,6 +102,40 @@ gen_map⌂(){
     map⌂['flag→vk'][i⌂.flag]	:= i⌂.vk
   }
 }
+dbgtt_ismod(dbg_pre:='') { ;
+  static _ := 0
+    , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
+    , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+  if dbg >= _dt {
+    ismod := getDbgKeyStatusS(dbg_pre)
+    , dbgtt(_dt,ismod.dbgt,t:='∞',i↘t,🖥️w↔,🖥️w↕*.91) ; title message
+    , dbgtt(_dt,ismod.dbgv,t:='∞',i↘ ,🖥️w↔,🖥️w↕) ; ↑/↓ status of all the asdfjkl; keys and their ⌂mod
+  }
+}
+getDbgKeyStatusS(dbg_pre:='') { ; get left to right debug string of which modtap keys are active (held)
+  modtap_status := ''
+  , iskeydown := ''
+  , dbg_title := ''
+  key_actual := map⌂['vk→⌂']
+  for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
+    i⌂_act := key_actual[i⌂.vk]
+    if i⌂_act.is {
+      modtap_status	.= i⌂.🔣
+    } else {
+      modtap_status	.= '  '
+    }
+    if GetKeyState(i⌂.vk,"P") {
+      iskeydown	.= ' ' i⌂.k
+    } else { ;
+      iskeydown	.= '  '
+    }
+  }
+  dbg_val := (StrReplace(modtap_status,' ') = '' ? '' : modtap_status) '`n' (StrReplace(iskeydown,' ') = '' ? '' : iskeydown)
+  if dbg_pre and not dbg_val = '`n' {
+    dbg_title := dbg_pre '🕐' preciseTΔ()
+  }
+  return {dbgt:dbg_title,dbgv:dbg_val,modtap:modtap_status,key:iskeydown}
+}
 
 get⌂Status() {
   static bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
