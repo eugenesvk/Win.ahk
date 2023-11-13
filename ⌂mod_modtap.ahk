@@ -281,6 +281,7 @@ Key↑_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') { ;
       }
       SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}')
       dbgtt_ismod('🠿1aa')
+      ih.Stop()
     }
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
     if dbg >= 2 { ;
