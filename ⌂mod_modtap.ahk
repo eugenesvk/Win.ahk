@@ -406,15 +406,21 @@ setup⌂mod(hk,c,is↓) { ;
 
     if (ih⌂.EndReason  = "Timeout") { ;0t) Timed out after ⌂tHold
       SendInput(this⌂.send↓), this⌂.is := true ;, dbgtt(d4,this⌂.🔣,t:='∞',i↗,🖥️w↔ - 40, 20)
-      if tooltip⎀ {
-        win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0)
-        dbgtt(d4,this⌂.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
-      } ;
-      dbgtt(d4,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH Timeout, Input=' ih⌂.Input ' ih⌂.InProgress=' ih⌂.InProgress,t:=4,,🖥️w↔//2,)
-    } else if (ih⌂.EndReason != "Max") { ; Timed out/Stopped without reaching typed char limit
-      dbgtt(d4,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH Nonmax ' ih⌂.EndReason ', Input=' ih⌂.Input ' ih⌂.InProgress=' ih⌂.InProgress,t:=4,,🖥️w↔//2) ;
+      if tooltip⎀ { ;
+        win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgtt(0,this⌂.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
+      }
+      dbgtt_ismod('0t')
+      _ := stack⌂.Pop() ;
+      dbgtt(d5,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH ‘' ih⌂.EndReason '’ Input=' ih⌂.Input '  stack' stack⌂.Length ' ',t:=4,i0↓,🖥️w↔//2,🖥️w↕)
+    } else if (ih⌂.EndReason = "Stopped") {
+      dbg⌂ih:='', ihID := {⌂:'',dbg:''}, _ := stack⌂.Pop() ; cleanup after handle⌂↑ or early ⌂🠿 in Key↑⌂
+      dbgtt(d5,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH ‘' ih⌂.EndReason '’ Input=' ih⌂.Input '  stack' stack⌂.Length ' 🕐' preciseTΔ(),t:=4,i0↓,🖥️w↔//2,🖥️w↕)
+    ; } else if (ih⌂.EndReason = "Match") { ; Input matches one of the items in MatchList
+    ; } else if (ih⌂.EndReason = "Max") { ; Input reached max length and it does not match any of the items in MatchList
+    ; } else if (ih⌂.EndReason = "EndKey") { ; One of the EndKeys was pressed to terminate the Input
     } else { ;
-      dbgtt(d4,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH else, Input=' ih⌂.Input ' ih⌂.InProgress=' ih⌂.InProgress,t:=4,,🖥️w↔//2,) ;
+      _ := stack⌂.Pop() ;???
+      dbgtt(d5,dbg⌂ ' ¦ ' dbg⌂ih '`n×IH else, Input=' ih⌂.Input '  stack' stack⌂.Length ' ',t:=4,i0↓,🖥️w↔//2,🖥️w↕)
       ; return ih⌂.Input ; Returns any text collected since the last time Input was started
     }
   }
