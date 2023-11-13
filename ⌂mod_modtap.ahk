@@ -373,7 +373,10 @@ setup⌂mod(hk,c,is↓) { ;
       ih⌂.Stop(), ⌂ih:={}, dbg⌂ih:='', ihID := {⌂:'',dbg:''}
     }
     if this⌂.is { ; 🠿1ba)
-      SendInput(this⌂.send↑), dbgtt(d4,'⇧↑',t:='∞',i:=18,🖥️w↔,🖥️w↕)
+      SendInput(this⌂.send↑)
+      if tooltip⎀ { ;
+        win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgtt(0,'',t:='∞',i↗,⎀←-9,⎀↑-30)
+      }
       this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
       dbgtt(d3,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
       dbgtt_ismod('🠿1ba')
