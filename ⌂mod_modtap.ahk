@@ -228,7 +228,10 @@ hkDoNothing(ThisHotkey) {
   dbgtt(4,'hkDoNothing ' preciseTΔ())
   return
 }
-
+get⌂dbg(⌂_) {
+  static bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
+   return ⌂_.dbg ⌂_.pos (⌂_.is ? '🠿' : '') ' send‘' ⌂_.send%(⌂_.pos)% '’ flag' dec→bin(⌂_.flag)
+}
 
 cb⌂_Key↓(⌂_,&stack⌂,  ih,vk,sc) { ;
   Key↓_⌂(ih,vk,sc,   &⌂_,&stack⌂)
