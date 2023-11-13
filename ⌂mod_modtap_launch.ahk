@@ -9,6 +9,7 @@
 #Include <str>
 #Include <libFunc>
 #Include <libFunc Native>
+#include <libFunc Num>	; Functions: Numeric
 
 CoordMode "ToolTip", "Screen"	; Place ToolTips at absolute screen coordinates
 CoordMode "Mouse",   "Screen"	; Mouse cursor: get absolute scren coordinates
