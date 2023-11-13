@@ -307,14 +307,17 @@ setup⌂mod(hk,c,is↓) { ;
    , map⌂hook	:= Map()
    , stack⌂  	:= [] ; track the level of a modtap key's inputhook in the stack (also used to set minsendlevel to allow sending keys to only the most recent hook)
 
+   cb⌂a_Key↑:=0,cb⌂s_Key↑:=0,cb⌂d_Key↑:=0,cb⌂f_Key↑:=0,cb⌂j_Key↑:=0,cb⌂k_Key↑:=0,cb⌂l_Key↑:=0,cb⌂︔_Key↑:=0
+  ,cb⌂a_Key↓:=0,cb⌂s_Key↓:=0,cb⌂d_Key↓:=0,cb⌂f_Key↓:=0,cb⌂j_Key↓:=0,cb⌂k_Key↓:=0,cb⌂l_Key↓:=0,cb⌂︔_Key↓:=0
   if not isInit {
     for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] { ; create inputhook objects for later use
       ih⌂	:= InputHook("T" ⌂tHold) ; I2 set minsendlevel individually depending on the stack order of modtap
       ih⌂.KeyOpt('{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
-      ih⌂.OnKeyUp  	:= cb⌂%i⌂.token%_Key↑	;
-      ih⌂.OnKeyDown	:= cb⌂%i⌂.token%_Key↓	;
-      ;;; or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
-      map⌂hook[i⌂.vk]	:= ih⌂
+      cb⌂%i⌂.token%_Key↑	:= cb⌂_Key↑.Bind(i⌂,&stack⌂) ; ih,vk,sc will be added automatically by OnKeyUp
+      cb⌂%i⌂.token%_Key↓	:= cb⌂_Key↓.Bind(i⌂,&stack⌂) ; ...                                     OnKeyDown
+      ih⌂.OnKeyUp       	:= cb⌂%i⌂.token%_Key↑	;
+      ih⌂.OnKeyDown     	:= cb⌂%i⌂.token%_Key↓	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
+      map⌂hook[i⌂.vk]   	:= ih⌂
     }
     isInit	:= true
   }
