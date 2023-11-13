@@ -34,9 +34,9 @@ a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the 
 ⌂↓ a↓ a↑ ⌂↑ 🠿    should be ⇧A, not ⌂
    •              same as above
    <ΔH•     🠿1aa) print ⇧A, also set ⌂ var as a modifier since we know it's not quick typing
-         •  🠿1ba) print nothing, 1a handles key, ⌂ is a mod
+   <ΔH   •  🠿1ba) print nothing, 1a handles key, ⌂ is a mod
    >ΔH•     🠿1ab) print nothing, 0c handled key↓ (⇧⌂ enabled on timer 🠿0t)
-         •  🠿1bb) print nothing, 1a handles key, ⌂ is a mod
+   >ΔH   •  🠿1bb) print nothing, 1a handles key, ⌂ is a mod
 
 if ⌂🠿
   a↓...      __)  not tracked, regular typing with modtap enabled
@@ -49,9 +49,11 @@ if alt⌂↓          another modtap key is active (but not switched to a hold y
     •>ΔH    _🠿0t)  enable ⌂ (⇧⌂ enabled on timer via input hook's timeout of the alt⌂)
 
 Tests:
+
 f↓j↓f↑w fW (f while another modtap is being held should count as a regular f key, the next W quick tap should work just like regular j↓w↓↑ quick W tap)
-f↓j↓↑f↑ fJ, not jfjfjjf
+f↓j↕f↑ J, not jfjfjjf
 hold f+j ~.5sec and release was bugging with unreachable 2b), though seems to be resolved with moving dbg tooltips to fire after the keypresses
+f↓j↓w↕↑f↑ W (with ⇧› enabled since j was the last activated inputhook so it has a priority over f's ‹⇧
 */
 
 ; —————————— User configuration ——————————
