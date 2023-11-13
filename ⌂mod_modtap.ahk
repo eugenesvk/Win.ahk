@@ -63,7 +63,12 @@ global ucfg⌂mod := Map(
  ; Debugging  	       	        	;
  , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
   )
-i↗ := 19 ; ttdbg index, top right position of the empty status of our home row mod
+i↗ 	:= 19 ; dbgTT index, top right position of the empty status of our home row mod
+i↘t	:=  8 ; dbgTT index, top down position of the key and modtap status (title)
+i↘ 	:=  9 ; ... value
+i1↓	:= 10 ; dbgTT index, bottom position for inputhooks on messages
+i0↓	:= 11 ; ... off
+_dt	:=  5 ; min debug level for the bottom-right status of all the keys
 
 ; ‹
 ⌂a := {k:'a',token:'a',mod:'LControl'} ; token can be used in function names
