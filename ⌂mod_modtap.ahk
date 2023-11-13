@@ -254,7 +254,7 @@ Key↓_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') {
       dbgtt(2,'✗ ?0b) ' dbg⌂ '(' ⌂_ ') ' keynm '↓ prio ‘' prionm '’ vk' hex(vk) ' sc' hex(sc),t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
   } else { ; should never get here?
-    dbgMsg(0,dbg⌂ '↑ vk↓' hex(vk) ' sc' hex(sc) ' ' preciseTΔ()) ;
+    dbgMsg(0,dbg⌂ ' vk↓' hex(vk) ' sc' hex(sc) ' ' preciseTΔ()) ;
   }
 }
 Key↑_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') { ;
@@ -351,7 +351,7 @@ setup⌂mod(hk,c,is↓) { ;
   isThis›    	:= this⌂.flag & bit›
   isOpp      	:= (isThis‹ and isAny›)
     or     (isThis› and isAny‹)
-    ; dbgtt(d4,isOpp ' isOpp`n' isThis‹ ' ' isAny› '`n' isThis› ' ' isAny‹,5)
+    ; dbgtt(d4,isOpp ' isOpp`n' isThis‹ ' ' isAny› '`n' isThis› ' ' isAny‹,3)
   static tmpid := 2
   if tmpid > 5 {
     tmpid := 2
@@ -368,10 +368,10 @@ setup⌂mod(hk,c,is↓) { ;
     ih_input := ''
     if ih⌂.InProgress { ;
       ih_input	:= ih⌂.Input
-      _ := stack⌂.Pop()
-      dbgtt(d4,'×InputHook, input=' ih_input,t:=2)
-      ih⌂.Stop(), ⌂ih:={}, dbg⌂ih:='', ihID := {⌂:'',dbg:''}
+      dbgtt(d5,'×IH handle⌂↑, input=' ih_input ' stack' stack⌂.Length ' 🕐' preciseTΔ(),t:=4,7) ; I
+      ih⌂.Stop() ; stack cleaned up when handling ih.reason so that it's possible to stop at Key↓↑ functions
     }
+    ; dbgtt(0,'✗post stop stack' stack⌂.Length ' 🕐' preciseTΔ(),'∞',8,0,0) ; II (stop III)
     if this⌂.is { ; 🠿1ba)
       SendInput(this⌂.send↑)
       if tooltip⎀ { ;
@@ -387,7 +387,7 @@ setup⌂mod(hk,c,is↓) { ;
           if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
             alt⌂ := stack⌂[-2], alt⌂ih := map⌂hook[alt⌂.vk]
             vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC) ; decimal value
-            Key↑_⌂(alt⌂ih, vk_d, sc_d, &alt⌂,&stack⌂, '↕xz') ; invoke callback directly, but use another modtap's inputhook (ours is already disabled)
+            Key↑_⌂(alt⌂ih, vk_d, sc_d, &alt⌂, '↕xz') ; invoke callback directly, but use another modtap's inputhook (ours is already disabled)
             dbgtt(d3,'✗ _↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone while ' alt⌂.dbg '↓`n🕐' this⌂t '<' ⌂ΔH ' PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ this⌂.is=' this⌂.is ' this⌂.pos=' this⌂.pos,t:=2,,0,🖥️w↕*.86) ;
           } else { ;
             SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
