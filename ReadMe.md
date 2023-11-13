@@ -78,7 +78,10 @@ Download all the files in this branch and double click `⌂mod_modtap_launch.ahk
 
 ## Known issues
 
-- only <kbd>f</kbd> as ⌂<kbd>⇧</kbd>
+- only a few keys working
+  - <kbd>f</kbd> as ⌂<kbd>‹⇧</kbd>
+  - <kbd>j</kbd> as ⌂<kbd>⇧›</kbd>
 - tapping same-side real modifier (e.g., <kbd>‹⇧</kbd>) resets the status of the homerow modifier, and the latter doesn't track&reset itself
+- same-type opposite-side modifiers are disabled, so if ⌂<kbd>f</kbd>(‹⇧) is activated as a Hold, then ⌂<kbd>j</kbd>(⇧›) won't activate, but will act like a regular key
 
 ## Credits
