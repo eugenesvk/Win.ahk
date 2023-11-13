@@ -223,57 +223,12 @@ hkDoNothing(ThisHotkey) {
   return
 }
 
-; callback for ↑
-cb⌂a_Key↓(ih, vk, sc) {
-  Key↓_⌂(ih, vk, sc, ⌂a)
+
+cb⌂_Key↓(⌂_,&stack⌂,  ih,vk,sc) { ;
+  Key↓_⌂(ih,vk,sc,   &⌂_,&stack⌂)
 }
-cb⌂s_Key↓(ih, vk, sc) {
-  Key↓_⌂(ih, vk, sc, ⌂s)
-}
-cb⌂d_Key↓(ih, vk, sc) {
-  Key↓_⌂(ih, vk, sc, ⌂d)
-}
-cb⌂f_Key↓(ih, vk, sc) {
-  dbgtt(4,'cb⌂f_Key↓',t:=1)
-  Key↓_⌂(ih, vk, sc, ⌂f)
-}
-cb⌂j_Key↓(ih, vk, sc) {
-  Key↓_⌂(ih, vk, sc, ⌂j)
-}
-cb⌂k_Key↓(ih, vk, sc) {
-  Key↓_⌂(ih, vk, sc, ⌂k)
-}
-cb⌂l_Key↓(ih, vk, sc) {
-  Key↓_⌂(ih, vk, sc, ⌂l)
-}
-cb⌂︔_Key↓(ih, vk, sc) {
-  Key↓_⌂(ih, vk, sc, ⌂︔)
-}
-; callback for ↑
-cb⌂a_Key↑(ih, vk, sc) {
-  Key↑_⌂(ih, vk, sc, ⌂a)
-}
-cb⌂s_Key↑(ih, vk, sc) {
-  Key↑_⌂(ih, vk, sc, ⌂s)
-}
-cb⌂d_Key↑(ih, vk, sc) {
-  Key↑_⌂(ih, vk, sc, ⌂d)
-}
-cb⌂f_Key↑(ih, vk, sc) {
-  dbgtt(4,'cb⌂f_Key↑',t:=1) ;
-  Key↑_⌂(ih, vk, sc, ⌂f)
-}
-cb⌂j_Key↑(ih, vk, sc) {
-  Key↑_⌂(ih, vk, sc, ⌂j)
-}
-cb⌂k_Key↑(ih, vk, sc) {
-  Key↑_⌂(ih, vk, sc, ⌂k)
-}
-cb⌂l_Key↑(ih, vk, sc) {
-  Key↑_⌂(ih, vk, sc, ⌂l)
-}
-cb⌂︔_Key↑(ih, vk, sc) {
-  Key↑_⌂(ih, vk, sc, ⌂︔)
+cb⌂_Key↑(⌂_,&stack⌂,  ih,vk,sc) {
+  Key↑_⌂(ih,vk,sc,   &⌂_,&stack⌂)
 }
 
 Key↓_⌂(ih, vk, sc, ⌂_) {
