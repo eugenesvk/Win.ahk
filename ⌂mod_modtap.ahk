@@ -62,6 +62,7 @@ global ucfg⌂mod := Map(
  , 'holdTimer'	, 0.5  	;|.5|   	seconds of holding a modtap key after which it becomes a hold modifier
  ; Debugging  	       	        	;
  , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
+ , 'sndlvl'   	, 1    	;|1|    	register hotkeys with this sendlevel
   )
 i↗ 	:= 19 ; dbgTT index, top right position of the empty status of our home row mod
 i↘t	:=  8 ; dbgTT index, top down position of the key and modtap status (title)
@@ -195,8 +196,8 @@ unregister⌂() {
     , token   	:= s.key→token(A_LoopField)
     , cbHotIf_	:= cbHotIf.Bind(token)
     HotIf cbHotIf_
-    HotKey(hkreg1, hkDoNothing) ; do nothing while home row mod is active _1)
-    HotKey(hkreg2, hkModTap_up) ; reset home row mod _2)
+    HotKey(hkreg1, hkDoNothing , "I" sndlvl) ; do nothing while home row mod is active _1)
+    HotKey(hkreg2, hkModTap_off, "I" sndlvl) ; reset home row mod _2)
     HotIf
     reg⌂map[hkreg1]     	:= {lbl:A_LoopField, is↓:1}
     reg⌂map[hkreg2]     	:= {lbl:A_LoopField, is↓:0}
