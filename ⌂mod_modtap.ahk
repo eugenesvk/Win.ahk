@@ -217,6 +217,7 @@ hkModTap_up(ThisHotkey) {
   dbgtt(1,'🠿1bb) ⌂↑ after timed ⌂🠿(' t⌂ (t⌂<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ(),t:=2,,x:=🖥️w↔,y:=900)
   SendInput(⌂_.send↑), ; 🠿1bb)
   ⌂_.pos := '↑', ⌂_.t := A_TickCount, ⌂_.is := false, dbgTT(0,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
+  dbgtt_ismod('🠿1bb')
 }
 hkDoNothing(ThisHotkey) {
   dbgtt(4,'hkDoNothing ' preciseTΔ())
@@ -271,6 +272,7 @@ Key↑_⌂(ih, vk, sc, ⌂_) { ;
         win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
       }
       SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}')
+      dbgtt_ismod('🠿1aa')
     }
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
     if dbg >= 2 { ;
@@ -361,6 +363,7 @@ setup⌂mod(hk,c,is↓) { ;
       SendInput(this⌂.send↑), dbgtt(d4,'⇧↑',t:='∞',i:=18,🖥️w↔,🖥️w↕)
       this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
       dbgtt(d3,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
+      dbgtt_ismod('🠿1ba')
     } else {
       if (prio := s.key→ahk(A_PriorKey)) = vkC {
         if this⌂.pos = '↓' { ; ↕xz) ↕01)
@@ -377,11 +380,13 @@ setup⌂mod(hk,c,is↓) { ;
         } else { ; 00) haven't been activated, no need to send self
           this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
           dbgtt(d3,'✗ 00) this⌂↑ alone this⌂↓(' this⌂t ' < ' ⌂ΔH ') PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ this⌂.is=' this⌂.is ' this⌂.pos=' this⌂.pos,t:=2,,x:=🖥️w↔,y:=850)
+          dbgtt_ismod('00)')
         }
       } else { ; ↕2a) ⌂↓ a↓ •⌂↑ a↑   fast typing ⌂,afjfjffjfjf
         this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
         keynm := kr['en'].Get(prio,'✗') ;
         dbgtt(d3,'↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' A_PriorKey ') A_PriorKey, print self ‘' c '’‘' ih_input '’=input',t:=4,,x:=0)  ;
+        dbgtt_ismod('↕2a)')
         SendLevel 1 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activated
         SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
         SendInput(ih_input) ;
@@ -393,9 +398,11 @@ setup⌂mod(hk,c,is↓) { ;
   if is↑ { ;
     this⌂t := A_TickCount - this⌂.t
     handle⌂↑(&this⌂,&ih,&⌂ih,&dbg⌂ih,&ihID,this⌂t) ;
+    dbgtt_ismod('↑')
   } else { ; is↓
     ; dbgtt(d4,'is↓' is↓ ' ' preciseTΔ(),t:=3,i:=13,x:=🖥️w↔,y:=300) ;
     this⌂.pos := '↓', this⌂.t := A_TickCount, dbgtt(d4,'⇧↓',t:='∞',i:=18,🖥️w↔,🖥️w↕)
+    dbgtt_ismod('↓')
     stack⌂.Push(this⌂)
     ih⌂.MinSendLevel	:= stack⌂.Length + 1
     ih⌂.Start()     	        	; 0a) •⌂↓ do nothing yet, just activate inputhook
