@@ -71,10 +71,16 @@ Download all the files in this branch and double click `⌂mod_modtap_launch.ahk
 
 ## Use
 
-- Type `f`to get the expected `f`
+- Type `f`to get the expected `f`fog
 - Type `fog` quickly to get the expected `fog`
 - Type `fu` quickly, but hold onto <kbd>f</kbd> for a tiny bit longer (release it after releasing <kbd>u</kbd>) to get `U`
-- Hold <kbd>f</kbd> for longer than 0.5 seconds, then type <kbd>u</kbd> get `U` without an `f`
+- Hold <kbd>f</kbd> for longer than 0.5 seconds , then type <kbd>u</kbd> get `U` without an `f`
+
+## Configure
+
+  Adjust configuration variables in the `global ucfg⌂mod := Map` line of the script
+  - Set `tooltip⎀` (enabled by default) to show a tooltip near the text cursor (caret) with an indicator of a modifier status, e.g., after holding <kbd>f</kbd> and tapping <kbd>w</kbd> you'd get `‹⇧` indicator  like ![f](./img/CaretToolTip.png)
+  - Change the hold duration via `holdTimer`
 
 ## Known issues
 
