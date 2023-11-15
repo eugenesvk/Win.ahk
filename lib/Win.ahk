@@ -2,7 +2,6 @@
 
 #include <UIA>
 #include <Acc2>
-#include <winapi Struct>
 #include <libFunc Dbg>	; Functions: Debug
 class win {
   static get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
@@ -37,7 +36,6 @@ class win {
   static get⎀GUI(&⎀←,&⎀↑,&⎀→:=0,&⎀↓:=0 ; returned in Screen coordinates to match ACC, also avoids an issue where Active top window for some reson isn't the same dimensions as the window that holds the caret, so converting x,y to screen coordinates later results in the wrong outcome
     ,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0) { ; autohotkey.com/boards/viewtopic.php?t=13004
     ; ⎀isVis sets to 1 only if caret Height > 1 (it's 1 in Help app even though there is no text input)
-    static ws        	:= winapi_Struct ; various win32 API structs
     static win32     	:= win32Constant ; various win32 API constants
      , gui           	:= win32.gui
      , bufSize       	:=24+6*A_PtrSize ; 72
