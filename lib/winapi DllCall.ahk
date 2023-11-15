@@ -13,6 +13,7 @@ test_winapi_DllCall() {
   MsgBox(WinGetClass(locfn(pt)))
 }
 */
+#include <winapi Struct>
 
 class winapi_DllCall { ; Various win32 API DllCall functions bound to AHK funcs with the help of AHK structs
   static ws      	:= winapi_Struct
