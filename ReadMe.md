@@ -72,6 +72,15 @@ Library files in `/lib` used only when function by the same name is called
 
 ## Use
 
+## Configure
+
+#### Press&Hold character picker
+  - [char🠿](./char🠿.ahk) contains the hotkey definitions and what set of symbols those hotkeys should use to show a symbol picker
+  - [symbol](./gVar/symbol.ahk) contains a few Maps of symbols that can be updated to insert whatever symbols you need
+  - [PressH](<./gVar/PressH.ahk>) contains a set of visual tweaks (like fonts and colors) and `TimerHold` hold threshold (0.4 sec by default)
+  - [varWinGroup](./varWinGroup.ahk) contains the list of apps in the `PressnHold` group where the functionality is enabled
+  - [PressH](./lib/PressH.ahk) library contains the actual `PressH_ChPick` function that creates the popup characte picker, and has `lbl_en` list of default labels used when no user defined labels are provided (non-english labels can be added to the [constKey](./lib/constKey.ahk) library)
+
 ## Known issues
   - Horizontal scrolling fails with 'UIA' enabled AutoHotkey and COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452), use [🖰Scroll Excel](<./🖰Scroll Excel.ahk>)
 
