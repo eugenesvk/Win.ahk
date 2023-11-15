@@ -60,9 +60,6 @@ Library files in `/lib` used only when function by the same name is called
   - `GroupHasWin` check if the specified group contains the specified window (quasi-boolean)
   - [libFunc Scroll](<./lib/libFunc Scroll.ahk>) `ScrollHCombo` horizontal scroll, picking the working sub-function depending on the window/app since ther isn't a single universal horizontal scrolling method. Unfortunately, with 'UIA' enabled fails with COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452)
   - [libFunc Dbg](<./lib/libFunc Dbg.ahk>) `dbgTT` debugging tooltip that only shows if a global `dbg` var is set above a threshold, also with posion/timer arguments, less intrusive than a typical message box (though `dbgMsg` is also there)
-
-WinLock() { ;requires two elevated tasks in the Task Scheduler
-    - HasValue
 - Enumerate all conhosts and tries to find the one that maps to our console window (external) [getconkbl.dll](github.com/Elfy/getconkbl)
 - UI Automation (external) [UIA v2](https://github.com/Descolada/UIA-v2/raw/main/Lib/UIA.ahk)
 
