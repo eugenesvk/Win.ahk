@@ -21,7 +21,8 @@ description continued
   - [char ⎇›](<./char ⎇›.ahk>) [TypES](https://github.com/eugenesvk/kbdLayout-Mac) typographical layout and easily insert modifier symbols like ⎇ when pressed with <kbd>⎇›</kbd>
   - [char🠿](<./char🠿.ahk>) insert chars on key Hold via a Mac-like Press&Hold character picker:<br/>
     ![sequential labels](./img/ch🠿Dia.png)<br/>
-    ![custom labels](./img/ch🠿Sym.png)
+    ![custom labels](./img/ch🠿Sym.png)<br/>
+    where a symbol can be inserted with a single key label, cursor keys and <kbd>⏎</kbd>, or a mouse click on the symbol or the label. Symbols, labels, hold duration trigger, and a few picker styles are customizable.
   - [char-AltTT](<./char-AltTT.ahk>) add diacritics to keys by triggering an diacritic type and finishing with a key (with a tooltip hint) or insert arbitrary symbols via the same mechanism<br/>
     ![tooltip diacritics](<./img/ch⎇TT Dia.png>) <kbd>⇧</kbd><kbd>⎇</kbd><kbd>m</kbd> to insert macron<br/>
     ![tooltip math symbols](<./img/ch⎇TT Sym.png>) <kbd>⇧</kbd><kbd>⎇</kbd><kbd>t</kbd> to insert math
