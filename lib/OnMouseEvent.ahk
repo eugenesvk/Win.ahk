@@ -1,4 +1,4 @@
-#Requires AutoHotKey 2.1-alpha.4
+#Requires AutoHotKey 2.0.10
 
 /* OnMouseEvent emitter
 Released on the AHK forum in 2022-05-28 autohotkey.com/boards/viewtopic.php?f=83&t=104629&p=464765&hilit=this.MouseMoved.Bind#p464765
