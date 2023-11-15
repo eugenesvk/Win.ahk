@@ -1,4 +1,4 @@
-#Requires AutoHotKey 2.1-alpha.4
+#Requires AutoHotKey 2.0.10
 ; —————————— User configuration ——————————
 global ucfg🖰hide := Map(
    'enableModifiers' 	, true  	; true : modifiers like ‘⇧a’ hide the pointer just like ‘a’ (register hotkeys with ‘*’, i.e. fire if any modifier is held down)
