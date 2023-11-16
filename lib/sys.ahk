@@ -11,14 +11,11 @@ class helperSystem {
   }
   static getDPI🖥️() {
     static C := win32Constant.Misc ; various win32 API constants
-     , ws	:= winapi_Struct, wdll := winapi_DllCall
+     , wdll := winapi_DllCall
 
     DllCall("SetThreadDpiAwarenessContext", "ptr",C.dpiAwareMon, "ptr") ;learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddpiawarenesscontext
-    Point	:= ws.Point ; get dynamically created class
-    pos🖰 := Point()
-    pos🖰 := 0
     if not got🖰pos := DllCall("GetCursorPos"  ; learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos?redirectedfrom=MSDN
-      ,  "Int64*",&pos🖰 ;o LPPOINT lpPoint	pointer to a POINT structure that receives the screen coordinates of the cursor
+      ,  "Int64*",&pos🖰:=0 ;o LPPOINT lpPoint	pointer to a POINT structure that receives the screen coordinates of the cursor
       ) {
       return [96,96] ; break silently
     }
