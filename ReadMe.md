@@ -35,6 +35,7 @@ To use with your existing AutoHotkey scripts:
 ## Configure
 
 Change the default values of the `ucfg🖰hide` configuration apps at the top of [🖰hide on 🖮](<./🖰hide on 🖮.ahk>) and relaunch/reload the script. Each value has a comment explaining what it does and what values are allowed
+The keys that trigger hiding the pointer are in the `keys_m['en']` map for the English locale and include all alphanumeric keys as well as ␈␡␠
 
 ## Use
 
