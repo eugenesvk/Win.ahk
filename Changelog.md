@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/eugenesvk/DUMMY/compare/0.0.0...HEAD
+[unreleased]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/compare/0.0.0...HEAD
 ## [Unreleased]
 <!-- - __Added__ -->
   <!-- + :sparkles:  -->
@@ -22,5 +22,5 @@ All notable changes to this project will be documented in this file
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
 
-[0.0.0]: https://github.com/eugenesvk/DUMMY/releases/tag/0.0.0
+[0.0.0]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.0
 ## [0.0.0]
