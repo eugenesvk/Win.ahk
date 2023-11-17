@@ -94,30 +94,36 @@ exitShow🖰Pointer(A_ExitReason, ExitCode) { ; Show 🖰 pointer
 getKeys🖰hide(&lbl:='') { ; Register the keys you want to listen on
   static locInf	:= localeInfo.m  ; Constants Used in the LCType Parameter of lyt.getLocaleInfo, lyt.getLocaleInfoEx, and SetLocaleInfo
    , s         	:= helperString
+   , K         	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    ; , sKbdSys 	:= lyt.getLocaleInfo("SEnLngNm",) ; system layout
    , keys_m    	:= Map()
    , isInit    	:= false
    , keys_def  	:= ""
    , vkKeys    	:= []
    , lblEnKeys 	:= '' ; store english labels of successfully registered hotkeys to match against dupe hotkeys in PressH
+   , useSC	:= Map() ; use Scan Code syntax for keys, not VKs (e.g., Delete)
   ; dbgTT(4, Text:='System language name`n' sKbdSys, Time:=4)
 
   if not isInit {
+    useSC.CaseSense := 0
     keys_m.CaseSense := 0 ; make key matching case insensitive
     keys_m["en"] := "
       ( Join LTrim
-       `1234567890-=
+       `1234567890-=␈␡
         qwertyuiop[]
         asdfghjkl;'\
         zxcvbnm,./
+        ␠
        )"
     keys_m["ru"] := "
       ( Join LTrim
-       ё1234567890-=
+       ё1234567890-=␈␡
         йцукенгшщзхъ
         фывапролджэ\
         ячсмитьбю.
+        ␠
        )"
+    useSC[vk['␡']] := sc['␡'] ; Delete bugs with VK, use SC
     keys_def   	:= keys_m.Get("en")
     ; keys     	:= keys_m.Get(sKbdSys,keys_def) ; if continues to bug
     curlayout  	:= lyt.GetCurLayout(&hDevice, &idLang)
@@ -135,7 +141,8 @@ getKeys🖰hide(&lbl:='') { ; Register the keys you want to listen on
       ; } else {
         ; vkKeys.Push(format("vk{1:X}",raw_vk))
       if (vkC := s.key→ahk(A_LoopField)) { ; vkC := Format("vk{:X}",GetKeyVK(c)) bugs with locale
-        vkKeys.Push(vkC)
+        vk_or_sc := useSC.Get(vkC,vkC) ; replace VK with SC if it was manually added to useSC
+        vkKeys.Push(vk_or_sc)
         lblEnKeys .= SubStr(keys_m["en"],A_Index,1)
         ; _dbg .= A_LoopField . "=" . format("{1:X}",GetKeySC(A_LoopField))
           ; . " " . format("{1:X}",GetKeyVK(A_LoopField))
