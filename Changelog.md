@@ -21,6 +21,8 @@ All notable changes to this project will be documented in this file
 <!-- - __Security__ -->
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
+- __Added__
+  + <kbd>␠</kbd>,<kbd>␈</kbd>,<kbd>␡</kbd> keys to trigger pointer hiding behavior
 
 [0.0.0]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.0
 ## [0.0.0]
