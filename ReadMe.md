@@ -82,6 +82,26 @@ Library files in `/lib` used only when function by the same name is called
   - [varWinGroup](./varWinGroup.ahk) contains the list of apps in the `PressnHold` group where the functionality is enabled
   - [PressH](./lib/PressH.ahk) library contains the actual `PressH_ChPick` function that creates the popup characte picker, and has `lbl_en` list of default labels used when no user defined labels are provided (non-english labels can be added to the [constKey](./lib/constKey.ahk) library)
 
+#### Hide mouse pointer while typing
+
+You can configure the script to ignore selected mouse behavior when you type:
+
+  - hide mouse pointer to avoid obscuring your text caret with it
+  - clicks to avoid surprising caret movements
+  - wheel scrolling (on a per-direction level)
+  - pointer movements within user defined horizontal/vertical threshold (to help with accidentally moving your mouse)
+
+And further configure it to:
+
+  - ignore key presses with modifiers, e.g., hide the pointer on <kbd>a</kbd>, but ignore <kbd>⎈</kbd><kbd>a</kbd> as that's not typing
+  - work only within text fields, e.g., don't hide when using <kbd>j</kbd> to scroll down in an app
+  - ignore specific apps (and manually tweaked to work only in specific apps)
+
+All of these are set by changing the values of the `ucfg🖰hide` configuration map at the top of [🖰hide on 🖮](<./🖰hide on 🖮.ahk>) and reloading the script. Each value has a comment explaining what it does and what values are allowed
+
+You can also change the keys that trigger hiding the pointer by adjusting the `keys_m['en']` map for the English locale
+
+
 ## Known issues
   - Horizontal scrolling fails with 'UIA' enabled AutoHotkey and COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452), use [🖰Scroll Excel](<./🖰Scroll Excel.ahk>)
 
