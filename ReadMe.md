@@ -47,6 +47,8 @@ To use with your existing AutoHotkey scripts: the import should do the trick
 
 ## Known issues
 
+- Doesn't hide app-specific pointers, e.g., a big fat cross in Excel
+
 ## Credits
   - [Windows-Cursor-Hider](https://github.com/Stefan-Z-Camilleri-zz/Windows-Cursor-Hider) the old simpler v1 version of the same idea
   - [UI Automation](https://github.com/Descolada/UIA-v2) library allowing detection of editable text fields
