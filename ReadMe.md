@@ -2,6 +2,8 @@
 Hide 🖰 mouse pointer when 🖮 typing
 </p>
 
+https://github.com/eugenesvk/Win.ahk/assets/12956286/2bf30625-a621-4b41-bdae-70ba39c04b1e
+
 ## Introduction
 
 This [AutoHotkey v2](https://www.autohotkey.com) script can be configured to ignore selected mouse behavior when you type:
