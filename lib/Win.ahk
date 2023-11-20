@@ -12,7 +12,7 @@ class win {
 
     win.get⎀GUI(&⎀←,&⎀↑,&⎀→,&⎀↓,&⎀↔,&⎀↕,&⎀Blink,&⎀isVis) ; 1 get caret via GetGUIThreadInfo
 
-    if ⎀isVis {
+    if IsSet(⎀isVis) and ⎀isVis {
           return true
     } else {
       if win.get⎀Acc(&⎀←,&⎀↑, &⎀↔,&⎀↕) {                  ; 2 get caret via UIA
