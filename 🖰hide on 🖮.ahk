@@ -1,19 +1,23 @@
 #Requires AutoHotKey 2.0.10
 ; —————————— User configuration ——————————
 global ucfg🖰hide := Map(
-   'enableModifiers' 	, true  	; true : modifiers like ‘⇧a’ hide the pointer just like ‘a’ (register hotkeys with ‘*’, i.e. fire if any modifier is held down)
-   ;                 	        	  false: only ‘a’ hides the pointer
- , 'modAllow🖰Pointer'	, "‹⎈⇧›"	; list of modifiers that do NOT hide    🖰 pointer, can be in AHK format like >! for Right Alt or
-   ;                 	   ‹⎈   	  for Left  Control
-   ;                 	    ⇧›  	  for Right Shift
- ; disable 🖰 buttons 	        	while the pointer is hidden
- , 'cfgDisable🖰Btn'  	, "LMR" 	; clicks          , string of L/M/R for Left/Middle/Right button
- , 'cfgDisable🖱'     	, "UDLR"	; wheel scrolling , string of U/D/L/R for directions Up/Down/Left/Right
- ;                   	        	;
- , 'limit2text'      	, true  	; hide only in text fields (don't hide when using alpha keys to execute commands)
- ; restore 🖰 pointer 	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
- , 'minΔ🖰x'          	, 0     	;
- , 'minΔ🖰y'          	, 0     	;
+   'enableModifiers'  	, true  	; true : modifiers like ‘⇧a’ hide the pointer just like ‘a’ (register hotkeys with ‘*’, i.e. fire if any modifier is held down)
+   ;                  	        	  false: only ‘a’ hides the pointer
+ , 'modAllow🖰Pointer' 	, "‹⎈⇧›"	; list of modifiers that do NOT hide    🖰 pointer, can be in AHK format like >! for Right Alt or
+   ;                  	   ‹⎈   	  for Left  Control
+   ;                  	    ⇧›  	  for Right Shift
+ ; disable 🖰 buttons  	        	while the pointer is hidden
+ , 'cfgDisable🖰Btn'   	, "LMR" 	; clicks          , string of L/M/R for Left/Middle/Right button
+ , 'cfgDisable🖱'      	, "UDLR"	; wheel scrolling , string of U/D/L/R for directions Up/Down/Left/Right
+ ;                    	        	;
+ , 'limit2text'       	, true  	; hide only in text fields (don't hide when using alpha keys to execute commands)
+ , 'suppressionMethod'	, "sys" 	;|sys|gui¦both¦ method of hiding the pointer
+  ; sys               	        	  hide system scheme pointers (Ibeam, Arrow, etc.), but fails with app-specific ones like a Cross in Excel
+  ; gui               	        	  create our own gui, attach it to the app's window, and hide the pointer (might break some functionality when hiding, e.g., mouse extra buttons might stop working)
+  ; both              	        	  use both sys and gui
+ ; restore 🖰 pointer  	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
+ , 'minΔ🖰x'           	, 0     	;
+ , 'minΔ🖰y'           	, 0     	;1121
   )
 ; do NOT hide 🖰 pointer in the following apps
 GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_1.exe") ; case sensitive!
@@ -59,11 +63,11 @@ for cfg🖰hidek,cfg🖰hidev in ucfg🖰hide {
 }
 
 OnExit(exitShow🖰Pointer, )
-global Init        	:= -2
- , On              	:=  1
- , Off             	:=  0
- , Toggle          	:= -1
- , is🖰PointerHidden	:= false
+global Init	:= -2
+ , On      	:=  1
+ , Off     	:=  0
+ , Toggle  	:= -1
+ , isSys🖰PointerHidden := false ; system suppression method replaces pointer icons with transparent ones, but doesn't hide disable the pointer itself, so need to track it separately from the API command used in is🖰PointerVisible()
 
 hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
   dbgTT(4,'hk🖰P ' ThisHotkey, t:=1)
@@ -73,27 +77,46 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
   static get⎀        	:= win.get⎀.Bind(win)
    , modAllow🖰Pointer	:= cfg🖰hide['modAllow🖰Pointer']
    , limit2text      	:= cfg🖰hide['limit2text']
+   , suppress        	:= cfg🖰hide['suppressionMethod']
   dbgtxt := ''
   if isAnyUserModiPressed(modAllow🖰Pointer) {
     ; dbgtxt .= 'modAllow🖰Pointer pressed, skipping hide'
   } else if limit2text {
     if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
       dbgtxt .= 'SystemCursor 0'
-      sys🖰Pointer(Off)
-      app🖰Pointer(Off)
+      if suppress = 'sys' or suppress = 'both' {
+        sys🖰Pointer(Off)
+      }
+      if suppress = 'gui' or suppress = 'both' {
+        app🖰Pointer(Off)
+        ; dbgtt(0,'✗ 🖰PointerHide gui text',t:=3,i:=2,0,0) ;
+      }
     } else {
       ; dbgtxt .= 'outside a text field, skipping hide'
     }
   } else {
     dbgtxt .= 'SystemCursor 0'
-    sys🖰Pointer(Off)
-    app🖰Pointer(Off)
+    if suppress = 'sys' or suppress = 'both' {
+      sys🖰Pointer(Off)
+    }
+    if suppress = 'gui' or suppress = 'both' {
+      app🖰Pointer(Off)
+      ; dbgtt(0,'✗ 🖰PointerHide gui else',t:=3,i:=2,0,0) ;
+    }
+      ; dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,250) ;1
   }
   dbgTT(3,dbgtxt,t:=1,i:=1,x:=0,y:=850)
 }
 exitShow🖰Pointer(A_ExitReason, ExitCode) { ; Show 🖰 pointer
-  sys🖰Pointer(On)
-  app🖰Pointer(On)
+  static suppress		:= cfg🖰hide['suppressionMethod']
+  if suppress = 'sys' or suppress = 'both' {
+    sys🖰Pointer(On)
+  }
+  if suppress = 'gui' or suppress = 'both' {
+    app🖰Pointer(On)
+    ; dbgtt(0,'✓exitShow🖰Pointer gui',t:=3,i:=3,0,50) ;
+  }
+    ; dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,350) ;
   ExitApp()
 }
 
@@ -107,7 +130,7 @@ getKeys🖰hide(&lbl:='') { ; Register the keys you want to listen on
    , keys_def  	:= ""
    , vkKeys    	:= []
    , lblEnKeys 	:= '' ; store english labels of successfully registered hotkeys to match against dupe hotkeys in PressH
-   , useSC	:= Map() ; use Scan Code syntax for keys, not VKs (e.g., Delete)
+   , useSC     	:= Map() ; use Scan Code syntax for keys, not VKs (e.g., Delete)
   ; dbgTT(4, Text:='System language name`n' sKbdSys, Time:=4)
 
   if not isInit {
@@ -261,9 +284,10 @@ HotIf ; turn off context sensitivity
 
 
 on🖰Moved() { ; Restore mouse pointer (and record its new position) unless keyboard key is held
-  static minΔ🖰x := cfg🖰hide['minΔ🖰x']
-   ,     minΔ🖰y := cfg🖰hide['minΔ🖰y']
-  if not is🖰PointerHidden { ; nothing to restore, pointer is not hidden
+  static minΔ🖰x	:= cfg🖰hide['minΔ🖰x']
+   ,     minΔ🖰y	:= cfg🖰hide['minΔ🖰y']
+   , suppress  	:= cfg🖰hide['suppressionMethod']
+  if is🖰PointerVisible() and not isSys🖰PointerHidden { ; nothing to restore, pointer is not hidden
     return
   }
   for vkKey in getKeys🖰hide() { ; for every defined key, check if user is still holding a key while moving the mouse
@@ -281,15 +305,21 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   }
   if ( 🖰x_ != 🖰x
     && 🖰y_ != 🖰y) {
-    sys🖰Pointer(On)
-    app🖰Pointer(On)
+    if suppress = 'sys' or suppress = 'both' {
+      sys🖰Pointer(On)
+    }
+    if suppress = 'gui' or suppress = 'both' {
+      app🖰Pointer(On)
+      ; dbgtt(0,'✓on🖰Moved gui',t:=3,i:=3,0,50) ;
+    }
+      ; dbgtt(0,'suppress=' suppress ,t:=3,i:=4,0,150) ;11
     dbgTT(dbgMin:=3, Text:="SystemCursor On" , Time:=1,id:=1,X:=0,Y:=850)
     🖰x_ := 🖰x
     🖰y_ := 🖰y
   }
 }
 sys🖰Pointer(OnOff := On) {
-  global is🖰PointerHidden
+  global isSys🖰PointerHidden
   static C := win32Constant.Misc ; various win32 API constants
 
   static hCur,AndMask,XorMask
@@ -298,7 +328,7 @@ sys🖰Pointer(OnOff := On) {
   , lcDef 	:= C.lrShared | C.lrDefColor | C.lrCcSrc	; lrDefSz
 
   if ( (OnOff = Off)
-    or (OnOff = Toggle and (not is🖰PointerHidden
+    or (OnOff = Toggle and (not isSys🖰PointerHidden
                          or not isInit)) ) { ; hide on first init call as well
     ; dbgTT(dbgMin:=0, Text:='toHide', Time:=1,id:=6,X:=0,Y:=150)
     changeTo := toHide  ; use hCur_blank cursors
@@ -392,8 +422,8 @@ sys🖰Pointer(OnOff := On) {
       )
     ; dbgOut .= "`nhCur=" hCur
     }
-  is🖰PointerHidden := (changeTo = toHide) ? true : false
-  dbgOut .= "`nis🖰PointerHidden=" is🖰PointerHidden
+  isSys🖰PointerHidden := (changeTo = toHide) ? true : false
+  dbgOut .= "`nisSys🖰PointerHidden=" isSys🖰PointerHidden
   dbgOut .= "`nOnOff=" OnOff
   if changeTo = toShow {
     restore🖰Pointers()
@@ -405,6 +435,17 @@ sys🖰Pointer(OnOff := On) {
   isInit	:= true
 }
 
+is🖰PointerVisible() {
+  static C := win32Constant.Misc ; various win32 API constants
+   , ws	:= winapi_Struct, wdll := winapi_DllCall
+   , Cursor_Showing := 0x00000001
+  🖰I	:= ws.CursorInfo() ; get dynamically created class
+  _ := DllCall("user32\GetCursorInfo", "Ptr",🖰I)
+  is🖰vis := 🖰I.flags & Cursor_Showing
+  ; dbgtt(0,'flags ' 🖰I.flags,t:=2,,200,200) ;
+  return is🖰vis
+}
+
 app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app its owner, then show a pointer there so it's redirected from the app to our invisible element
   static C := win32Constant.Misc ; various win32 API constants
    , ws	:= winapi_Struct, wdll := winapi_DllCall
@@ -412,12 +453,9 @@ app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app 
    , guiOwner := 0
    ; , isHidden := 0
    , displayCounter := 0 ; track thread pointer counter, pointer is shown only if >=0, no way to get current value
-   , Cursor_Showing := 0x00000001
    , x := A_ScreenWidth*.7
 
-  🖰I	:= ws.CursorInfo() ; get dynamically created class
-  _ := DllCall("user32\GetCursorInfo", "Ptr",🖰I)
-  is🖰vis := 🖰I.flags & Cursor_Showing ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
+  is🖰vis := is🖰PointerVisible() ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
   MouseGetPos(,,&winID,)
 
   if    OnOff = Off                     	; hide if explicit command to hide is given
