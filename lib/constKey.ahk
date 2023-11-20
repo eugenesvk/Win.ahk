@@ -443,7 +443,7 @@ class keyConstant {
       }
     }
 
-      this._map    	:= vk
+    this._map      	:= vk
     this._mapr     	:= vkrev
     this._mapsc    	:= sc
     this._labels   	:= labels
