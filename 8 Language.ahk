@@ -44,4 +44,5 @@ LayoutSwitch() {
   } else {
     dbgTT(0,"Layout neither enU nor ruU, not switching anything")
   }
+  ; LocaleDbg()
   }
