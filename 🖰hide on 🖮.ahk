@@ -29,7 +29,10 @@ GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per
 ; —————————— Test ——————————
 ; !1::sys🖰Btn(Off)
 ; !2::sys🖰Btn(On)
+; !3::app🖰Pointer(Off)
+; !4::app🖰Pointer(On)
 ; !q::sys🖰Pointer(Toggle) ; manual cursor toggle
+; !w::app🖰Pointer(Toggle) ; manual cursor toggle
 
 ; —————————— Script ——————————
 #include <OnMouseEvent>
@@ -77,17 +80,20 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
     if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
       dbgtxt .= 'SystemCursor 0'
       sys🖰Pointer(Off)
+      app🖰Pointer(Off)
     } else {
       ; dbgtxt .= 'outside a text field, skipping hide'
     }
   } else {
     dbgtxt .= 'SystemCursor 0'
     sys🖰Pointer(Off)
+    app🖰Pointer(Off)
   }
   dbgTT(3,dbgtxt,t:=1,i:=1,x:=0,y:=850)
 }
 exitShow🖰Pointer(A_ExitReason, ExitCode) { ; Show 🖰 pointer
   sys🖰Pointer(On)
+  app🖰Pointer(On)
   ExitApp()
 }
 
@@ -276,6 +282,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   if ( 🖰x_ != 🖰x
     && 🖰y_ != 🖰y) {
     sys🖰Pointer(On)
+    app🖰Pointer(On)
     dbgTT(dbgMin:=3, Text:="SystemCursor On" , Time:=1,id:=1,X:=0,Y:=850)
     🖰x_ := 🖰x
     🖰y_ := 🖰y
