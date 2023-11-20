@@ -18,6 +18,9 @@ The script can also be further configured to:
   - ignore key presses with modidifers, e.g., hide the pointer on <kbd>a</kbd>, but ignore <kbd>⎈</kbd><kbd>a</kbd> as that's not typing
   - work only within text fields, e.g., don't hide when using <kbd>j</kbd> to scroll down in an app
   - ignore specific apps (and manually tweaked to work only in specific apps)
+  - adjust pointer suppression method:
+    - `sys` replace system pointers (Ibeam, Arrow, etc.) with a transparent image, but fails with app-specific ones like a Cross in Excel
+    - `gui` for the app to hide its pointer by attaching our own blank gui element to its window (might break some functionality when hiding, e.g., mouse extra buttons might stop working)
 
 This script also fixes the issue with the main mouse pointer becoming "blocky" if the pointer size is > 1
 
