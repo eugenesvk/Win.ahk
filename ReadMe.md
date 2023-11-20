@@ -84,6 +84,8 @@ Download all the files in this branch and double click `⌂mod_modtap_launch.ahk
 
 ## Known issues
 
+- interaction between ⌂<kbd>‹⇧</kbd> and ⌂<kbd>⇧›</kbd> is bugged: fast typing of `fgj` skips `j`
+- <kbd>␠</kbd> triggers home row mod as a regular alphanumeric key instead of breaking the hold check and printing the key itself
 - only a few keys working
   - <kbd>f</kbd> as ⌂<kbd>‹⇧</kbd>
   - <kbd>j</kbd> as ⌂<kbd>⇧›</kbd>
