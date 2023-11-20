@@ -437,7 +437,6 @@ sys🖰Pointer(OnOff := On) {
 
 is🖰PointerVisible() {
   static C := win32Constant.Misc ; various win32 API constants
-   , ws	:= winapi_Struct, wdll := winapi_DllCall
    , Cursor_Showing := 0x00000001
   vSize := (A_PtrSize=8)?24:20
   CursorInfo := Buffer(vSize, 0)
@@ -451,7 +450,6 @@ is🖰PointerVisible() {
 
 app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app its owner, then show a pointer there so it's redirected from the app to our invisible element
   static C := win32Constant.Misc ; various win32 API constants
-   , ws	:= winapi_Struct, wdll := winapi_DllCall
    , guiBlankChild := Gui()
    , guiOwner := 0
    ; , isHidden := 0
