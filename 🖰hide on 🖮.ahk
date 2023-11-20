@@ -398,6 +398,60 @@ sys🖰Pointer(OnOff := On) {
   isInit	:= true
 }
 
+app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app its owner, then show a pointer there so it's redirected from the app to our invisible element
+  static C := win32Constant.Misc ; various win32 API constants
+   , ws	:= winapi_Struct, wdll := winapi_DllCall
+   , guiBlankChild := Gui()
+   , guiOwner := 0
+   ; , isHidden := 0
+   , displayCounter := 0 ; track thread pointer counter, pointer is shown only if >=0, no way to get current value
+   , Cursor_Showing := 0x00000001
+   , x := A_ScreenWidth*.7
+
+  🖰I	:= ws.CursorInfo() ; get dynamically created class
+  _ := DllCall("user32\GetCursorInfo", "Ptr",🖰I)
+  is🖰vis := 🖰I.flags & Cursor_Showing ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
+  MouseGetPos(,,&winID,)
+
+  if    OnOff = Off                     	; hide if explicit command to hide is given
+    or (OnOff = Toggle and is🖰vis = 0)  	; or   if explicti command to toggle is given and it's not hidden yet
+    or (OnOff = ''     and is🖰vis = 0) {	; or no command and it hasn't been hidden yet
+    ; if not winID = guiOwner { ;+Owner breaks SetPoint mouse buttons, so set/reset it for every Off/On
+      ; dbgtt(0,"hidden2 change owner from`n" (guiOwner>0?WinGetTitle(guiOwner):'') ' ↓`n' WinGetTitle(winID),t:=2,i:=2,x,100)
+      guiBlankChild.Opt("+Owner" . winID) ; make the GUI owned by winID
+      guiOwner := winID
+    ; }
+    if is🖰vis {
+      if displayCounter < -1 { ;;; likely an issue with being unable to hide the pointer
+        ; dbgtt(0,"✗✗✗hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
+      } else {
+        displayCounter := DllCall("ShowCursor", "int",0)
+        ; dbgtt(0,"✓hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
+      }
+    } else {
+      ; dbgtt(0,"✗hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
+    }
+    ; isHidden := 1
+  } else {
+    if is🖰vis {
+      ; dbgtt(0,"✗shown " displayCounter " flag=" 🖰I.flags " at " (guiOwner>0?WinGetTitle(guiOwner):''),t:=2,i:=2,x,50)
+    } else {
+      if not winID = guiOwner {
+        guiBlankChild.Opt("+Owner" . winID) ; make the GUI owned by winID
+        guiOwner := winID
+        displayCounter := DllCall("ShowCursor", "int",1)
+        guiBlankChild.Opt("-Owner")
+        ; dbgtt(0,"✓shown GUI " displayCounter " flag=" 🖰I.flags " at " (guiOwner>0?WinGetTitle(guiOwner):''),t:=2,i:=2,x,50)
+      } else {
+        displayCounter := DllCall("ShowCursor", "int",1)
+        guiBlankChild.Opt("-Owner")
+        ; dbgtt(0,"✓shown "    displayCounter " flag=" 🖰I.flags " at " (guiOwner>0?WinGetTitle(guiOwner):''),t:=2,i:=2,x,50)
+      }
+    }
+    ; isHidden := 0
+  }
+}
+
 doNothing(ThisHotkey){
   return
 }
