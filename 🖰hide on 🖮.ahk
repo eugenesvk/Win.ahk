@@ -11,9 +11,9 @@ global ucfg🖰hide := Map(
  , 'cfgDisable🖱'      	, "UDLR"	; wheel scrolling , string of U/D/L/R for directions Up/Down/Left/Right
  ;                    	        	;
  , 'limit2text'       	, true  	; hide only in text fields (don't hide when using alpha keys to execute commands)
- , 'suppressionMethod'	, "sys" 	;|sys|gui¦both¦ method of hiding the pointer
-  ; sys               	        	  hide system scheme pointers (Ibeam, Arrow, etc.), but fails with app-specific ones like a Cross in Excel
+ , 'suppressionMethod'	, "gui" 	;|gui|sys¦both¦ method of hiding the pointer
   ; gui               	        	  create our own gui, attach it to the app's window, and hide the pointer (might break some functionality when hiding, e.g., mouse extra buttons might stop working)
+  ; sys               	        	  hide system scheme pointers (Ibeam, Arrow, etc.), but fails with app-specific ones like a Cross in Excel
   ; both              	        	  use both sys and gui
  ; restore 🖰 pointer  	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
  , 'minΔ🖰x'           	, 0     	;
