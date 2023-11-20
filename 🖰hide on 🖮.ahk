@@ -439,9 +439,12 @@ is🖰PointerVisible() {
   static C := win32Constant.Misc ; various win32 API constants
    , ws	:= winapi_Struct, wdll := winapi_DllCall
    , Cursor_Showing := 0x00000001
-  🖰I	:= ws.CursorInfo() ; get dynamically created class
-  _ := DllCall("user32\GetCursorInfo", "Ptr",🖰I)
-  is🖰vis := 🖰I.flags & Cursor_Showing
+  vSize := (A_PtrSize=8)?24:20
+  CursorInfo := Buffer(vSize, 0)
+  NumPut("UInt",vSize, CursorInfo, 0) ;cbSize
+  _ := DllCall("user32\GetCursorInfo", "Ptr",CursorInfo)
+  flags := NumGet(CursorInfo, 4, "Ptr") ;flags
+  is🖰vis := flags & Cursor_Showing
   ; dbgtt(0,'flags ' 🖰I.flags,t:=2,,200,200) ;
   return is🖰vis
 }
