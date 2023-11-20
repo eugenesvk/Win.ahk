@@ -19,7 +19,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
-  loop parse "qhxtvg-r" { ; 🠿q​🠿h​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod
+  loop parse "qwhxtvg-r" { ; 🠿q​🠿w​🠿h​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
   }
   loop parse "``45f" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
@@ -90,7 +90,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       case ＄ ˜ v‐  	: char→sym(hk,'-',Ch['Dash'       	],'Ch','DashLab')
       ;case ＄ ˜  p⃣	: char→sym(hk,'p',Ch['XSymbols'   	],'Ch','XSymbolsLab',InStr(lbl🖰hide,''))
       case ＄ ˜  r⃣ 	: char→sym(hk,'r',Ch['Checks'     	],'Ch','ChecksLab',InStr(lbl🖰hide,'r'))
-      ;case ＄ ˜  w⃣	: char→sym(hk,'w',Ch['Arrows'     	],'Ch','ArrowsLab',InStr(lbl🖰hide,''))
+      case ＄ ˜  w⃣ 	: char→sym(hk,'w',Ch['Arrows'     	],'Ch','ArrowsLab',InStr(lbl🖰hide,'w'))
       case ＄ ˜ v‘  	: char→sym(hk, "'",Ch['QuotesS'   	],unset,unset)
       case ＄ ˜ ⇧‘  	: char→sym(hk, "'",Ch['QuotesD'   	],unset,unset,InStr(lbl🖰hide,'`'') & is∗)
       case ＄ ˜ ⇧ˋ  	: char→sym(hk,'``',Ch['Para'      	],unset,unset,InStr(lbl🖰hide,'``') & is∗)
