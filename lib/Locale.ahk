@@ -237,7 +237,7 @@ class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
     return StrGet(klID)
   }
 
-  static GetCurLayout(&lytPhys := "", &idLang := "", win:="") {
+  static GetCurLayout(&lytPhys := 0, &idLang := 0, win:="") {
     ; ??? int layout = (int) GetKeyboardLayout(GetWindowThreadProcessId(GetForegroundWindow(), NULL)) & 0xFFFF; https://forum.rainmeter.net/viewtopic.php?t=12337
     winID_fg	:= DllCall("GetForegroundWindow") ; Get handle (HWND) to the foreground window docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow
     dbgtxt := "Layout info from GetForegroundWindow"
