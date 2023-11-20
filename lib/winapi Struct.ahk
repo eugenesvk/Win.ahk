@@ -37,4 +37,14 @@ class winapi_Struct { ; Various win32 API constants
     ;           		} POINT, *PPOINT;
     ; 8:8
   }
+  class CursorInfo { ; learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo
+    static T   	:= winTypes.m ; winT types and their ahk types for DllCalls and structs
+    cbSize     	: (this.T['DWORD']['struct']) := ObjGetDataSize(this) ; size of the structure, in bytes. The caller must set this to sizeof(CURSORINFO)
+    flags      	: (this.T['DWORD']['struct']) ; cursor state. This parameter can be one of the following values.
+    ;          	0                           	cursor is hidden
+    ;          	CURSOR_SHOWING    0x00000001	cursor is showing
+    ;          	CURSOR_SUPPRESSED 0x00000002	Windows 8: The cursor is suppressed. This flag indicates that the system is not drawing the cursor because the user is providing input through touch or pen instead of the mouse.
+    hCursor    	: (this.T['HCURSOR']['struct']) ; Handle to the cursor
+    ptScreenPos	: winapi_Struct.Point ; Structure that receives the screen coordinates of the cursor
+  } ; CURSORINFO, *PCURSORINFO, *LPCURSORINFO
 }
