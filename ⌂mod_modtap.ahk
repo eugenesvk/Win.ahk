@@ -58,11 +58,11 @@ f↓j↓w↕↑f↑ W (with ⇧› enabled since j was the last activated inputh
 
 ; —————————— User configuration ——————————
 global ucfg⌂mod := Map(
-   'tooltip⎀' 	, true 	;|true| 	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
- , 'holdTimer'	, 0.5  	;|.5|   	seconds of holding a modtap key after which it becomes a hold modifier
- ; Debugging  	       	        	;
- , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
- , 'sndlvl'   	, 1    	;|1|    	register hotkeys with this sendlevel
+   'tooltip⎀'  	, true 	;|true| 	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
+  , 'holdTimer'	, 0.5  	;|.5|   	seconds of holding a modtap key after which it becomes a hold modifier
+  ; Debugging  	       	        	;
+  , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
+  , 'sndlvl'   	, 1    	;|1|    	register hotkeys with this sendlevel
   )
 i↗ 	:= 19 ; dbgTT index, top right position of the empty status of our home row mod
 i↘t	:=  8 ; dbgTT index, top down position of the key and modtap status (title)
@@ -240,12 +240,14 @@ cb⌂_Key↑(⌂_,  ih,vk,sc) {
   Key↑_⌂(ih,vk,sc,   &⌂_)
 }
 
-Key↓_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') {
-  static k	:= keyConstant._map, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
+Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+    , dbl := 2
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
+  kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   if ⌂_.pos = '↓' { ; ?0b) should always be true? otherwise we won't get a callback
     if dbg >= 2 {
       keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
@@ -253,11 +255,11 @@ Key↓_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') {
       ⌂_    	:= A_TickCount - ⌂_.t
       dbgtt(2,'✗ ?0b) ' dbg⌂ '(' ⌂_ ') ' keynm '↓ prio ‘' prionm '’ vk' hex(vk) ' sc' hex(sc),t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
-  } else { ; should never get here?
-    dbgMsg(0,dbg⌂ ' vk↓' hex(vk) ' sc' hex(sc) ' ' preciseTΔ()) ;
+  } else { ; should never get here?f
+    dbgMsg(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' ' preciseTΔ()) ;
   }
 }
-Key↑_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') { ;
+Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
   static k	:= keyConstant._map, lbl := keyConstant._labels, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
@@ -267,34 +269,34 @@ Key↑_⌂(ih,vk,sc,  &⌂_, dbgsrc:='') { ;
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   if ⌂_.pos = '↓' { ; 1a)
     if ⌂_.vk = s.key→ahk(A_PriorKey) { ; xx) a↓ ⌂↓ •a↑ ⌂↑
-      dbgtt(2,'xx) a↓ ⌂↓ •a↑ ⌂↑ (' dbgsrc ')`n' dbg⌂ ' vk↑' hex(vk) ' sc' hex(sc) ' PreK=' A_PriorKey '=' ⌂_.k ' ' preciseTΔ(),t:=4,i:=12,A_ScreenWidth - 40) ;
+      dbgtt(2,'xx) a↓ ⌂↓ •a↑ ⌂↑ (' dbgsrc ')`n' dbg⌂ ' vk↑' hex(kvk) ' sc' hex(ksc) ' PreK=' A_PriorKey '=' ⌂_.k ' ' preciseTΔ(),t:=4,i:=12,A_ScreenWidth - 40) ;
     } else { ; 🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑
       if dbg >= 2 { ;
-        keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
+        keynm 	:= kr['en'].Get('vk' hex(kvk),'✗')
         prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗')
         t⌂_   	:= A_TickCount - ⌂_.t
-        dbgtt(2,'🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(vk' hex(vk) 'sc' hex(sc) ') prio ‘' prionm '’ ≠' ⌂_.k '`n' ⌂_.send↓ ' ' keynm,t:=4,i:=13,0,🖥️w↕//2) ;
+        dbgtt(2,'🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(vk' hex(kvk) 'sc' hex(ksc) ') prio ‘' prionm '’ ≠' ⌂_.k '`n' ⌂_.send↓ ' ' keynm,t:=4,i:=13,0,🖥️w↕//2) ;
       }
       SendInput(⌂_.send↓), ⌂_.is := true
       if tooltip⎀ {
         win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
       }
-      SendInput('{' Format("vk{:x}sc{:x}",vk,sc) '}')
+      SendInput('{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
       dbgtt_ismod('🠿1aa')
       ih.Stop()
     }
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
     if dbg >= 2 { ;
-      keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
+      keynm 	:= kr['en'].Get('vk' hex(kvk),'✗')
       prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗') ;
       t⌂_   	:= A_TickCount - ⌂_.t
-      dbgMsg(2,'✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(vk' hex(vk) ' sc' hex(sc) ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑⌂')
+      dbgMsg(2,'✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(vk' hex(kvk) ' sc' hex(ksc) ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑⌂')
     }
   }
 }
 
 setup⌂mod(hk,c,is↓) { ;
-  static k  	:= keyConstant._map, kr := keyConstant._mapr, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
+  static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
    , get⎀   	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
    , s      	:= helperString
@@ -400,7 +402,7 @@ setup⌂mod(hk,c,is↓) { ;
         }
       } else { ; ↕2a) ⌂↓ a↓ •⌂↑ a↑   fast typing ⌂,a
         this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
-        keynm := kr['en'].Get(prio,'✗')
+        keynm := vkrl['en'].Get(prio,'✗')
         dbgtt(d3,'↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' A_PriorKey ') A_PriorKey, print self ‘' c '’‘' ih_input '’=input',t:=4,,x:=0)  ;
         dbgtt_ismod('↕2a)')
         SendLevel 1 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activated
