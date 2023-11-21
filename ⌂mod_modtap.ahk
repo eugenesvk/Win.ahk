@@ -75,6 +75,18 @@ i1↓	:= 10 ; dbgTT index, bottom position for inputhooks on messages
 i0↓	:= 11 ; ... off
 _dt	:=  5 ; min debug level for the bottom-right status of all the keys
 
+; getKeyLabels_forVK('vk20') ; ␠ ␣
+getKeyLabels_forVK(kvk){
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+  key_labels := ''
+  for keyNm, vkCode in vk {
+    if vkCode = kvk and strlen(keyNm) = 1 { ;
+      key_labels .= keyNm ' '
+    }
+  }
+  msgbox(key_labels '`n (copied to clipboard)','Key labels for ‘' kvk '’') ;
+  A_Clipboard := key_labels
+}
 parseUserConfig() {
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , isInit := false
