@@ -63,6 +63,10 @@ global ucfg⌂mod := Map(
   ; Debugging  	       	        	;
   , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
   , 'sndlvl'   	, 1    	;|1|    	register hotkeys with this sendlevel
+  , 'ignored'  	, Map( 	;       	ignore specific key combos to avoid typing mistakes from doing something annoying (like ◆l locking your computer)
+     f‹⇧       	, '␠'  	; key   	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
+    ,f⇧›       	, '␠'  	; value 	list of alphanumeric key labels
+    ) ; single key names suitable for using here are available via getKeyLabels_forVK('vk20') function, which for 'vk20' (space) would copy ‘␠ ␣’ to your clipboard
   )
 i↗ 	:= 19 ; dbgTT index, top right position of the empty status of our home row mod
 i↘t	:=  8 ; dbgTT index, top down position of the key and modtap status (title)
@@ -71,6 +75,25 @@ i1↓	:= 10 ; dbgTT index, bottom position for inputhooks on messages
 i0↓	:= 11 ; ... off
 _dt	:=  5 ; min debug level for the bottom-right status of all the keys
 
+parseUserConfig() {
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+    , isInit := false
+    , ignored := Map()
+    , cfgignored := ucfg⌂mod.Get('ignored',Map())
+  if isInit = true {
+    return ignored
+  } else { ; convert cfgignored into a map of vk codes to make later matches easier
+    for keyFlag, keyNm in cfgignored { ; f‹⇧ 'qwerty␠\'
+      vkCode := Map()
+      loop parse keyNm {
+        vkCode[vk[A_LoopField]] := A_LoopField
+      }
+      ignored[keyFlag] := vkCode
+    }
+    isInit := true
+    return ignored
+  }
+}
 ; ‹
 ⌂a := {k:'a',token:'a',mod:'LControl'} ; token can be used in function names
 ⌂s := {k:'s',token:'s',mod:'LWin'    }
@@ -245,15 +268,29 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
     , s   	:= helperString
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
+    , ignored := parseUserConfig()
     , dbl := 2
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   if ⌂_.pos = '↓' { ; ?0b) should always be true? otherwise we won't get a callback
-    if dbg >= 2 {
-      keynm 	:= kr['en'].Get('vk' hex(vk),'✗')
-      prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗')
-      ⌂_    	:= A_TickCount - ⌂_.t
-      dbgtt(2,'✗ ?0b) ' dbg⌂ '(' ⌂_ ') ' keynm '↓ prio ‘' prionm '’ vk' hex(vk) ' sc' hex(sc),t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
+    if ignored.Has(⌂_.flag) and ;
+       ignored[⌂_.flag].Has(kvk_s) { ; this modtap+key combo should be ignored
+      if dbg >= dbl {
+        keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+        prionm	:= vkrl['en'].Get(s.key→ahk(A_PriorKey),'✗')
+        ⌂_t   	:= A_TickCount - ⌂_.t
+        dbgtt(dbl,'✗✗✗ ignore ' dbg⌂ '(' ⌂_t ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
+      }
+      ⌂_.is := '↑' ;
+      SendInput('{' ⌂_.vk '}' '{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
+      ih.Stop()
+    } else {
+      if dbg >= dbl {
+        keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+        prionm	:= vkrl['en'].Get(s.key→ahk(A_PriorKey),'✗')
+        ⌂_t   	:= A_TickCount - ⌂_.t
+        dbgtt(dbl,'✗ ?0b) ' dbg⌂ '(' ⌂_t ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
+      }
     }
   } else { ; should never get here?f
     dbgMsg(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' ' preciseTΔ()) ;
