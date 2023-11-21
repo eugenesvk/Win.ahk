@@ -56,7 +56,7 @@ class keyConstant {
     ; k.a → vk41
     ; k	:= keyConstant._map
     ; k['a'] → vk41
-    static vk := Map(), sc := Map(), vkrev := Map(), labels := Map(), ahk_token := Map()
+    static vk := Map(), vklng := Map(), sc := Map(), vkrev := Map(), vkrevlng := Map(), labels := Map(), ahk_token := Map()
      , isInit := false
     if isInit {
       return
@@ -64,7 +64,9 @@ class keyConstant {
       isInit := true
     }
     vk.CaseSense       	:= 0 ; make key matching case insensitive
+    vklng.CaseSense    	:= 0
     vkrev.CaseSense    	:= 0 ; reverse, vk → key
+    vkrevlng.CaseSense 	:= 0
     sc.CaseSense       	:= 0
     labels.CaseSense   	:= 0
     ahk_token.CaseSense	:= 0 ; key tokens that can be used in var/function names like a︔ := ';'
@@ -94,11 +96,11 @@ class keyConstant {
     ;;; add non alpha? just use the currently mapped ones, don't depend on a layout
     lyt_enabled := lyt.getlist() ; system loaded that are available in the language bar
     for lytID, layout in lyt_enabled {
-      ; lytID    	:= layout['id']
-      LngNm      	:= layout['LangShort'] ;en
-      LngLong    	:= layout['LangLong'] ;english
-      KLID       	:= layout['KLID'] ; 00000409
-      vk[LngNm]  	:= Map() ; or use unique ? KLID check ;;;
+      ; lytID     	:= layout['id']
+      LngNm       	:= layout['LangShort'] ;en
+      LngLong     	:= layout['LangLong'] ;english
+      KLID        	:= layout['KLID'] ; 00000409
+      vklng[LngNm]	:= Map() ; or use unique ? KLID check ;;;
       if labels.Has(LngNm) {
         for key in StrSplit(labels[LngNm]) {
           vk_full	:= DllCall("VkKeyScanExW" ; SHORT VkKeyScanExW( ;;; preload?
@@ -109,7 +111,7 @@ class keyConstant {
            ,  "ptr",lytID)   	;   [in] HKL   dwhkl	; Input localeID used to translate the character. This parameter can be any input locale identifier previously returned by the LoadKeyboardLayout function
           if not vk_full = -1 {
             vk_code	:= vk_full & 0xFF
-            vk[LngNm][key] := 'vk' hex(vk_code)
+            vklng[LngNm][key] := 'vk' hex(vk_code)
           }
         }
       }
@@ -121,7 +123,7 @@ class keyConstant {
     vk['🖱←']	:= 'vk9C'	; WheelLeft 	0x9C	078
 
 
-      ; "Mappable" codes, to which Unicode characters can be assigned in the High-level editor
+    ; "Mappable" codes, to which Unicode characters can be assigned in the High-level editor
     ;              	         	Name          	#Value	Description
     vk['ABNT_C1']  	:= 'vkC1'	; VK_ABNT_C1  	0xC1  	Abnt C1
     vk['ABNT_C2']  	:= 'vkC2'	; VK_ABNT_C2  	0xC2  	Abnt C2
@@ -135,7 +137,7 @@ class keyConstant {
     vk['ICO_CLEAR']	:= 'vkE6'	; VK_ICO_CLEAR	0xE6  	IcoClr
     vk['ICO_HELP'] 	:= 'vkE3'	; VK_ICO_HELP 	0xE3  	IcoHlp
 
-      start	:= 0x30 ; VK_KEY_0	0x30 ('0')	0
+    start	:= 0x30 ; VK_KEY_0	0x30 ('0')	0
     end  	:= 0x39 ; VK_KEY_9	0x39 ('9')	9
     loop (end - start + 1) {
       i1           	:= A_Index
@@ -196,7 +198,7 @@ class keyConstant {
       }
     }
 
-      vk['OEM_ATTN']      	:= 'vkF0'	; VK_OEM_ATTN      	0xF0	Oem Attn
+    vk['OEM_ATTN']      	:= 'vkF0'	; VK_OEM_ATTN      	0xF0	Oem Attn
     vk['OEM_AUTO']      	:= 'vkF3'	; VK_OEM_AUTO      	0xF3	Auto
     vk['OEM_AX']        	:= 'vkE1'	; VK_OEM_AX        	0xE1	Ax
     vk['OEM_BACKTAB']   	:= 'vkF5'	; VK_OEM_BACKTAB   	0xF5	Back Tab
@@ -395,7 +397,7 @@ class keyConstant {
     vk['BROWSER_STOP']     	:= 'vkA9'	; VK_BROWSER_STOP     	0xA9  	Browser Stop
     vk['CONVERT']          	:= 'vk1C'	; VK_CONVERT          	0x1C  	Convert
 
-      start	:= 0x70 ; VK_F1 	0x70	F1
+    start	:= 0x70 ; VK_F1 	0x70	F1
     end  	:= 0x87 ; VK_F24	0x87	F24
     loop (end - start + 1) {
       i1         	:= A_Index
@@ -406,7 +408,7 @@ class keyConstant {
       }
     }
 
-      vk['FINAL']              	:= 'vk18'	; VK_FINAL              	0x18	Final
+    vk['FINAL']              	:= 'vk18'	; VK_FINAL              	0x18	Final
     vk['HELP']               	:= 'vk2F'	; VK_HELP               	0x2F	Help
     vk['ICO_00']             	:= 'vkE4'	; VK_ICO_00             	0xE4	Ico00 *
     vk['JUNJA']              	:= 'vk17'	; VK_JUNJA              	0x17	Junja
@@ -433,18 +435,26 @@ class keyConstant {
     vk['VOLUME_MUTE']        	:= 'vkAD'	; VK_VOLUME_MUTE        	0xAD	Volume Mute
     vk['VOLUME_UP']          	:= 'vkAF'	; VK_VOLUME_UP          	0xAF	Volume Up
 
-      for keyNm, vkCode in vk { ; Back , vk08
+    for keyNm, vkCode in vk { ; Back , vk08
       this.%keyNm%	:= vkCode ; convert map into object properties
     }
     for LngNm in labels { ; en / ru
-      vkrev[LngNm]	:= Map()
-      for keyNm, vkCode in vk[LngNm] {
-        vkrev[LngNm][vkCode]	:= keyNm ; create a reverse map
+      vkrevlng[LngNm]	:= Map()
+    }
+    for keyNm, vkCode in vk {
+      vkrev[vkCode]	:= keyNm ; create a reverse map
+      for LngNm in labels { ; en / ru
+          vkrevlng[LngNm][vkCode]	:= keyNm ;
+        for keyNml, vkCodel in vklng[LngNm] {
+          vkrevlng[LngNm][vkCodel]	:= keyNml ; overwrite dupes with layout-specific combo since same VK has layout-specific key
+        }
       }
     }
 
     this._map      	:= vk
+    this._maplng   	:= vklng
     this._mapr     	:= vkrev
+    this._maprlng  	:= vkrevlng
     this._mapsc    	:= sc
     this._labels   	:= labels
     this._ahk_token	:= ahk_token
