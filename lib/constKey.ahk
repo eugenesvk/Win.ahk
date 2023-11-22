@@ -95,13 +95,15 @@ class keyConstant {
     ; though store it only in simplified 'en'/'ru' (are IDs needed?)
     ;;; add non alpha? just use the currently mapped ones, don't depend on a layout
     lyt_enabled := lyt.getlist() ; system loaded that are available in the language bar
+    labels_enabled := []
     for lytID, layout in lyt_enabled {
-      ; lytID     	:= layout['id']
-      LngNm       	:= layout['LangShort'] ;en
-      LngLong     	:= layout['LangLong'] ;english
-      KLID        	:= layout['KLID'] ; 00000409
-      vklng[LngNm]	:= Map() ; or use unique ? KLID check ;;;
+      ; lytID	:= layout['id']
+      LngNm  	:= layout['LangShort'] ;en
+      LngLong	:= layout['LangLong'] ;english
+      KLID   	:= layout['KLID'] ; 00000409
       if labels.Has(LngNm) {
+        labels_enabled.Push(LngNm)
+        vklng[LngNm]	:= Map() ; or use unique ? KLID check ;;;
         for key in StrSplit(labels[LngNm]) {
           vk_full	:= DllCall("VkKeyScanExW" ; SHORT VkKeyScanExW( ;;; preload?
            ; low-order  byte contains virtual-key code
@@ -438,12 +440,12 @@ class keyConstant {
     for keyNm, vkCode in vk { ; Back , vk08
       this.%keyNm%	:= vkCode ; convert map into object properties
     }
-    for LngNm in labels { ; en / ru
+    for LngNm in labels_enabled { ; en / ru (but only if such layouts exist)
       vkrevlng[LngNm]	:= Map()
     }
     for keyNm, vkCode in vk {
       vkrev[vkCode]	:= keyNm ; create a reverse map
-      for LngNm in labels { ; en / ru
+      for LngNm in labels_enabled { ; en / ru (but only if such layouts exist)
           vkrevlng[LngNm][vkCode]	:= keyNm ;
         for keyNml, vkCodel in vklng[LngNm] {
           vkrevlng[LngNm][vkCodel]	:= keyNml ; overwrite dupes with layout-specific combo since same VK has layout-specific key
