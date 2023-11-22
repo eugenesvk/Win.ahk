@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file
 
 - __Fixed__
   + :beetle: hide app-specific pointers, e.g., a big fat cross in Excel
+  + :beetle: labels' list mismatch in constKey
 
 [0.0.1]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.0
 ## [0.0.1]
