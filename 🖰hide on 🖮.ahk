@@ -31,12 +31,15 @@ GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per
   ; add labels in your layout to the ‘regWatchers’ function similar to ‘keys_m["en"] := "’ in the script below, letter positions must match that of the 'en' layout
   ; add your full layout to the ‘keyConstant’ class in ‘constKey’ library similar to ‘labels['en'] := "’
 ; —————————— Test ——————————
-; !1::sys🖰Btn(Off)
-; !2::sys🖰Btn(On)
-; !3::app🖰Pointer(Off)
-; !4::app🖰Pointer(On)
-; !q::sys🖰Pointer(Toggle) ; manual cursor toggle
-; !w::app🖰Pointer(Toggle) ; manual cursor toggle
+; !1::sys🖰Pointer(Toggle) ; manual cursor toggle
+; !2::app🖰Pointer(Toggle) ; manual cursor toggle
+; !3::sys🖰Btn(Toggle)
+; !4::sys🖰Btn(Off)
+; !5::sys🖰Btn(On)
+; !6::sys🖰Pointer(Off)
+; !7::sys🖰Pointer(On)
+; !8::app🖰Pointer(Off)
+; !9::app🖰Pointer(On)
 
 ; —————————— Script ——————————
 #include <OnMouseEvent>
