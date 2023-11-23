@@ -17,7 +17,7 @@ global ucfg🖰hide := Map(
   ; both              	        	  use both sys and gui
  ; restore 🖰 pointer  	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
  , 'minΔ🖰x'           	, 0     	;
- , 'minΔ🖰y'           	, 0     	;1121
+ , 'minΔ🖰y'           	, 0     	;
   )
 ; do NOT hide 🖰 pointer in the following apps
 GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_1.exe") ; case sensitive!
@@ -52,6 +52,7 @@ GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per
 #include <str>
 #include <sys>
 
+preciseTΔ() ; start timer for debugging
 if (isStandAlone := (A_ScriptFullPath = A_LineFile)) {
   dbg := 4         	; Level of debug verbosity (0-none)
   SendMode("Input")	; Recommended for new scripts due to its superior speed and reliability
@@ -73,7 +74,10 @@ global Init	:= -2
  , isSys🖰PointerHidden := false ; system suppression method replaces pointer icons with transparent ones, but doesn't hide disable the pointer itself, so need to track it separately from the API command used in is🖰PointerVisible()
 
 hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
-  dbgTT(4,'hk🖰P ' ThisHotkey, t:=1)
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+    , s   	:= helperString
+    , _d  	:= 3
+  dbgTT(_d,'hk🖰P ' ThisHotkey, t:=1)
   🖰PointerHide()
 }
 🖰PointerHide() {
@@ -86,19 +90,19 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
     ; dbgtxt .= 'modAllow🖰Pointer pressed, skipping hide'
   } else if limit2text {
     if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
-      dbgtxt .= 'SystemCursor 0'
+      ; dbgtxt .= 'sys🖰P 0'
       if suppress = 'sys' or suppress = 'both' {
         sys🖰Pointer(Off)
       }
       if suppress = 'gui' or suppress = 'both' {
         app🖰Pointer(Off)
-        ; dbgtt(0,'✗ 🖰PointerHide gui text',t:=3,i:=2,0,0) ;
+        dbgtt(0,'✗ 🖰PointerHide gui text',t:=3,i:=2,0,0) ;
       }
     } else {
       ; dbgtxt .= 'outside a text field, skipping hide'
     }
   } else {
-    dbgtxt .= 'SystemCursor 0'
+    ; dbgtxt .= 'sys🖰P 0'
     if suppress = 'sys' or suppress = 'both' {
       sys🖰Pointer(Off)
     }
@@ -107,6 +111,7 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
       ; dbgtt(0,'✗ 🖰PointerHide gui else',t:=3,i:=2,0,0) ;
     }
       ; dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,250) ;1
+      dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,250) ;1
   }
   dbgTT(3,dbgtxt,t:=1,i:=1,x:=0,y:=850)
 }
@@ -120,6 +125,7 @@ exitShow🖰Pointer(A_ExitReason, ExitCode) { ; Show 🖰 pointer
     ; dbgtt(0,'✓exitShow🖰Pointer gui',t:=3,i:=3,0,50) ;
   }
     ; dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,350) ;
+    dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,350) ;
   ExitApp()
 }
 
@@ -227,8 +233,15 @@ sys🖰Btn(OnOff) {
    , disable🖰Btn   	:= []
    , cfgDisable🖰Btn	:= cfg🖰hide['cfgDisable🖰Btn']
    , cfgDisable🖱   	:= cfg🖰hide['cfgDisable🖱']
+   , x             	:= A_ScreenWidth*.8
+   , y             	:= 500, y1 := 550
+   , _d            	:= 3
+   , _d4            	:= 4
+   , i1            	:= 3 ; tooltip index for on
+   , i0            	:= 4 ; ...               off
+   , _t            	:= '∞' ; time for tooltip
   if not isInit {
-    ; dbgTT(0,"sys🖰Btn Init")
+    dbgTT(_d4,"sys🖰Btn Init")
     isInit := true
     for cfg in cfg2🖰Btn { ; L
       if InStr(cfgDisable🖰Btn, cfg) { ; L in "LR"
@@ -242,7 +255,7 @@ sys🖰Btn(OnOff) {
     }
   }
   if disable🖰Btn.Length = 0 {
-    ; dbgTT(0,"disable🖰Btn.Length=0")
+    ; dbgTT(_d,"disable🖰Btn.Length=0" preciseTΔ(),_t,i0,x,y)
     return
   }
   HotIfWinNotActive("ahk_group no🖰HideOnType") ; turn on context sensitivity
@@ -251,14 +264,17 @@ sys🖰Btn(OnOff) {
     for 🖰Btn in disable🖰Btn {
       Hotkey(hkModPrefix 🖰Btn, doNothing, "Off") ; register in a disabled state
     }
+    ; dbgTT(_d,"sys🖰Btn Init" preciseTΔ(),_t,i0,x,y)
   } else if OnOff = Off  {
     for 🖰Btn in disable🖰Btn {
       Hotkey(hkModPrefix 🖰Btn, doNothing, "On")  ; enable  doNothing → disable key
     }
+    ; dbgTT(_d,"✗sys🖰Btn " preciseTΔ(),_t,i0,x,y)
   } else if OnOff = On   {
     for 🖰Btn in disable🖰Btn {
       Hotkey(hkModPrefix 🖰Btn, doNothing, "Off") ; disable doNothing → enable key
     }
+    ; dbgTT(_d,"✓sys🖰Btn " preciseTΔ(),_t,i1,x,y1)
   }
   HotIf ; turn off context sensitivity
 }
@@ -290,7 +306,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   static minΔ🖰x	:= cfg🖰hide['minΔ🖰x']
    ,     minΔ🖰y	:= cfg🖰hide['minΔ🖰y']
    , suppress  	:= cfg🖰hide['suppressionMethod']
-  if is🖰PointerVisible() and not isSys🖰PointerHidden { ; nothing to restore, pointer is not hidden
+   , _d        	:= 3
     return
   }
   for vkKey in getKeys🖰hide() { ; for every defined key, check if user is still holding a key while moving the mouse
@@ -313,10 +329,11 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
     }
     if suppress = 'gui' or suppress = 'both' {
       app🖰Pointer(On)
-      ; dbgtt(0,'✓on🖰Moved gui',t:=3,i:=3,0,50) ;
+      dbgtt(_d,'✓on🖰Moved gui',t:=3,i:=3,0,50) ;
     }
       ; dbgtt(0,'suppress=' suppress ,t:=3,i:=4,0,150) ;11
-    dbgTT(dbgMin:=3, Text:="SystemCursor On" , Time:=1,id:=1,X:=0,Y:=850)
+      dbgtt(_d,'suppress=' suppress ,t:=3,i:=4,0,150) ;
+    dbgTT(_d, "sys🖰P On" , Time:=1,id:=1,X:=0,Y:=850)
     🖰x_ := 🖰x
     🖰y_ := 🖰y
   }
@@ -458,43 +475,48 @@ app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app 
    ; , isHidden := 0
    , displayCounter := 0 ; track thread pointer counter, pointer is shown only if >=0, no way to get current value
    , x := A_ScreenWidth*.7
+   , _d := 3
+   , i1 := 3 ; tooltip index for on
+   , i0 := 4 ; ...               off
+   , _t := '∞' ; time for tooltip
 
   is🖰vis := is🖰PointerVisible() ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
   MouseGetPos(,,&winID,)
 
   if    OnOff = Off                     	; hide if explicit command to hide is given
     or (OnOff = Toggle and is🖰vis = 0)  	; or   if explicti command to toggle is given and it's not hidden yet
-    or (OnOff = ''     and is🖰vis = 0) {	; or no command and it hasn't been hidden yet
+    or (OnOff = ''     and is🖰vis = 1) {	; or no command and it hasn't been hidden yet
     ; if not winID = guiOwner { ;+Owner breaks SetPoint mouse buttons, so set/reset it for every Off/On
-      ; dbgtt(0,"hidden2 change owner from`n" (guiOwner>0?WinGetTitle(guiOwner):'') ' ↓`n' WinGetTitle(winID),t:=2,i:=2,x,100)
+      ; dbgtt(_d,"Δowner " preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):'') '`n' WinGetTitle(winID),_t,i1,x,100)
       guiBlankChild.Opt("+Owner" . winID) ; make the GUI owned by winID
       guiOwner := winID
     ; }
     if is🖰vis {
       if displayCounter < -1 { ;;; likely an issue with being unable to hide the pointer
         ; dbgtt(0,"✗✗✗hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
+        ; dbgtt(_d,"✗✓ hide± #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
       } else {
         displayCounter := DllCall("ShowCursor", "int",0)
-        ; dbgtt(0,"✓hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
+        ; dbgtt(_d,"✓ hide #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
       }
     } else {
-      ; dbgtt(0,"✗hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
+        ; dbgtt(_d,"✗ already hidden #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
     }
     ; isHidden := 1
   } else {
-    if is🖰vis {
-      ; dbgtt(0,"✗shown " displayCounter " flag=" 🖰I.flags " at " (guiOwner>0?WinGetTitle(guiOwner):''),t:=2,i:=2,x,50)
+    if is🖰vis { ;
+      ; dbgtt(0,"✗shown #" displayCounter ' ' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
     } else {
       if not winID = guiOwner {
         guiBlankChild.Opt("+Owner" . winID) ; make the GUI owned by winID
         guiOwner := winID
         displayCounter := DllCall("ShowCursor", "int",1)
         guiBlankChild.Opt("-Owner")
-        ; dbgtt(0,"✓shown GUI " displayCounter " flag=" 🖰I.flags " at " (guiOwner>0?WinGetTitle(guiOwner):''),t:=2,i:=2,x,50)
+        ; dbgtt(_d,"✓shown GUI #" displayCounter ' ' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
       } else {
         displayCounter := DllCall("ShowCursor", "int",1)
         guiBlankChild.Opt("-Owner")
-        ; dbgtt(0,"✓shown "    displayCounter " flag=" 🖰I.flags " at " (guiOwner>0?WinGetTitle(guiOwner):''),t:=2,i:=2,x,50)
+        ; dbgtt(_d,"✓shown     #" displayCounter ' ' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
       }
     }
     ; isHidden := 0
