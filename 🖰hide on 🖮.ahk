@@ -62,11 +62,18 @@ if (isStandAlone := (A_ScriptFullPath = A_LineFile)) {
   Persistent       	; Ensure the cursor is made visible when the script exits.
 }
 
-; convert user config into a case-insensitive map
-global cfg🖰hide := Map()
-cfg🖰hide.CaseSense := 0
-for cfg🖰hidek,cfg🖰hidev in ucfg🖰hide {
-  cfg🖰hide[cfg🖰hidek] := cfg🖰hidev
+cfg🖰convert() { ; convert user config into a case-insensitive map
+  static isInit := false
+    , cfg🖰h := Map()
+  if not isInit {
+    isInit := true
+    cfg🖰h.CaseSense := 0
+    for k,v in ucfg🖰hide {
+      cfg🖰h[k] := v
+    }
+    cfg🖰h['hkModPrefix'] := cfg🖰h['modiHide']?"*":""
+  }
+  return cfg🖰h
 }
 
 OnExit(exitShow🖰Pointer, )
