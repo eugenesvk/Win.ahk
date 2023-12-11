@@ -529,7 +529,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
    ;, isHidden	:= 0
    , displayCounter := 0 ; track thread pointer counter, pointer is shown only if >=0, no way to get current value
    , x 	:= A_ScreenWidth*.7
-   , _d	:= 0 ; dbg level
+   , _d	:= 3 ; dbg level
    , i1	:= 3 ; tooltip index for on
    , i0	:= 4 ; ...               off
    , _t	:= '∞' ; time for tooltip
