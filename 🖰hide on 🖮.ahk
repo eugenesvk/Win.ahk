@@ -351,6 +351,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
    , suppress 	:= cfg🖰h['suppressionMethod']
    , _d       	:= 3
    , _i       	:= 17
+  sleep(1) ;;; potential fix for another bug when moving the pointer from another app to the active app is🖰vis returns an invisible status on crossing the border between 2 apps, and then this triggers another 'shown GUI' event, thus breaking the counter
   is🖰vis := is🖰PointerVisible()
   if is🖰vis
     and not isSys🖰PointerHidden
