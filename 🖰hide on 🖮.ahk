@@ -1,9 +1,9 @@
 #Requires AutoHotKey 2.0.10
 ; —————————— User configuration ——————————
 global ucfg🖰hide := Map(
-   'enableModifiers'  	, true  	; true : modifiers like ‘⇧a’ hide the pointer just like ‘a’ (register hotkeys with ‘*’, i.e. fire if any modifier is held down)
-   ;                  	        	  false: only ‘a’ hides the pointer
- , 'modAllow🖰Pointer' 	, "‹⎈⇧›"	; list of modifiers that do NOT hide    🖰 pointer, can be in AHK format like >! for Right Alt or
+   'modiHide'         	, true  	; true : modifiers like ‘⇧a’ hide    🖰 pointer just like ‘a’ (register hotkeys with ‘*’, i.e. fire if any modifier is held down)
+   ;                  	        	  false: only            ‘a’ hides   🖰 pointer, not ‘⇧a’
+ , 'modAllow🖰Pointer' 	, "‹⎈⇧›"	; list of modifiers that do NOT hide 🖰 pointer, can be in AHK format like >! for Right Alt or ⇧◆⎇⎈ for Shift/Win/Alt/Control with ‹Left and Right› side indicators
    ;                  	   ‹⎈   	  for Left  Control
    ;                  	    ⇧›  	  for Right Shift
  ; disable 🖰 buttons  	        	while the pointer is hidden
@@ -12,8 +12,8 @@ global ucfg🖰hide := Map(
  ;                    	        	;
  , 'limit2text'       	, true  	; hide only in text fields (don't hide when using alpha keys to execute commands)
  , 'suppressionMethod'	, "gui" 	;|gui|sys¦both¦ method of hiding the pointer
-  ; gui               	        	  create our own gui, attach it to the app's window, and hide the pointer (might break some functionality when hiding, e.g., mouse extra buttons might stop working)
-  ; sys               	        	  hide system scheme pointers (Ibeam, Arrow, etc.), but fails with app-specific ones like a Cross in Excel
+  ; gui               	        	  create our own gui, attach it to the app's window, and hide the pointer (might break some functionality when hiding, e.g., sending key events via mouse extra buttons)
+  ; sys               	        	  hide system scheme pointers (Ibeam, Arrow, etc.), but fails with app-specific ones like a Cross🞧 in Excel
   ; both              	        	  use both sys and gui
  , 'attachGUI_🖰'      	, 0     	;|0|1 attach our gui element to: Active window has keyboard focus and if mouse is hovering over a different window
   ; active window     	  0     	 hides the pointer even if the active window is different, but then keyboard events from the mouse (e.g., ␈ with a side mouse buttons) aren't blocked (they are blocked by the gui element, but the gui element belongs to inactive window while typing happens in the active window)
@@ -34,8 +34,8 @@ GroupAdd("no🖰HideOnType"	, "ahk_exe your_app_2.exe") ; or any other match per
   ; add labels in your layout to the ‘regWatchers’ function similar to ‘keys_m["en"] := "’ in the script below, letter positions must match that of the 'en' layout
   ; add your full layout to the ‘keyConstant’ class in ‘constKey’ library similar to ‘labels['en'] := "’
 ; —————————— Test ——————————
-; !1::sys🖰Pointer(Toggle) ; manual cursor toggle
-; !2::app🖰Pointer(Toggle) ; manual cursor toggle
+; !1::sys🖰Pointer(Toggle) ;
+; !2::app🖰Pointer(Toggle)
 ; !3::sys🖰Btn(Toggle)
 ; !4::sys🖰Btn(Off)
 ; !5::sys🖰Btn(On)
