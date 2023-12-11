@@ -49,6 +49,10 @@ For a standalone use: double-click on [🖰hide on 🖮_launch](<./🖰hide on �
 To use with your existing AutoHotkey scripts: the import should do the trick
 
 ## Known issues
+  - Changing GUI element owner to AHK breaks modifiers, requiring adding sleep(1) https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123412
+  - BUT this workaround prevents getting mouse pointer status correctly https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123908
+    - potential workaround is to move pointer status check earlier
+  - `displayCounter` sometimes misbehaves and goes below -1, not sure whether this has any negative effects
 
 ## Credits
   - [Windows-Cursor-Hider](https://github.com/Stefan-Z-Camilleri-zz/Windows-Cursor-Hider) the old simpler v1 version of the same idea
