@@ -350,10 +350,18 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
    , minΔ🖰y   	:= cfg🖰h['minΔ🖰y']
    , suppress 	:= cfg🖰h['suppressionMethod']
    , _d       	:= 3
+   , _i       	:= 17
   is🖰vis := is🖰PointerVisible()
-  if is🖰vis and not isSys🖰PointerHidden
+  if is🖰vis
+    and not isSys🖰PointerHidden
     and not isSys🖰BtnBlocked { ; nothing to restore, pointer is not hidden, buttons not blocked
+    if dbg >= _d {
+      dbgtt(_d,'on🖰Moved ⎋`t' is🖰vis ' ' isSys🖰PointerHidden ' ' isSys🖰BtnBlocked ' ' preciseTΔ(), t:='∞',_i,0,115) ;
+    }
     return
+  }
+  if dbg >= _d {
+    dbgtt(_d,'on🖰Moved  `t' is🖰vis ' ' isSys🖰PointerHidden ' ' isSys🖰BtnBlocked ' ' preciseTΔ(), t:='∞',_i-1,0,85) ;
   }
   for vkKey in getKeys🖰hide() { ; for every defined key, check if it's being held while moving the mouse
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
@@ -364,7 +372,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   MouseGetPos(&🖰x, &🖰y)
   🖰Δ↔ := abs(🖰x - 🖰x_)
   🖰Δ↕ := abs(🖰y - 🖰y_)
-  if (  (🖰Δ↔ < minΔ🖰x) ; don't show a mosue on tiny movements below these thresholds (in pixels)
+  if (  (🖰Δ↔ < minΔ🖰x) ; don't show a mouse on tiny movements below these thresholds (in pixels)
     and (🖰Δ↕ < minΔ🖰y)) {
     return
   }
@@ -376,13 +384,13 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
     if suppress = 'gui' or suppress = 'both' {
       app🖰Pointer(On, is🖰vis)
       if dbg >= _d {
-        dbgtt(_d,'✓on🖰Moved gui',t:=3,i:=3,0,50) ;
+        dbgtt(_d,'✓on🖰Moved gui ' preciseTΔ(),t:=3,_i+1,0,50) ;
       }
     }
     sys🖰Btn(On)
       if dbg >= _d {
-        dbgtt(_d,'suppress=' suppress ,t:=3,i:=4,0,150) ;
-        dbgTT(_d, "sys🖰P On" , Time:=1,id:=1,X:=0,Y:=850)
+        dbgtt(_d,'suppress=' suppress ' ' preciseTΔ(), t:=3,_i+2,0,150) ;11111
+        dbgTT(_d, "sys🖰P On " preciseTΔ(), Time:=1,_i+3,X:=0,Y:=850)
       }
     🖰x_ := 🖰x
     🖰y_ := 🖰y
