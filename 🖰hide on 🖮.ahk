@@ -82,6 +82,24 @@ global Init	:= -2
  , Off     	:=  0
  , Toggle  	:= -1
  , isSys🖰PointerHidden := false ; system suppression method replaces pointer icons with transparent ones, but doesn't hide disable the pointer itself, so need to track it separately from the API command used in is🖰PointerVisible()
+sys_app_btnHide(OnOff, is🖰vis:='') { ; hide button functions and system/app pointers depending on config
+  static get⎀	:= win.get⎀.Bind(win)
+   , cfg🖰h   	:= cfg🖰convert()
+   , suppress	:= cfg🖰h['suppressionMethod']
+   , _d      	:= 3
+  dbgtxt := '✗ btn'
+  if suppress = 'sys' or suppress = 'both' {
+    sys🖰Pointer(OnOff)
+    dbgtxt .= ' sys'
+  }
+  if suppress = 'gui' or suppress = 'both' {
+    app🖰Pointer(OnOff, is🖰vis)
+    dbgtxt .= ' app'
+  }
+    sys🖰Btn(    OnOff)
+  dbgtxt .= ' suppress=' suppress ' ' preciseTΔ()
+  dbgTT(_d,dbgtxt,t:='∞',i:=1,x:=0,y:=850)
+}
 
 hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
@@ -100,42 +118,16 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
     ; dbgtxt .= 'modAllow🖰Pointer pressed, skipping hide'
   } else if limit2text {
     if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
-      ; dbgtxt .= 'sys🖰P 0'
-      if suppress = 'sys' or suppress = 'both' {
-        sys🖰Pointer(Off)
-      }
-      if suppress = 'gui' or suppress = 'both' {
-        app🖰Pointer(Off)
-        dbgtt(0,'✗ 🖰PointerHide gui text',t:=3,i:=2,0,0) ;
-      }
+      sys_app_btnHide(Off, is🖰vis)
     } else {
       ; dbgtxt .= 'outside a text field, skipping hide'
     }
   } else {
-    ; dbgtxt .= 'sys🖰P 0'
-    if suppress = 'sys' or suppress = 'both' {
-      sys🖰Pointer(Off)
-    }
-    if suppress = 'gui' or suppress = 'both' {
-      app🖰Pointer(Off)
-      ; dbgtt(0,'✗ 🖰PointerHide gui else',t:=3,i:=2,0,0) ;
-    }
-      ; dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,250) ;1
-      dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,250) ;1
+    sys_app_btnHide(Off, is🖰vis)
   }
-  dbgTT(3,dbgtxt,t:=1,i:=1,x:=0,y:=850)
 }
 exitShow🖰Pointer(A_ExitReason, ExitCode) { ; Show 🖰 pointer
-  static suppress		:= cfg🖰hide['suppressionMethod']
-  if suppress = 'sys' or suppress = 'both' {
-    sys🖰Pointer(On)
-  }
-  if suppress = 'gui' or suppress = 'both' {
-    app🖰Pointer(On)
-    ; dbgtt(0,'✓exitShow🖰Pointer gui',t:=3,i:=3,0,50) ;
-  }
-    ; dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,350) ;
-    dbgtt(0,'suppress=' suppress,t:=3,i:=4,0,350) ;
+  sys_app_btnHide(On)
   ExitApp()
 }
 
