@@ -15,6 +15,9 @@ global ucfg🖰hide := Map(
   ; gui               	        	  create our own gui, attach it to the app's window, and hide the pointer (might break some functionality when hiding, e.g., mouse extra buttons might stop working)
   ; sys               	        	  hide system scheme pointers (Ibeam, Arrow, etc.), but fails with app-specific ones like a Cross in Excel
   ; both              	        	  use both sys and gui
+ , 'attachGUI_🖰'      	, 0     	;|0|1 attach our gui element to: Active window has keyboard focus and if mouse is hovering over a different window
+  ; active window     	  0     	 hides the pointer even if the active window is different, but then keyboard events from the mouse (e.g., ␈ with a side mouse buttons) aren't blocked (they are blocked by the gui element, but the gui element belongs to inactive window while typing happens in the active window)
+  ; window @ pointer  	  1     	 doesn't hide the pointer of the active window (if different), but blocks keyboard events from the mouse
  ; restore 🖰 pointer  	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
  , 'minΔ🖰x'           	, 0     	;
  , 'minΔ🖰y'           	, 0     	;
@@ -478,13 +481,23 @@ app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app 
    , i1 := 3 ; tooltip index for on
    , i0 := 4 ; ...               off
    , _t := '∞' ; time for tooltip
-
+   , attachGUI_🖰 := cfg🖰h['attachGUI_🖰']
   is🖰vis := is🖰PointerVisible() ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
   MouseGetPos(,,&winID,)
 
   if    OnOff = Off                     	; hide if explicit command to hide is given
     or (OnOff = Toggle and is🖰vis = 0)  	; or   if explicti command to toggle is given and it's not hidden yet
     or (OnOff = ''     and is🖰vis = 1) {	; or no command and it hasn't been hidden yet
+
+  winID := 0
+  if attachGUI_🖰 {
+    winID := WinGetID("A")
+  } else {
+    MouseGetPos(,,&winID,)
+  }
+  if not winID {
+    return
+  }
     ; if not winID = guiOwner { ;+Owner breaks SetPoint mouse buttons, so set/reset it for every Off/On
       ; dbgtt(_d,"Δowner " preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):'') '`n' WinGetTitle(winID),_t,i1,x,100)
       guiBlankChild.Opt("+Owner" . winID) ; make the GUI owned by winID
