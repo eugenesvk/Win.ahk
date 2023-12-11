@@ -515,25 +515,30 @@ is🖰PointerVisible() {
   return is🖰vis
 }
 
-app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app its owner, then show a pointer there so it's redirected from the app to our invisible element
+app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, make the target app its owner, then show a pointer there so it's redirected from the app to our invisible element
   static C := win32Constant.Misc ; various win32 API constants
-   , ws	:= winapi_Struct, wdll := winapi_DllCall
-   , guiBlankChild := Gui()
-   , guiOwner := 0
-   ; , isHidden := 0
+   , cfg🖰h 	:= cfg🖰convert()
+   , ws    	:= winapi_Struct, wdll := winapi_DllCall
+   , guiopt	:= "-Caption -MinimizeBox -MaximizeBox -SysMenu -Border +ToolWindow +Resize +MinSize50x50" ;
+   , guiBlankChild := Gui(guiopt)
+   , guiID    	:= WinGetID(guiBlankChild)
+   , guiOwner 	:= 0
+   ;, isHidden	:= 0
    , displayCounter := 0 ; track thread pointer counter, pointer is shown only if >=0, no way to get current value
-   , x := A_ScreenWidth*.7
-   , _d := 3
-   , i1 := 3 ; tooltip index for on
-   , i0 := 4 ; ...               off
-   , _t := '∞' ; time for tooltip
+   , x 	:= A_ScreenWidth*.7
+   , _d	:= 0 ; dbg level
+   , i1	:= 3 ; tooltip index for on
+   , i0	:= 4 ; ...               off
+   , _t	:= '∞' ; time for tooltip
    , attachGUI_🖰 := cfg🖰h['attachGUI_🖰']
-  is🖰vis := is🖰PointerVisible() ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
-  MouseGetPos(,,&winID,)
 
-  if    OnOff = Off                     	; hide if explicit command to hide is given
-    or (OnOff = Toggle and is🖰vis = 0)  	; or   if explicti command to toggle is given and it's not hidden yet
-    or (OnOff = ''     and is🖰vis = 1) {	; or no command and it hasn't been hidden yet
+  if not WinExist(guiID) { ; our gui element is destroyed, eg, by closing of the original window it's a child of
+    guiBlankChild	:= Gui(guiopt)
+    guiID        	:= WinGetID(guiBlankChild)
+    if dbg >= _d {
+      dbgtt(_d,"recreated GUI " preciseTΔ() "`n" WinGetTitle(guiID),_t,5,x,0) ;
+    }
+  }
 
   winID := 0
   if attachGUI_🖰 {
@@ -544,42 +549,79 @@ app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app 
   if not winID {
     return
   }
+
+  if    OnOff = Off                     	; hide if explicit command to hide   is given
+    or (OnOff = Toggle and is🖰vis = 1)  	; or   if explicit command to toggle is given and it's not hidden yet
+    or (OnOff = ''     and is🖰vis = 1) {	; or   if no       command           is given and it's not hidden yet
     ; if not winID = guiOwner { ;+Owner breaks SetPoint mouse buttons, so set/reset it for every Off/On
       ; dbgtt(_d,"Δowner " preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):'') '`n' WinGetTitle(winID),_t,i1,x,100)
-      guiBlankChild.Opt("+Owner" . winID) ; make the GUI owned by winID
       guiOwner := winID
+      guiBlankChild.Opt("+Owner" . guiOwner) ; make the GUI owned by winID
     ; }
-    if is🖰vis {
-      if displayCounter < -1 { ;;; likely an issue with being unable to hide the pointer
-        ; dbgtt(0,"✗✗✗hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
-        ; dbgtt(_d,"✗✓ hide± #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
+    if is🖰vis { ;
+      if displayCounter <= -1 { ; likely an issue with being unable to hide the pointer or it reappearing
+        _pre := displayCounter
+        displayCounter := DllCall("ShowCursor", "int",1)*0 + DllCall("ShowCursor", "int",0) ; leave it as is
         if dbg >= _d {
           dbgtt(_d,"✗✓ hide± #" displayCounter ' (' _pre ')' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
         }
       } else {
-        displayCounter := DllCall("ShowCursor", "int",0)
-        ; dbgtt(_d,"✓ hide #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
+        _pre := displayCounter
+        _preGui := DllCall("ShowCursor", "int",1)*0 + DllCall("ShowCursor", "int",0)
+        displayCounter := DllCall("ShowCursor", "int",0) ;
+        if dbg >= _d {
+          dbgtt(_d,"✓ hide #" displayCounter ' (' _pre '|' _preGui ') ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
+        }
       }
     } else {
-        ; dbgtt(_d,"✗ already hidden #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
+        if dbg >= _d {
+          _pre := displayCounter ;
+          if displayCounter <= -2 { ; ??? the app itself also changed the counter ??? or some other bug
+            _preGui := DllCall("ShowCursor", "int",0)*0 + DllCall("ShowCursor", "int",1)*0 + DllCall("ShowCursor", "int",1)
+            _preGui .= '__' ;
+          } else {
+            _preGui := DllCall("ShowCursor", "int",0)*0 + DllCall("ShowCursor", "int",1)
+            _preGui .= '_'
+          }
+            dbgtt(_d,"✗ already hidden #" displayCounter ' (' _pre '|' _preGui ') ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
+        }
     }
     ; isHidden := 1
-  } else {
+  } else {                                ; show
     if is🖰vis { ;
-      ; dbgtt(0,"✗shown #" displayCounter ' ' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
+      if not winID = guiOwner or attachGUI_🖰 {
+        guiOwner := winID ; make the GUI owned by winID
+        guiBlankChild.Opt("+Owner" . guiOwner)
+        _pre := displayCounter
+        displayCounter := DllCall("ShowCursor", "int",1)
+        guiBlankChild.Opt("+Owner") ; move gui to be owned by AHK
+        if dbg >= _d {
+          dbgtt(_d,"✓🖰vis shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
+        }
+      } else {
+        if dbg >= _d {
+          dbgtt(_d,"✗ not showing, already 🖰vis #" displayCounter ' ' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
+        }
+      }
     } else {
       if not winID = guiOwner {
-        guiBlankChild.Opt("+Owner" . winID) ; make the GUI owned by winID
-        guiOwner := winID
+        guiOwner := winID ; make the GUI owned by winID
+        guiBlankChild.Opt("+Owner" . guiOwner) ;
+        _pre := displayCounter
         displayCounter := DllCall("ShowCursor", "int",1)
-        guiBlankChild.Opt("-Owner")
+        guiBlankChild.Opt("+Owner") ; move gui to be owned by AHK
         if dbg >= _d {
           dbgtt(_d,"✓shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
         }
       } else {
+        guiBlankChild.Opt("+Owner" . guiOwner)
+        _pre := displayCounter
         displayCounter := DllCall("ShowCursor", "int",1)
-        guiBlankChild.Opt("-Owner")
-        ; dbgtt(_d,"✓shown     #" displayCounter ' ' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
+        guiBlankChild.Opt("+Owner") ; move gui to be owned by AHK
+        ; guiBlankChild.Show("NoActivate") ;;; debug show our gui
+        if dbg >= _d {
+          dbgtt(_d,"✓shown     #" displayCounter ' (' _pre ')' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
+        }
       }
     }
     ; isHidden := 0
