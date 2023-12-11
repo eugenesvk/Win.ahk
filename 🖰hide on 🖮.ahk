@@ -579,7 +579,8 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
         if dbg >= _d {
           guiOwnerID := getWinID_Owner(guiID)
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
-          dbgtt(_d,"✗✓ hide± #" displayCounter ' (' _pre ')' preciseTΔ() "`n“" guiOwnerT '”',_t,i0,x,200)
+          guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
+          dbgtt(_d,"✗✓ hide± #" displayCounter ' (' _pre ')' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i0,x,200)
         }
       } else { ; no counter issues, decrement it to hide the pointer
         _pre := displayCounter
@@ -588,7 +589,8 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
         if dbg >= _d {
           guiOwnerID := getWinID_Owner(guiID)
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
-          dbgtt(_d,"✓ hide #" displayCounter ' (' _pre '|' _preGui ') ' preciseTΔ() "`n“" guiOwnerT '”',_t,i0,x,200)
+          guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
+          dbgtt(_d,"✓ hide #" displayCounter ' (' _pre '|' _preGui ') ' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i0,x,200)
         }
       }
     } else { ; Pointer is hidden, do nothing except attempt to fix the counter issue
@@ -603,7 +605,8 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
           _pre := displayCounter ;
           guiOwnerID := getWinID_Owner(guiID)
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
-          dbgtt(_d,"✗ already hidden #" displayCounter ' (' _pre '|' _preGui ') ' preciseTΔ() "`n“" guiOwnerT '”',_t,i0,x,200)
+          guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
+          dbgtt(_d,"✗ already hidden #" displayCounter ' (' _pre '|' _preGui ') ' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i0,x,200)
         }
     }
     ; isHidden := 1
@@ -619,13 +622,15 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
         if dbg >= _d {
           guiOwnerID := getWinID_Owner(guiID)
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
-          dbgtt(_d,"✓🖰vis shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`n“" guiOwnerT '”',_t,i1,x,50)
+          guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
+          dbgtt(_d,"✓🖰vis shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i1,x,50)
         }
       } else {
         if dbg >= _d {
           guiOwnerID := getWinID_Owner(guiID) ;
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
-          dbgtt(_d,"✗ not showing, already 🖰vis #" displayCounter ' ' preciseTΔ() "`n“" guiOwnerT '”',_t,i1,x,50)
+          guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
+          dbgtt(_d,"✗ not showing, already 🖰vis #" displayCounter ' ' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i1,x,50)
         }
       }
     } else { ; Pointer is hidden, so need to show it
@@ -638,7 +643,8 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
         if dbg >= _d {
           guiOwnerID := getWinID_Owner(guiID)
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
-          dbgtt(_d,"✓shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`n“" guiOwnerT '”',_t,i1,x,50)
+          guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
+          dbgtt(_d,"✓shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i1,x,50)
         }
       } else { ; our gui is owned by the same app we attached it to when we hid the pointer
         guiBlankChild.Opt("+Owner" . guiOwner)
@@ -649,7 +655,8 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
         if dbg >= _d {
           guiOwnerID := getWinID_Owner(guiID)
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
-          dbgtt(_d,"✓shown     #" displayCounter ' (' _pre ')' preciseTΔ() "`n“" guiOwnerT '”',_t,i1,x,50)
+          guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
+          dbgtt(_d,"✓shown     #" displayCounter ' (' _pre ')' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i1,x,50)
         }
       }
     }
