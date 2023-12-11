@@ -104,11 +104,21 @@ sys_app_btnHide(OnOff, is🖰vis:='') { ; hide button functions and system/app p
 }
 
 hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
-  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
-    , s   	:= helperString
-    , _d  	:= 3
-  dbgTT(_d,'hk🖰P ' ThisHotkey, t:=1)
-  🖰PointerHide()
+  static K   	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , s       	:= helperString
+   , cfg🖰h   	:= cfg🖰convert()
+   , suppress	:= cfg🖰h['suppressionMethod']
+   , _d      	:= 3
+  if suppress = 'gui' or suppress = 'both' { ;;; workaround for a bug: checking for pointer visibility later may fail
+    is🖰vis := is🖰PointerVisible() ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
+  } else {
+    is🖰vis := ''
+  }
+  if dbg >= _d {
+    dbgTT(_d,'hk🖰P ' ThisHotkey ' ' preciseTΔ(), t:='∞',i:=9,0,0)
+  }
+  sleep(1) ;;; workaround for a bug: changing GUI element owner to AHK breaks modifiers autohotkey.com/boards/viewtopic.php?f=82&t=123412, but causes another bug: prevents getting mouse pointer status correctly autohotkey.com/boards/viewtopic.php?f=82&t=123908, potential fix is to get the pointer status earlier ↑
+  🖰PointerHide(is🖰vis)
 }
 🖰PointerHide() {
   static get⎀        	:= win.get⎀.Bind(win)
