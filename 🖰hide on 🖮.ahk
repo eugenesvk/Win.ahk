@@ -81,7 +81,9 @@ global Init	:= -2
  , On      	:=  1
  , Off     	:=  0
  , Toggle  	:= -1
- , isSys🖰PointerHidden := false ; system suppression method replaces pointer icons with transparent ones, but doesn't hide disable the pointer itself, so need to track it separately from the API command used in is🖰PointerVisible()
+ , isSys🖰PointerHidden := false ; system suppression method replaces pointer icons with transparent ones, but doesn't disable the pointer itself, so need to track it separately from the API command used in is🖰PointerVisible
+ , isSys🖰BtnBlocked := false ; track whether buttons are being blocked (not always in sync with the pointer, especially if a GUI method is used (non-script actions can enable it, so can't just check whether a pointer is visible to decide whether to unblock buttons)
+
 sys_app_btnHide(OnOff, is🖰vis:='') { ; hide button functions and system/app pointers depending on config
   static get⎀	:= win.get⎀.Bind(win)
    , cfg🖰h   	:= cfg🖰convert()
@@ -242,6 +244,7 @@ sys🖰Btn(OnOff) {
    , i1            	:= 3 ; tooltip index for on
    , i0            	:= 4 ; ...               off
    , _t            	:= '∞' ; time for tooltip
+  global isSys🖰BtnBlocked
   if not isInit {
     dbgTT(_d4,"sys🖰Btn Init")
     isInit := true
@@ -267,16 +270,19 @@ sys🖰Btn(OnOff) {
       Hotkey(hkModPrefix 🖰Btn, doNothing, "Off") ; register in a disabled state
     }
     ; dbgTT(_d,"sys🖰Btn Init" preciseTΔ(),_t,i0,x,y)
+    isSys🖰BtnBlocked := false
   } else if OnOff = Off  {
     for 🖰Btn in disable🖰Btn {
       Hotkey(hkModPrefix 🖰Btn, doNothing, "On")  ; enable  doNothing → disable key
     }
     ; dbgTT(_d,"✗sys🖰Btn " preciseTΔ(),_t,i0,x,y)
+    isSys🖰BtnBlocked := true
   } else if OnOff = On   {
     for 🖰Btn in disable🖰Btn {
       Hotkey(hkModPrefix 🖰Btn, doNothing, "Off") ; disable doNothing → enable key
     }
     ; dbgTT(_d,"✓sys🖰Btn " preciseTΔ(),_t,i1,x,y1)
+    isSys🖰BtnBlocked := false
   }
   HotIf ; turn off context sensitivity
 }
