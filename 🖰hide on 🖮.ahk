@@ -297,7 +297,7 @@ sys🖰Btn(OnOff) {
     return
   }
   HotIfWinNotActive("ahk_group no🖰HideOnType") ; turn on context sensitivity
-  static hkModPrefix := cfg🖰hide['hkModPrefix']
+  static hkModPrefix := cfg🖰h['hkModPrefix']
   if        OnOff = Init {
     for 🖰Btn in disable🖰Btn {
       Hotkey(hkModPrefix 🖰Btn, doNothing, "Off") ; register in a disabled state
@@ -344,13 +344,17 @@ HotIf ; turn off context sensitivity
 
 
 on🖰Moved() { ; Restore mouse pointer (and record its new position) unless keyboard key is held
-  static minΔ🖰x	:= cfg🖰hide['minΔ🖰x']
-   ,     minΔ🖰y	:= cfg🖰hide['minΔ🖰y']
-   , suppress  	:= cfg🖰hide['suppressionMethod']
-   , _d        	:= 3
+  static cfg🖰h	:= cfg🖰convert()
+   , minΔ🖰x   	:= cfg🖰h['minΔ🖰x']
+   , minΔ🖰y   	:= cfg🖰h['minΔ🖰y']
+   , suppress 	:= cfg🖰h['suppressionMethod']
+   , _d       	:= 3
+  is🖰vis := is🖰PointerVisible()
+  if is🖰vis and not isSys🖰PointerHidden
+    and not isSys🖰BtnBlocked { ; nothing to restore, pointer is not hidden, buttons not blocked
     return
   }
-  for vkKey in getKeys🖰hide() { ; for every defined key, check if user is still holding a key while moving the mouse
+  for vkKey in getKeys🖰hide() { ; for every defined key, check if it's being held while moving the mouse
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
       return
     }
