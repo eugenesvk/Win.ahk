@@ -1,7 +1,8 @@
 #Requires AutoHotKey 2.1-alpha.4
 
-#include <constKey>	; various key constants
-#include <str>     	; string helper functions
+#include <libFunc Native>	; Functions: Native
+#include <constKey>      	; various key constants
+#include <str>           	; string helper functions
 
 preciseTΔ(n:=3) {
   static start := nativeFunc.GetSystemTimePreciseAsFileTime()
