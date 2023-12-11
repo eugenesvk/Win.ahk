@@ -181,9 +181,26 @@ getKeys🖰hide(&lbl:='') { ; Register the keys you want to listen on
         ␠
        )"
     useSC[vk['␡']] := sc['␡'] ; Delete bugs with VK, use SC
-    keys_def   	:= keys_m.Get("en")
-    ; keys     	:= keys_m.Get(sKbdSys,keys_def) ; if continues to bug
-    curlayout  	:= lyt.GetCurLayout(&hDevice, &idLang)
+    keys_def 	:= keys_m.Get("en")
+    ; keys   	:= keys_m.Get(sKbdSys,keys_def) ; if continues to bug
+    curlayout	:= lyt.GetCurLayout(&hDevice, &idLang)
+    if not isSet(idLang) {
+      a := ''
+      for i in [100,200,300,1000] {
+        sleep(i)
+        curlayout	:= lyt.GetCurLayout(&hDevice, &idLang)
+        a .= A_Index ' ' i '`n'
+        if isSet(idLang) {
+          msgbox(a)
+          break
+        }
+      }
+    }
+    if isSet(idLang) {
+      ; dbgmsg(0,'curlayout=' curlayout '`n' 'idLang=' idLang)
+    } else {
+      dbgmsg(0,'curlayout=' curlayout '`n' 'idLang=not set')
+    }
     sKbdCurrent	:= lyt.getLocaleInfo("en",idLang)
     keys       	:= keys_m.Get(sKbdCurrent,keys_def) ; use ←↑ to register instead (and throw out 0 keys, use ↓ first)
     _dbg := "", _dbg0 := "", _dbgid := 1
