@@ -1,5 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.4
-; —————————— User configuration ——————————
+; —————————— User configuration —————————— v0.5@23-12
 global ucfg🖰hide := Map(
    'modiHide'         	, true  	; true : modifiers like ‘⇧a’ hide    🖰 pointer just like ‘a’ (register hotkeys with ‘*’, i.e. fire if any modifier is held down)
    ;                  	        	  false: only            ‘a’ hides   🖰 pointer, not ‘⇧a’
