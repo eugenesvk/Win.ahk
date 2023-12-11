@@ -378,7 +378,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
         dbgtt(_d,'✓on🖰Moved gui',t:=3,i:=3,0,50) ;
       }
     }
-
+    sys🖰Btn(On)
       if dbg >= _d {
         dbgtt(_d,'suppress=' suppress ,t:=3,i:=4,0,150) ;
         dbgTT(_d, "sys🖰P On" , Time:=1,id:=1,X:=0,Y:=850)
@@ -496,11 +496,13 @@ sys🖰Pointer(OnOff := On) {
   dbgOut .= "`nOnOff=" OnOff
   if changeTo = toShow {
     restore🖰Pointers()
-    sys🖰Btn(On)
+    ; sys🖰Btn(On)
   } else if changeTo = toHide {
-    sys🖰Btn(Off)
+    ; sys🖰Btn(Off)
   }
-  dbgTT(dbgMin:=4, Text:=dbgOut, Time:=3,id:=3,X:=0,Y:=750)
+  if dbg >= (dbgMin:=4) {
+    dbgTT(dbgMin, Text:=dbgOut, Time:=3,id:=3,X:=0,Y:=750)
+  }
   isInit	:= true
 }
 
