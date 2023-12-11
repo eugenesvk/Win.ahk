@@ -266,13 +266,14 @@ cfg2🖱 := Map(
   )
 sys🖰Btn(OnOff) {
   static isInit    	:= false
+   , cfg🖰h         	:= cfg🖰convert()
    , disable🖰Btn   	:= []
-   , cfgDisable🖰Btn	:= cfg🖰hide['cfgDisable🖰Btn']
-   , cfgDisable🖱   	:= cfg🖰hide['cfgDisable🖱']
+   , cfgDisable🖰Btn	:= cfg🖰h['cfgDisable🖰Btn']
+   , cfgDisable🖱   	:= cfg🖰h['cfgDisable🖱']
    , x             	:= A_ScreenWidth*.8
    , y             	:= 500, y1 := 550
    , _d            	:= 3
-   , _d4            	:= 4
+   , _d4           	:= 4
    , i1            	:= 3 ; tooltip index for on
    , i0            	:= 4 ; ...               off
    , _t            	:= '∞' ; time for tooltip
@@ -319,15 +320,12 @@ sys🖰Btn(OnOff) {
   HotIf ; turn off context sensitivity
 }
 
-if cfg🖰hide['enableModifiers'] = true {
-  cfg🖰hide['hkModPrefix'] := "*"
-} else {
-  cfg🖰hide['hkModPrefix'] := ""
-}
 ; NB!!! wrapping Hotkey function in another fails: Unlike v1, the Hotkey function in v2 defaults to acting on global hotkeys, unless you call it from within a hotkey, in which case it defaults to the same criteria as the hotkey autohotkey.com/boards/viewtopic.php?f=82&t=118616&p=526495&hilit=hotkey+within+another+hotkey#p526495
 HotIfWinNotActive("ahk_group no🖰HideOnType") ; turn on context sensitivity
-; _dbgregistered_list := ""
-__∗ := cfg🖰hide['hkModPrefix']
+; _dbgregistered_list	:= ""
+; , _dbgcount        	:= 0
+__cfg🖰h              	:= cfg🖰convert()
+, __∗                	:= __cfg🖰h['hkModPrefix']
 for _vkKey in getKeys🖰hide() { ; for every defined key, register a call to hide the mouse cursor
   Hotkey(˜ __∗ _vkKey, hk🖰PointerHide)
   ; Hotkey(˜ __∗ GetKeyName(_scKey), hk🖰PointerHide)
