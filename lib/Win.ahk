@@ -140,6 +140,20 @@ getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to act
     }
   }
 }
+getWinID_Owner(winIDarg) { ; get a window ID of the owner of the passed winID
+  static winT	:= winTypes.ahk ; winT types and their ahk types for DllCalls and structs
+   , GW_OWNER := 4 ; An application can use the GetWindow function with the GW_OWNER flag to retrieve a handle to a window's owner.
+  if (winIDarg = 0) {
+    throw ValueError("Can't pass a 0 window ID argument!", -1)
+  } else {
+    ownerID := DllCall("user32\GetWindow", winT['HWND'],winIDarg, winT['UINT'],GW_OWNER) ; learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow HWND GetWindow([in] HWND hWnd,[in] UINT uCmd);
+    if ownerID {
+      return ownerID
+    } else {
+      return 0
+    }
+  }
+}
 
 ; Fullscreen window toggle
 Win_FWT(hwnd:="") { ;autohotkey.com/boards/viewtopic.php?p=123166#p123166
