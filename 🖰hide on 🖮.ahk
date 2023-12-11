@@ -508,7 +508,7 @@ is🖰PointerVisible() {
   static C := win32Constant.Misc ; various win32 API constants
    , ws	:= winapi_Struct, wdll := winapi_DllCall
    , Cursor_Showing := 0x00000001
-  🖰I	:= ws.CursorInfo() ; get dynamically created class
+  🖰I	:= ws.CursorInfo() ; get dynamically created class ;;; why can't make it static and overwrite every single time via DllCall
   _ := DllCall("user32\GetCursorInfo", "Ptr",🖰I)
   is🖰vis := 🖰I.flags & Cursor_Showing
   ; dbgtt(0,'flags ' 🖰I.flags,t:=2,,200,200) ;
