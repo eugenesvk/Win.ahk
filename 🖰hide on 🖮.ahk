@@ -120,19 +120,24 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
   sleep(1) ;;; workaround for a bug: changing GUI element owner to AHK breaks modifiers autohotkey.com/boards/viewtopic.php?f=82&t=123412, but causes another bug: prevents getting mouse pointer status correctly autohotkey.com/boards/viewtopic.php?f=82&t=123908, potential fix is to get the pointer status earlier ↑
   🖰PointerHide(is🖰vis)
 }
-🖰PointerHide() {
+🖰PointerHide(is🖰vis:='') {
   static get⎀        	:= win.get⎀.Bind(win)
-   , modAllow🖰Pointer	:= cfg🖰hide['modAllow🖰Pointer']
-   , limit2text      	:= cfg🖰hide['limit2text']
-   , suppress        	:= cfg🖰hide['suppressionMethod']
-  dbgtxt := ''
+   , cfg🖰h           	:= cfg🖰convert()
+   , modAllow🖰Pointer	:= cfg🖰h['modAllow🖰Pointer']
+   , limit2text      	:= cfg🖰h['limit2text']
+   , suppress        	:= cfg🖰h['suppressionMethod']
+   , _d              	:= 3 ;
   if isAnyUserModiPressed(modAllow🖰Pointer) {
-    ; dbgtxt .= 'modAllow🖰Pointer pressed, skipping hide'
+    if dbg >= _d {
+      dbgTT(_d,'modAllow🖰Pointer pressed, skipping hide ' preciseTΔ(),t:=2,,x:=0,y:=800)
+    }
   } else if limit2text {
     if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
       sys_app_btnHide(Off, is🖰vis)
     } else {
-      ; dbgtxt .= 'outside a text field, skipping hide'
+      if dbg >= _d {
+        dbgTT(_d,'outside a text field, skipping hide 1 ' preciseTΔ(),t:=2,,x:=0,y:=800)
+      }
     }
   } else {
     sys_app_btnHide(Off, is🖰vis)
@@ -310,9 +315,12 @@ for _vkKey in getKeys🖰hide() { ; for every defined key, register a call to hi
   Hotkey(˜ __∗ _vkKey, hk🖰PointerHide)
   ; Hotkey(˜ __∗ GetKeyName(_scKey), hk🖰PointerHide)
   ; _dbgregistered_list .= GetKeyName("sc" . format("{1:X}",_scKey)) . " "
+  ; _dbgregistered_list .= GetKeyName(_vkKey) . " "
+  ; _dbgcount += 1
+  ; _dbgregistered_list .= (Mod(_dbgcount,10) = 0)?'`n':''
 }
 ; _dbgout() {
-  ; dbgTT(0,_dbgregistered_list,t:=3,id:=15,x:=1500,y:=600)
+;   dbgTT(0,_dbgregistered_list,t:=5,id:=15,x:=1500,y:=600)
 ; }
 ; _dbgout()
 
@@ -346,12 +354,16 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
       sys🖰Pointer(On)
     }
     if suppress = 'gui' or suppress = 'both' {
-      app🖰Pointer(On)
-      dbgtt(_d,'✓on🖰Moved gui',t:=3,i:=3,0,50) ;
+      app🖰Pointer(On, is🖰vis)
+      if dbg >= _d {
+        dbgtt(_d,'✓on🖰Moved gui',t:=3,i:=3,0,50) ;
+      }
     }
-      ; dbgtt(0,'suppress=' suppress ,t:=3,i:=4,0,150) ;11
-      dbgtt(_d,'suppress=' suppress ,t:=3,i:=4,0,150) ;
-    dbgTT(_d, "sys🖰P On" , Time:=1,id:=1,X:=0,Y:=850)
+
+      if dbg >= _d {
+        dbgtt(_d,'suppress=' suppress ,t:=3,i:=4,0,150) ;
+        dbgTT(_d, "sys🖰P On" , Time:=1,id:=1,X:=0,Y:=850)
+      }
     🖰x_ := 🖰x
     🖰y_ := 🖰y
   }
@@ -522,6 +534,9 @@ app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app 
       if displayCounter < -1 { ;;; likely an issue with being unable to hide the pointer
         ; dbgtt(0,"✗✗✗hidden3 cursor " displayCounter " flag=" 🖰I.flags " at " WinGetTitle(guiOwner),t:=2,i:=3,x,200)
         ; dbgtt(_d,"✗✓ hide± #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
+        if dbg >= _d {
+          dbgtt(_d,"✗✓ hide± #" displayCounter ' (' _pre ')' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
+        }
       } else {
         displayCounter := DllCall("ShowCursor", "int",0)
         ; dbgtt(_d,"✓ hide #" displayCounter ' ' preciseTΔ() "`n" WinGetTitle(guiOwner),_t,i0,x,200)
@@ -539,7 +554,9 @@ app🖰Pointer(OnOff := '') { ; create our own gui element, make the target app 
         guiOwner := winID
         displayCounter := DllCall("ShowCursor", "int",1)
         guiBlankChild.Opt("-Owner")
-        ; dbgtt(_d,"✓shown GUI #" displayCounter ' ' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
+        if dbg >= _d {
+          dbgtt(_d,"✓shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`n" (guiOwner>0?WinGetTitle(guiOwner):''),_t,i1,x,50)
+        }
       } else {
         displayCounter := DllCall("ShowCursor", "int",1)
         guiBlankChild.Opt("-Owner")
