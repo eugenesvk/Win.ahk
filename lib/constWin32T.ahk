@@ -217,10 +217,12 @@ class winTypes { ; from github.com/jNizM/AutoHotkey_MSDN_Types
   )
 
   static __new() { ; get all vars and store their values in a ‘m’ map
-    static m    	:= Map()
-    , ms        	:= Map() ; store structs
-    m.CaseSense 	:= 0 ; make key matching case insensitive
-    ms.CaseSense	:= 0 ; make key matching case insensitive
+    static m      	:= Map()
+    , ms          	:= Map() ; store structs
+    , mahk        	:= Map() ; store Ahk types
+    m.CaseSense   	:= 0 ; make key matching case insensitive
+    ms.CaseSense  	:= 0 ;
+    mahk.CaseSense	:= 0 ;
 
     for i,arrTName in this.mapNames { ; DataType1
       for j,arrT in this.%arrTName% {
@@ -238,8 +240,9 @@ class winTypes { ; from github.com/jNizM/AutoHotkey_MSDN_Types
         } else       	{
           mT['ahk']  	:= mT['ahk32'] := mT['ahk64'] := typeAhkNm
         }
-        typeDll     	:= arrT[3] ; Str / WStr or ShortP | IntP
-        typeDll32¦64	:= StrSplit(typeDll, '|', A_Space)
+        mahk[mT['win']]	:= mT['ahk']
+        typeDll        	:= arrT[3] ; Str / WStr or ShortP | IntP
+        typeDll32¦64   	:= StrSplit(typeDll, '|', A_Space)
         if typeDll32¦64.Length > 1 {
           ; msgbox(arrT[1] '`n' typeDll32¦64[1] '`n' typeDll32¦64[2])
           mT['dll32']	:= typeDll32¦64[1] ; ShortP
@@ -273,7 +276,8 @@ class winTypes { ; from github.com/jNizM/AutoHotkey_MSDN_Types
         ms[mT['win']] 	:= mT['struct']
       }
     }
-    this.m := m
-    this.struct := ms
+    this.m     	:= m
+    this.struct	:= ms
+    this.ahk   	:= mahk
   }
 }
