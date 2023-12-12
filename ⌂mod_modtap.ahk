@@ -316,24 +316,29 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
     , dbl := 2
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
-  if ⌂_.pos = '↓' { ; ?0b) should always be true? otherwise we won't get a callback
+  if ⌂_.pos = '↓' { ; should always be true? otherwise we won't get a callback
     if ignored.Has(⌂_.flag) and ;
        ignored[⌂_.flag].Has(kvk_s) { ; this modtap+key combo should be ignored
       if dbg >= dbl {
-        keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-        prionm	:= vkrl['en'].Get(s.key→ahk(A_PriorKey),'✗')
-        ⌂_t   	:= A_TickCount - ⌂_.t
-        dbgtt(dbl,'✗✗✗ ignore ' dbg⌂ '(' ⌂_t ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
+        variant	:= '✗✗✗↓ ignore'
+        keynm  	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+        prionm 	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+        t⌂_    	:= A_TickCount - ⌂_.t
+        dbgtt(dbl,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,_ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
       }
-      ⌂_.is := '↑' ;
-      SendInput('{' ⌂_.vk '}' '{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
-      ih.Stop()
+      ; ⌂_.is := '↑' ;
+      ; if ih.InProgress { ;
+        ; ih_input	:= ih.Input
+        ; dbgtt(dbl,'×IH handle⌂↑, input=' ih_input ' 🕐' preciseTΔ(),t:=4,_ik+1) ;
+        ; ih.Stop() ; stack cleaned up when handling ih.reason so that it's possible to stop at Key↓↑ functions
+      ; }
     } else {
       if dbg >= dbl {
-        keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-        prionm	:= vkrl['en'].Get(s.key→ahk(A_PriorKey),'✗')
-        ⌂_t   	:= A_TickCount - ⌂_.t
-        dbgtt(dbl,'✗ ?0b) ' dbg⌂ '(' ⌂_t ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
+        variant	:= '✗ ?0b)'
+        keynm  	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+        prionm 	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+        t⌂_    	:= A_TickCount - ⌂_.t
+        dbgtt(dbl,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,_ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
       }
     }
   } else { ; should never get here?f
@@ -350,23 +355,42 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
     , dbl := 0 ;
   global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
+  kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   if ⌂_.pos = '↓' { ; 1a)
-    if ⌂_.vk = s.key→ahk(A_PriorKey) { ; xx) a↓ ⌂↓ •a↑ ⌂↑
-      dbgtt(2,'xx) a↓ ⌂↓ •a↑ ⌂↑ (' dbgsrc ')`n' dbg⌂ ' vk↑' hex(kvk) ' sc' hex(ksc) ' PreK=' A_PriorKey '=' ⌂_.k ' ' preciseTΔ(),t:=4,i:=12,A_ScreenWidth - 40) ;
-    } else { ; 🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑
-      if dbg >= 2 { ;
-        keynm 	:= kr['en'].Get('vk' hex(kvk),'✗')
-        prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗')
-        t⌂_   	:= A_TickCount - ⌂_.t
-        dbgtt(2,'🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(vk' hex(kvk) 'sc' hex(ksc) ') prio ‘' prionm '’ ≠' ⌂_.k '`n' ⌂_.send↓ ' ' keynm,t:=4,i:=13,0,🖥️w↕//2) ;
+    if ⌂_.vk = vk[A_PriorKey] {
+      if dbg >= dbl {
+        variant := 'xx) a↓ ⌂↓ •a↑ ⌂↑'
+        dbgtt(dbl,variant ' (' dbgsrc ')`n' dbg⌂ ' ↑' kvk_s ' ' sc_s ' PreK=' A_PriorKey '=' ⌂_.k ' ' preciseTΔ(),t:=4,_ik,A_ScreenWidth - 40) ;
       }
-      SendInput(⌂_.send↓), ⌂_.is := true
-      if tooltip⎀ {
-        win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
+    } else {
+      if ignored.Has(⌂_.flag) and ;
+         ignored[⌂_.flag].Has(kvk_s) { ; Ignore this modtap+key combo
+        if dbg >= _ds {
+          variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
+          ,keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+          ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+          ,t⌂_   	:= A_TickCount - ⌂_.t
+          ,dbgtt(_ds,variant ' ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑('  kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k '`n' ⌂_.send↓ ' ' keynm,t:=4,_ik+1,0,🖥️w↕//2) ;
+        } ;
+      } else { ; don't ignore this modtap+key combo
+        if dbg >= _ds {
+          variant := '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
+          ,keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+          ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+          ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
+          ,t⌂_   	:= A_TickCount - ⌂_.t
+          ,dbgtt(_ds,variant ' ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,_ik+1,0,🖥️w↕//2) ;
+          ,dbgtt(_ds,variant ' ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k ' prio⌂↓‘' prio↓ '’`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,_ik+1,0,🖥️w↕//2) ;
+        } ;
+        SendInput(⌂_.send↓), ⌂_.is := true
+        if tooltip⎀ {
+          win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',i↗,⎀←-9,⎀↑-30)
+        }
+        SendInput('{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
+        dbgtt_ismod('🠿1aa')
+        ; dbgtt(0,ih.Input '`n' (ih=⌂_.ih) ' ' preciseTΔ() '`n' ⌂_.ih.Input,t:=1) ;
+        ; ih.Stop() ;
       }
-      SendInput('{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
-      dbgtt_ismod('🠿1aa')
-      ih.Stop()
     }
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
     if dbg >= dbl { ;
