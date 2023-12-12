@@ -293,6 +293,20 @@ cb⌂_K↑(⌂_,  ih,vk,sc) {
   Key↑_⌂(ih,vk,sc,   &⌂_)
 }
 
+kvk→label(arr) { ; convert an array of decimal VK codes into an tring of English-based key names
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+  labels := ''
+  ; labels := Array()
+  ; dbgtxt := ''
+  for kvk in arr {
+    ; dbgtxt .= kvk '(' 'vk' hex(kvk) '→' vkrl['en'].Get('vk' hex(kvk),'✗') ')'
+    ; labels.push(vkrl['en'].Get('vk' hex(kvk),'✗'))
+    labels .= vkrl['en'].Get('vk' hex(kvk),'✗')
+  }
+  ; dbgTT(0, dbgtxt, t:=3) ;
+  return labels
+}
+
 Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
