@@ -130,6 +130,8 @@ gen_map⌂(){
   global map⌂
   map⌂['vk→⌂'] := Map()
   map⌂['flag→vk'] := Map()
+   cb⌂a_K↑:=0,cb⌂s_K↑:=0,cb⌂d_K↑:=0,cb⌂f_K↑:=0,cb⌂j_K↑:=0,cb⌂k_K↑:=0,cb⌂l_K↑:=0,cb⌂︔_K↑:=0
+  ,cb⌂a_K↓:=0,cb⌂s_K↓:=0,cb⌂d_K↓:=0,cb⌂f_K↓:=0,cb⌂j_K↓:=0,cb⌂k_K↓:=0,cb⌂l_K↓:=0,cb⌂︔_K↓:=0
   for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
     i⌂.t    	:= A_TickCount
     i⌂.vk   	:= vk[i⌂.k] ; vk21 for f
@@ -141,6 +143,14 @@ gen_map⌂(){
     i⌂.🔣ahk 	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
     i⌂.flag 	:= f%i⌂.🔣%
     i⌂.dbg  	:= '⌂' i⌂.k i⌂.🔣 ;
+    ; Setup inputhook to manually handle input when modtap key is pressed
+    ih              	:= InputHook("T" ⌂tHold) ; minSendLevel set within setup⌂mod depending on the stack order of a given modtap
+    ih.KeyOpt(      	'{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
+    cb⌂%i⌂.token%_K↑	:= cb⌂_K↑.Bind(i⌂) ; ih,vk,sc will be added automatically by OnKeyUp
+    cb⌂%i⌂.token%_K↓	:= cb⌂_K↓.Bind(i⌂) ; ...                                     OnKeyDown
+    ih.OnKeyUp      	:= cb⌂%i⌂.token%_K↑	;
+    ih.OnKeyDown    	:= cb⌂%i⌂.token%_K↓	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
+    i⌂.ih           	:= ih
 
     map⌂['vk→⌂'   ][i⌂.vk]  	:= i⌂
     map⌂['flag→vk'][i⌂.flag]	:= i⌂.vk
@@ -377,18 +387,7 @@ setup⌂mod(hk,c,is↓) { ;
   ; dbgtt(0,hk ' ' c ' ' is↓,t:='∞',i:=7,0,0) ;
 
 
-   cb⌂a_Key↑:=0,cb⌂s_Key↑:=0,cb⌂d_Key↑:=0,cb⌂f_Key↑:=0,cb⌂j_Key↑:=0,cb⌂k_Key↑:=0,cb⌂l_Key↑:=0,cb⌂︔_Key↑:=0
-  ,cb⌂a_Key↓:=0,cb⌂s_Key↓:=0,cb⌂d_Key↓:=0,cb⌂f_Key↓:=0,cb⌂j_Key↓:=0,cb⌂k_Key↓:=0,cb⌂l_Key↓:=0,cb⌂︔_Key↓:=0
   if not isInit {
-    for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] { ; create inputhook objects for later use
-      ih⌂	:= InputHook("T" ⌂tHold) ; I2 set minsendlevel individually depending on the stack order of modtap
-      ih⌂.KeyOpt('{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
-      cb⌂%i⌂.token%_Key↑	:= cb⌂_Key↑.Bind(i⌂) ; ih,vk,sc will be added automatically by OnKeyUp
-      cb⌂%i⌂.token%_Key↓	:= cb⌂_Key↓.Bind(i⌂) ; ...                                     OnKeyDown
-      ih⌂.OnKeyUp       	:= cb⌂%i⌂.token%_Key↑	;
-      ih⌂.OnKeyDown     	:= cb⌂%i⌂.token%_Key↓	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
-      map⌂hook[i⌂.vk]   	:= ih⌂
-    }
     isInit	:= true
   }
 
