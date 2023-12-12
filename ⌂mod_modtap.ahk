@@ -58,24 +58,29 @@ f↓j↓w↕↑f↑ W (with ⇧› enabled since j was the last activated inputh
 
 ; —————————— User configuration ——————————
 global ucfg⌂mod := Map(
+  ; Key        	 Value 	 |Default|Alternative¦
    'tooltip⎀'  	, true 	;|true| 	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
   , 'holdTimer'	, 0.5  	;|.5|   	seconds of holding a modtap key after which it becomes a hold modifier
   ; Debugging  	       	        	;
   , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
   , 'sndlvl'   	, 1    	;|1|    	register hotkeys with this sendlevel
   , 'ignored'  	, Map( 	;       	ignore specific key combos to avoid typing mistakes from doing something annoying (like ◆l locking your computer)
-     f‹⇧       	, '␠'  	; key   	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
-    ,f⇧›       	, '␠'  	; value 	list of alphanumeric key labels
-    ) ; single key names suitable for using here are available via getKeyLabels_forVK('vk20') function, which for 'vk20' (space) would copy ‘␠ ␣’ to your clipboard
+    ; key      	       	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
+    ;          	value  	list of alphanumeric key labels
+     f‹⇧       	, '123qwerty␠'
+    ,f⇧›       	, '[]'
+    ) ;
   )
 i↗ 	:= 19 ; dbgTT index, top right position of the empty status of our home row mod
 i↘t	:=  8 ; dbgTT index, top down position of the key and modtap status (title)
 i↘ 	:=  9 ; ... value
 i1↓	:= 10 ; dbgTT index, bottom position for inputhooks on messages
 i0↓	:= 11 ; ... off
+_ik	:= 13 ; dbgTT index for Key↓↑_⌂ functions
 _dt	:=  5 ; min debug level for the bottom-right status of all the keys
+_ds	:=  0 ; min debug level for Send events
 
-; getKeyLabels_forVK('vk20') ; ␠ ␣
+; getKeyLabels_forVK(kvk:='vk20') ; ␠ ␣
 getKeyLabels_forVK(kvk){
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
   key_labels := ''
@@ -120,21 +125,24 @@ parseUserConfig() {
 map⌂ := Map()
 gen_map⌂() ; setup info and status fields for all the homerow mods
 gen_map⌂(){
+  static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+    , ⌂tHold	:= ucfg⌂mod.Get('holdTimer',0.5) ;
   global map⌂
   map⌂['vk→⌂'] := Map()
   map⌂['flag→vk'] := Map()
   for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
-    i⌂.t                    	:= A_TickCount
-    i⌂.vk                   	:= helperString.key→ahk(i⌂.k) ; vk21 for f
-    i⌂.pos                  	:= '↑'
-    i⌂.is                   	:= false ; is down
-    i⌂.send↓                	:= '{' i⌂.mod ' Down' '}'
-    i⌂.send↑                	:= '{' i⌂.mod ' Up'   '}'
-    i⌂.🔣                    	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
-    i⌂.🔣ahk                 	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
-    i⌂.flag                 	:= f%i⌂.🔣%
-    i⌂.dbg                  	:= '⌂' i⌂.k i⌂.🔣 ;
-    map⌂['vk→⌂'][i⌂.vk]     	:= i⌂
+    i⌂.t    	:= A_TickCount
+    i⌂.vk   	:= vk[i⌂.k] ; vk21 for f
+    i⌂.pos  	:= '↑'
+    i⌂.is   	:= false ; is down
+    i⌂.send↓	:= '{' i⌂.mod ' Down' '}'
+    i⌂.send↑	:= '{' i⌂.mod ' Up'   '}'
+    i⌂.🔣    	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
+    i⌂.🔣ahk 	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
+    i⌂.flag 	:= f%i⌂.🔣%
+    i⌂.dbg  	:= '⌂' i⌂.k i⌂.🔣 ;
+
+    map⌂['vk→⌂'   ][i⌂.vk]  	:= i⌂
     map⌂['flag→vk'][i⌂.flag]	:= i⌂.vk
   }
 }
@@ -187,13 +195,13 @@ preciseTΔ() ; start timer for debugging
 reg⌂map := Map() ; store registered keypairs 'vk46'='f'
 register⌂()
 register⌂() {
-  static k	:= keyConstant._map, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
   global reg⌂map
   loop parse 'fj' {
-    vk := s.key→ahk(A_LoopField)
-    hkreg1	:= ＄ vk
-    hkreg2	:= ＄ vk ' UP' ; $kbd hook
+    kvk := vk[A_LoopField]
+    hkreg1	:= ＄ kvk
+    hkreg2	:= ＄ kvk ' UP' ; $kbd hook
     HotKey(hkreg1, hkModTap,'I1') ;
     HotKey(hkreg2, hkModTap,'I1') ;
     reg⌂map[hkreg1]     	:= {lbl:A_LoopField, is↓:1}
@@ -268,10 +276,10 @@ get⌂dbg(⌂_) {
    return ⌂_.dbg ⌂_.pos (⌂_.is ? '🠿' : '') ' send‘' ⌂_.send%(⌂_.pos)% '’ flag' dec→bin(⌂_.flag)
 }
 
-cb⌂_Key↓(⌂_,  ih,vk,sc) { ;
+cb⌂_K↓(⌂_,  ih,vk,sc) { ;
   Key↓_⌂(ih,vk,sc,   &⌂_)
 }
-cb⌂_Key↑(⌂_,  ih,vk,sc) {
+cb⌂_K↑(⌂_,  ih,vk,sc) {
   Key↑_⌂(ih,vk,sc,   &⌂_)
 }
 
@@ -309,11 +317,13 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
   }
 }
 Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
-  static k	:= keyConstant._map, lbl := keyConstant._labels, kr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
-   , s    	:= helperString
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+    , s   	:= helperString
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-   , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1), ttdbg := ucfg⌂mod.Get('ttdbg',0)
+    , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1), ttdbg := ucfg⌂mod.Get('ttdbg',0)
+    , ignored := parseUserConfig()
+    , dbl := 0 ;
   global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   if ⌂_.pos = '↓' { ; 1a)
@@ -335,11 +345,11 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
       ih.Stop()
     }
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
-    if dbg >= 2 { ;
-      keynm 	:= kr['en'].Get('vk' hex(kvk),'✗')
-      prionm	:= kr['en'].Get(s.key→ahk(A_PriorKey),'✗') ;
+    if dbg >= dbl { ;
+      keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+      prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗') ;
       t⌂_   	:= A_TickCount - ⌂_.t
-      dbgMsg(2,'✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(vk' hex(kvk) ' sc' hex(ksc) ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑⌂')
+      dbgMsg(dbl,'✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ ' preciseTΔ() '`n' dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑⌂')
     }
   }
 }
@@ -363,7 +373,6 @@ setup⌂mod(hk,c,is↓) { ;
    , dbg⌂ih  	:= ''
       ; I1 sendlevel (ignore regular keys sent at level 0)
       ; L1024 def don't need many since after a short hold timer a permanent mode will set, the hoook will reset
-   , map⌂hook	:= Map()
    , stack⌂  	:= [] ; track the level of a modtap key's inputhook in the stack (also used to set minsendlevel to allow sending keys to only the most recent hook)
   ; dbgtt(0,hk ' ' c ' ' is↓,t:='∞',i:=7,0,0) ;
 
@@ -385,12 +394,12 @@ setup⌂mod(hk,c,is↓) { ;
 
   global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
 
-  vkC := s.key→ahk(c)
+  vkC := vk[c]
   this⌂ := map⌂['vk→⌂'].Get(vkC, '')
   if not this⌂ { ;
     throw ValueError("Unknow modtap key!", -1, c ' ' vkC)
   }
-  ih⌂ 	:= map⌂hook[vkC]
+  ih⌂ 	:= this⌂.ih
   dbg⌂	:= '⌂' this⌂.k this⌂.🔣 ;
   dbgorder := Map('a',[1,4], 's',[1,3], 'd',[1,2], 'f',[1,1]
                  ,';',[0,4], 'l',[0,3], 'k',[0,2], 'j',[0,1])
@@ -429,20 +438,20 @@ setup⌂mod(hk,c,is↓) { ;
         win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgtt(0,'',t:='∞',i↗,⎀←-9,⎀↑-30)
       }
       this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
-      dbgtt(d3,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
+      dbgtt(_ds,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') ' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
       dbgtt_ismod('🠿1ba')
     } else {
-      if (prio := s.key→ahk(A_PriorKey)) = vkC {
+      if (prio := vk[A_PriorKey]) = vkC {
         if this⌂.pos = '↓' { ; ↕xz) ↕01)
           this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
           if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
-            alt⌂ := stack⌂[-2], alt⌂ih := map⌂hook[alt⌂.vk]
+            alt⌂ := stack⌂[-2], alt⌂ih := alt⌂.ih
             vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC) ; decimal value
             Key↑_⌂(alt⌂ih, vk_d, sc_d, &alt⌂, '↕xz') ; invoke callback directly, but use another modtap's inputhook (ours is already disabled)
             dbgtt(d3,'✗ _↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone while ' alt⌂.dbg '↓`n🕐' this⌂t '<' ⌂ΔH ' PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ this⌂.is=' this⌂.is ' this⌂.pos=' this⌂.pos,t:=2,,0,🖥️w↕*.86) ;
           } else { ;
             SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
-            dbgtt(d3,'↕xz) ↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone`n🕐' this⌂t '<' ⌂ΔH ' PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ this⌂.is=' this⌂.is ' this⌂.pos=' this⌂.pos,t:=2,,0,🖥️w↕*.86)
+            dbgtt(_ds,'↕xz) ↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone`n🕐' this⌂t '<' ⌂ΔH ' PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ this⌂.is=' this⌂.is ' this⌂.pos=' this⌂.pos,t:=2,,0,🖥️w↕*.86)
           } ;
         } else { ; 00) haven't been activated, no need to send self
           this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
@@ -452,9 +461,9 @@ setup⌂mod(hk,c,is↓) { ;
       } else { ; ↕2a) ⌂↓ a↓ •⌂↑ a↑   fast typing ⌂,a
         this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',i↗,🖥️w↔ - 40, 20)
         keynm := vkrl['en'].Get(prio,'✗')
-        dbgtt(d3,'↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' A_PriorKey ') A_PriorKey, print self ‘' c '’‘' ih_input '’=input',t:=4,,x:=0)  ;
+        dbgtt(_ds,'↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' A_PriorKey ') A_PriorKey, print self+input ‘' c '’+‘' ih_input '’',t:=4,,x:=0)  ;
         dbgtt_ismod('↕2a)')
-        SendLevel 1 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activated
+        SendLevel 1 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activate
         SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
         SendInput(ih_input) ;
         SendLevel 0 ;
@@ -474,7 +483,7 @@ setup⌂mod(hk,c,is↓) { ;
     ih⌂.MinSendLevel	:= stack⌂.Length + 1
     ih⌂.Start()     	       	; 0a) •⌂↓ do nothing yet, just activate inputhook
     dbg⌂ih          	:= dbg⌂	;
-    dbgtt(d5,dbg⌂ '¦' dbg⌂ih '`nIH with callback cb⌂' this⌂.k '_Key↓ ↑ stack' stack⌂.Length ' ' preciseTΔ(),t:=2,i1↓,🖥️w↔//2,🖥️w↕*.89) ;
+    dbgtt(d5,dbg⌂ '¦' dbg⌂ih '`nIH with callback cb⌂' this⌂.k '_K↓ ↑ stack' stack⌂.Length ' ' preciseTΔ(),t:=2,i1↓,🖥️w↔//2,🖥️w↕*.89) ;
     ih⌂.Wait()		; Waits until the Input is terminated (InProgress is false)
 
     if (ih⌂.EndReason  = "Timeout") { ;0t) Timed out after ⌂tHold
