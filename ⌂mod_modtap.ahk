@@ -20,6 +20,8 @@ Sequence    Label Comment
 a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the prior key finish
       •      xx)  print nothing (a is printed outside of this script)
          •  ↕xz)  print ⌂
+a↓ ⌂↓ b↓ a↑ ⌂↑ ↕
+         •   x_x) print nothing (a is printed outside of this script, b )
 ⎈↓ ⌂↓ ⎈↑⌂↑       not a tap, swallowed by the modifier
          •   00)  print nothing
 ⌂↓       ⌂↑ ↕     single standalone tap, not hold
@@ -368,6 +370,11 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
     if ⌂_.vk = vk[A_PriorKey] {
       if dbg >= dbl {
         variant := 'xx) a↓ ⌂↓ •a↑ ⌂↑'
+        dbgtt(dbl,variant ' (' dbgsrc ')`n' dbg⌂ ' ↑' kvk_s ' ' sc_s ' PreK=' A_PriorKey '=' ⌂_.k ' ' preciseTΔ(),t:=4,_ik,A_ScreenWidth - 40) ;
+      }
+    } else if not HasValue(⌂_.K↓,kvk) { ;
+      if dbg >= dbl { ;
+        variant := 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕'
         dbgtt(dbl,variant ' (' dbgsrc ')`n' dbg⌂ ' ↑' kvk_s ' ' sc_s ' PreK=' A_PriorKey '=' ⌂_.k ' ' preciseTΔ(),t:=4,_ik,A_ScreenWidth - 40) ;
       }
     } else {
