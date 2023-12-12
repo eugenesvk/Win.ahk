@@ -420,6 +420,20 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
   }
 }
 
+vk→token(kvk) {
+  static K    	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , s        	:= helperString
+   , kvk→token	:= Map()
+   , isInit   	:= false
+  if not isInit {
+    for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔] {
+      kvk→token[i⌂.vk]	:= i⌂.token
+    }
+    isInit := true
+  }
+  return kvk→token[kvk]
+}
+
 setup⌂mod(hk,c,is↓) { ;
   static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
