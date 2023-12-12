@@ -143,6 +143,12 @@ gen_map⌂(){
     i⌂.🔣ahk 	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
     i⌂.flag 	:= f%i⌂.🔣%
     i⌂.dbg  	:= '⌂' i⌂.k i⌂.🔣 ;
+    ; Track 	which keys have been pressed
+    i⌂.prio↓	:= '' ; before a given modtap is down
+    i⌂.prio↑	:= '' ;                          up
+    ;       	while a given modtap is down
+    i⌂.K↓   	:=  Array() ; key down events (track K↑ for a111 K↓ that happened before modtap)
+    i⌂.K↑   	:=  Array() ; ... up
     ; Setup inputhook to manually handle input when modtap key is pressed
     ih              	:= InputHook("T" ⌂tHold) ; minSendLevel set within setup⌂mod depending on the stack order of a given modtap
     ih.KeyOpt(      	'{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
@@ -316,6 +322,7 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
     , dbl := 2
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
+  ⌂_.K↓.push(kvk)
   if ⌂_.pos = '↓' { ; should always be true? otherwise we won't get a callback
     if ignored.Has(⌂_.flag) and ;
        ignored[⌂_.flag].Has(kvk_s) { ; this modtap+key combo should be ignored
@@ -356,6 +363,7 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
   global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
+  ⌂_.K↑.push(kvk)
   if ⌂_.pos = '↓' { ; 1a)
     if ⌂_.vk = vk[A_PriorKey] {
       if dbg >= dbl {
@@ -379,8 +387,11 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
           ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
           ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
           ,t⌂_   	:= A_TickCount - ⌂_.t
+          ; ,⌂K↓ 	:= Object2Str(kvk→label(⌂_.K↓)) ;
+          ; ,⌂K↑ 	:= Object2Str(kvk→label(⌂_.K↑)) ;
+          ,⌂K↓   	:= kvk→label(⌂_.K↓) ;
+          ,⌂K↑   	:= kvk→label(⌂_.K↑) ;
           ,dbgtt(_ds,variant ' ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,_ik+1,0,🖥️w↕//2) ;
-          ,dbgtt(_ds,variant ' ' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k ' prio⌂↓‘' prio↓ '’`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,_ik+1,0,🖥️w↕//2) ;
         } ;
         SendInput(⌂_.send↓), ⌂_.is := true
         if tooltip⎀ {
@@ -461,7 +472,7 @@ setup⌂mod(hk,c,is↓) { ;
   is↑ := not is↓ ;
 
   handle⌂↑(&this⌂,&ih,&ihID,this⌂t) { ; allows calling called either when a single ⌂ or combined
-    _tprio := A_PriorKey
+    this⌂.prio↓ := '', this⌂.prio↑ := A_PriorKey, this⌂.K↓ := Array(), this⌂.K↑ := Array()
     ih_input := ''
     if ih⌂.InProgress { ;
       ih_input	:= ih⌂.Input
@@ -514,7 +525,7 @@ setup⌂mod(hk,c,is↓) { ;
     dbgtt_ismod('↑')
   } else { ; is↓
     ; dbgtt(d4,'is↓' is↓ ' ' preciseTΔ(),t:=3,i:=13,x:=🖥️w↔,y:=300) ;
-    this⌂.pos := '↓', this⌂.t := A_TickCount
+    this⌂.pos := '↓', this⌂.t := A_TickCount, this⌂.prio↓ := A_PriorKey, this⌂.prio↑ := ''
     dbgtt_ismod('↓')
     stack⌂.Push(this⌂)
     ih⌂.MinSendLevel	:= stack⌂.Length + 1
