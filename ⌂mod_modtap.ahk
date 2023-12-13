@@ -23,7 +23,7 @@ class udbg⌂mod { ; various debug constants like indices for tooltips
   ,i0↓     	:= 11 ; ... off
   ,ik      	:= 13 ; dbgTT index for Key↓↑_⌂ functions
   ,dt      	:=  5 ; min debug level for the bottom-right status of all the keys
-  ,ds      	:=  0 ; min debug level for Send events
+  ,ds      	:=  3 ; min debug level for Send events
 }
 
 ; getKeyLabels_forVK(kvk:='vk20') ; ␠ ␣
@@ -306,7 +306,7 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
     , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1), ttdbg := ucfg⌂mod.Get('ttdbg',0)
     , ignored := parseUserConfig()
-    , dbl := 0 ;
+    , dbl := 3 ;
   global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
