@@ -38,8 +38,9 @@ A slightly more complicated set of actions depending on the sequence of keys is 
   ↕ key tap<br/>
   🠿 key hold<br/>
   • perform action at this point<br/>
-  •<ΔH perform action at this point only if ⌂tHold seconds has NOT passed<br/>
-  ⌂ home row modtap key <br/>
+  •>ΔH perform action at this point only after ⌂tHold seconds<br/>
+  •<ΔH perform action at this point only if ⌂tHold seconds has __NOT__ passed<br/>
+  ⌂ home row modtap key (e.g., <kbd>f</kbd> types `f` with a single tap, but becomes <kbd>⇧</kbd> on hold) <br/>
   a any regular key (not modtap)<br/>
 
 ⌂↓ always activates our modtap input handler, so won't be marked as •
@@ -49,19 +50,35 @@ Sequence    Label Comment
 a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the prior key finish
       •      xx)  print nothing (a is printed outside of this script)
          •  ↕xz)  print ⌂
+a↓ ⌂↓ b↓ a↑ ⌂↑ ↕
+         •   x_x) print nothing (a is printed outside of this script, b )
+⎈↓ ⌂↓ ⎈↑⌂↑       not a tap, swallowed by the modifier
+         •   00)  print nothing
 ⌂↓       ⌂↑ ↕     single standalone tap, not hold
-         •  ↕00)  print ⌂
+     <ΔH •  ↕01)  print ⌂
+    •>ΔH    🠿0t)  enable ⌂ (⇧⌂ enabled on timer via input hook's timeout)
 ⌂↓ a↓ ⌂↑ a↑ ↕     should be ⌂,a as that's just fast typing
 •            0a)  print nothing, don't know the future yet, just activate input hook
-   •<ΔH      ?0b) print nothing, don't know whether to print ⇧A or ⌂,a, the hold depends on the next key sequence
-   •>ΔH      🠿0c) print ⇧A
+<ΔH•         ?0b) print nothing, don't know whether to print ⇧A or ⌂,a, the hold depends on the next key sequence
       •     ↕2a)  print ⌂,a
          •  ↕2b)  print nothing, 2a handle it
+>ΔH•        🠿0c) print ⇧A (⇧⌂ enabled on timer 🠿0t), A is printed outside of the scripts purview)
 ⌂↓ a↓ a↑ ⌂↑ 🠿    should be ⇧A, not ⌂
    •              same as above
-      •<ΔH  🠿1aa) print ⇧A, also set ⌂ var as a modifier since we know it's not quick typing
-      •>ΔH  🠿1ab) print nothing, 0c handled key↓
-         •  🠿1b)  print nothing, 1a handles key, ⌂ is a mod
+   <ΔH•     🠿1aa) print ⇧A, also set ⌂ var as a modifier since we know it's not quick typing
+   <ΔH   •  🠿1ba) print nothing, 1a handles key, ⌂ is a mod
+   >ΔH•     🠿1ab) print nothing, 0c handled key↓ (⇧⌂ enabled on timer 🠿0t)
+   >ΔH   •  🠿1bb) print nothing, 1a handles key, ⌂ is a mod
+
+if ⌂🠿
+  a↓...      __)  not tracked, regular typing with modtap enabled
+  ⌂↓   ⌂↑
+  •          _1)  do nothing, block repeat of the
+       •     _2)  reset
+if alt⌂↓          another modtap key is active (but not switched to a hold yet, so inputhook is in progress)
+⌂↓       ⌂↑ ↕     single standalone tap, not hold
+     <ΔH •  _↕01)  print ⌂
+    •>ΔH    _🠿0t)  enable ⌂ (⇧⌂ enabled on timer via input hook's timeout of the alt⌂)
 ```
 
 ## Install
@@ -84,12 +101,14 @@ Download all the files in this branch and double click `⌂mod_modtap_launch.ahk
 
 ## Known issues
 
-- interaction between ⌂<kbd>‹⇧</kbd> and ⌂<kbd>⇧›</kbd> is bugged: fast typing of `fgj` skips `j`
-- <kbd>␠</kbd> triggers home row mod as a regular alphanumeric key instead of breaking the hold check and printing the key itself
-- only a few keys working
+- only <kbd>⇧</kbd> is implemented so far
   - <kbd>f</kbd> as ⌂<kbd>‹⇧</kbd>
   - <kbd>j</kbd> as ⌂<kbd>⇧›</kbd>
-- tapping same-side real modifier (e.g., <kbd>‹⇧</kbd>) resets the status of the homerow modifier, and the latter doesn't track&reset itself
+- `ignored` keys are buffered until modtap release instead of being inserted right away, so if <kbd>␠</kbd> is ignored for <kbd>f</kbd>, then <kbd>f</kbd>↓<kbd>␠</kbd>↕ will not print anything, and only <kbd>f</kbd>↑ will print two symbols `f `
 - same-type opposite-side modifiers are disabled, so if ⌂<kbd>f</kbd>(‹⇧) is activated as a Hold, then ⌂<kbd>j</kbd>(⇧›) won't activate, but will act like a regular key
+- interaction between ⌂<kbd>‹⇧</kbd> and ⌂<kbd>⇧›</kbd> sometimes breaks: fast typing of `fgj` skips `j`
+- <kbd>f</kbd>🠿<kbd>v</kbd>🠿 longer than `holdTimer` sometimes prints `pPP...` instead of `PPP...`
+- <kbd>␠</kbd> triggers home row mod as a regular alphanumeric key (even though it has no upper-cased variant and in principle shouldn't interact with a modtap key) instead of breaking the hold check and printing the key itself. Current solution is to add it to the `ignored` keys
+- tapping same-side real modifier (e.g., <kbd>‹⇧</kbd>) resets the status of the homerow modifier, and the latter doesn't track&reset itself. Maybe not a real issue since a home row mod is designed to be identical to the real one, so this should be expected?
 
 ## Credits
