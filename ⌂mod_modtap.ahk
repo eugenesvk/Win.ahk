@@ -52,6 +52,7 @@ getCfgIgnored() {
   } else { ; convert cfgignored into a map of vk codes to make later matches easier
     for keyFlag, keyNm in cfgignored { ; f‹⇧ 'qwerty␠\'
       vkCode := Map()
+      vkCode.CaseSense	:= 0
       loop parse keyNm {
         vkCode[vk[A_LoopField]] := A_LoopField
       }
