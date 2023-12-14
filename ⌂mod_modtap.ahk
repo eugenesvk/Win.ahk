@@ -290,12 +290,6 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
     if ignored.Has(⌂_.flag) and ;
        ignored[⌂_.flag].Has(kvk_s) { ; this modtap+key combo should be ignored
       variant	:= '✗✗✗↓ ignore'
-      ; ⌂_.is := '↑' ;
-      ; if ih.InProgress { ;
-        ; ih_input	:= ih.Input
-        ; dbgTT(dbl,'×IH handle⌂↑, input=' ih_input ' 🕐' preciseTΔ(),t:=4,D.ik+1) ;
-        ; ih.Stop() ; stack cleaned up when handling ih.reason so that it's possible to stop at Key↓↑ functions
-      ; }
     } else {
       variant	:= '✗ ?0b)'
     }
@@ -336,7 +330,6 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
          ignored[⌂_.flag].Has(kvk_s) { ;       ignore this modtap+key combo
         variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
         if ignore🛑 { ; force-cancel modtap
-          ; dbgTT(0,A_SendLevel ' ' ih.MinSendLevel) ;
           _SendLevel := A_SendLevel
           SendLevel ih.MinSendLevel ; tweak sendlevel to allow the script to accept the generated Up event
           SendEvent('{' ⌂_.vk ' UP}') ;
@@ -434,7 +427,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
    , dbg⌂ih  	:= ''
       ; I1 sendlevel (ignore regular keys sent at level 0)
       ; L1024 def don't need many since after a short hold timer a permanent mode will set, the hoook will reset
-   , stack⌂  	:= [] ; track the level of a modtap key's inputhook in the stack (also used to set minsendlevel to allow sending keys to only the most recent hook)
+   , stack⌂	:= [] ; track the level of a modtap key's inputhook in the stack (also used to set minsendlevel to allow sending keys to only the most recent hook)
   ; dbgTT(0,hk ' ' c ' ' is↓,t:='∞',i:=7,0,0) ;
 
 
