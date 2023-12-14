@@ -9,8 +9,8 @@ global ucfg⌂mod := Map(
   , 'ignored'  	, Map(	;      	ignore specific key combos to avoid typing mistakes from doing something annoying (like ◆l locking your computer)
     ; key      	      	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
     ;          	value 	list of alphanumeric key labels
-     f‹⇧       	, '123qwerty␠'
-    ,f⇧›       	, '[]'
+     f‹⇧      	, 'qwertzxcvb␠'
+    ,f⇧›      	, 'yuiopnm,./[]'
     ) ;
   ,'ignore🛑' 	, true  	;|true|	force stop the modtap after encountering an ignored key even if the physical key is being held, so if 'f' is ‹⇧ and 'e' is 'ignored':
     ;        	   true 	  f🠿e↕ will print 'fe' right away
