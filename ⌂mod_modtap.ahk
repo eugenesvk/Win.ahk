@@ -2,18 +2,18 @@
 ; v0.2@23-12 Design overview and limitations @ github.com/eugenesvk/Win.ahk/blob/modtap/ReadMe.md
 ; —————————— User configuration ——————————
 global ucfg⌂mod := Map(
-  ; Key        	 Value 	 |Default|Alternative¦
-   'tooltip⎀'  	, true 	;|true| 	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
-  , 'holdTimer'	, 0.5  	;|.5|   	seconds of holding a modtap key after which it becomes a hold modifier
-  ; Debugging  	       	        	;
-  , 'ttdbg'    	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
-  , 'sndlvl'   	, 1    	;|1|    	register hotkeys with this sendlevel
-  , 'ignored'  	, Map( 	;       	ignore specific key combos to avoid typing mistakes from doing something annoying (like ◆l locking your computer)
-    ; key      	       	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
-    ;          	value  	list of alphanumeric key labels
+  ; Key        	 Value	 |Default|Alternative¦
+   'tooltip⎀'  	, true	;|true|	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
+  , 'holdTimer'	, 0.5 	;|.5|  	seconds of holding a modtap key after which it becomes a hold modifier
+  , 'ignored'  	, Map(	;      	ignore specific key combos to avoid typing mistakes from doing something annoying (like ◆l locking your computer)
+    ; key      	      	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
+    ;          	value 	list of alphanumeric key labels
      f‹⇧       	, '123qwerty␠'
     ,f⇧›       	, '[]'
     ) ;
+  ; Debugging	        	        	;
+  , 'ttdbg'  	, false 	;|false|	show an empty (but visible) tooltip when modtap is deactivated
+  , 'sndlvl' 	, 1     	;|1|    	register hotkeys with this sendlevel
   )
 class udbg⌂mod { ; various debug constants like indices for tooltips
   static i↗	:= 19 ; dbgTT index, top right position of the empty status of our home row mod
@@ -38,7 +38,7 @@ getKeyLabels_forVK(kvk){
   msgbox(key_labels '`n (copied to clipboard)','Key labels for ‘' kvk '’') ;
   A_Clipboard := key_labels
 }
-parseUserConfig() {
+getCfgIgnored() {
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , isInit := false
     , ignored := Map()
@@ -214,14 +214,15 @@ cbHotIf(_token, HotkeyName) { ; callback for unregister⌂
   return ⌂%_token%.is ; token is ︔ for ; to be used in var names
 }
 hkModTap_off(ThisHotkey) {
-  static D	:= udbg⌂mod
+  static D	:= udbg⌂mod, C := ucfg⌂mod
   hk_reg := reg⌂map[ThisHotkey]
   ⌂_ := ⌂%hk_reg.lbl%
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ;
-  static ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := ucfg⌂mod.Get('ttdbg',0), sndlvl := ucfg⌂mod.Get('sndlvl',0)
+  static ⌂tHold := C.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := C.Get('ttdbg',0), sndlvl := C.Get('sndlvl',0)
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-    , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1), ttdbg := ucfg⌂mod.Get('ttdbg',0)
+    , tooltip⎀ := C.Get('tooltip⎀',1), tt⎀delay := C.Get('tt⎀delay',0) * 1000
+    , ttdbg := C.Get('ttdbg',0)
   t⌂_ := A_TickCount - ⌂f.t
   dbgtt(3,'🠿1bb) ⌂↓ >ΔH •⌂↑ 🕐' preciseTΔ() ' (hkModTap_off)`n' dbg⌂ ' ¦ ' hk_reg.lbl ' ¦ ' ThisHotkey ' (' t⌂_ (t⌂_<⌂ΔH?'<':'>') ⌂ΔH ') `n' ⌂_.send↑,t:=4,i:=13,0,🖥️w↕//2) ;
   SendInput(⌂_.send↑), ⌂_.is  := false, ⌂_.pos := '↑', ⌂_.t := A_TickCount ; 🠿1bb)
@@ -267,7 +268,7 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
     , D   	:= udbg⌂mod
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-    , ignored := parseUserConfig()
+    , ignored := getCfgIgnored()
     , dbl := 2
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
@@ -301,64 +302,56 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
 Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
-    , D   	:= udbg⌂mod
+    , C   	:= ucfg⌂mod, D	:= udbg⌂mod
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-    , tooltip⎀ := ucfg⌂mod.Get('tooltip⎀',1), ttdbg := ucfg⌂mod.Get('ttdbg',0)
-    , ignored := parseUserConfig()
+    , tooltip⎀ := C.Get('tooltip⎀',1), ttdbg := C.Get('ttdbg',0)
+    , ignored := getCfgIgnored()
     , dbl := 3 ;
   global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   ⌂_.K↑.push(kvk)
-  if ⌂_.pos = '↓' { ; 1a)
-    if ⌂_.vk = vk[A_PriorKey] {
-      if dbg >= dbl {
-        variant := 'xx) a↓ ⌂↓ •a↑ ⌂↑'
-        dbgtt(dbl,variant ' (' dbgsrc ')`n' dbg⌂ ' ↑' kvk_s ' ' sc_s ' PreK=' A_PriorKey '=' ⌂_.k ' 🕐' preciseTΔ(),t:=4,D.ik,A_ScreenWidth - 40) ;
-      }
+  if ⌂_.pos = '↓' { ; 1a)f
+    dbg_min := min(D.ds,dbl)
+    variant := '', pri₌ := '', 🕐 := (dbg >= dbg_min) ? preciseTΔ() : ''
+    if A_PriorKey and ⌂_.vk = vk[A_PriorKey] {
+      variant   :=  'xx) a↓ ⌂↓ •a↑ ⌂↑'      , pri₌ := '='
     } else if not HasValue(⌂_.K↓,kvk) { ;
-      if dbg >= dbl { ;
-        variant := 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕'
-        ,keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-        ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
-        ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
-        ,⌂K↓   	:= kvk→label(⌂_.K↓) ;
-        ,⌂K↑   	:= kvk→label(⌂_.K↑) ;
-        dbgtt(dbl,variant ' (' dbgsrc ') 🕐' preciseTΔ() '`n' dbg⌂ ' ↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,D.ik,A_ScreenWidth - 40) ;
-      }
+      variant   := 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕', pri₌ := '≠'
     } else {
-      if ignored.Has(⌂_.flag) and ;
-         ignored[⌂_.flag].Has(kvk_s) { ; Ignore this modtap+key combo
-        if dbg >= D.ds {
-          variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
-          ,keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-          ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
-          ,t⌂_   	:= A_TickCount - ⌂_.t
-          ,dbgtt(D.ds,variant ' 🕐' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑('  kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k '`n' ⌂_.send↓ ' ' keynm,t:=4,D.ik+1,0,🖥️w↕//2) ;
-        } ;
-      } else { ; don't ignore this modtap+key combo
-        if dbg >= D.ds {
-          variant := '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
-          ,keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-          ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
-          ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
-          ,t⌂_   	:= A_TickCount - ⌂_.t
-          ; ,⌂K↓ 	:= Object2Str(kvk→label(⌂_.K↓)) ;
-          ; ,⌂K↑ 	:= Object2Str(kvk→label(⌂_.K↑)) ;
-          ,⌂K↓   	:= kvk→label(⌂_.K↓) ;
-          ,⌂K↑   	:= kvk→label(⌂_.K↑) ;
-          dbgtt(D.ds,variant ' 🕐' preciseTΔ() '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,D.ik+1,0,🖥️w↕//2) ;
-        } ;
+      if ignored.Has(⌂_.flag) and
+         ignored[⌂_.flag].Has(kvk_s) { ;       ignore this modtap+key combo
+        variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
+      } else {                         ; don't ignore this modtap+key combo
+        variant :=  '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
         SendInput(⌂_.send↓), ⌂_.is := true
         if tooltip⎀ {
           win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',D.i↗,⎀←-9,⎀↑-30)
         }
         SendInput('{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
         dbgtt_ismod('🠿1aa')
-        ; dbgtt(0,ih.Input '`n' (ih=⌂_.ih) ' 🕐' preciseTΔ() '`n' ⌂_.ih.Input,t:=1) ;
+        ; dbgtt(0,ih.Input '`n' (ih=⌂_.ih) ' 🕐' 🕐 '`n' ⌂_.ih.Input,t:=1) ;
         ; ih.Stop() ;
       }
+    }
+    if dbg >= dbg_min {
+      keynm  	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+      ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+      ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
+      ,t⌂_   	:= A_TickCount - ⌂_.t
+      ; ,⌂K↓ 	:= Object2Str(kvk→label(⌂_.K↓))
+      ; ,⌂K↑ 	:= Object2Str(kvk→label(⌂_.K↑))
+      ,⌂K↓   	:= kvk→label(⌂_.K↓)
+      ,⌂K↑   	:= kvk→label(⌂_.K↑)
+    }
+    if dbg >= dbl {
+      dbgtt(dbl,variant ' (' dbgsrc ') 🕐' 🕐
+        '`n' dbg⌂ ' ↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ' pri₌ ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,D.ik,A_ScreenWidth - 40) ;
+    }
+    if dbg >= D.ds {
+      dbgtt(D.ds,variant ' 🕐' 🕐
+        '`n' dbg⌂ '(' t⌂_ ') ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`n' ⌂_.send↓ ' ' keynm '`n' ih.input,t:=4,D.ik+1,0,🖥️w↕//2) ;
     }
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
     if dbg >= dbl { ;
@@ -481,7 +474,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
       } else { ; ↕2a) ⌂↓ a↓ •⌂↑ a↑   fast typing ⌂,a
         this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
         keynm := vkrl['en'].Get(prio,'✗')
-        dbgtt(D.ds,'↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' A_PriorKey ') A_PriorKey, print self+input ‘' c '’+‘' ih_input '’',t:=4,,x:=0)  ;
+        dbgtt(D.ds,'↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' A_PriorKey ') PriK, print self+input ‘' c '’+‘' ih_input '’',t:=4,,x:=0)  ;
         dbgtt_ismod('↕2a)')
         SendLevel 1 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activate
         SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
