@@ -234,11 +234,10 @@ hkModTap_off(ThisHotkey) {
   , dbgTT(ttdbg?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
   if tooltip⎀ { ;
     win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0)
-    if tt⎀delay {
+    if tt⎀delay { ; cancel a potential delayed timer
       set⎀TT(0)
-    } else {
-      dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30)
     }
+    dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30) ; and remove a non-timer tooltip regardless of the timed one
   }
   dbgTT_isMod('🠿1bb')
 }
@@ -491,12 +490,11 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     ; dbgTT(0,'✗post stop stack' stack⌂.Length ' 🕐' preciseTΔ(),'∞',8,0,0) ; II (stop III)
     if this⌂.is { ; 🠿1ba)
       SendInput(this⌂.send↑)
-      if tooltip⎀ { ;
+      if tooltip⎀ {
         if tt⎀delay { ; hide the caret tooltip before it's shown if delay hasn't expired yet
           set⎀TT(0)
-        } else {
-          win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30)
         }
+        win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30) ; and hide a non-delayed one
       }
       this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
       dbgTT(D.ds,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') 🕐' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
