@@ -1,5 +1,5 @@
 #Requires AutoHotkey v2.0
-; v0.1@23-12 Design overview and limitations @ github.com/eugenesvk/Win.ahk/blob/modtap/ReadMe.md
+; v0.2@23-12 Design overview and limitations @ github.com/eugenesvk/Win.ahk/blob/modtap/ReadMe.md
 ; —————————— User configuration ——————————
 global ucfg⌂mod := Map(
   ; Key        	 Value 	 |Default|Alternative¦
