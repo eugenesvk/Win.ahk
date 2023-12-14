@@ -2,8 +2,9 @@
 ; v0.2@23-12 Design overview and limitations @ github.com/eugenesvk/Win.ahk/blob/modtap/ReadMe.md
 ; —————————— User configuration ——————————
 global ucfg⌂mod := Map(
-  ; Key        	 Value	 |Default|Alternative¦
+  ; Key       	 Value	 |Default|Alternative¦
    'tooltip⎀'  	, true	;|true|	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
+  ,'tt⎀delay' 	, 0   	;|0|   	seconds before a `tooltip⎀` is shown, helpful if you don't like tooltip flashes on using modtap only once for a single key (like ⇧), but would still like to have it to understand when `holdTimer` has been exceeded. If you release a modtap within this delay, `tooltip⎀` will be cancelled and not flash
   , 'holdTimer'	, 0.5 	;|.5|  	seconds of holding a modtap key after which it becomes a hold modifier
   , 'ignored'  	, Map(	;      	ignore specific key combos to avoid typing mistakes from doing something annoying (like ◆l locking your computer)
     ; key      	      	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
@@ -232,7 +233,12 @@ hkModTap_off(ThisHotkey) {
   SendInput(⌂_.send↑), ⌂_.is  := false, ⌂_.pos := '↑', ⌂_.t := A_TickCount ; 🠿1bb)
   , dbgTT(ttdbg?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
   if tooltip⎀ { ;
-    win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgtt(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30)
+    win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0)
+    if tt⎀delay {
+      set⎀TT(0)
+    } else {
+      dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30)
+    }
   }
   dbgtt_ismod('🠿1bb')
 }
@@ -309,7 +315,8 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
     , C   	:= ucfg⌂mod, D	:= udbg⌂mod
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-    , tooltip⎀ := C.Get('tooltip⎀',1), ttdbg := C.Get('ttdbg',0)
+    , tooltip⎀ := C.Get('tooltip⎀',1), tt⎀delay := C.Get('tt⎀delay',0) * 1000
+    , ttdbg := C.Get('ttdbg',0)
     , ignored := getCfgIgnored()
     , ignore🛑 := C.Get('ignore🛑','true')
     , dbl := 3 ;
@@ -339,7 +346,11 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
         variant :=  '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
         SendInput(⌂_.send↓), ⌂_.is := true
         if tooltip⎀ {
-          win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',D.i↗,⎀←-9,⎀↑-30)
+          if tt⎀delay { ; delay showing tooltip
+            set⎀TT(1, ⌂_.🔣)
+          } else {
+            win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',D.i↗,⎀←-9,⎀↑-30)
+          }
         }
         SendInput('{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
         dbgtt_ismod('🠿1aa')
@@ -373,6 +384,19 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
       dbgMsg(dbl,'✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ 🕐' preciseTΔ() '`n' dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑⌂')
     }
   }
+}
+
+global set⎀TT_txt
+set⎀TT(OnOff, ttText:='') { ;
+  static K   	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+    ,tt⎀delay	:= ucfg⌂mod.Get('tt⎀delay',0) * 1000
+  global set⎀TT_txt
+  set⎀TT_txt := ttText
+  SetTimer(timer⎀TT, OnOff ? -tt⎀delay : 0) ; start a timer after a delay or delete
+}
+timer⎀TT() { ; show a tooltip near text caret with a text set via a global var (;;; don't know how to make a func object with a dynamic argument so that you could cancel the same timer⎀TT you started earlier)
+  static D	:= udbg⌂mod
+  win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,set⎀TT_txt,t:='∞',D.i↗,⎀←-9,⎀↑-30)
 }
 
 vk→token(kvk) {
@@ -467,7 +491,11 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     if this⌂.is { ; 🠿1ba)
       SendInput(this⌂.send↑)
       if tooltip⎀ { ;
-        win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgtt(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30)
+        if tt⎀delay { ; hide the caret tooltip before it's shown if delay hasn't expired yet
+          set⎀TT(0)
+        } else {
+          win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30)
+        }
       }
       this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
       dbgtt(D.ds,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') 🕐' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
