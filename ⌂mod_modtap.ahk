@@ -11,6 +11,9 @@ global ucfg⌂mod := Map(
      f‹⇧       	, '123qwerty␠'
     ,f⇧›       	, '[]'
     ) ;
+  ,'ignore🛑' 	, true  	;|true|	force stop the modtap after encountering an ignored key even if the physical key is being held, so if 'f' is ‹⇧ and 'e' is 'ignored':
+    ;        	   true 	  f🠿e↕ will print 'fe' right away
+    ;        	   false	  f🠿e↕ will print nothing, 'f↑' will print 'fe'
   ; Debugging	        	        	;
   , 'ttdbg'  	, false 	;|false|	show an empty (but visible) tooltip when modtap is deactivated
   , 'sndlvl' 	, 1     	;|1|    	register hotkeys with this sendlevel
@@ -83,6 +86,7 @@ gen_map⌂(){
     i⌂.vk   	:= vk[i⌂.k] ; vk21 for f
     i⌂.pos  	:= '↑'
     i⌂.is   	:= false ; is down
+    i⌂.force↑	:= false ; this is set to true if we need to manually reset the status while the key is physically ↓
     i⌂.send↓	:= '{' i⌂.mod ' Down' '}'
     i⌂.send↑	:= '{' i⌂.mod ' Up'   '}'
     i⌂.🔣    	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
@@ -307,6 +311,7 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
     , tooltip⎀ := C.Get('tooltip⎀',1), ttdbg := C.Get('ttdbg',0)
     , ignored := getCfgIgnored()
+    , ignore🛑 := C.Get('ignore🛑','true')
     , dbl := 3 ;
   global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
@@ -323,6 +328,13 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
       if ignored.Has(⌂_.flag) and
          ignored[⌂_.flag].Has(kvk_s) { ;       ignore this modtap+key combo
         variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
+        if ignore🛑 { ; force-cancel modtap
+          _SendLevel := A_SendLevel
+          SendLevel ih.MinSendLevel ; tweak sendlevel to allow the script to accept the generated Up event
+          SendEvent('{' ⌂_.vk ' UP}') ;
+          SendLevel _SendLevel
+          ; setup⌂mod(＄ ⌂_.vk ' UP',⌂_.k,is↓:='0') ; alternative way to cancel by calling the function directly
+        }
       } else {                         ; don't ignore this modtap+key combo
         variant :=  '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
         SendInput(⌂_.send↓), ⌂_.is := true
@@ -437,6 +449,13 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   is↑ := not is↓ ;
 
   handle⌂↑(&this⌂,&ih,&ihID,this⌂t) { ; allows calling called either when a single ⌂ or combined
+    if this⌂.force↑ { ; already handled ⌂↑ via an artifical send in ignore🛑 condition, so reset it and return without printing an extra ⌂.k
+      this⌂.force↑ := false
+      return
+    }
+    if (is↓phys := GetKeyState(this⌂.k,'P')) {
+      this⌂.force↑ := true
+    }
     this⌂.prio↓ := '', this⌂.prio↑ := A_PriorKey, this⌂.K↓ := Array(), this⌂.K↑ := Array()
     ih_input := ''
     if ih⌂.InProgress { ;
