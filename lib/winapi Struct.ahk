@@ -22,28 +22,28 @@ class winapi_Struct { ; Various win32 API constants
   static winT	:= winTypes.m ; winT types and their ahk types for DllCalls and structs
 
   class lvInsertMark { ; learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertmark
-    static T  	:= winTypes.m ; winT types and their ahk types for DllCalls and structs
-    cbSize    	: (this.T['UINT']['struct']) := ObjGetDataSize(this)
-    dwFlags   	: (this.T['DWORD']['struct'])	; Flag that specifies where the insertion point should appear. Use the following
-     ;        	                             	 LVIM_AFTER The insertion point appears after the item specified if the LVIM_AFTER flag is set; otherwise it appears before the specified item.
-    iItem     	: (this.T['int']['struct'])  	; Item next to which the insertion point appears. If this member contains -1, there is no insertion point
-    dwReserved	: (this.T['DWORD']['struct'])
+    static T  	:= winTypes.struct ; winT types and their ahk types for structs
+    cbSize    	: (this.T['UINT']) := ObjGetDataSize(this)
+    dwFlags   	: (this.T['DWORD'])	; Flag that specifies where the insertion point should appear. Use the following
+     ;        	                   	 LVIM_AFTER The insertion point appears after the item specified if the LVIM_AFTER flag is set; otherwise it appears before the specified item.
+    iItem     	: (this.T['int'])  	; Item next to which the insertion point appears. If this member contains -1, there is no insertion point
+    dwReserved	: (this.T['DWORD'])
   } ;  LVINSERTMARK, *LPLVINSERTMARK;
 
   class Point { ; learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point
-    static T	:= winTypes.m ; winT types and their ahk types for DllCalls and structs
-    x : (this.T['LONG']['struct']) ; point's x-coordinate
-    y : (this.T['LONG']['struct']) ; point's y-coordinate
+    static T	:= winTypes.struct ; winT types and their ahk types for structs
+    x : (this.T['LONG']) ; point's x-coordinate
+    y : (this.T['LONG']) ; point's y-coordinate
   } ; POINT, *PPOINT;
 
   class CursorInfo { ; learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo
-    static T   	:= winTypes.m ; winT types and their ahk types for DllCalls and structs
-    cbSize     	: (this.T['DWORD']['struct']) := ObjGetDataSize(this) ; size of the structure, in bytes. The caller must set this to sizeof(CURSORINFO)
-    flags      	: (this.T['DWORD']['struct']) ; cursor state. This parameter can be one of the following values.
+    static T   	:= winTypes.struct ; winT types and their ahk types for structs
+    cbSize     	: (this.T['DWORD']) := ObjGetDataSize(this) ; size of the structure, in bytes. The caller must set this to sizeof(CURSORINFO)
+    flags      	: (this.T['DWORD']) ; cursor state. This parameter can be one of the following values.
     ;          	0                           	cursor is hidden
     ;          	CURSOR_SHOWING    0x00000001	cursor is showing
     ;          	CURSOR_SUPPRESSED 0x00000002	Windows 8: The cursor is suppressed. This flag indicates that the system is not drawing the cursor because the user is providing input through touch or pen instead of the mouse.
-    hCursor    	: (this.T['HCURSOR']['struct']) ; Handle to the cursor
+    hCursor    	: (this.T['HCURSOR']) ; Handle to the cursor
     ptScreenPos	: winapi_Struct.Point ; Structure that receives the screen coordinates of the cursor
   } ; CURSORINFO, *PCURSORINFO, *LPCURSORINFO
 }
