@@ -543,10 +543,17 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
    , i0	:= 4 ; ...               off
    , _t	:= '∞' ; time for tooltip
    , attachGUI_🖰 := cfg🖰h['attachGUI_🖰']
+   , isInit := false
+  if not isInit {
+    isInit := true
+    guiBlankChild.NewTitle := "🖰hide on 🖮"
+  }
+
 
   if not WinExist(guiID) { ; our gui element is destroyed, eg, by closing of the original window it's a child of
     guiBlankChild	:= Gui(guiopt)
     guiID        	:= WinGetID(guiBlankChild)
+    guiBlankChild.NewTitle := "🖰hide on 🖮"
     if dbg >= _d {
       dbgtt(_d,"recreated GUI " preciseTΔ() "`n" WinGetTitle(guiID),_t,5,x,0) ;
     }
@@ -624,7 +631,8 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
           guiOwnerT_attached := (guiOwner=0) ? '' : WinGetTitle(guiOwner)
           dbgtt(_d,"✓🖰vis shown GUI #" displayCounter ' (' _pre ')' preciseTΔ() "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”`n',_t,i1,x,50)
         }
-      } else {
+      } else { ; ... or ??? potentially resolve a bug where pointer was shown by some other means, but our gui blocks ???
+        ; guiBlankChild.Opt("+Owner") ; ??? move gui to be owned by AHK
         if dbg >= _d {
           guiOwnerID := getWinID_Owner(guiID) ;
           guiOwnerT := (guiOwnerID=0) ? '' : WinGetTitle(guiOwnerID)
