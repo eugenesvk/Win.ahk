@@ -8,13 +8,12 @@ add_HomeRowCursor() {
    , hkSend	:= keyFunc.hkSend, hkSendI := keyFunc.hkSendI
 
   preMod := ␠›1 ;  physical ⎇, but maybe be remapped to other key in the Registry eg ⎈›
-  if preMod = '☰' { ; non-modifier key needs & to be turned into a modifier
-    pre := preMod ' & ' , blind_ex := ''
-  } else {
+  if s.modiMap.has(preMod) {
     pre := preMod       , blind_ex := s.modi_ahk_map[preMod] ; ⎈› → >^
-  }
+  } else { ; non-modifier key needs & to be turned into a modifier
+    pre := preMod ' & ' , blind_ex := ''
+  } ; Blind mode avoids releasing mods if they started out in the down position (unless mod is excluded). +s::Send
   blind := '{Blind' blind_ex '}' ; with modifiers, exclude self from Blind commands
-  ; Blind mode avoids releasing the modifier keys (Alt, Ctrl, Shift, and Win) if they started out in the down position, unless the modifier is excluded. For example, the hotkey +s::Send "{Blind}abc" would send ABC rather than abc because the user is holding down Shift. lexikos.github.io/v2/docs/commands/Send.htm
 
   mHomeRow := Map(
      'g',K.␡
@@ -27,6 +26,25 @@ add_HomeRowCursor() {
   for k_from, k_to in mHomeRow {
     r := hkf("*",pre k_from,"") ; (with modifiers)
     hkSend(r[1], blind '{' k_to '}')
+  }
+}
+add_⎈›PassThrough() ; print symbol when ⎈› is pressed to avoid issues when using HomeRowCursor with ␠›1
+add_⎈›PassThrough() {
+  static K 	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , s     	:= helperString ; K.▼ = vk['▼']
+   , hkf   	:= keyFunc.customHotkeyFull
+   , hkSend	:= keyFunc.hkSend, hkSendI := keyFunc.hkSendI
+
+  preMod := ␠›1 ;  physical ⎇, but maybe be remapped to other key in the Registry eg ⎈›
+  if s.modiMap.has(preMod) {
+    pre := preMod       , blind_ex := s.modi_ahk_map[preMod] ; ⎈› → >^
+  } else { ; non-modifier key needs & to be turned into a modifier
+    pre := preMod ' & ' , blind_ex := ''
+  } ; Blind mode avoids releasing mods if they started out in the down position (unless mod is excluded). +s::Send
+  blind := '{Blind' blind_ex '}' ; with modifiers, exclude self from Blind commands
+
+  loop parse "wertasdfzxcvbn" { ; *with modifiers
+    r := hkf('*',pre A_LoopField,""), hkSend(r[1], blind '{' A_LoopField '}')
   }
 }
 
