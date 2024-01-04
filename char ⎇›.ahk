@@ -12,7 +12,7 @@ global isAltGr := false ; does ⎇› emit ⎈ keycode?
 
 add_TypES()
 add_TypES() { ; use english labels and precompute revers maps to easier match hotkey to a character to insert
-  static vk             	:= keyConstant._map, vkr	:= keyConstant._mapr ; various key name constants, gets vk code to avoid issues with another layout
+  static K              	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , s                  	:= helperString
    , hkf                	:= keyFunc.customHotkeyFull
   vkrloc                	:= Map() ; create a local reverse matching Map to easily map hotkey back to its origin key to paste its replacement
@@ -30,7 +30,7 @@ add_TypES() { ; use english labels and precompute revers maps to easier match ho
 
   dbgtxt := '', dbgcount := 0
   pre	:= '⎈'
-  ; msgbox(bir_labels_ru '`n' vk['ru']['ю'] ' ' hkf('',pre . 'ю',,,'ru')[1] '`n' vk['ru']['.'] ' ' hkf('',pre . '.',,,'ru')[1])
+  ; msgbox(bir_labels_ru '`n' vkl['ru']['ю'] ' ' hkf('',pre . 'ю',,,'ru')[1] '`n' vkl['ru']['.'] ' ' hkf('',pre . '.',,,'ru')[1])
   for labels in [bir_labels_en, bir_labels_ru] {
     lng_lbl := (labels = bir_labels_ru) ? 'ru' : 'en'
     ; if not lng_lbl = 'en' {
@@ -48,13 +48,13 @@ add_TypES() { ; use english labels and precompute revers maps to easier match ho
         if is⅋ = '&' { ; convert all to vk codes and connect with &
           ; try {
             ; hk := s.key→ahk(pre . key,,"&")
-            ; vk_pre	:= vk[lng_lbl][pre]	; ⎈› → vkA3
+            ; vk_pre	:= vkl[lng_lbl][pre]	; ⎈› → vkA3
           ; } catch Error as err {
             ; msgbox(pre '`t' 'pre' '`n' key '`t' 'key',"can't be found")
           ; }
           ; hk := s.key→ahk(pre . key,,"&")
           vk_pre	:= vk[pre]            	; ⎈› → vkA3
-          vk_key	:= vk[lng_lbl][key]   	; vk30
+          vk_key	:= vkl[lng_lbl][key]   	; vk30
           hk    	:= vk_pre " & " vk_key	; vkA3 vk30  , need VK only for appskey
           ; dbgtxt .= pre '`tpre ' vk_pre '`t`n' key '`tkey ' vk_key0
         } else {
