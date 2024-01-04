@@ -8,14 +8,14 @@ add_Numpad() {
    , hkSend	:= keyFunc.hkSend, hkSendI := keyFunc.hkSendI
 
   ; ————— ‹🔢
+  /*
   preMod := ␠›1 ;  physical ⎇, but may be remapped to other key in the Registry eg ⎈›
-  if preMod = '☰' { ; non-modifier key needs & to be turned into a modifier
-    pre := preMod ' & ' , blind_ex := ''
-  } else {
+  if s.modiMap.has(preMod) {
     pre := preMod       , blind_ex := s.modi_ahk_map[preMod] ; ⎈› → >^
-  }
-  blind := '{Blind' blind_ex '}' ; with modifiers, exclude self from Blind commands
-  ; Blind mode avoids releasing the modifier keys (Alt, Ctrl, Shift, and Win) if they started out in the down position, unless the modifier is excluded. For example, the hotkey +s::Send "{Blind}abc" would send ABC rather than abc because the user is holding down Shift. lexikos.github.io/v2/docs/commands/Send.htm
+  } else { ; non-modifier key needs & to be turned into a modifier
+    pre := preMod ' & ' , blind_ex := ''
+  } ; Blind mode avoids releasing mods if they started out in the down position (unless mod is excluded). +s::Send "{Blind}abc" → ABC, not abc because the user is holding ⇧
+  blind := '{Blind' blind_ex '}' ; with mods, exclude self from Blind commands
 
   lbl‹🔢 := "
     ( Join ` LTrim ; spaces are removed, so both lists must match in length, to disable remove a key/symbol pair
@@ -39,21 +39,21 @@ add_Numpad() {
     hkSend(r[1], blind '{' vk['🔢' SubStr(sym‹🔢,i,1)] '}') ; *>^vk51 :: Send('blind{vkBB}')
   }
     r := hkf("*",pre 'b',""), hkSend(r[1], blind '{' sc['🔢⏎'] '}') ; g_key_to_sc, see constKey.ahk
-
+  */
 
   ; ————— 🔢›
-  preMod := '⭾' ;  physical ⎇, but may be remapped to other key in the Registry eg ⎈›
-  if preMod = '⭾' { ; non-modifier key needs & to be turned into a modifier
-    pre := preMod ' & ' , blind_ex := ''
-  } else {
+  preMod := '⇪' ;  physical ⎇, but may be remapped to other key in the Registry eg ⎈›
+  if s.modiMap.has(preMod) {
     pre := preMod       , blind_ex := s.modi_ahk_map[preMod] ; ⎈› → >^
+  } else { ; non-modifier key needs & to be turned into a modifier
+    pre := preMod ' & ' , blind_ex := ''
   }
+  ; dbgtt(0,pre '`t' vk['⎈›'] ' ' vk['‹⎈'] ' ' s.key→ahk('‹⎈') ' ' s.modi_ahk_map.has('⇪'),t:=5)
   blind := '{Blind' blind_ex '}' ; with modifiers, exclude self from Blind commands
-  ; Blind mode avoids releasing the modifier keys (Alt, Ctrl, Shift, and Win) if they started out in the down position, unless the modifier is excluded. For example, the hotkey +s::Send "{Blind}abc" would send ABC rather than abc because the user is holding down Shift. lexikos.github.io/v2/docs/commands/Send.htm
 
   lbl🔢› := "
     ( Join ` LTrim ; spaces are removed, so both lists must match in length, to disable remove a key/symbol pair
-    7890
+    7 890
     yuiop
      jkl;
     nm,./␠
@@ -75,6 +75,6 @@ add_Numpad() {
 
   sym🔢›mod := Map(1,'0',2,'.',3,'/') ; modifier keys require special & syntax
   for lbl, sym in sym🔢›mod {
-    r := hkf('','⭾ & ' ␠›%lbl%,''), hkSend(r[1], blind '{' vk['🔢' sym] '}')
+    r := hkf('',pre ' ' ␠›%lbl%,''), hkSend(r[1], blind '{' vk['🔢' sym] '}')
   }
 }
