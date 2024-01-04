@@ -11,6 +11,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
    , s       	:= helperString
    , pre     	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    , lbl🖰hide	:= ''
+   , cfg🖰h   	:= cfg🖰convert()
   getKeys🖰hide(&lbl🖰hide)
 
   HotIfWinActive("ahk_group PressnHold")
@@ -45,7 +46,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     dbgTT(5,ThisHotkey,t:=1) ;
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
-    is∗ := cfg🖰hide['enableModifiers'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
+    is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
     Switch ThisHotkey, 0 {
       default  : return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
       ; —————————— Diacritic               hk  c  key_list lblMap lblKey 🖰hide
