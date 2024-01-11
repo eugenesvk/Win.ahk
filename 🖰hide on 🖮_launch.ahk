@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotKey 2.0.10
 
-#Warn All            	; Enable all warnings to assist with detecting common errors ; #Warn All, Off
+; #Warn All          	; Enable all warnings to assist with detecting common errors ; #Warn All, Off
 #SingleInstance force	; Reloads script without dialog box
 
 #Include %A_scriptDir%\gVar\var.ahk	; Global vars
