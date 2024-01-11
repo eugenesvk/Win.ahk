@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file
   + :beetle: add missing library updates
   + :beetle: a pointer visibility check on mouse crossing app borders
 
-[0.0.1]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.0
-## [0.0.1]
+[0.0.1-mhide]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.1-mhide
+## [0.0.1-mhide]
 - __Added__
   + <kbd>␠</kbd>,<kbd>␈</kbd>,<kbd>␡</kbd> keys to trigger pointer hiding behavior
