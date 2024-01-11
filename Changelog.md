@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/compare/0.0.2-mhide...HEAD
+[unreleased]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/compare/0.0.2-mhide...mhide_kbd
 ## [Unreleased]
 <!-- - __Added__ -->
   <!-- + :sparkles:  -->
