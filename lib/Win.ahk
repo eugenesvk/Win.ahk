@@ -3,6 +3,7 @@
 #include <UIA>
 #include <Acc2>
 #include <libFunc Dbg>	; Functions: Debug
+#include <constWin32T>
 class win {
   static get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
     static ptcProp	:= ["IsTextPatternAvailable","HasKeyboardFocus"]
