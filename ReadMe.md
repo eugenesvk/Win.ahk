@@ -66,6 +66,11 @@ Library files in `/lib` used only when function by the same name is called
 
 ## Install
 
+  This page (the `main` branch of the repo) doesn't support care-free installation of individual components (e.g., launching `🖰hide on 🖮.ahk` will result in warnings and might not work) or even the full combined version. So far only the following components have been separated to allow a double-click install:
+    - [Press&Hold character picker](https://github.com/eugenesvk/Win.ahk/tree/pressH)
+    - [Hide mouse pointer while typing](https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd)
+    - [Home row modifier (⌂mod)](https://github.com/eugenesvk/Win.ahk/tree/modtap)
+  Others would likely require manual modifications to import only the libraries that they require
   - Copy external libraries to `Lib`
     - [UIA v2](https://github.com/Descolada/UIA-v2/raw/main/Lib/UIA.ahk)
     - [winAPIconst_embed.dll](https://github.com/eugenesvk/winAPIconst/releases)
