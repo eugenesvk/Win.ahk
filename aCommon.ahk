@@ -58,11 +58,11 @@ ListLines 0                                  	; Potential performance boost
 #include %A_scriptDir%\Hotstring.ahk       	;
 #include %A_scriptDir%\5 App Switcher.ahk  	; Awitch app windows (e.g., only within an app)
 #include %A_scriptDir%\9 ‹␠1 as ⎇.ahk      	; physical ⎇ (mapped to ⎈) as ⎇ restore
-#include %A_scriptDir%\QuickSwitch.ahk     	; Listary Quick Switch alternative
+; #include %A_scriptDir%\QuickSwitch.ahk   	; Listary Quick Switch alternative
 #include %A_scriptDir%\🖰hide on 🖮.ahk      	; Hide idle mouse cursor when typing
 ;#include %A_scriptDir%\xReformatPrompt.ahk	; (use exe for another thread) Auto✗ prompts with a ‘Format disk’ button
 
-#include %A_scriptDir%\test\test.ahk	; Test
+; #include %A_scriptDir%\test\test.ahk	; Test
 
 ; #include %A_scriptDir%\Game\init_game.ahk	; Games
 
