@@ -17,6 +17,11 @@ description continued
 ### Scripts
   - [0 Hyper](<./0 Hyper.ahk>) <kbd>⇪</kbd> as a "Hyper" modifier key when held and open a launcher app when tapped
   - [xReformatPrompt](<./xReformatPrompt.ahk>) avoid accidentally formatting your USB drive by auto-closing prompts with a 'Format disk' button (helpful when inserting USB drives with unrecognized formatting). Use in a separate process / compile to a standalone `exe` with `Ahk2Exe` to not block the main app
+  - [Home row modifier (⌂mod)](./⌂mod_modtap.ahk) without affecting fast typing (experimental)! ⌂modtap key:
+    - located at the most convenient `⌂`home row position (e.g., 👆🏻<kbd>f</kbd>)
+    - on hold acts as a `mod`ifier (e.g., <kbd>⇧</kbd>)
+    - on a single `tap` acts as usual and types its letter (`f`)
+
 #### Insert various characters and symbols
   - [char ⎇›](<./char ⎇›.ahk>) [TypES](https://github.com/eugenesvk/kbdLayout-Mac) typographical layout and easily insert modifier symbols like ⎇ when pressed with <kbd>⎇›</kbd>
   - [char🠿](<./char🠿.ahk>) insert chars on key Hold via a Mac-like Press&Hold character picker:<br/>
