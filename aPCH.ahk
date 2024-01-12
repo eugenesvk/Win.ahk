@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
 ; ————————————————————————— Key changes —————————————————————————————
-  #Include %A_scriptDir%\Char-AltGr.ahk	; TypES layout on AltGr (diacritics built into LayoutDLL via DeadKeys)
+  ; #Include %A_scriptDir%\Char-AltGr.ahk	; TypES layout on AltGr (diacritics built into LayoutDLL via DeadKeys)
 
   ~NumLock::NumLockReverse()	; Reverse NumLock LED indicator
 
