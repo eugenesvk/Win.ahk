@@ -39,11 +39,13 @@
   , AppDOpusRt     	:= Utilities . "Directory Opus\DOpusrt.exe"
   , AppTotalCMD    	:= ""
   , AppConEmu      	:= ""
+  , AppWezTerm     	:= ""
   , AppEverything  	:= Progs . "Everything.exe"
   , AppPowerPoint  	:= MSO . "PowerPnt.exe"
   , AppExcel       	:= MSO . "EXCEL.EXE"
   , AppWord        	:= MSO . "WinWord.exe"
   , AppOutlook     	:= MSO . "Outlook.exe"
+  , AppWire        	:= AppLocal . "wire\Wire.exe"
 
 ; Store App Launch Name and Settings object for RunActivMin
 ; App, WorkDir:="", Size:="", Title:=0, PosFix:=0, Menu:=1, Match:="exe", CLIOpts:=""
