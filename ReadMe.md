@@ -1,11 +1,7 @@
 <p align="center">
-Brief description
+A collection of Windows extensions written in
 <br>
-(description continued)
-</p>
-
-<p align="center">  
-description continued
+<a href="https://www.autohotkey.com">AutoHotkey</a> automation scripting language
 </p>
 
 
