@@ -299,8 +299,15 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
       t⌂_   	:= A_TickCount - ⌂_.t
       dbgTT(dbl,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
-  } else { ; should never get here?
-    dbgMsg(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' 🕐' preciseTΔ()) ;
+  } else { ; should never get here? or maybe can get here due to a delay and something else set an ↑ position?
+    ; if dbg >= dbl {
+    if dbg >= 0 {
+      keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+      prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+      t⌂_   	:= A_TickCount - ⌂_.t
+      dbgTT(0,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=10,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
+    }
+    dbgMsg(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' 🕐' preciseTΔ(),"Unknown state @Key↓_⌂?") ;
   }
 }
 Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
