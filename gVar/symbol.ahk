@@ -29,7 +29,7 @@
   ; global Ch['Math']   	:= ["¬","∩","∪","∴","∵","∎","∞","×","−","±","≈","   ","√","∃","∀","π","∑","∂","∫","÷"]
   ; global Ch['MathLab']	:= ["1","2","3","4","5","6","8","*","-","+","=","   ","q","e","a","g","s","d","i","/"]
   , Ch['MathS']         	:= ["¬","θ","⇑","⇓","∗","⊂","⊃","⌈","⌉","⇒","ℚ","Ω","∃","ℝ","∴","Ψ","∪","∩","Θ","Π","⌊","⌋","∀","Σ","Δ","Φ","Γ","Λ"] ; tshorter Math ending with 1-0a-s to fit on screen for Press&Hold
-  , Ch['Math']          	:= ["¬","√","θ","⇑","⇓","∞", "∗","⊂","⊃","⌈","⌉","≝","⇒","ℚ","Ω","∃","ℝ","∴","Ψ","∪","∩","Θ","Π","⌊","⌋","∀","Σ","Δ","Φ","Γ","H","J","K","Λ","∈","｜","ℤ","Ξ","×","ℂ","∇","∨","∵","ℕ","M","〈","〉","·","÷"]
+  , Ch['Math']          	:= ["¬","√","θ","⇑","⇓","∞", "∗","⊂","⊃","⌈","⌉","≝","⇒","ℚ","Ω","∃","ℝ","∴","Ψ","∪","∩","Θ","Π","⌊","⌋","∀","Σ","Δ","Φ","Γ","H","J","K","Λ","∈","｜","ℤ","Ξ","×","ℂ","∇","∨","∵","ℕ","⋅","〈","〉","·","÷"]
   , Ch['MathLab']       	:= ["``","2","3","6","7","8","*","9","0","(",")","-","=","q","w","e","r","t","y","u","i","o","p","[","]", "a","s","d","f","g","h","j","k","l",";","'", "z","x","X","c","v","V","b","n","m","<",">",".","/"]
   , Ch['MathLabRu']     	:= ["``","2","3","6","7","8","*","9","0","(",")","-","=","й","ц","у","к","е","н","г","ш","щ","з","х","ъ", "ф","ы","в","а","п","р","о","л","д","ж","э", "я","ч","Ч","с","м","М","и","т","ь","Б","Ю","ю","."]
   , Ch['MathSp']        	:= [13,25,36]
@@ -59,7 +59,7 @@
   , Ch['WinFileLab1']	:= ["8","\","|",";","'","l","<",">","/","?","7","."]        	; Illegal Filename Chars (Windows)
   , Ch['WinFileLab2']	:= ["*","\","|",":",'"',"'","<",">","/","?","."]            	; Illegal Filename Chars (Windows)
   , Ch['Bullet']     	:= ["•","‣","⁌","⁍","⁘","⁙","⁚","⁛","⁝","⁞","※","⁜"]        	;b Bullet, Triangular Bullet, Reference Mark, Black Leftwards Bullet, Black Rightwards Bullet, 4/5/2 Dot Punctuation, 4 Dot Mark, Dotted Cross, Tricolon, Vertical Four Dots
-  , Ch['Misc']       	:= ["♪","♫","⁁","⁂","⁑","⁒","⁖"]                            	;B Caret Insertion Point, Asterism, Two Asterisks Aligned Vertically, Commercial Minus Sign, Three Dot Punctuation
+  , Ch['Misc']       	:= ["♪","♫","⁁","‸","⎀","⁂","⁑","⁒","⁖"]                    	;B Caret Insertion Point, Asterism, Two Asterisks Aligned Vertically, Commercial Minus Sign, Three Dot Punctuation
 
 setBir()
 setBir() { ; Typography Layout. Lab - label‹›≤≥
