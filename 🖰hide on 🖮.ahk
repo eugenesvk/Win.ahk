@@ -187,12 +187,12 @@ getKeys🖰hide(&lbl:='') { ; Register the keys you want to listen on
     curlayout	:= lyt.GetCurLayout(&hDevice, &idLang)
     if not isSet(idLang) {
       a := ''
-      for i in [100,200,300,1000,2000] {
+      for i in [100,300,500,1000,2000] {
         sleep(i)
         curlayout	:= lyt.GetCurLayout(&hDevice, &idLang)
         a .= A_Index ' ' i '`n'
         if isSet(idLang) {
-          dbgTT(0,'lyt.GetCurLayout(&hDevice, &idLang) failed at step ‘' a '’',t:='∞',i:=17,x:=0,y:=0)
+          dbgTT(0,'lyt.GetCurLayout(&hDevice, &idLang) failed at step ‘' a '’',t:=20,i:=17,x:=0,y:=0)
           break
         }
       }
