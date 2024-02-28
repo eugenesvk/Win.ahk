@@ -321,8 +321,8 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
   if ⌂_.pos = '↓' { ; 1a)f
     dbg_min := min(D.ds,dbl)
     variant := '', pri₌ := '', 🕐 := (dbg >= dbg_min) ? preciseTΔ() : ''
-    if A_PriorKey and ⌂_.vk = vk[A_PriorKey] {
-      variant   :=  'xx) a↓ ⌂↓ •a↑ ⌂↑'      , pri₌ := '='
+    if A_PriorKey and ⌂_.vk = (prio := vk.get(A_PriorKey,'')) {
+      variant   :=  'xx) a↓ ⌂↓ •a↑ ⌂↑'     , pri₌ := '='
     } else if not HasValue(⌂_.K↓,kvk) { ;
       variant   := 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕', pri₌ := '≠'
     } else {
@@ -440,7 +440,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   vkC := vk[c] ; c=f, vkC=vk46
   this⌂ := map⌂['vk→⌂'].Get(vkC, '')
   if not this⌂ { ;
-    throw ValueError("Unknow modtap key!", -1, c ' ' vkC)
+    throw ValueError("Unknown modtap key!", -1, c ' ' vkC)
   }
   ih⌂ 	:= this⌂.ih
   dbg⌂	:= '⌂' this⌂.k this⌂.🔣 ;
@@ -494,7 +494,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
       dbgTT(D.ds,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') 🕐' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
       dbgTT_isMod('🠿1ba')
     } else {
-      if (prio := vk[A_PriorKey]) = vkC {
+      if (prio := vk.get(A_PriorKey,'')) = vkC {
         if this⌂.pos = '↓' { ; ↕xz) ↕01)
           this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
           if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
