@@ -121,16 +121,16 @@ ListLines 0                                  	; Potential performance boost
      , s      := helperString ; K.▼ = vk['▼']
      , hkf    := keyFunc.customHotkeyFull
      , hkSend := keyFunc.hkSend, hkSendI := keyFunc.hkSendI, hkSendC := keyFunc.hkSendC
-  
+
     blind := '{Blind}#' ; with modifiers, exclude self from Blind commands
-    loop parse "1234567891crst;" { ; '1cdefghiklmpx0-=,.' ❖2​  vk32 ⟶ #2
+    loop parse "1234567890wcrst;" { ; '1cdefghiklmpx0-=,.' ❖2​  vk32 ⟶ #2
       hkSendC('$#' vk[A_LoopField], blind '{' vk[A_LoopField] '}')
     }
 
     ; Disable Office Shortcut (Ctrl+Alt+Shift+Win)
     ; Method1 Map2Self (allow mapping to arbitrary command in other Apps)
-    ; d(OneDrive) l(LinkedIn) n(OneNote) o(Outlook) p(PowerPoint) t(Teams) w(Word) x(Excel) y(Yammer)
-    loop parse "dlnoptwxy" { ; ⇧^❖⌥d​ vk44 ⟶ ⇧^❖⌥d (OneDrive)
+    ; d(OneDrive) l(LinkedIn) n(OneNote) o(Outlook) p(PowerPoint) t(Teams) x(Excel) y(Yammer) ✗w(Word)
+    loop parse "dlnoptxy" { ; ⇧^❖⌥d​ vk44 ⟶ ⇧^❖⌥d (OneDrive)
       hkSendC('$+^#!' vk[A_LoopField], blind '{' vk[A_LoopField] '}')
     }
 
@@ -338,7 +338,7 @@ ListLines 0                                  	; Potential performance boost
   #p::RunActivMin(AppPowerPoint)        	;❖p​        		vk50 ⟶ ...
   ; #t::Run('"' AppTotalCMD '"')        	;❖t​        		vk54 ⟶ ...
   ; #x::RunActivMin(AppExcel)           	;❖x​        		vk58 ⟶ ...
-  #w::RunActivMin(AppWord)              	;❖w​        		vk57 ⟶ ...
+  ; #w::RunActivMin(AppWord)            	;❖w​        		vk57 ⟶ ...
   ;#o::RunActivMin(AppOutlook)          	;❖o​        		vk4F ⟶ ...
   ; HyperKeys bindings
   #include %A_scriptDir%\0 Hyper.ahk
