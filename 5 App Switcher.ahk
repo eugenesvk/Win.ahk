@@ -21,12 +21,12 @@ setAppSwitcher() {
     Switch ThisHotkey  {
       default  : return
       ; default  : msgbox('nothing matched AppSwitcher ThisHotkey=' . ThisHotkey)
-      case s.key→ahk('⇧❖​ ⭾') 	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
-      case s.key→ahk('  ❖​ ⭾')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
-      case s.key→ahk('  ❖​ k')	: AppWindowSwitcher(→)	;   ...    to Next     App's Window (↑ Z-order)
-      case s.key→ahk('  ❖​ j')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
-      case s.key→ahk('  ❖​ i')	: SwapTwoAppWindows() 	;   ...    between 2   App's Windows
-      ; case s.key→ahk('❖​ i')	: dbgShowWinZOrder()  	;   ...    between 2   App's Windows
+      case s.key→ahk('⇧❖​ ⭾​') 	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
+      case s.key→ahk('  ❖​ ⭾​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
+      case s.key→ahk('  ❖​ k​')	: AppWindowSwitcher(→)	;   ...    to Next     App's Window (↑ Z-order)
+      case s.key→ahk('  ❖​ j​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
+      case s.key→ahk('  ❖​ i​')	: SwapTwoAppWindows() 	;   ...    between 2   App's Windows
+      ; case s.key→ahk('❖​ i​')	: dbgShowWinZOrder()  	;   ...    between 2   App's Windows
     }
   }
 }
@@ -84,13 +84,17 @@ AppWindowSwitcher(dir:=→) {
     return
   }
 
-  winA_id  	:= WinGetID(         "A")
-  winA_proc	:= WinGetProcessName("A")
-  winA_cls 	:= WinGetClass(      "A")
+  winA_id    	:= WinGetID(         "A")
+  winA_proc  	:= WinGetProcessName("A")
+  winA_procP 	:= WinGetProcessPath("A")
+  winA_procID	:= WinGetPID(        "A")
+  winA_cls   	:= WinGetClass(      "A")
+
+  ; dbgtt(0,winA_proc . " ¦ " . winA_procP . " ¦ " . winA_cls . " ¦ " . winA_procID,t:=5)
   if winA_proc = "explorer.exe" { ; Explorer needs an extra condition to only count actual File Explorer windows
-    winTitleMatch	:= "ahk_exe " winA_proc " ahk_class " winA_cls
+    winTitleMatch	:= "ahk_pid " winA_procID " ahk_class " winA_cls
   } else {
-    winTitleMatch	:= "ahk_exe " winA_proc
+    winTitleMatch	:= "ahk_pid " winA_procID
   }
   winIDs	:= WinGetList(winTitleMatch)
 
@@ -133,13 +137,14 @@ winTop(win_id) {
 }
 
 dbgShowWinZOrder() {
-  winA_id  	:= WinGetID(         "A")
-  winA_proc	:= WinGetProcessName("A")
-  winA_cls 	:= WinGetClass(      "A")
+  winA_id    	:= WinGetID(         "A")
+  winA_proc  	:= WinGetProcessName("A")
+  winA_cls   	:= WinGetClass(      "A")
+  winA_procID	:= WinGetPID(        "A")
   if winA_proc = "explorer.exe" { ; Explorer needs an extra condition to only count actual File Explorer windows
-    winTitleMatch	:= "ahk_exe " winA_proc " ahk_class " winA_cls
+    winTitleMatch	:= "ahk_pid " winA_procID " ahk_class " winA_cls
   } else {
-    winTitleMatch	:= "ahk_exe " winA_proc
+    winTitleMatch	:= "ahk_pid " winA_procID
   }
   winIDs	:= WinGetList(winTitleMatch)
 
