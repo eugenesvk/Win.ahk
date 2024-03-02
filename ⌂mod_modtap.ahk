@@ -193,13 +193,13 @@ register⌂() {
   global reg⌂map
   loop parse 'fj' {
     kvk := vk[A_LoopField]
-    , hkreg1	:= ＄ kvk       ;f → $vk46
-    , hkreg2	:= ＄ kvk ' UP' ;f → $vk46 UP   $=kbd hook
-    HotKey(hkreg1, hkModTap,'I1') ;
-    HotKey(hkreg2, hkModTap,'I1') ;
-    reg⌂map[hkreg1]     	:= {lbl:A_LoopField, is↓:1}
-    reg⌂map[hkreg2]     	:= {lbl:A_LoopField, is↓:0}
-    reg⌂map[A_LoopField]	:= {down:hkreg1, up:hkreg2}
+    , hkreg↓	:= ＄ kvk       ;f → $vk46
+    , hkreg↑	:= ＄ kvk ' UP' ;f → $vk46 UP   $=kbd hook
+    HotKey(hkreg↓, hkModTap,'I1') ;
+    HotKey(hkreg↑, hkModTap,'I1') ;
+    reg⌂map[hkreg↓]     	:= {lbl:A_LoopField, is↓:1}
+    reg⌂map[hkreg↑]     	:= {lbl:A_LoopField, is↓:0}
+    reg⌂map[A_LoopField]	:= {down:hkreg↓, up:hkreg↑}
   }
   ; HotKey(＄ f⃣	     , hkModTap) ;
   ; HotKey(＄ f⃣	' UP', hkModTap) ;
@@ -227,17 +227,17 @@ unregister⌂() {
   loop parse 'fj' {
     pre_ahk := ⌂%A_LoopField%.🔣ahk ; <+ for f and >+ for j
     hk_reg := reg⌂map[A_LoopField]
-    , hkreg1  	:= pre_ahk hk_reg.down ; >+ ＄ vk       for j
-    , hkreg2  	:= pre_ahk hk_reg.up   ; >+ ＄ vk ' UP'
+    , hkreg↓  	:= pre_ahk hk_reg.down ; >+ ＄ vk       for j
+    , hkreg↑  	:= pre_ahk hk_reg.up   ; >+ ＄ vk ' UP'
     , token   	:= s.key→token(A_LoopField) ;f for f
     , cbHotIf_	:= cbHotIf.Bind(token)
     HotIf cbHotIf_ ; filter down/up events for
-    HotKey(hkreg1, hkDoNothing , "I" sndlvl) ; do nothing while home row mod is active _1)
-    HotKey(hkreg2, hkModTap_off, "I" sndlvl) ; reset home row mod if it's active on UP _2)
+    HotKey(hkreg↓, hkDoNothing , "I" sndlvl) ; do nothing while home row mod is active _1)
+    HotKey(hkreg↑, hkModTap_off, "I" sndlvl) ; reset home row mod if it's active on UP _2)
     HotIf
-    reg⌂map[hkreg1]     	:= {lbl:A_LoopField, is↓:1}
-    reg⌂map[hkreg2]     	:= {lbl:A_LoopField, is↓:0}
-    reg⌂map[A_LoopField]	:= {down:hkreg1, up:hkreg2}
+    reg⌂map[hkreg↓]     	:= {lbl:A_LoopField, is↓:1}
+    reg⌂map[hkreg↑]     	:= {lbl:A_LoopField, is↓:0}
+    reg⌂map[A_LoopField]	:= {down:hkreg↓, up:hkreg↑}
   }
 }
 cbHotIf(_token, HotkeyName) { ; callback for unregister⌂ ;f <+$vk46 and f <+$vk46 UP
