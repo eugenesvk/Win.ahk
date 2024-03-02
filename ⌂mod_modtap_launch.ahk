@@ -3,7 +3,8 @@
 ; #Warn All            	; Enable all warnings to assist with detecting common errors ; #Warn All, Off
 #SingleInstance force	; Reloads script without dialog box
 
-#Include %A_scriptDir%\gVar\var.ahk	; Global vars
+#Include %A_scriptDir%\gVar\var.ahk     	; Global vars
+#include %A_scriptDir%\listen_WinMsg.ahk	; Listen to window messages and set global vars accordingly
 
 #Include <Locale>
 #Include <str>
