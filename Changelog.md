@@ -22,5 +22,8 @@ All notable changes to this project will be documented in this file
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
 
+- __Added__
+  + :sparkles: taphold example of a conditonal behavior drive by another app: <kbd>h</kbd> sends <kbd>⎋</kbd> when Sublime Text's modal editing plugin NeoVintageous is in Insert mode
+
 [0.0.2-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.2-modtap
 ## [0.0.2-modtap]
