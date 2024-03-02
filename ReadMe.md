@@ -29,6 +29,8 @@ This script tries to use 2 heuristics to detect a hold of a ⌂mod (but only for
   - is tapped <kbd>a↕</kbd> (pressed down and released), this is a Hold of ⌂<kbd>f</kbd>
   - or only pressed <kbd>a↓</kbd><kbd>f↑</kbd>, this is just fast `fa` typing where it's common to press the next button before the first one is released
 
+This script also adds a taphold example of a conditonal behavior driven by another app: <kbd>h</kbd> sends <kbd>⎋</kbd> when Sublime Text's modal editing plugin NeoVintageous is in Insert mode to exit it and otherwise sends `h`. This allows for the most convenient and reliable way to exit insert mode (key sequences like <kbd>j</kbd><kbd>k</kbd> are more convenient, but not 100% reliable since you maybe have workds containing `jk` or )
+
 A slightly more complicated set of actions depending on the sequence of keys is described below:
 
 ### Legend:
@@ -91,7 +93,10 @@ Download all the files in this branch and double click `⌂mod_modtap_launch.ahk
 - Type `f`to get the expected `f`fog
 - Type `fog` quickly to get the expected `fog`
 - Type `fu` quickly, but hold onto <kbd>f</kbd> for a tiny bit longer (release it after releasing <kbd>u</kbd>) to get `U`
-- Hold <kbd>f</kbd> for longer than 0.5 seconds , then type <kbd>u</kbd> get `U` without an `f`
+- Hold <kbd>f</kbd> for longer than 0.5 seconds, then type <kbd>u</kbd> get `U` without an `f`
+
+For taphold contitional key <kbd>h</kbd>
+- Hold <kbd>h</kbd> for longer than 0.5 seconds when in Insert mode of Sublime Text's NeoVintageous plugin to exit it (send <kbd>⎋</kbd>)
 
 ## Configure
 
