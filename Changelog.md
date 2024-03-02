@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file
 [0.0.3-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.3-modtap
 ## [0.0.3-modtap]
 - __Added__
-  + :sparkles: taphold example of a conditonal behavior drive by another app: <kbd>h</kbd> sends <kbd>⎋</kbd> when Sublime Text's modal editing plugin NeoVintageous is in Insert mode
+  + :sparkles: taphold example of a conditonal behavior driven by another app: <kbd>h</kbd> sends <kbd>⎋</kbd> when Sublime Text's modal editing plugin NeoVintageous is in Insert mode
 
 [0.0.2-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.2-modtap
 ## [0.0.2-modtap]
