@@ -73,6 +73,12 @@ getCfgIgnored() {
 ⌂︔ := {k:';',token:'︔',mod:'RControl'}
 ⌂l := {k:'l',token:'l',mod:'RWin'     }
 ; others
+⌂i := {k:'i',token:'i',send↓:'{Escape Down}', send↑:'{Escape Up}'
+ ,🔣        	: ''
+ ,🔣ahk     	: ''
+ ,flag     	: 0
+ ,ignoreall	: 1
+}
 ⌂h := {k:'h',token:'h',send↓:'{Escape Down}', send↑:'{Escape Up}'
  ,🔣        	: ''
  ,🔣ahk     	: ''
