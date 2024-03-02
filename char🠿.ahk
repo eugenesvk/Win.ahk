@@ -18,7 +18,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
   ;;; 2 Define hotkeys          without Shift
-  loop parse "qwhxtvg-r" { ; 🠿q​🠿w​🠿h​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod
+  loop parse "qwpxtvg-r" { ; 🠿q​🠿w​🠿p​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod h for exit insert mode
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
   }
   ;;; 3 Define hotkeys with             Shift
@@ -79,7 +79,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       case ＄ ˜ v⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
       case ＄ ˜ ⇧⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
       case ＄ ˜  q⃣ 	: char→sym(hk,'q',Ch['XSymbols'   	],'Ch','XSymbolsLab')
-      case ＄ ˜  h⃣ 	: char→sym(hk,'h',Ch['Currency'   	],'Ch','CurrLab')
+      case ＄ ˜  p⃣ 	: char→sym(hk,'p',Ch['Currency'   	],'Ch','CurrLab')
       case ＄ ˜  x⃣ 	: char→sym(hk,'x',Ch['Tech'       	],'Ch','TechLab')
       case ＄ ˜  t⃣ 	: char→sym(hk,'t',Ch['Math'       	],'Ch','MathLab')
       case ＄ ˜ ⇧f  	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset)
