@@ -20,7 +20,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
-  loop parse "qwhxtvg-r" { ; 🠿q​🠿w​🠿h​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod
+  loop parse "qwpxtvg-r" { ; 🠿q​🠿w​🠿p​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod h for exit insert mode
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
   }
   loop parse "``45f" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
@@ -80,7 +80,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       case ＄ ˜ v⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
       case ＄ ˜ ⇧⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab',InStr(lbl🖰hide,'/') & is∗)
       case ＄ ˜  q⃣ 	: char→sym(hk,'q',Ch['XSymbols'   	],'Ch','XSymbolsLab',InStr(lbl🖰hide,'q'))
-      case ＄ ˜  h⃣ 	: char→sym(hk,'h',Ch['Currency'   	],'Ch','CurrLab',InStr(lbl🖰hide,'h'))
+      case ＄ ˜  p⃣ 	: char→sym(hk,'p',Ch['Currency'   	],'Ch','CurrLab',InStr(lbl🖰hide,'p'))
       case ＄ ˜  x⃣ 	: char→sym(hk,'x',Ch['Tech'       	],'Ch','TechLab',InStr(lbl🖰hide,'x'))
       case ＄ ˜  t⃣ 	: char→sym(hk,'t',Ch['Math'       	],'Ch','MathLab',InStr(lbl🖰hide,'t'))
       case ＄ ˜ ⇧f  	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset,InStr(lbl🖰hide,'f'))
