@@ -204,6 +204,33 @@ register⌂() {
   ; HotKey(＄ f⃣	     , hkModTap) ;
   ; HotKey(＄ f⃣	' UP', hkModTap) ;
 }
+register_taphold_if()
+register_taphold_if() {
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , s    	:= helperString
+  global reg⌂map
+  loop parse 'h' {
+    kvk := vk[A_LoopField]
+    , hkreg↓    	:= ＄ kvk       ;p → $vk46
+    , hkreg↑    	:= ＄ kvk ' UP' ;p → $vk46 UP   $=kbd hook
+    , token     	:= s.key→token(A_LoopField) ;p for p
+    , cbHotIfVar_	:= cbHotIfVar.Bind(token)
+    HotIf cbHotIfVar_ ; filter down/up events for
+    HotKey(hkreg↓, hkModTap,'I1') ;
+    HotKey(hkreg↑, hkModTap,'I1') ;
+    HotIf
+    reg⌂map[hkreg↓]     	:= {lbl:A_LoopField, is↓:1}
+    reg⌂map[hkreg↑]     	:= {lbl:A_LoopField, is↓:0}
+    reg⌂map[A_LoopField]	:= {down:hkreg↓, up:hkreg↑}
+  }
+}
+cbHotIfVar(_token, HotkeyName) { ; callback for register_taphold_if
+  if nv_mode = 2 and WinActive("ahk_exe sublime_text.exe") { ; Insert mode in Sublime Text passed via winmsg
+    return true
+  } else {
+    return false
+  }
+}
 hkModTap(ThisHotkey) {
   static _ := 0
   , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
@@ -224,7 +251,7 @@ unregister⌂() {
    ; , k := helperString.key→token.Bind(helperString)
   static ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := ucfg⌂mod.Get('ttdbg',0), sndlvl := ucfg⌂mod.Get('sndlvl',0)
   global  reg⌂map
-  loop parse 'fj' {
+  loop parse 'fjh' { ;
     pre_ahk := ⌂%A_LoopField%.🔣ahk ; <+ for f and >+ for j
     hk_reg := reg⌂map[A_LoopField]
     , hkreg↓  	:= pre_ahk hk_reg.down ; >+ ＄ vk       for j
@@ -311,7 +338,9 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
   ; dbgTT(0,⌂_.dbg ' ' keynm '↓' kvk '_' hex(kvk),t:=5,16,0,0) ;
   variant	:= ''
   if ⌂_.pos = '↓' { ; should always be true? otherwise we won't get a callback
-    if ignored.Has(⌂_.flag) and ;
+    if ⌂_.HasOwnProp('ignoreall') {
+      variant	:= '✗✗✗↓ ignore all'
+    } else if ignored.Has(⌂_.flag) and
        ignored[⌂_.flag].Has(kvk_s) { ; this modtap+key combo should be ignored
       variant	:= '✗✗✗↓ ignore'
     } else {
@@ -357,7 +386,14 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
     } else if not HasValue(⌂_.K↓,kvk) { ;
       variant   := 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕', pri₌ := '≠'
     } else {
-      if ignored.Has(⌂_.flag) and
+      if ⌂_.HasOwnProp('ignoreall') { ;lkl
+        variant := '✗all 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
+          _SendLevel := A_SendLevel
+          SendLevel ih.MinSendLevel ; tweak sendlevel to allow the script to accept the generated Up event
+          SendEvent('{' ⌂_.vk ' UP}') ;
+          SendLevel _SendLevel
+          ; setup⌂mod(＄ ⌂_.vk ' UP',⌂_.k,is↓:='0') ; alternative way to cancel by calling the function directly
+      } else if ignored.Has(⌂_.flag) and
          ignored[⌂_.flag].Has(kvk_s) { ;       ignore this modtap+key combo
         variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
         if ignore🛑 { ; force-cancel modtap
