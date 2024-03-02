@@ -360,7 +360,7 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
       t⌂_   	:= A_TickCount - ⌂_.t
       dbgTT(0,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=10,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
-    dbgMsg(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' 🕐' preciseTΔ(),"Unknown state @Key↓_⌂?") ;
+    dbgTT(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' 🕐' preciseTΔ() " Unknown state @Key↓_⌂?",t:='20') ;
   }
 }
 Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
