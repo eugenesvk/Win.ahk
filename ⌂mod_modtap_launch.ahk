@@ -4,7 +4,6 @@
 #SingleInstance force	; Reloads script without dialog box
 
 #Include %A_scriptDir%\gVar\var.ahk     	; Global vars
-#include %A_scriptDir%\listen_WinMsg.ahk	; Listen to window messages and set global vars accordingly
 
 #Include <Locale>
 #Include <str>
@@ -12,6 +11,8 @@
 #Include <libFunc Native>
 #include <libFunc Num>	; Functions: Numeric
 #include <Array>      	; Array helpers
+
+#include %A_scriptDir%\listen_WinMsg.ahk	; Listen to window messages and set global vars accordingly
 
 CoordMode "ToolTip", "Screen"	; Place ToolTips at absolute screen coordinates
 CoordMode "Mouse",   "Screen"	; Mouse cursor: get absolute scren coordinates
