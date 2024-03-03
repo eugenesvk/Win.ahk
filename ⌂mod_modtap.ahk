@@ -138,7 +138,7 @@ class ⌂ { ; 🠿
       i⌂.prio↓	:= '' ; before a given modtap is down
       i⌂.prio↑	:= '' ;                          up
       ;       	while a given modtap is down
-      i⌂.K↓   	:=  Array() ; key down events (track K↑ for a111 K↓ that happened before modtap)
+      i⌂.K↓   	:=  Array() ; key down events (track K↑ for all K↓ that happened before modtap)
       i⌂.K↑   	:=  Array() ; ... up
       ; Setup inputhook to manually handle input when modtap key is pressed
       ih          	:= InputHook("T" ⌂tHold) ; minSendLevel set within setup⌂mod depending on the stack order of a given modtap
@@ -366,6 +366,7 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
     , ignored := getCfgIgnored()
     , ignore🛑 := C.Get('ignore🛑','true')
     , dbl := 3 ;
+    , dbb := 6 ; bug
   ⌂_ := ⌂.%token% ;
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
@@ -410,10 +411,24 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
         variant :=  '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
         SendInput(⌂_.send↓ '{' kvk_s sc_s '}'), ⌂_.is := true ; splitting send↓ and key bugs due to slow tooltip⎀
         if tooltip⎀ {
+          if dbg >= dbb {
+            🕐1 := preciseTΔ()
+            dbg_ih := ih.input
+            dbg_k↓ := Object2Str(kvk→label(⌂_.K↓))
+          }
           if tt⎀delay { ; delay showing tooltip
             set⎀TT(1, ⌂_.🔣)
           } else {
             win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',D.i↗,⎀←-9,⎀↑-30)
+          }
+          if dbg >= dbb {
+            🕐2 := preciseTΔ()
+          }
+          if not ⌂_.is {
+            dbgTT(0,'',t:='∞',D.i↗) ; hide a slowpoke tooltip that doesn't reflect modtap key status whic was reset while win.get⎀ was trying to get the cursor
+          }
+          if dbg >= dbb {
+            dbgtt(dbb,'send HK↓=' ⌂_.k ' ' ⌂_.mod ' K↓=' GetKeyName(kvk_s) ' ⌂_is=' ⌂_.is '`nih=' dbg_ih '`n _=' ih.input '`nK↓=' dbg_k↓ '`n  _=' Object2Str(kvk→label(⌂_.K↓)) '`n🕐' 🕐2-🕐1 '`n' 🕐1 '`n' 🕐2,'∞',18,0,0)
           }
         }
         dbgTT_isMod('🠿1aa')
@@ -533,6 +548,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     if (is↓phys := GetKeyState(this⌂.k,'P')) {
       this⌂.force↑ := true
     }
+    ; dbgtt(0,'K↓ reset=' Object2Str(kvk→label(this⌂.K↓)) ' 🕐' preciseTΔ(),10,16,0,250)
     this⌂.prio↓ := '', this⌂.prio↑ := A_PriorKey, this⌂.K↓ := Array(), this⌂.K↑ := Array()
     ih_input := ''
     if ih⌂.InProgress { ;
@@ -548,6 +564,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
           set⎀TT(0)
         }
         win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30) ; and hide a non-delayed one
+        ; dbgtt(0,'⎀ reset 🕐' preciseTΔ(),10,15,0,285) ;
       }
       this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
       dbgTT(D.ds,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') 🕐' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
