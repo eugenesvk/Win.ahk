@@ -110,13 +110,14 @@ class ⌂ { ; 🠿
   static gen_map⌂() {
     static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
       , ⌂tHold	:= ucfg⌂mod.Get('holdTimer',0.5) ;
-    ⌂.map['vk→⌂'   ] := Map()
-    ⌂.map['flag→vk'] := Map()
+    ⌂.map['vk→token'] := Map()
+    ⌂.map['flag→vk' ] := Map()
 
     for i in ⌂.tokens {
       i⌂       	:= ⌂.%i%
       i⌂.t     	:= A_TickCount
       i⌂.vk    	:= vk[i⌂.k] ; vk21 for f
+      ⌂.map[   	'vk→token'][i⌂.vk] := i
       i⌂.pos   	:= '↑'
       i⌂.is    	:= false ; is down
       i⌂.force↑	:= false ; this is set to true if we need to manually reset the status while the key is physically ↓
@@ -146,7 +147,6 @@ class ⌂ { ; 🠿
       ih.OnKeyDown	:= cb⌂_K↓.Bind(i)	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
       i⌂.ih       	:= ih
 
-      ⌂.map['vk→⌂'   ][i⌂.vk  ]	:= i⌂
       ⌂.map['flag→vk'][i⌂.flag]	:= i⌂.vk
     }
   }
@@ -211,10 +211,9 @@ getDbgKeyStatusS(dbg_pre:='') { ; get left to right debug string of which modtap
   modtap_status := ''
   , iskeydown := ''
   , dbg_title := ''
-  key_actual := ⌂.map['vk→⌂']
   for i in ⌂.tokens {
     i⌂	:= ⌂.%i%
-    i⌂_act := key_actual[i⌂.vk]
+    i⌂_act := ⌂.%⌂.map['vk→token'][i⌂.vk]%
     if i⌂_act.is {
       modtap_status	.= i⌂.🔣
     } else {
@@ -497,10 +496,11 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   }
 
   vkC := vk[c] ; c=f, vkC=vk46
-  this⌂ := ⌂.map['vk→⌂'].Get(vkC, '')
-  if not this⌂ { ;
+  this_token := ⌂.map['vk→token'].Get(vkC, '')
+  if not this_token { ;
     throw ValueError("Unknown modtap key!", -1, c ' ' vkC)
   }
+  this⌂ := ⌂.%this_token%
   ih⌂ 	:= this⌂.ih
   dbg⌂	:= '⌂' this⌂.k this⌂.🔣 ;
   dbgorder := Map('a',[1,4], 's',[1,3], 'd',[1,2], 'f',[1,1]
