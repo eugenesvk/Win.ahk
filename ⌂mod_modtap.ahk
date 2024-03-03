@@ -373,6 +373,17 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
   if ⌂_.pos = '↓' { ; 1a)f
     dbg_min := min(D.ds,dbl)
     variant := '', pri₌ := '', 🕐 := (dbg >= dbg_min) ? preciseTΔ() : ''
+    if dbg >= dbg_min { ; get debug values early otherwise ⌂_.K↓ can get reset on slow tooltip ops
+      keynm  	:= vkrl['en'].Get(kvk_s,'✗')
+      ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+      ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
+      ,t⌂_   	:= A_TickCount - ⌂_.t
+      ; ,⌂K↓ 	:= Object2Str(kvk→label(⌂_.K↓))
+      ; ,⌂K↑ 	:= Object2Str(kvk→label(⌂_.K↑))
+      ,⌂K↓   	:= kvk→label(⌂_.K↓)
+      ,⌂K↑   	:= kvk→label(⌂_.K↑)
+    }
+
     if A_PriorKey and ⌂_.vk = (prio := vk.get(A_PriorKey,'')) {
       variant   :=  'xx) a↓ ⌂↓ •a↑ ⌂↑'     , pri₌ := '='
     } else if not HasValue(⌂_.K↓,kvk) { ;
@@ -397,7 +408,7 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
         }
       } else {                         ; don't ignore this modtap+key combo
         variant :=  '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
-        SendInput(⌂_.send↓), ⌂_.is := true
+        SendInput(⌂_.send↓ '{' kvk_s sc_s '}'), ⌂_.is := true ; splitting send↓ and key bugs due to slow tooltip⎀
         if tooltip⎀ {
           if tt⎀delay { ; delay showing tooltip
             set⎀TT(1, ⌂_.🔣)
@@ -405,21 +416,10 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
             win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,⌂_.🔣,t:='∞',D.i↗,⎀←-9,⎀↑-30)
           }
         }
-        SendInput('{' Format("vk{:x}sc{:x}",kvk,ksc) '}')
         dbgTT_isMod('🠿1aa')
         ; dbgTT(0,ih.Input '`n' (ih=⌂_.ih) ' 🕐' 🕐 '`n' ⌂_.ih.Input,t:=1) ;
         ; ih.Stop() ;
       }
-    }
-    if dbg >= dbg_min {
-      keynm  	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-      ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
-      ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
-      ,t⌂_   	:= A_TickCount - ⌂_.t
-      ; ,⌂K↓ 	:= Object2Str(kvk→label(⌂_.K↓))
-      ; ,⌂K↑ 	:= Object2Str(kvk→label(⌂_.K↑))
-      ,⌂K↓   	:= kvk→label(⌂_.K↓)
-      ,⌂K↑   	:= kvk→label(⌂_.K↑)
     }
     if dbg >= dbl {
       dbgTT(dbl,variant ' (' dbgsrc ') 🕐' 🕐
