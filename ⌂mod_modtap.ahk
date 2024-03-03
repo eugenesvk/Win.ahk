@@ -581,7 +581,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
           if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
             alt⌂ := stack⌂[-2], alt⌂ih := alt⌂.ih
             vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC) ; decimal value
-            Key↑_⌂(alt⌂ih, vk_d, sc_d, &alt⌂, '↕xz') ; invoke callback directly, but use another modtap's inputhook (ours is already disabled)
+            Key↑_⌂(alt⌂ih, vk_d, sc_d, alt⌂.token, '↕xz') ; invoke callback directly, but use another modtap's inputhook (ours is already disabled)
             dbgTT(d3,'✗ _↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone while ' alt⌂.dbg '↓`n🕐' this⌂t '<' ⌂ΔH ' PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ this⌂.is=' this⌂.is ' this⌂.pos=' this⌂.pos,t:=2,,0,🖥️w↕*.86) ;
           } else { ;
             SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
