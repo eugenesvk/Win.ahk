@@ -142,7 +142,8 @@ class ⌂ { ; 🠿
       i⌂.K↑   	:=  Array() ; ... up
       ; Setup inputhook to manually handle input when modtap key is pressed
       ih          	:= InputHook("T" ⌂tHold) ; minSendLevel set within setup⌂mod depending on the stack order of a given modtap
-      ih.KeyOpt(  	'{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
+      ih.KeyOpt(  	'{All}','NS')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
+      ; S         	: blocks key after processing it otherwise NonText (default non-suppressed) ⌂◀ will double ◀
       ih.OnKeyUp  	:= cb⌂_K↑.Bind(i)	;
       ih.OnKeyDown	:= cb⌂_K↓.Bind(i)	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
       i⌂.ih       	:= ih
