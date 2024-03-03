@@ -22,6 +22,9 @@ All notable changes to this project will be documented in this file
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
 
+- __Fixed__
+  + :beetle: non-text keys (e.g., arrow keys)double-tapping due to not being suppressed
+
 [0.0.4-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.4-modtap
 ## [0.0.4-modtap]
 - __Changed__
