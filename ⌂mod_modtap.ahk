@@ -280,7 +280,7 @@ hkModTap_off(ThisHotkey) {
     if tt⎀delay { ; cancel a potential delayed timer
       set⎀TT(0)
     }
-    dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30) ; and remove a non-timer tooltip regardless of the timed one
+    dbgTT(ttdbg?5:0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30) ; and remove a non-timer tooltip regardless of the timed one unless ttdbg mandates we use a blank tooltip
   }
   dbgTT_isMod('🠿1bb')
 }
