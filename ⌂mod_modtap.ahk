@@ -15,9 +15,16 @@ global ucfg⌂mod := Map(
   ,'ignore🛑' 	, true  	;|true|	force stop the modtap after encountering an ignored key even if the physical key is being held, so if 'f' is ‹⇧ and 'e' is 'ignored':
     ;        	   true 	  f🠿e↕ will print 'fe' right away
     ;        	   false	  f🠿e↕ will print nothing, 'f↑' will print 'fe' (unless hold time > holdTimer, then ‹⇧ will toggle and no 'fe' or 'e' is printed)
-  ; Debugging	        	        	;
-  , 'ttdbg'  	, false 	;|false|	show an empty (but visible) tooltip when modtap is deactivated
-  , 'sndlvl' 	, 1     	;|1|    	register hotkeys with this sendlevel
+  , 'keymap'	, Map( 	;	Modtap key:mod pairs (only fjh actually set manually @ register🠿↕ below)
+    ; ⌂ Home Row mods, set a modifier on hold
+    'a',‹⎈, 's',‹◆ ,'d',‹⎇ ,'f',‹⇧,  ; 'a','LControl' , 's','LWin' , 'd','LAlt' , 'f','LShift',
+    'l',⎈›, ';',◆› ,'k',⎇› ,'j',⇧›,  ; 'l','RControl' , ';','RWin' , 'k','RAlt' , 'j','RShift',
+    ; regular ModTaps (not home row mods, don't set modifiers on hold)
+    'h','Escape'
+   ) ;
+  ; Debugging	       	        	;
+  , 'ttdbg'  	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
+  , 'sndlvl' 	, 1    	;|1|    	register hotkeys with this sendlevel
   )
 class udbg⌂mod { ; various debug constants like indices for tooltips
   static i↗	:= 19 ; dbgTT index, top right position of the empty status of our home row mod
@@ -28,6 +35,28 @@ class udbg⌂mod { ; various debug constants like indices for tooltips
   ,ik      	:= 13 ; dbgTT index for Key↓↑_⌂ functions
   ,dt      	:=  5 ; min debug level for the bottom-right status of all the keys
   ,ds      	:=  3 ; min debug level for Send events
+}
+
+⌂mod_init()
+⌂mod_init() { ; Prepare key objects that store info for initializing and using modtaps
+  local mod
+  for key,mod in ucfg⌂mod['keymap'] {
+    ⌂(key,mod)
+  }
+  ⌂.gen_map⌂()
+}
+
+; Assign functions that will handle modtap keys
+hk_map := Map() ; store registered keypairs 'vk46'='f'
+register🠿↕('fj','')
+register🠿↕('h' ,cbHotIfVar) ; conditional modtap
+unregister🠿↕('fjh') ; block repeats on 🠿, reset on ↑
+cbHotIfVar(HotkeyName) { ; callback for register🠿↕
+  if nv_mode = 2 and WinActive("ahk_exe sublime_text.exe") { ; Insert mode in Sublime Text passed via winmsg
+    return true
+  } else {
+    return false
+  }
 }
 
 ; getKeyLabels_forVK(kvk:='vk20') ; ␠ ␣
@@ -62,88 +91,66 @@ getCfgIgnored() {
     return ignored
   }
 }
-; ‹
-⌂a := {k:'a',token:'a',mod:'LControl'} ; token can be used in function names
-⌂s := {k:'s',token:'s',mod:'LWin'    }
-⌂d := {k:'d',token:'d',mod:'LAlt'    }
-⌂f := {k:'f',token:'f',mod:'LShift'  }
-; ›
-⌂j := {k:'j',token:'j',mod:'RShift'   }
-⌂k := {k:'k',token:'k',mod:'RAlt'     }
-⌂︔ := {k:';',token:'︔',mod:'RControl'}
-⌂l := {k:'l',token:'l',mod:'RWin'     }
-; others
-⌂i := {k:'i',token:'i',send↓:'{Escape Down}', send↑:'{Escape Up}'
- ,🔣        	: ''
- ,🔣ahk     	: ''
- ,flag     	: 0
- ,ignoreall	: 1
-}
-⌂h := {k:'h',token:'h',send↓:'{Escape Down}', send↑:'{Escape Up}'
- ,🔣        	: ''
- ,🔣ahk     	: ''
- ,flag     	: 0
- ,ignoreall	: 1 ; ignore all keys, so K+X sequences always type kx
-}
 
-map⌂ := Map()
-gen_map⌂() ; setup info and status fields for all the homerow mods
-gen_map⌂(){
-  static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
-    , ⌂tHold	:= ucfg⌂mod.Get('holdTimer',0.5) ;
-  global map⌂
-  map⌂['vk→⌂'] := Map()
-  map⌂['flag→vk'] := Map()
-   cb⌂a_K↑:=0,cb⌂s_K↑:=0,cb⌂d_K↑:=0,cb⌂f_K↑:=0,cb⌂j_K↑:=0,cb⌂k_K↑:=0,cb⌂l_K↑:=0,cb⌂︔_K↑:=0,cb⌂i_K↑:=0,cb⌂h_K↑:=0 ; can't create new vars dynamically, so create them in advance
-  ,cb⌂a_K↓:=0,cb⌂s_K↓:=0,cb⌂d_K↓:=0,cb⌂f_K↓:=0,cb⌂j_K↓:=0,cb⌂k_K↓:=0,cb⌂l_K↓:=0,cb⌂︔_K↓:=0,cb⌂i_K↓:=0,cb⌂h_K↓:=0
+class ⌂ { ; 🠿
+  static keys := []
+  static tokens := []
+  static key2token := Map(';','︔')
+  static cb↑ := Map()
+  static cb↓ := Map()
+  static map := Map()
+  static Call(key,mod) {
+    token := this.key2token.get(key,key)
+    ⌂.keys  .push(key  )
+    ⌂.tokens.push(token)
+    this.DefineProp(token,{Call:{k:key,token:token,mod:mod} })
+  }
 
-  for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔,⌂i,⌂h] {
-    i⌂.t       	:= A_TickCount
-    i⌂.vk      	:= vk[i⌂.k] ; vk21 for f
-    i⌂.pos     	:= '↑'
-    i⌂.is      	:= false ; is down
-    i⌂.force↑  	:= false ; this is set to true if we need to manually reset the status while the key is physically ↓
-    if   !     	i⌂.HasOwnProp('send↓') {
-      i⌂.send↓ 	:= '{' i⌂.mod ' Down' '}'
-    }          	;
-    if   !     	i⌂.HasOwnProp('send↑') {
+  static gen_map⌂() {
+    static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+      , ⌂tHold	:= ucfg⌂mod.Get('holdTimer',0.5) ;
+    ⌂.map['vk→⌂'   ] := Map()
+    ⌂.map['flag→vk'] := Map()
+
+    for i in ⌂.tokens {
+      i⌂       	:= ⌂.%i%
+      i⌂.t     	:= A_TickCount
+      i⌂.vk    	:= vk[i⌂.k] ; vk21 for f
+      i⌂.pos   	:= '↑'
+      i⌂.is    	:= false ; is down
+      i⌂.force↑	:= false ; this is set to true if we need to manually reset the status while the key is physically ↓
+      i⌂.send↓ 	:= '{' i⌂.mod ' Down' '}' ; ahk formatted key to be sent on down/up
       i⌂.send↑ 	:= '{' i⌂.mod ' Up'   '}'
-    }          	;
-    if         	i⌂.HasOwnProp('mod') {
-      i⌂.🔣     	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
-      i⌂.🔣ahk  	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
-      i⌂.flag  	:= f%i⌂.🔣%
-    } else     	{
-      if   !   	i⌂.HasOwnProp('🔣') {
-        i⌂.🔣   	:= ''
-      }        	;
-      if   !   	i⌂.HasOwnProp('🔣ahk') {
-        i⌂.🔣ahk	:= ''
-      }        	;
-      if   !   	i⌂.HasOwnProp('flag') {
-        i⌂.flag	:= 0
-      }        	;
-    }          	;
-    i⌂.dbg     	:= '⌂' i⌂.k i⌂.🔣 ;
-    ; Track    	which keys have been pressed
-    i⌂.prio↓   	:= '' ; before a given modtap is down
-    i⌂.prio↑   	:= '' ;                          up
-    ;          	while a given modtap is down
-    i⌂.K↓      	:=  Array() ; key down events (track K↑ for a111 K↓ that happened before modtap)
-    i⌂.K↑      	:=  Array() ; ... up
-    ; Setup inputhook to manually handle input when modtap key is pressed
-    ih              	:= InputHook("T" ⌂tHold) ; minSendLevel set within setup⌂mod depending on the stack order of a given modtap
-    ih.KeyOpt(      	'{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
-    cb⌂%i⌂.token%_K↑	:= cb⌂_K↑.Bind(i⌂) ; ih,vk,sc will be added automatically by OnKeyUp
-    cb⌂%i⌂.token%_K↓	:= cb⌂_K↓.Bind(i⌂) ; ...                                     OnKeyDown
-    ih.OnKeyUp      	:= cb⌂%i⌂.token%_K↑	;
-    ih.OnKeyDown    	:= cb⌂%i⌂.token%_K↓	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
-    i⌂.ih           	:= ih
+      try {
+        i⌂.🔣        	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
+        i⌂.🔣ahk     	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
+        i⌂.flag     	:= f%i⌂.🔣%
+      } catch       	Error as err { ; not a home row mod, so doesn't have mod prefixex/flags
+        i⌂.🔣        	:= ''
+        i⌂.🔣ahk     	:= ''
+        i⌂.flag     	:= 0
+        i⌂.ignoreall	:= 1 ; ignore all keys, so K+X sequences always type kx
+      }
+      i⌂.dbg  	:= '⌂' i⌂.k i⌂.🔣 ;
+      ; Track 	which keys have been pressed
+      i⌂.prio↓	:= '' ; before a given modtap is down
+      i⌂.prio↑	:= '' ;                          up
+      ;       	while a given modtap is down
+      i⌂.K↓   	:=  Array() ; key down events (track K↑ for a111 K↓ that happened before modtap)
+      i⌂.K↑   	:=  Array() ; ... up
+      ; Setup inputhook to manually handle input when modtap key is pressed
+      ih          	:= InputHook("T" ⌂tHold) ; minSendLevel set within setup⌂mod depending on the stack order of a given modtap
+      ih.KeyOpt(  	'{All}','N')  ; N: Notify. OnKeyDown/OnKeyUp callbacks to be called each time the key is pressed
+      ih.OnKeyUp  	:= cb⌂_K↑.Bind(i)	;
+      ih.OnKeyDown	:= cb⌂_K↓.Bind(i)	; ;;;or cbkeys? and '{Left}{Up}{Right}{Down}' separately???
+      i⌂.ih       	:= ih
 
-    map⌂['vk→⌂'   ][i⌂.vk]  	:= i⌂
-    map⌂['flag→vk'][i⌂.flag]	:= i⌂.vk
+      ⌂.map['vk→⌂'   ][i⌂.vk  ]	:= i⌂
+      ⌂.map['flag→vk'][i⌂.flag]	:= i⌂.vk
+    }
   }
 }
+
 dbgTT_isMod(dbg_pre:='') { ;
   static _ := 0
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
@@ -159,8 +166,9 @@ getDbgKeyStatusS(dbg_pre:='') { ; get left to right debug string of which modtap
   modtap_status := ''
   , iskeydown := ''
   , dbg_title := ''
-  key_actual := map⌂['vk→⌂']
-  for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔,⌂i,⌂h] {
+  key_actual := ⌂.map['vk→⌂']
+  for i in ⌂.tokens {
+    i⌂	:= ⌂.%i%
     i⌂_act := key_actual[i⌂.vk]
     if i⌂_act.is {
       modtap_status	.= i⌂.🔣
@@ -183,7 +191,8 @@ getDbgKeyStatusS(dbg_pre:='') { ; get left to right debug string of which modtap
 get⌂Status() {
   static bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
   bitflags := 0
-  for modtap in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔,⌂i,⌂h] {
+  for i in ⌂.tokens {
+    modtap := ⌂.%i%
     bitflags |= GetKeyState(modtap.vk,"P") ? modtap.flag : 0 ; modtap.is ? modtap.flag : 0
   } ; dbgTT(0,'bitflags ' dec→bin(bitflags) ' ‹' isAny‹ ' ›' isAny›,t:=5)
   return {isAny‹:bitflags & bit‹, isAny›:bitflags & bit›, bit:bitflags}
@@ -191,50 +200,26 @@ get⌂Status() {
 
 preciseTΔ() ; start timer for debugging
 
-reg⌂map := Map() ; store registered keypairs 'vk46'='f'
-register⌂()
-register⌂() {
+register🠿↕(keys,cb) {
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
-  global reg⌂map
-  loop parse 'fj' {
+  global hk_map
+  loop parse keys {
     kvk := vk[A_LoopField]
-    , hkreg↓	:= ＄ kvk       ;f → $vk46
-    , hkreg↑	:= ＄ kvk ' UP' ;f → $vk46 UP   $=kbd hook
-    HotKey(hkreg↓, hkModTap,'I1') ;
-    HotKey(hkreg↑, hkModTap,'I1') ;
-    reg⌂map[hkreg↓]     	:= {lbl:A_LoopField, is↓:1}
-    reg⌂map[hkreg↑]     	:= {lbl:A_LoopField, is↓:0}
-    reg⌂map[A_LoopField]	:= {down:hkreg↓, up:hkreg↑}
-  }
-  ; HotKey(＄ f⃣	     , hkModTap) ;
-  ; HotKey(＄ f⃣	' UP', hkModTap) ;
-}
-register_taphold_if()
-register_taphold_if() {
-  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
-   , s    	:= helperString
-  global reg⌂map
-  loop parse 'h' {
-    kvk := vk[A_LoopField]
-    , hkreg↓    	:= ＄ kvk       ;p → $vk46
-    , hkreg↑    	:= ＄ kvk ' UP' ;p → $vk46 UP   $=kbd hook
-    , token     	:= s.key→token(A_LoopField) ;p for p
-    , cbHotIfVar_	:= cbHotIfVar.Bind(token)
-    HotIf cbHotIfVar_ ; filter down/up events for
-    HotKey(hkreg↓, hkModTap,'I1') ;
-    HotKey(hkreg↑, hkModTap,'I1') ;
-    HotIf
-    reg⌂map[hkreg↓]     	:= {lbl:A_LoopField, is↓:1}
-    reg⌂map[hkreg↑]     	:= {lbl:A_LoopField, is↓:0}
-    reg⌂map[A_LoopField]	:= {down:hkreg↓, up:hkreg↑}
-  }
-}
-cbHotIfVar(_token, HotkeyName) { ; callback for register_taphold_if
-  if nv_mode = 2 and WinActive("ahk_exe sublime_text.exe") { ; Insert mode in Sublime Text passed via winmsg
-    return true
-  } else {
-    return false
+    , hk↓  	:= ＄ kvk       ;p → $vk46
+    , hk↑  	:= ＄ kvk ' UP' ;p → $vk46 UP   $=kbd hook
+    , token	:= s.key→token(A_LoopField) ;p for p
+    if cb { ; turn hotkey context sensitivity if a callback is passed
+      HotIf cb
+    }
+    HotKey(hk↓, hkModTap,'I1') ;
+    HotKey(hk↑, hkModTap,'I1') ;
+    if cb {
+      HotIf
+    }
+    hk_map[hk↓]        	:= {lbl:A_LoopField, is↓:1}
+    hk_map[hk↑]        	:= {lbl:A_LoopField, is↓:0}
+    hk_map[A_LoopField]	:= {↓:hk↓, ↑:hk↑}
   }
 }
 hkModTap(ThisHotkey) {
@@ -243,44 +228,44 @@ hkModTap(ThisHotkey) {
   , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
   hk := ThisHotkey
   dbgTT(3,ThisHotkey ' lvl' A_SendLevel ' ThisHotkey@hkModTap',t:=2,,🖥️w↔,🖥️w↕*0.3) ;
-  if reg⌂map.Has(ThisHotkey) {
-    hk_reg := reg⌂map[ThisHotkey] ; f,↓or↑ for $vk46
+  if hk_map.Has(ThisHotkey) {
+    hk_reg := hk_map[ThisHotkey] ; f,↓or↑ for $vk46
     setup⌂mod(hk,hk_reg.lbl,hk_reg.is↓)
   } else {
     return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
   }
 }
-unregister⌂()
-unregister⌂() {
+unregister🠿↕(keys) {
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
    ; , k := helperString.key→token.Bind(helperString)
   static ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := ucfg⌂mod.Get('ttdbg',0), sndlvl := ucfg⌂mod.Get('sndlvl',0)
-  global  reg⌂map
-  loop parse 'fjh' { ;
-    pre_ahk := ⌂%A_LoopField%.🔣ahk ; <+ for f and >+ for j
-    hk_reg := reg⌂map[A_LoopField]
-    , hkreg↓  	:= pre_ahk hk_reg.down ; >+ ＄ vk       for j
-    , hkreg↑  	:= pre_ahk hk_reg.up   ; >+ ＄ vk ' UP'
+  global  hk_map
+  loop parse keys { ;
+    pre_ahk := ⌂.%A_LoopField%.🔣ahk ; <+ for f and >+ for j
+    hk_reg := hk_map[A_LoopField]
+    , hk↓     	:= pre_ahk hk_reg.↓  ; >+ ＄ vk       for j
+    , hk↑     	:= pre_ahk hk_reg.↑  ; >+ ＄ vk ' UP'
     , token   	:= s.key→token(A_LoopField) ;f for f
     , cbHotIf_	:= cbHotIf.Bind(token)
     HotIf cbHotIf_ ; filter down/up events for
-    HotKey(hkreg↓, hkDoNothing , "I" sndlvl) ; do nothing while home row mod is active _1)
-    HotKey(hkreg↑, hkModTap_off, "I" sndlvl) ; reset home row mod if it's active on UP _2)
+    HotKey(hk↓, hkDoNothing , "I" sndlvl) ; do nothing while home row mod is active _1)
+    HotKey(hk↑, hkModTap_off, "I" sndlvl) ; reset home row mod if it's active on UP _2)
     HotIf
-    reg⌂map[hkreg↓]     	:= {lbl:A_LoopField, is↓:1}
-    reg⌂map[hkreg↑]     	:= {lbl:A_LoopField, is↓:0}
-    reg⌂map[A_LoopField]	:= {down:hkreg↓, up:hkreg↑}
+    hk_map[hk↓]        	:= {lbl:A_LoopField, is↓:1}
+    hk_map[hk↑]        	:= {lbl:A_LoopField, is↓:0}
+    hk_map[A_LoopField]	:= {↓:hk↓, ↑:hk↑}
+    ; dbgtt(0,Object2Str(hk_map[A_LoopField]),5)
   }
 }
-cbHotIf(_token, HotkeyName) { ; callback for unregister⌂ ;f <+$vk46 and f <+$vk46 UP
-  return ⌂%_token%.is ; token is ︔ for ; to be used in var names
+cbHotIf(_token, HotkeyName) { ; callback for unregister🠿↕ ;f <+$vk46 and f <+$vk46 UP
+  return ⌂.%_token%.is ; token is ︔ for ; to be used in var names
 }
 hkModTap_off(ThisHotkey) {
   static D	:= udbg⌂mod, C := ucfg⌂mod
-  hk_reg := reg⌂map[ThisHotkey]
-  ⌂_ := ⌂%hk_reg.lbl%
-  dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ;
+  hk_reg := hk_map[ThisHotkey]
+  ⌂_ := ⌂.%hk_reg.lbl%
+  dbg⌂ := ⌂_.k ' ' ⌂_.🔣
   static ⌂tHold := C.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := C.Get('ttdbg',0), sndlvl := C.Get('sndlvl',0)
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
@@ -308,11 +293,11 @@ get⌂dbg(⌂_) {
    return ⌂_.dbg ⌂_.pos (⌂_.is ? '🠿' : '') ' send‘' ⌂_.send%(⌂_.pos)% '’ flag' dec→bin(⌂_.flag)
 }
 
-cb⌂_K↓(⌂_,  ih,vk,sc) { ;
-  Key↓_⌂(ih,vk,sc,   &⌂_)
+cb⌂_K↓(token,  ih,vk,sc) { ;
+  Key↓_⌂(ih,vk,sc,   token)
 }
-cb⌂_K↑(⌂_,  ih,vk,sc) {
-  Key↑_⌂(ih,vk,sc,   &⌂_)
+cb⌂_K↑(token,  ih,vk,sc) {
+  Key↑_⌂(ih,vk,sc,   token)
 }
 
 kvk→label(arr) { ; convert an array of decimal VK codes into an tring of English-based key names
@@ -329,7 +314,7 @@ kvk→label(arr) { ; convert an array of decimal VK codes into an tring of Engli
   return labels
 }
 
-Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
+Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vkrlen:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
     , D   	:= udbg⌂mod
@@ -337,6 +322,7 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
     , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
     , ignored := getCfgIgnored()
     , dbl := 2
+  ⌂_ := ⌂.%token%
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   ⌂_.K↓.push(kvk)
@@ -369,7 +355,7 @@ Key↓_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') {
     dbgTT(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' 🕐' preciseTΔ() " Unknown state @Key↓_⌂?",t:='20') ;
   }
 }
-Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
+Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
     , C   	:= ucfg⌂mod, D	:= udbg⌂mod
@@ -380,7 +366,7 @@ Key↑_⌂(ih,kvk,ksc,  &⌂_, dbgsrc:='') { ;
     , ignored := getCfgIgnored()
     , ignore🛑 := C.Get('ignore🛑','true')
     , dbl := 3 ;
-  global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔,⌂i,⌂h
+  ⌂_ := ⌂.%token% ;
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   ⌂_.K↑.push(kvk)
@@ -472,7 +458,8 @@ vk→token(kvk) {
    , kvk→token	:= Map()
    , isInit   	:= false
   if not isInit {
-    for i⌂ in [⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔,⌂i,⌂h] {
+    for i in ⌂.tokens {
+      i⌂              	:= ⌂.%i%
       kvk→token[i⌂.vk]	:= i⌂.token
     }
     isInit := true
@@ -508,10 +495,8 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     isInit	:= true
   }
 
-  global ⌂a,⌂s,⌂d,⌂f,⌂j,⌂k,⌂l,⌂︔,⌂i,⌂h
-
   vkC := vk[c] ; c=f, vkC=vk46
-  this⌂ := map⌂['vk→⌂'].Get(vkC, '')
+  this⌂ := ⌂.map['vk→⌂'].Get(vkC, '')
   if not this⌂ { ;
     throw ValueError("Unknown modtap key!", -1, c ' ' vkC)
   }
