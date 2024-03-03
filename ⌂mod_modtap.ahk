@@ -167,8 +167,8 @@ class ⌂ { ; 🠿
       if cb {
         HotIf
       }
-      ⌂.hk_map[hk↓]        	:= {lbl:A_LoopField, is↓:1}
-      ⌂.hk_map[hk↑]        	:= {lbl:A_LoopField, is↓:0}
+      ⌂.hk_map[hk↓]        	:= {k:A_LoopField, is↓:1}
+      ⌂.hk_map[hk↑]        	:= {k:A_LoopField, is↓:0}
       ⌂.hk_map[A_LoopField]	:= {↓:hk↓, ↑:hk↑}
     }
   }
@@ -188,8 +188,8 @@ class ⌂ { ; 🠿
       HotKey(hk↓, hkDoNothing , "I" sndlvl) ; do nothing while home row mod is active _1)
       HotKey(hk↑, hkModTap_off, "I" sndlvl) ; reset home row mod if it's active on UP _2)
       HotIf
-      ⌂.hk_map[hk↓]        	:= {lbl:A_LoopField, is↓:1}
-      ⌂.hk_map[hk↑]        	:= {lbl:A_LoopField, is↓:0}
+      ⌂.hk_map[hk↓]        	:= {k:A_LoopField, is↓:1}
+      ⌂.hk_map[hk↑]        	:= {k:A_LoopField, is↓:0}
       ⌂.hk_map[A_LoopField]	:= {↓:hk↓, ↑:hk↑}
       ; dbgtt(0,Object2Str(⌂.hk_map[A_LoopField]),5)
     }
@@ -252,7 +252,7 @@ hkModTap(ThisHotkey) {
   dbgTT(3,ThisHotkey ' lvl' A_SendLevel ' ThisHotkey@hkModTap',t:=2,,🖥️w↔,🖥️w↕*0.3) ;
   if ⌂.hk_map.Has(ThisHotkey) {
     hk_reg := ⌂.hk_map[ThisHotkey] ; f,↓or↑ for $vk46
-    setup⌂mod(hk,hk_reg.lbl,hk_reg.is↓)
+    setup⌂mod(hk,hk_reg.k,hk_reg.is↓)
   } else {
     return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
   }
@@ -264,7 +264,7 @@ cbHotIf(_token, HotkeyName) { ; callback for unregister🠿↕ ;f <+$vk46 and f 
 hkModTap_off(ThisHotkey) {
   static D	:= udbg⌂mod, C := ucfg⌂mod
   hk_reg := ⌂.hk_map[ThisHotkey]
-  ⌂_ := ⌂.%hk_reg.lbl%
+  ⌂_ := ⌂.%hk_reg.k%
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣
   static ⌂tHold := C.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := C.Get('ttdbg',0), sndlvl := C.Get('sndlvl',0)
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
