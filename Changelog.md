@@ -22,6 +22,9 @@ All notable changes to this project will be documented in this file
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
 
+- __Changed__
+  + :recycle: move global modtap vars to a single class
+
 [0.0.3-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.3-modtap
 ## [0.0.3-modtap]
 - __Added__
