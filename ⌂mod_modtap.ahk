@@ -323,33 +323,37 @@ Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
     , ignored := getCfgIgnored()
     , dbl := 2
   ⌂_ := ⌂.%token%
-  dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
-  kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   ⌂_.K↓.push(kvk)
-  ; keynm	:= vkrlen.Get('vk' hex(kvk),'✗')
-  ; dbgTT(0,⌂_.dbg ' ' keynm '↓' kvk '_' hex(kvk),t:=5,16,0,0) ;
-  variant	:= ''
   if ⌂_.pos = '↓' { ; should always be true? otherwise we won't get a callback
-    if ⌂_.HasOwnProp('ignoreall') {
-      variant	:= '✗✗✗↓ ignore all'
-    } else if ignored.Has(⌂_.flag) and
-       ignored[⌂_.flag].Has(kvk_s) { ; this modtap+key combo should be ignored
-      variant	:= '✗✗✗↓ ignore'
-    } else {
-      variant	:= '✗ ?0b)'
-    }
     if dbg >= dbl {
+      dbg⌂ := ⌂_.dbg ⌂_.pos ;
+      kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
+      ; keynm	:= vkrlen.Get('vk' hex(kvk),'✗')
+      ; dbgTT(0,⌂_.dbg ' ' keynm '↓' kvk '_' hex(kvk),t:=5,16,0,0) ;
+      variant	:= ''
+      if ⌂_.HasOwnProp('ignoreall') {
+        variant	:= '✗✗✗↓ ignore all'
+      } else if ignored.Has(⌂_.flag) and
+         ignored[⌂_.flag].Has(kvk_s) { ; this modtap+key combo should be ignored
+        variant	:= '✗✗✗↓ ignore'
+      } else {
+        variant	:= '✗ ?0b)'
+      }
       keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
       prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
       t⌂_   	:= A_TickCount - ⌂_.t
       dbgTT(dbl,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
   } else { ; should never get here? or maybe can get here due to a delay and something else set an ↑ position?
-    ; if dbg >= dbl {
-    if dbg >= 0 {
-      keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-      prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
-      t⌂_   	:= A_TickCount - ⌂_.t
+    dbg⌂ := ⌂_.dbg ⌂_.pos
+    , kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
+    if dbg >= dbl {
+      ; keynm	:= vkrlen.Get('vk' hex(kvk),'✗')
+      ; dbgTT(0,⌂_.dbg ' ' keynm '↓' kvk '_' hex(kvk),t:=5,16,0,0) ;
+      variant	:= ''
+      keynm  	:= vkrl['en'].Get('vk' hex(kvk),'✗')
+      prionm 	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+      t⌂_    	:= A_TickCount - ⌂_.t
       dbgTT(0,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=10,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
     dbgTT(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' 🕐' preciseTΔ() " Unknown state @Key↓_⌂?",t:='20') ;
