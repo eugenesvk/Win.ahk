@@ -2,19 +2,19 @@
 ; v0.3@23-12 Design overview and limitations @ github.com/eugenesvk/Win.ahk/blob/modtap/ReadMe.md
 ; —————————— User configuration ——————————
 global ucfg⌂mod := Map(
-  ; Key       	 Value	 |Default|Alternative¦
+  ; Key        	 Value	 |Default|Alternative¦
    'tooltip⎀'  	, true	;|true|	show a tooltip with activated modtaps near text caret (position isn't updated as the caret moves)
-  ,'tt⎀delay' 	, 0   	;|0|   	seconds before a `tooltip⎀` is shown, helpful if you don't like tooltip flashes on using modtap only once for a single key (like ⇧), but would still like to have it to understand when `holdTimer` has been exceeded. If you release a modtap within this delay, `tooltip⎀` will be cancelled and not flash
+  ,'tt⎀delay'  	, 0   	;|0|   	seconds before a `tooltip⎀` is shown, helpful if you don't like tooltip flashes on using modtap only once for a single key (like ⇧), but would still like to have it to understand when `holdTimer` has been exceeded. If you release a modtap within this delay, `tooltip⎀` will be cancelled and not flash
   , 'holdTimer'	, 0.5 	;|.5|  	seconds of holding a modtap key after which it becomes a hold modifier
   , 'ignored'  	, Map(	;      	ignore specific key combos to avoid typing mistakes from doing something annoying (like ◆l locking your computer)
     ; key      	      	modifier bitflag (can be combined with bitwise and symbol ‘&’, alternative/or ‘|’ is not supported to make lookup easier)
     ;          	value 	list of alphanumeric key labels
-     f‹⇧      	, 'qwertzxcvb␠'
-    ,f⇧›      	, 'yuiopnm,./[]'
+     f‹⇧       	, 'qwertzxcvb␠'
+    ,f⇧›       	, 'yuiopnm,./[]'
     ) ;
-  ,'ignore🛑' 	, true  	;|true|	force stop the modtap after encountering an ignored key even if the physical key is being held, so if 'f' is ‹⇧ and 'e' is 'ignored':
-    ;        	   true 	  f🠿e↕ will print 'fe' right away
-    ;        	   false	  f🠿e↕ will print nothing, 'f↑' will print 'fe' (unless hold time > holdTimer, then ‹⇧ will toggle and no 'fe' or 'e' is printed)
+  ,'ignore🛑'	, true 	;|true|	force stop the modtap after encountering an ignored key even if the physical key is being held, so if 'f' is ‹⇧ and 'e' is 'ignored':
+    ;       	  true 	  f🠿e↕ will print 'fe' right away
+    ;       	  false	  f🠿e↕ will print nothing, 'f↑' will print 'fe' (unless hold time > holdTimer, then ‹⇧ will toggle and no 'fe' or 'e' is printed)
   , 'keymap'	, Map( 	;	Modtap key:mod pairs (only fjh actually set manually @ register🠿↕ below)
     ; ⌂ Home Row mods, set a modifier on hold
     'a',‹⎈, 's',‹◆ ,'d',‹⎇ ,'f',‹⇧,  ; 'a','LControl' , 's','LWin' , 'd','LAlt' , 'f','LShift',
@@ -60,7 +60,7 @@ cbHotIfVar(HotkeyName) { ; callback for register🠿↕
 }
 
 ; getKeyLabels_forVK(kvk:='vk20') ; ␠ ␣
-getKeyLabels_forVK(kvk){
+getKeyLabels_forVK(kvk) {
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
   key_labels := ''
   for keyNm, vkCode in vk {
@@ -285,7 +285,7 @@ hkModTap_off(ThisHotkey) {
   dbgTT_isMod('🠿1bb')
 }
 hkDoNothing(ThisHotkey) {
-  dbgTT(4,'hkDoNothing 🕐' preciseTΔ())
+  dbgTT(4,'hkDoNothing 🕐' preciseTΔ(),,14,0,50) ;
   return
 }
 get⌂dbg(⌂_) {
