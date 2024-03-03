@@ -113,8 +113,8 @@ For taphold contitional key <kbd>h</kbd>
   - <kbd>j</kbd> as ⌂<kbd>⇧›</kbd>
 - same-type opposite-side modifiers are disabled, so if ⌂<kbd>f</kbd>(‹⇧) is activated as a Hold, then ⌂<kbd>j</kbd>(⇧›) won't activate, but will act like a regular key
 - interaction between ⌂<kbd>‹⇧</kbd> and ⌂<kbd>⇧›</kbd> sometimes breaks: fast typing of `fgj` skips `j`
-- <kbd>f</kbd>🠿<kbd>v</kbd>🠿 longer than `holdTimer` sometimes prints `pPP...` instead of `PPP...`, might be a limitation of AutoHotkey's inputhook mechanism where the sent modifier down event is not registered fast enough to have an effect on the contninuously held regular key
 - <kbd>␠</kbd> triggers home row mod as a regular alphanumeric key (even though it has no upper-cased variant and in principle shouldn't interact with a modtap key) instead of breaking the hold check and printing the key itself. Current solution is to add it to the `ignored` keys
 - tapping same-side real modifier (e.g., <kbd>‹⇧</kbd>) resets the status of the homerow modifier, and the latter doesn't track&reset itself. Maybe not a real issue since a home row mod is designed to be identical to the real one, so this should be expected?
+- (fixed? haven't seen in a while)<kbd>f</kbd>🠿<kbd>v</kbd>🠿 longer than `holdTimer` sometimes prints `pPP...` instead of `PPP...`, might be a limitation of AutoHotkey's inputhook mechanism where the sent modifier down event is not registered fast enough to have an effect on the continuously held regular key
 
 ## Credits
