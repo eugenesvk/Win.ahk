@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file
 
 - __Changed__
   + :recycle: move global modtap vars to a single class
+- __Fixed__
+  + :beetle: mod function stuck due to slow tooltip@cursor function delaying mod send event past the point when said modtap is reset due to its UP event
 
 [0.0.3-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.3-modtap
 ## [0.0.3-modtap]
