@@ -118,8 +118,8 @@ class ⌂ { ; 🠿
       i⌂.t     	:= A_TickCount
       i⌂.vk    	:= vk[i⌂.k] ; vk21 for f
       ⌂.map[   	'vk→token'][i⌂.vk] := i
-      i⌂.pos   	:= '↑'
-      i⌂.is    	:= false ; is down
+      i⌂.pos   	:= ↑
+      i⌂.is    	:= false ; is activated
       i⌂.force↑	:= false ; this is set to true if we need to manually reset the status while the key is physically ↓
       i⌂.send↓ 	:= '{' i⌂.mod ' Down' '}' ; ahk formatted key to be sent on down/up
       i⌂.send↑ 	:= '{' i⌂.mod ' Up'   '}'
@@ -283,7 +283,7 @@ hkDoNothing(ThisHotkey) {
 }
 get⌂dbg(⌂_) {
   static bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
-   return ⌂_.dbg ⌂_.pos (⌂_.is ? '🠿' : '') ' send‘' ⌂_.send%(⌂_.pos)% '’ flag' dec→bin(⌂_.flag)
+   return ⌂_.dbg (⌂_.pos=↓?'↓':'↑') (⌂_.is ? '🠿' : '') ' send‘' ⌂_.send%(⌂_.pos=↓?'↓':'↑')% '’ flag' dec→bin(⌂_.flag)
 }
 
 cb⌂_K↓(token,  ih,vk,sc) { ;
@@ -317,9 +317,9 @@ Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
     , dbl := 2
   ⌂_ := ⌂.%token%
   ⌂_.K↓.push(kvk)
-  if ⌂_.pos = '↓' { ; should always be true? otherwise we won't get a callback
+  if ⌂_.pos = ↓ { ; should always be true? otherwise we won't get a callback
     if dbg >= dbl {
-      dbg⌂ := ⌂_.dbg ⌂_.pos ;
+      dbg⌂ := ⌂_.dbg (⌂_.pos=↓?'↓':'↑') ;
       kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
       ; keynm	:= vkrlen.Get('vk' hex(kvk),'✗')
       ; dbgTT(0,⌂_.dbg ' ' keynm '↓' kvk '_' hex(kvk),t:=5,16,0,0) ;
@@ -338,7 +338,7 @@ Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
       dbgTT(dbl,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
   } else { ; should never get here? or maybe can get here due to a delay and something else set an ↑ position?
-    dbg⌂ := ⌂_.dbg ⌂_.pos
+    dbg⌂ := ⌂_.dbg (⌂_.pos=↑?'↑':'↓')
     , kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
     if dbg >= dbl {
       ; keynm	:= vkrlen.Get('vk' hex(kvk),'✗')
@@ -365,10 +365,10 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
     , dbl := 3 ;
     , dbb := 6 ; bug
   ⌂_ := ⌂.%token% ;
-  dbg⌂ := ⌂_.k ' ' ⌂_.🔣 ⌂_.pos ;
+  dbg⌂ := ⌂_.k ' ' ⌂_.🔣 (⌂_.pos=↓?'↓':'↑') ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   ⌂_.K↑.push(kvk)
-  if ⌂_.pos = '↓' { ; 1a)f
+  if ⌂_.pos = ↓ { ; 1a)f
     dbg_min := min(D.ds,dbl)
     variant := '', pri₌ := '', 🕐 := (dbg >= dbg_min) ? preciseTΔ() : ''
     if dbg >= dbg_min { ; get debug values early otherwise ⌂_.K↓ can get reset on slow tooltip ops
@@ -563,13 +563,13 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
         win.get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0), dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30) ; and hide a non-delayed one
         ; dbgtt(0,'⎀ reset 🕐' preciseTΔ(),10,15,0,285) ;
       }
-      this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
+      this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false, log(tooltip⎀?0:1,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
       dbgTT(D.ds,'🠿1ba) this⌂↑ after sequenced this⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') 🕐' preciseTΔ() ' input=‘' ih_input '’',t:=2,,x:=🖥️w↔,y:=850)
       dbgTT_isMod('🠿1ba')
     } else {
       if (prio := vk.get(A_PriorKey,'')) = vkC {
-        if this⌂.pos = '↓' { ; ↕xz) ↕01)
-          this⌂.pos := '↑', this⌂.t := A_TickCount, this⌂.is := false, dbgTT(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
+        if this⌂.pos = ↓ { ; ↕xz) ↕01)
+          this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false, log(tooltip⎀?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
           if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
             alt⌂ := stack⌂[-2], alt⌂ih := alt⌂.ih
             vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC) ; decimal value
@@ -603,7 +603,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     dbgTT_isMod('↑')
   } else { ; is↓
     ; dbgTT(d4,'is↓' is↓ ' 🕐' preciseTΔ(),t:=3,i:=13,x:=🖥️w↔,y:=300) ;
-    this⌂.pos := '↓', this⌂.t := A_TickCount, this⌂.prio↓ := A_PriorKey, this⌂.prio↑ := ''
+    this⌂.pos := ↓, this⌂.t := A_TickCount, this⌂.prio↓ := A_PriorKey, this⌂.prio↑ := ''
     dbgTT_isMod('↓')
     for i⌂ in stack⌂ { ; since the setup⌂mod has a higher priority that active inputhooks, the is↑ event that triggers the Key↑_⌂ callback will not print this mod key by confusing it with the 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕' variant (it checks whether there are key↓ events that match the key↑ event, and there would be now key↓). So we need to manually add a modtap key↓ record to each of the active modtaps
       i⌂.K↓.push(GetKeyVK(vkC)) ; GetKeyVK = same integer format as kvk in Key↓_⌂ callbacks
