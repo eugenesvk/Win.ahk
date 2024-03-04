@@ -218,7 +218,7 @@ getDbgKeyStatusS(dbg_pre:='') { ; get left to right debug string of which modtap
     modtap_status		.= (i⌂_act.is = 1 ? i⌂.🔣 : '  ')
     iskeydown    		.= ' ' (GetKeyState(i⌂.vk,"P") ? i⌂.k : ' ')
   }
-  dbg_val := (StrReplace(modtap_status,' ') = '' ? '' : modtap_status) '`n' (StrReplace(iskeydown,' ') = '' ? '' : iskeydown)
+  dbg_val := (StrReplace(modtap_status,' ') = '' ? '' : modtap_status) '`n' (StrReplace(iskeydown,' ') = ''?'':iskeydown)
   if dbg_pre and not dbg_val = '`n' {
     dbg_title := dbg_pre '🕐' preciseTΔ()
   }
@@ -283,7 +283,7 @@ hkDoNothing(ThisHotkey) {
 }
 get⌂dbg(⌂_) {
   static bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
-   return ⌂_.dbg (⌂_.pos=↓?'↓':'↑') (⌂_.is ? '🠿' : '') ' send‘' ⌂_.send%(⌂_.pos=↓?'↓':'↑')% '’ flag' dec→bin(⌂_.flag)
+   return ⌂_.dbg (⌂_.pos=↓?'↓':'↑') (⌂_.is?'🠿':'') ' send‘' ⌂_.send%(⌂_.pos=↓?'↓':'↑')% '’ flag' dec→bin(⌂_.flag)
 }
 
 cb⌂_K↓(token,  ih,vk,sc) { ;
