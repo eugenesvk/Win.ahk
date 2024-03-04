@@ -215,16 +215,8 @@ getDbgKeyStatusS(dbg_pre:='') { ; get left to right debug string of which modtap
   for i in ⌂.tokens {
     i⌂	:= ⌂.%i%
     i⌂_act := ⌂.%⌂.map['vk→token'][i⌂.vk]%
-    if i⌂_act.is {
-      modtap_status	.= i⌂.🔣
-    } else {
-      modtap_status	.= '  '
-    }
-    if GetKeyState(i⌂.vk,"P") {
-      iskeydown	.= ' ' i⌂.k
-    } else { ;
-      iskeydown	.= '  '
-    }
+    modtap_status		.= (i⌂_act.is = 1 ? i⌂.🔣 : '  ')
+    iskeydown    		.= ' ' (GetKeyState(i⌂.vk,"P") ? i⌂.k : ' ')
   }
   dbg_val := (StrReplace(modtap_status,' ') = '' ? '' : modtap_status) '`n' (StrReplace(iskeydown,' ') = '' ? '' : iskeydown)
   if dbg_pre and not dbg_val = '`n' {
@@ -237,8 +229,8 @@ get⌂Status() {
   static bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
   bitflags := 0
   for i in ⌂.tokens {
-    modtap := ⌂.%i%
-    bitflags |= GetKeyState(modtap.vk,"P") ? modtap.flag : 0 ; modtap.is ? modtap.flag : 0
+    ⌂i := ⌂.%i%
+    bitflags |= GetKeyState(⌂i.vk,"P") ? ⌂i.flag : 0
   } ; dbgTT(0,'bitflags ' dec→bin(bitflags) ' ‹' isAny‹ ' ›' isAny›,t:=5)
   return {isAny‹:bitflags & bit‹, isAny›:bitflags & bit›, bit:bitflags}
 }
