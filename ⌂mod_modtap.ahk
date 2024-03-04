@@ -333,7 +333,7 @@ Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
         variant	:= '✗ ?0b)'
       }
       keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-      prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+      prionm	:= vkrl['en'].Get(vk.get(A_PriorKey,''),'✗')
       t⌂_   	:= A_TickCount - ⌂_.t
       dbgTT(dbl,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=5,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
@@ -345,7 +345,7 @@ Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
       ; dbgTT(0,⌂_.dbg ' ' keynm '↓' kvk '_' hex(kvk),t:=5,16,0,0) ;
       variant	:= ''
       keynm  	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-      prionm 	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+      prionm 	:= vkrl['en'].Get(vk.get(A_PriorKey,''),'✗')
       t⌂_    	:= A_TickCount - ⌂_.t
       dbgTT(0,variant ' ' dbg⌂ '(' t⌂_ ') ' keynm '↓ prio ‘' prionm '’ ' kvk_s ' ' sc_s,t:=10,D.ik,🖥️w↔ - 40,🖥️w↕*.86) ; vk57 sc11
     }
@@ -373,7 +373,7 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
     variant := '', pri₌ := '', 🕐 := (dbg >= dbg_min) ? preciseTΔ() : ''
     if dbg >= dbg_min { ; get debug values early otherwise ⌂_.K↓ can get reset on slow tooltip ops
       keynm  	:= vkrl['en'].Get(kvk_s,'✗')
-      ,prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗')
+      ,prionm	:= vkrl['en'].Get(vk.get(A_PriorKey,''),'✗')
       ,prio↓ 	:= vkrl['en'].Get(vk.Get(⌂_.prio↓,''),'✗')
       ,t⌂_   	:= A_TickCount - ⌂_.t
       ; ,⌂K↓ 	:= Object2Str(kvk→label(⌂_.K↓))
@@ -444,7 +444,7 @@ Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
   } else { ; 2b) ⌂↓ a↓ ⌂↑ •a↑ ??? unreachable since ⌂_↑ cancels input hook and resets ⌂_.pos
     if dbg >= dbl { ;
       keynm 	:= vkrl['en'].Get('vk' hex(kvk),'✗')
-      prionm	:= vkrl['en'].Get(vk[A_PriorKey],'✗') ;
+      prionm	:= vkrl['en'].Get(vk.get(A_PriorKey,''),'✗') ;
       t⌂_   	:= A_TickCount - ⌂_.t
       dbgMsg(dbl,'✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ 🕐' preciseTΔ() '`n' dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑⌂')
     }
