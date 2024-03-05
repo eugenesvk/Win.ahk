@@ -112,5 +112,6 @@ You can also change the keys that trigger hiding the pointer by adjusting the `k
 
 ## Known issues
   - Horizontal scrolling fails with 'UIA' enabled AutoHotkey and COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452), use [🖰Scroll Excel](<./🖰Scroll Excel.ahk>)
+  - `🖰hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the [standalone version](https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd)
 
 ## Credits
