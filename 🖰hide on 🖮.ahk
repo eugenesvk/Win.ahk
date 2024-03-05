@@ -110,16 +110,21 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
    , cfg🖰h   	:= cfg🖰convert()
    , suppress	:= cfg🖰h['suppressionMethod']
    , _d      	:= 3
+  ; log(0,ThisHotkey,A_ThisFunc,'hk🖰P')
+  ; 🕐1 := preciseTΔ()
   if suppress = 'gui' or suppress = 'both' { ;;; workaround for a bug: checking for pointer visibility later may fail
     is🖰vis := is🖰PointerVisible() ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
   } else {
     is🖰vis := ''
   }
+  ; 🕐2 := preciseTΔ()
   if dbg >= _d {
     dbgTT(_d,'hk🖰P ' ThisHotkey ' ' preciseTΔ(), t:='∞',i:=9,0,0)
   }
   sleep(1) ;;; workaround for a bug: changing GUI element owner to AHK breaks modifiers autohotkey.com/boards/viewtopic.php?f=82&t=123412, but causes another bug: prevents getting mouse pointer status correctly autohotkey.com/boards/viewtopic.php?f=82&t=123908, potential fix is to get the pointer status earlier ↑
   🖰PointerHide(is🖰vis)
+  ; 🕐3 := preciseTΔ()
+  ; log(0,ThisHotkey format(" 🕐3Δ{:.3f}",🕐3-🕐2) format(" 🕐2Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'hk🖰P')
 }
 🖰PointerHide(is🖰vis:='') {
   static get⎀        	:= win.get⎀.Bind(win)
