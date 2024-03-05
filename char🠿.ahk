@@ -125,37 +125,41 @@ char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,blind_:=true) {
   keyOnHold := hk
   lyt_from := 'en'
   if (KeyWait(vkC,TimerHold) = 0) {
-    if keyOnHold == hk  ; (likely) no other key was pressed while this key was on hold
-      and get⎀(&⎀←,&⎀↑) { ; editable text (no point in showing a picker if the picked char can't be inserted
-      if    IsSet(lblMap)           	; Ch
-        and IsSet(lblKey)           	; 'ArrowsLab'
-        and   %lblMap%.Has(lblKey) {	; 1a arguments are set and map has labels
-        local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
-        sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
-        if lbl.Has(sLng)
-          and not sLng = 'en' { ; 2a keyboard non-en labels (qwerty...) exist for the target layout
-          c_lbl_pos := InStr(lbl[lyt_from],c) ; c=w, pos=2
-          c_to := c_lbl_pos ? SubStr(lbl[sLng],c_lbl_pos,1) : c
-          dbgTT(2,'c=' c ' c_to =‘' c_to '’ c_lbl_pos' c_lbl_pos, t:=2) ;
-          if %lblMap%.Has(lblKey sLng) { ; 3a map has labels for the target layout, use them
-              PressH_ChPick(key_list,%lblMap%[lblKey sLng],c_to,'',[⎀←,⎀↑]) ; Ch['ArrowsLab' 'Ru']	:= [ф,ц,в
-          } else { ; 3b no user labels, transliterate english ones and store in a static map for later retrieval
-            if lbl_translit.Has(sLng) { ; 4a map contains cache of transliterated labels, use them
-              PressH_ChPick(key_list,lbl_translit[sLng]   ,c_to,'',[⎀←,⎀↑])
-            } else { ; 4b
-              arrout := s.convert_lyt_arr(%lblMap%[lblKey],sLng,&ℯ:="") ;
-              lbl_translit[sLng] := arrout
-              PressH_ChPick(key_list,arrout               ,c_to,'',[⎀←,⎀↑])
+    if keyOnHold == hk { ; (likely) no other key was pressed while this key was on hold
+      if get⎀(&⎀←,&⎀↑) { ; editable text (no point in showing a picker if the picked char can't be inserted
+        if    IsSet(lblMap)           	; Ch
+          and IsSet(lblKey)           	; 'ArrowsLab'
+          and   %lblMap%.Has(lblKey) {	; 1a arguments are set and map has labels
+          local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
+          sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
+          if lbl.Has(sLng)
+            and not sLng = 'en' { ; 2a keyboard non-en labels (qwerty...) exist for the target layout
+            c_lbl_pos := InStr(lbl[lyt_from],c) ; c=w, pos=2
+            c_to := c_lbl_pos ? SubStr(lbl[sLng],c_lbl_pos,1) : c
+            dbgTT(2,'c=' c ' c_to =‘' c_to '’ c_lbl_pos' c_lbl_pos, t:=2) ;
+            if %lblMap%.Has(lblKey sLng) { ; 3a map has labels for the target layout, use them
+                PressH_ChPick(key_list,%lblMap%[lblKey sLng],c_to,'',[⎀←,⎀↑]) ; Ch['ArrowsLab' 'Ru']	:= [ф,ц,в
+            } else { ; 3b no user labels, transliterate english ones and store in a static map for later retrieval
+              if lbl_translit.Has(sLng) { ; 4a map contains cache of transliterated labels, use them
+                PressH_ChPick(key_list,lbl_translit[sLng]   ,c_to,'',[⎀←,⎀↑])
+              } else { ; 4b
+                arrout := s.convert_lyt_arr(%lblMap%[lblKey],sLng,&ℯ:="") ;
+                lbl_translit[sLng] := arrout
+                PressH_ChPick(key_list,arrout               ,c_to,'',[⎀←,⎀↑])
+              }
             }
+          } else { ; 2b return the original (en) labels
+                PressH_ChPick(key_list,%lblMap%[lblKey     ],c,'',[⎀←,⎀↑]) ; Ch['ArrowsLab']	:= [a,w,d
           }
-        } else { ; 2b return the original (en) labels
-              PressH_ChPick(key_list,%lblMap%[lblKey     ],c,'',[⎀←,⎀↑]) ; Ch['ArrowsLab']	:= [a,w,d
+        } else { ; 1b arguments not set or no labels in the map, return the original
+                PressH_ChPick(key_list,unset                ,c)
         }
-      } else { ; 1b arguments not set or no labels in the map, return the original
-              PressH_ChPick(key_list,unset                ,c)
+      } else { ;no ⎀
       }
+    } else { ; keyOnHold ≠ hk
     }
-  } ; else SendEvent('{' . vkC . ' up}')
+  } else { ; else SendEvent('{' . vkC . ' up}')
+  }
   keyOnHold := ''
   }
 
