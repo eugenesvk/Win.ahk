@@ -108,7 +108,7 @@ char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,blind_:=true) {
    , s       	:= helperString
 
   if 🖰hide { ; hide a pointer if the same key is registered twice since only this function will be called
-    🖰PointerHide()
+    hk🖰PointerHide('') ; use hk function instead of 🖰PointerHide due to a bug in '🖰hide on 🖮'?
   }
   static lbl_translit     	:= Map()
   if lbl_translit.Count   	= 0 { ; can set case only on empty maps
