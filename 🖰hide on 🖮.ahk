@@ -328,21 +328,23 @@ sys🖰Btn(OnOff) {
 
 ; NB!!! wrapping Hotkey function in another fails: Unlike v1, the Hotkey function in v2 defaults to acting on global hotkeys, unless you call it from within a hotkey, in which case it defaults to the same criteria as the hotkey autohotkey.com/boards/viewtopic.php?f=82&t=118616&p=526495&hilit=hotkey+within+another+hotkey#p526495
 HotIfWinNotActive("ahk_group no🖰HideOnType") ; turn on context sensitivity
-; _dbgregistered_list	:= ""
-; , _dbgcount        	:= 0
-__cfg🖰h              	:= cfg🖰convert()
-, __∗                	:= __cfg🖰h['hkModPrefix']
+; _dbgregistered_list1	:= ""
+;,_dbgregistered_list2	:= ""
+;,_dbgcount           	:= 0
+,__∗                  	:= cfg🖰convert()['hkModPrefix']
 for _vkKey in getKeys🖰hide() { ; for every defined key, register a call to hide the mouse cursor
   Hotkey(˜ __∗ _vkKey, hk🖰PointerHide)
   ; Hotkey(˜ __∗ GetKeyName(_scKey), hk🖰PointerHide)
-  ; _dbgregistered_list .= GetKeyName("sc" . format("{1:X}",_scKey)) . " "
-  ; _dbgregistered_list .= GetKeyName(_vkKey) . " "
+  ; _dbgregistered_list1 .= GetKeyName(_vkKey) . " "
+  ; _dbgregistered_list2 .= keyConstant._maprlng['en'].Get(_vkKey,'✗') . " "
   ; _dbgcount += 1
-  ; _dbgregistered_list .= (Mod(_dbgcount,10) = 0)?'`n':''
+  ; _dbgregistered_list1 .= (Mod(_dbgcount,10) = 0)?'`n':''
+  ; _dbgregistered_list2 .= (Mod(_dbgcount,10) = 0)?'`n':''
 }
-; _dbgout() {
-;   dbgTT(0,_dbgregistered_list,t:=5,id:=15,x:=1500,y:=600)
-; }
+;_dbgout() {
+;  dbgTT(0,_dbgregistered_list1,t:=5,id:=15,x:=1500,y:=600)
+;  dbgTT(0,_dbgregistered_list2,t:=5,id:=15,x:=1500,y:=600)
+;}
 ; _dbgout()
 
 sys🖰Btn(Init) ; register button supressing hotkey (disabled)
