@@ -12,7 +12,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
    , pre     	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    , lbl🖰hide	:= ''
    , cfg🖰h   	:= cfg🖰convert()
-  getKeys🖰hide(&lbl🖰hide)
+  getKeys🖰hide(&lbl🖰hide) ; these hdotkeys override '🖰hide on 🖮', so we need to invoke pointer hiding here
 
   HotIfWinActive("ahk_group PressnHold")
 
@@ -41,15 +41,14 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   }
   HotIf
   ; blind_ := false
-  hkChar🠿(ThisHotkey) {
-    hk := ThisHotkey
-    dbgTT(5,ThisHotkey,t:=1) ;
+  hkChar🠿(hk) {
+    dbgTT(5,hk,t:=1) ;
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
-    Switch ThisHotkey, 0 {
-      default  : return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
-      ; —————————— Diacritic               hk  c  key_list lblMap lblKey 🖰hide
+    Switch hk, 0 {
+      default  : return ; msgbox('nothing matched setChar🠿 hk=' . hk)
+      ; —————————— Diacritic hk  c  key_list lblMap lblKey 🖰hide
       case ＄ ˜  a⃣	: char→sym(hk,'a',Dia['a'	],unset,unset,InStr(lbl🖰hide,'a'))
       case ＄ ˜ ⇧a 	: char→sym(hk,'a',Dia['A'	],unset,unset,InStr(lbl🖰hide,'a') & is∗)
       case ＄ ˜  c⃣	: char→sym(hk,'c',Dia['c'	],unset,unset,InStr(lbl🖰hide,'c'))
