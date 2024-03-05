@@ -22,7 +22,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
   }
   ;;; 3 Define hotkeys with             Shift
-  loop parse "``45f" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
+  loop parse "``45" { ; ⇧🠿`​⇧🠿4​⇧🠿5​
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
   HotIf
