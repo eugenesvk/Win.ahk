@@ -357,6 +357,9 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
    , minΔ🖰y   	:= cfg🖰h['minΔ🖰y']
    , suppress 	:= cfg🖰h['suppressionMethod']
    , _d       	:= 3
+   , _dt      	:= 2 ; dbg level for tooltips
+   , _dl      	:= 1
+   , _dl3     	:= 3
    , _i       	:= 17
   sleep(1) ;;; potential fix for another bug when moving the pointer from another app to the active app is🖰vis returns an invisible status on crossing the border between 2 apps, and then this triggers another 'shown GUI' event, thus breaking the counter
   is🖰vis := is🖰PointerVisible()
@@ -364,12 +367,12 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
     and not isSys🖰PointerHidden
     and not isSys🖰BtnBlocked { ; nothing to restore, pointer is not hidden, buttons not blocked
     if dbg >= _d {
-      dbgtt(_d,'on🖰Moved ⎋`t' is🖰vis ' ' isSys🖰PointerHidden ' ' isSys🖰BtnBlocked ' ' preciseTΔ(), t:='∞',_i,0,115) ;
+      dbgtxt := 'on🖰Moved ⎋`t' (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓'), dbgtt(_dt,dbgtxt,t:='∞',_i,0,115), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i)
     }
     return
   }
   if dbg >= _d {
-    dbgtt(_d,'on🖰Moved  `t' is🖰vis ' ' isSys🖰PointerHidden ' ' isSys🖰BtnBlocked ' ' preciseTΔ(), t:='∞',_i-1,0,85) ;
+    dbgtxt := 'on🖰Moved  `t' (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓'), dbgtt(_dt,dbgtxt,t:='∞',_i-1,0,85), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1)
   }
   for vkKey in getKeys🖰hide() { ; for every defined key, check if it's being held while moving the mouse
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
