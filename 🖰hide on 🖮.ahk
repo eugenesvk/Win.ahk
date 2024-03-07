@@ -361,6 +361,9 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
    , _dl      	:= 1
    , _dl3     	:= 3
    , _i       	:= 17
+   , x        	:= A_ScreenWidth*.9
+   , y        	:= A_ScreenHeight*.85
+   , y1       	:= A_ScreenHeight*.9
   sleep(1) ;;; potential fix for another bug when moving the pointer from another app to the active app is🖰vis returns an invisible status on crossing the border between 2 apps, and then this triggers another 'shown GUI' event, thus breaking the counter
   is🖰vis := is🖰PointerVisible()
   if is🖰vis
