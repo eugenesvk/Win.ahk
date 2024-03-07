@@ -286,11 +286,11 @@ get⌂dbg(⌂_) {
    return ⌂_.dbg (⌂_.pos=↓?'↓':'↑') (⌂_.is?'🠿':'') ' send‘' ⌂_.send%(⌂_.pos=↓?'↓':'↑')% '’ flag' dec→bin(⌂_.flag)
 }
 
-cb⌂_K↓(token,  ih,vk,sc) { ;
-  Key↓_⌂(ih,vk,sc,   token)
+cb⌂_K↓(token,  ih,vk,sc) {
+  Key↓_⌂(ih,&vk,&sc,   &token)
 }
 cb⌂_K↑(token,  ih,vk,sc) {
-  Key↑_⌂(ih,vk,sc,   token)
+  Key↑_⌂(ih,&vk,&sc,   &token)
 }
 
 kvk→label(arr) { ; convert an array of decimal VK codes into an tring of English-based key names
