@@ -219,7 +219,7 @@ getDbgKeyStatusS(dbg_pre:='') { ; get left to right debug string of which modtap
   for i in ⌂.tokens {
     i⌂	:= ⌂.%i%
     i⌂_act := ⌂.%⌂.map['vk→token'][i⌂.vk]%
-    modtap_status		.= (i⌂_act.is = 1 ? i⌂.🔣 : '  ')
+    modtap_status		.= (i⌂_act.is ? i⌂.🔣 : '  ')
     iskeydown    		.= ' ' (GetKeyState(i⌂.vk,"P") ? i⌂.k : ' ')
   }
   dbg_val := (StrReplace(modtap_status,' ') = '' ? '' : modtap_status) '`n' (StrReplace(iskeydown,' ') = ''?'':iskeydown)
@@ -315,7 +315,7 @@ kvk→label(arr) { ; convert an array of decimal VK codes into an tring of Engli
   return labels
 }
 
-Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
+Key↓_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') {
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vkrlen:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
     , D   	:= udbg⌂mod
@@ -360,7 +360,7 @@ Key↓_⌂(ih,kvk,ksc,  token, dbgsrc:='') {
     dbgTT(0,dbg⌂ ' ↓' kvk_s ' ' sc_s ' 🕐' preciseTΔ() " Unknown state @Key↓_⌂?",t:='20') ;
   }
 }
-Key↑_⌂(ih,kvk,ksc,  token, dbgsrc:='') { ;
+Key↑_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') { ;
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
     , C   	:= ucfg⌂mod, D	:= udbg⌂mod
@@ -490,7 +490,7 @@ vk→token(kvk) {
   return kvk→token[kvk]
 }
 
-setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
+setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
    , get⎀   	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
@@ -597,8 +597,8 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
           ;🕐14 := preciseTΔ()
           if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
             alt⌂ := stack⌂[-2], alt⌂ih := alt⌂.ih
-            vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC) ; decimal value
-            Key↑_⌂(alt⌂ih, vk_d, sc_d, alt⌂.token, '↕xz') ; invoke callback directly, but use another modtap's inputhook (ours is already disabled)
+            vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC), token := alt⌂.token ; decimal value
+            Key↑_⌂(alt⌂ih, &vk_d, &sc_d, &token, '↕xz') ; invoke callback directly, but use another modtap's IHooks (ours is already disabled)
             if dbg >= d3 {
               dbgTT(d3,'✗ _↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone while ' alt⌂.dbg '↓`n🕐' this⌂t '<' ⌂ΔH ' PreKey ‘' A_PriorKey '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ this⌂.is=' this⌂.is ' this⌂.pos=' (this⌂.pos = ↓ ? '↓' : '↑'),t:=2,,0,🖥️w↕*.86) ;
             }
