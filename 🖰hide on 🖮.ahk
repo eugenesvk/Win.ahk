@@ -536,6 +536,7 @@ is🖰PointerVisible() {
   return is🖰vis
 }
 
+CoordMode("ToolTip", "Screen")
 app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, make the target app its owner, then show a pointer there so it's redirected from the app to our invisible element
   static C := win32Constant.Misc ; various win32 API constants
    , cfg🖰h 	:= cfg🖰convert()
