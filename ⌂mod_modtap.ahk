@@ -35,6 +35,10 @@ class udbg⌂mod { ; various debug constants like indices for tooltips
   ,ik      	:= 13 ; dbgTT index for Key↓↑_⌂ functions
   ,dt      	:=  5 ; min debug level for the bottom-right status of all the keys
   ,ds      	:=  3 ; min debug level for Send events
+  ,dsl     	:=  3 ; min debug log level for Send events
+  ,dihl    	:=  4 ; min debug log level for IHook
+  ,init    	:=  4 ; min debug log level for IHook
+  ,ttl     	:=  1 ; min debug level for Itooltip
 }
 
 ⌂mod_init()
