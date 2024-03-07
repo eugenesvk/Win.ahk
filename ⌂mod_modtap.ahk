@@ -531,16 +531,16 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   isOpp      	:= (isThis‹ and isAny›)
     or     (isThis› and isAny‹)
     ; dbgTT(d4,isOpp ' isOpp`n' isThis‹ ' ' isAny› '`n' isThis› ' ' isAny‹,3)
-  static tmpid := 2
-  if tmpid > 5 {
-    tmpid := 2
+  if dbg >= d3 {
+    static tmpid := 2
+    if tmpid > 5 {
+      tmpid := 2
+    }
+    dbgTT(d3, '•2' c ' ' vkC ' is' (is↓?'↓':'↑') ' ⌂' (this⌂.pos=↓?'↓':'↑') (this⌂.is?'🠿':'') ' isOpp' isOpp ' stack' stack⌂.Length ' 🕐' preciseTΔ() '`n@setup⌂',t:='∞',tmpid
+     ,🖥️w↔*(1  - dbgorder.Get(c,0)[1]*.24)
+     ,🖥️w↕*(.5 + dbgorder.Get(c,0)[2]*.05 + is↓ * .06) ) ;
+    tmpid += 1 ;
   }
-  dbgTT(d3, c ' ' vkC ' is' (is↓ ? '↓' : '↑') this⌂.pos (this⌂.is ? '🠿' : '') ' isOpp' isOpp ' stack' stack⌂.Length ' 🕐' preciseTΔ() '`n@setup⌂',t:='∞',tmpid
-   ,🖥️w↔*(1  - dbgorder.Get(c,0)[1]*.24)
-   ,🖥️w↕*(.5 + dbgorder.Get(c,0)[2]*.05 + is↓ * .06) ) ;
-  tmpid += 1 ;
-
-  is↑ := not is↓ ;
 
   handle⌂↑(&this⌂,&ih,&ihID,this⌂t) { ; allows calling called either when a single ⌂ or combined
     if this⌂.force↑ { ; already handled ⌂↑ via an artifical send in ignore🛑 condition, so reset it and return without printing an extra ⌂.k
