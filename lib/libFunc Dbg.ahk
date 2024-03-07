@@ -7,6 +7,11 @@ dbgMsg(dbgMin:=0, Text:="", Title:="", Options:="") {
   }
 }
 
+log(dbgMin:=0, Text:="", fn:='',idTT:=0,X:=0,Y:=0) { ; print to debug, so leave unused vars as well
+  if (dbg >= dbgMin) {
+    OutputDebug((idTT?idTT ': ':'') Text (fn?' @' fn:''))
+  }
+}
 dbgTT(dbgMin:=0, Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   if (dbg >= dbgMin) {
     TT(Text, Time,idTT,X,Y)
