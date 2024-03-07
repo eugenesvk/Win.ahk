@@ -503,11 +503,14 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
    , dbg⌂ih  	:= ''
       ; I1 sendlevel (ignore regular keys sent at level 0)
       ; L1024 def don't need many since after a short hold timer a permanent mode will set, the hoook will reset
-   , stack⌂	:= [] ; track the level of a modtap key's inputhook in the stack (also used to set minsendlevel to allow sending keys to only the most recent hook)
+   , stack⌂  	:= [] ; track the level of a modtap key's IHooks in the stack (also used to set minsendlevel to allow sending keys to only the most recent hook)
+   , dbgorder	:= Map()
   ; dbgTT(0,hk ' ' c ' ' is↓,t:='∞',i:=7,0,0) ;
 
 
   if not isInit {
+    dbgorder := Map('a',[1,4], 's',[1,3], 'd',[1,2], 'f',[1,1]
+                   ,';',[0,4], 'l',[0,3], 'k',[0,2], 'j',[0,1],  'i',[2,1],'h',[2,2])
     isInit	:= true
   }
 
@@ -519,8 +522,6 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   this⌂ := ⌂.%this_token%
   ih⌂ 	:= this⌂.ih
   dbg⌂	:= '⌂' this⌂.k this⌂.🔣 ;
-  dbgorder := Map('a',[1,4], 's',[1,3], 'd',[1,2], 'f',[1,1]
-                 ,';',[0,4], 'l',[0,3], 'k',[0,2], 'j',[0,1],  'i',[2,1],'h',[2,2])
   modtapflags	:= get⌂Status() ; {isAny‹,isAny›,bit}
   bit⌂       	:= modtapflags.bit
   isAny‹     	:= modtapflags.isAny‹
