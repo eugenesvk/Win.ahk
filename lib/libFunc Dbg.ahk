@@ -553,19 +553,20 @@ EditGui(Input){
 }
 
 dbgvar(args*) { ; autohotkey.com/boards/viewtopic.php?f=83&t=123206#p547596
-  static LogFunc          	:= { MsgBox: MsgBox, Tooltip: Tooltip, StdOut: (x) => FileAppend(x, "*"), OutputDebug: OutputDebug, LogToFile: (x) => FileAppend(x, "tmp.log") }.MsgBox
+  static LogFunc          	:= {msg:MsgBox, tt:Tooltip, print:(x)=>FileAppend(x,"*"), dbg:OutputDebug, log:(x)=>FileAppend(x,"tmp.log")}.msg
     , t                   	:= "txt"
     , SerializeFunc       	:= (t="txt") ? Object2Str : Obj_Gui
-    , FormatFunc          	:= { Terse: (info) => Format("{1} ⟹ {2}", info.expression, info.value), Verbose: (info) => SerializeFunc(info) }.Terse
-    , ReadLineFromFile    	:= (file, lineNo) => StrSplit(FileRead(file), "`n", "`r")[lineNo]
+    , FormatFunc          	:= {Terse:(info)=>Format("{1} ⟹ {2}",info.expression,info.value), Verbose:(info)=>SerializeFunc(info)}.Terse
+    , ReadLineFromFile    	:= (file,lineNo)=>StrSplit(FileRead(file),"`n","`r")[lineNo]
     , funcName            	:= A_ThisFunc
     , FindExpressionInLine	:= ((line) => RegExMatch(line, "^\s*" funcName " (.+)$", &mo) ? mo[1] : RegExMatch(line, "\b" funcName "\(((?:[^()]+|(?>\((?1)\)))+)\)", &mo) ? Substr(mo[0], StrLen(funcName) + 2, -1) : "Expression not found; line context = " line)
     , Cache               	:= Map()
   try throw Error(, -1)
   catch as err {
-    valStr := SerializeFunc(args), args.length ? valStr := SubStr(valStr, 2, -1) : 0
-    if not Cache.Has(fileLineKey := err.File "//" err.Line)
+    valStr := SerializeFunc(args) , args.length ? valStr := SubStr(valStr,2,-1) : 0
+    if not Cache.Has(fileLineKey := err.File "//" err.Line) {
       Cache.Set(fileLineKey, Trim(ReadLineFromFile(err.File, err.Line)))
+    }
     if t = "txt" {
       LogFunc(FormatFunc({
         expression	: FindExpressionInLine(Cache[fileLineKey]),
@@ -578,7 +579,7 @@ dbgvar(args*) { ; autohotkey.com/boards/viewtopic.php?f=83&t=123206#p547596
   return args.length == 1 ? args[1] : args
 }
 dbgvar_o(args*) { ; autohotkey.com/boards/viewtopic.php?f=83&t=123206#p547596
-  static LogFunc          	:= { MsgBox: MsgBox, Tooltip: Tooltip, StdOut: (x) => FileAppend(x, "*"), OutputDebug: OutputDebug, LogToFile: (x) => FileAppend(x, "tmp.log") }.MsgBox
+  static LogFunc          	:= {msg:MsgBox, tt:Tooltip, print:(x)=>FileAppend(x,"*"), dbg:OutputDebug, log:(x)=>FileAppend(x,"tmp.log")}.msg
     , t                   	:= "obj"
     , SerializeFunc       	:= (t="txt") ? Object2Str : Obj_Gui
     , FormatFunc          	:= { Terse: (info) => Format("{1} ⟹ {2}", info.expression, info.value), Verbose: (info) => SerializeFunc(info) }.Terse
