@@ -641,7 +641,7 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     ; log(0,'timings' format(" 🕐15Δ{:.3f}",🕐15-🕐14) format(" 🕐14Δ{:.3f}",🕐14-🕐13) format(" 🕐13Δ{:.3f}",🕐13-🕐12) format(" 🕐12Δ{:.3f}",🕐12-🕐11),A_ThisFunc,'handle⌂↑') ;
   }
 
-  if is↑ { ;
+  if not is↓ { ;
     ;🕐2 := preciseTΔ()
     this⌂t := A_TickCount - this⌂.t
     handle⌂↑(&this⌂,&ih,&ihID,this⌂t) ;
