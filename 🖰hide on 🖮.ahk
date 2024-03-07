@@ -369,14 +369,10 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   if is🖰vis
     and not isSys🖰PointerHidden
     and not isSys🖰BtnBlocked { ; nothing to restore, pointer is not hidden, buttons not blocked
-    if dbg >= _d {
-      dbgtxt := 'on🖰Moved ⎋`t' (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓'), dbgtt(_dt,dbgtxt,t:='∞',_i,0,115), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i)
-    }
+    (dbg<_d)?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i))
     return
   }
-  if dbg >= _d {
-    dbgtxt := 'on🖰Moved  `t' (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓'), dbgtt(_dt,dbgtxt,t:='∞',_i-1,0,85), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1)
-  }
+  (dbg<_d  )?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,dbgtxt,t:=5,_i-1,x,y-30), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1))
   for vkKey in getKeys🖰hide() { ; for every defined key, check if it's being held while moving the mouse
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
       return
@@ -397,9 +393,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
     }
     if suppress = 'gui' or suppress = 'both' {
       app🖰Pointer(On, is🖰vis)
-      if dbg >= _d {
-        dbgtt(_d,'✓on🖰Moved gui ' preciseTΔ(),t:=3,_i+1,0,50) ;
-      }
+      (dbg<_d)?'':(dbgtxt := '✓on🖰Moved gui ', dbgtt(_dt,dbgtxt,t:=3,_i+2,0,50), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i+2))
     }
     sys🖰Btn(On)
       if dbg >= _d {
