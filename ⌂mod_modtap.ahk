@@ -520,8 +520,8 @@ setup⌂mod(hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     throw ValueError("Unknown modtap key!", -1, c ' ' vkC)
   }
   this⌂ := ⌂.%this_token%
-  ih⌂ 	:= this⌂.ih
-  dbg⌂	:= '⌂' this⌂.k this⌂.🔣 ;
+  ih⌂        	:= this⌂.ih
+  dbg⌂       	:= '⌂' this⌂.k this⌂.🔣 ;
   modtapflags	:= get⌂Status() ; {isAny‹,isAny›,bit}
   bit⌂       	:= modtapflags.bit
   isAny‹     	:= modtapflags.isAny‹
