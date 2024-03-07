@@ -20,7 +20,7 @@ global ucfg⌂mod := Map(
     'a',‹⎈, 's',‹◆ ,'d',‹⎇ ,'f',‹⇧,  ; 'a','LControl' , 's','LWin' , 'd','LAlt' , 'f','LShift',
     'l',⎈›, ';',◆› ,'k',⎇› ,'j',⇧›,  ; 'l','RControl' , ';','RWin' , 'k','RAlt' , 'j','RShift',
     ; regular ModTaps (not home row mods, don't set modifiers on hold)
-    'h','Escape'
+    'h','Escape','i','Escape'
    ) ;
   ; Debugging	       	        	;
   , 'ttdbg'  	, false	;|false|	show an empty (but visible) tooltip when modtap is deactivated
@@ -48,8 +48,8 @@ class udbg⌂mod { ; various debug constants like indices for tooltips
 
 ; Assign functions that will handle modtap keys
 ⌂.register🠿↕('fj','')
-⌂.register🠿↕('h' ,cbHotIfVar) ; conditional modtap
-⌂.unregister🠿↕('fjh') ; block repeats on 🠿, reset on ↑
+⌂.register🠿↕('hi' ,cbHotIfVar) ; conditional modtap
+⌂.unregister🠿↕('fjhi') ; block repeats on 🠿, reset on ↑
 cbHotIfVar(HotkeyName) { ; callback for register🠿↕
   if nv_mode = 2 and WinActive("ahk_exe sublime_text.exe") { ; Insert mode in Sublime Text passed via winmsg
     return true
