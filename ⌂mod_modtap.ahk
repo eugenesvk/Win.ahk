@@ -595,6 +595,7 @@ setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
       if (prio := vk.get(A_PriorKey,'')) = vkC {
         if this⌂.pos = ↓ { ; ↕xz) ↕01)
           ;🕐14 := preciseTΔ()
+          this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false
           if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
             alt⌂ := stack⌂[-2], alt⌂ih := alt⌂.ih
             vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC), token := alt⌂.token ; decimal value
