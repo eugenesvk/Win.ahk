@@ -41,14 +41,13 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   HotIf
   ; blind_ := false
   ;;; 4 Match hotkeys defined above to actual symbols (see symbol.ahk)
-  hkChar🠿(ThisHotkey) {
-    hk := ThisHotkey
-    dbgTT(5,ThisHotkey,t:=1) ;
+  hkChar🠿(hk) {
+    dbgTT(5,hk,t:=1) ;
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
-    Switch ThisHotkey, 0 {
-      default  : return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
-      ; —————————— Diacritic               hk  c  key_list lblMap lblKey
+    Switch hk, 0 {
+      default  : return ; msgbox('nothing matched setChar🠿 hk=' . hk)
+      ; —————————— Diacritic hk  c  key_list lblMap lblKey
       case ＄ ˜  a⃣	: char→sym(hk,'a',Dia['a'	],unset,unset)
       case ＄ ˜ ⇧a 	: char→sym(hk,'a',Dia['A'	],unset,unset)
       case ＄ ˜  c⃣	: char→sym(hk,'c',Dia['c'	],unset,unset)
