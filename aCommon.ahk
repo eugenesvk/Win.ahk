@@ -73,8 +73,9 @@ ListLines 0                                  	; Potential performance boost
 ; LWin & LAlt::SendInput('{LWin down}{LCtrl down}{Right down}{LWin up}{LCtrl up}{Right up}')
 
 ; ————————————————————————— Key changes —————————————————————————————
-  #include %A_scriptDir%\char🠿.ahk     	; Diacritics+chars on key hold
-  #include %A_scriptDir%\Char-AltTT.ahk	; Diacritics+chars@Tooltip on Alt+Shift+?+3rd, e.g. ⌥⇧u+e=ë (Umlaut on e)
+  #include %A_scriptDir%\char🠿.ahk      	; Diacritics+chars on key hold
+  #include %A_scriptDir%\Char-AltTT.ahk 	; Diacritics+chars@Tooltip on Alt+Shift+?+3rd, e.g. ⌥⇧u+e=ë (Umlaut on e)
+  #include %A_scriptDir%\⌂mod_modtap.ahk	; Hold vs tap without interfering with typing: Homerow mods, exit Insert in modal editor on 🠿i
 
 ; !!!!!TOO slow, check why
 ; $Shift:: { ; One Shot Shift. Don't hold down ⇧ to Cap! Tap ⇧ and forget, it expires in 1 second or capitalizes the next letter. No more typing ‘THe’! Frees up the pinky and is a better than Sticky Keys
