@@ -42,7 +42,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   ; blind_ := false
   ;;; 4 Match hotkeys defined above to actual symbols (see symbol.ahk)
   hkChar🠿(hk) {
-    dbgTT(5,hk,t:=1) ;
+    (dbg<5)?'':dbgTT(0,hk,t:=1)
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     Switch hk, 0 {
