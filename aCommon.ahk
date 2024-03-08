@@ -523,6 +523,7 @@ ListLines 0                                  	; Potential performance boost
   #Esc::Suspend -1 ;#⎋
 
   ; !z:: ;;; temporary fast reloads
+  !F1::     	;‹⎇F1​   	vk70
   <^<!<+r::{	;‹⎈‹⎇‹⇧r​	vk52 ⟶ Reload this AutoHotKey script
     Tooltip "AutoHotKey Reloading!"
     sleep(500)
