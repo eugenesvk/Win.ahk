@@ -375,7 +375,11 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   (dbg<_d  )?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,dbgtxt,t:=5,_i-1,x,y-30), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1))
   for vkKey in getKeys🖰hide() { ; for every defined key, check if it's being held while moving the mouse
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
-      return
+      sleep 10 ; workaround for an unreliable detection, give the system time to update key status
+      if (IsDown := GetKeyState(vkKey,"P")) {
+        (dbg<_d)?'':(dbgtxt := vkKey '↓ @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i))
+        return
+      }
     }
   }
   global 🖰x_,🖰y_
