@@ -356,6 +356,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
    , minΔ🖰x   	:= cfg🖰h['minΔ🖰x']
    , minΔ🖰y   	:= cfg🖰h['minΔ🖰y']
    , suppress 	:= cfg🖰h['suppressionMethod']
+   , gotKeys  	:= getKeys🖰hide()
    , _d       	:= 3
    , _dt      	:= 2 ; dbg level for tooltips
    , _dl      	:= 1
@@ -369,15 +370,15 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   if is🖰vis
     and not isSys🖰PointerHidden
     and not isSys🖰BtnBlocked { ; nothing to restore, pointer is not hidden, buttons not blocked
-    (dbg<_d)?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i))
+    (dbg<min(_d,_dl))?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i  ))
     return
   }
-  (dbg<_d  )?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,dbgtxt,t:=5,_i-1,x,y-30), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1))
-  for vkKey in getKeys🖰hide() { ; for every defined key, check if it's being held while moving the mouse
+  (dbg  <min(_d,_dl))?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,dbgtxt,t:=5,_i-1,x,y-30), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1))
+  for vkKey in gotKeys { ; for every defined key, check if it's being held while moving the mouse
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
       sleep 10 ; workaround for an unreliable detection, give the system time to update key status
       if (IsDown := GetKeyState(vkKey,"P")) {
-        (dbg<_d)?'':(dbgtxt := vkKey '↓ @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i))
+        (dbg<0)?'':(dbgtxt := vkKey '↓ lvl' A_SendLevel ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i))
         return
       }
     }
@@ -563,6 +564,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
    , isInit := false
    , _d 	:= 3 ; dbg level
    , _d0	:= 3 ; dbg level for tooltips for off (just do debug log)
+   , _dl	:= 0 ; dbg level for logs
   if not isInit {
     isInit := true
     guiBlankChild.NewTitle := "🖰hide on 🖮"
@@ -575,7 +577,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
     guiBlankChild.NewTitle := "🖰hide on 🖮"
     if dbg >= _d {
       guiT := SubStr(guiID?WinGetTitle(guiID):'',-20)
-      dbgtxt := "recreated GUI `n" guiT, dbgtt(_d,dbgtxt,_t,5,x,0), log(_d,dbgtxt ' 🕐' preciseTΔ(),,5)
+      dbgtxt := "recreated GUI `n" guiT, dbgtt(_d,dbgtxt,_t,5,x,0), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,5)
     }
   }
   guiOwner_pre := getWinID_Owner(guiID)
@@ -587,7 +589,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
     MouseGetPos(,,&winID,)
   }
   if not winID {
-    log(_d,'app🖰Pointer ↩ no winID')
+    log(_dl,'app🖰Pointer ↩ no winID')
     return
   }
 
@@ -631,7 +633,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
       guiOwnerT          := SubStr(guiOwnerID?WinGetTitle(guiOwnerID):'',-20)
       guiOwnerT_attached := SubStr(guiOwner  ?WinGetTitle(guiOwner  ):'',-20)
       dbgtxt := variant displayCounter ' (' _pre '¦' _preGui ') ' "`nattach “" guiOwnerT_attached '”`nactual “' guiOwnerT '”'
-      dbgtt(_d0,dbgtxt,_t,i0,x0,y0), log(_d,dbgtxt ' 🕐' preciseTΔ(),_t,i0,x0,y0)
+      dbgtt(_d0,dbgtxt,_t,i0,x0,y0), log(_dl,dbgtxt ' 🕐' preciseTΔ(),_t,i0,x0,y0)
     }
     ; isHidden := 1
   } else {                                ; show
@@ -676,7 +678,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
       guiOwnerT          := SubStr(guiOwnerID?WinGetTitle(guiOwnerID):'',-20)
       guiOwnerT_attached := SubStr(guiOwner  ?WinGetTitle(guiOwner  ):'',-20)
       dbgtxt := variant displayCounter ' (' _pre ')' "`nattach“" guiOwnerT_attached '”`nactual“' guiOwnerT '”'
-      dbgtt(_d,dbgtxt,_t,i1,x1,y1), log(_d,dbgtxt ' 🕐' preciseTΔ(),_t,i1,x1,y1)
+      dbgtt(_d,dbgtxt,_t,i1,x1,y1), log(_dl,dbgtxt ' 🕐' preciseTΔ(),_t,i1,x1,y1)
     }
     ; isHidden := 0
   }
