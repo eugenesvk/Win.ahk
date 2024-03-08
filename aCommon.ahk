@@ -37,6 +37,7 @@ ListLines 0                                  	; Potential performance boost
 
 ; lib functions not autoloaded anymore in v2.a128
 #include <libFunc>        	; General set of functions
+#include <libFunc App>    	; Functions: app-specific
 #include <libFunc Scroll> 	; Functions: Scrolling
 #include <libFunc Num>    	; Functions: Numeric
 #include <libFunc Dbg>    	; Functions: Debug
