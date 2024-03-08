@@ -7,9 +7,9 @@
 ; Use SendEvent for SpecialChars-Alt to recognize keys
 setChar🠿()
 setChar🠿() { ; hold key to select a symbol from a popup menu
-  static k   	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
-   , s       	:= helperString
-   , pre     	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
+  static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
+   , s    	:= helperString
+   , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
 
   HotIfWinActive("ahk_group PressnHold")
   ;;; 1 Define hotkeys with and without Shift
@@ -26,75 +26,91 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
   HotIf
-  WinActive_Not(active, not_active) { ; = #Hotif WinActive("ahk_group PressnHold") and !WinActive("ahk_group Browser")
-    if WinActive(active) and !WinActive(not_active) {
+  WinActive_Not(active, not_active*) { ; = #Hotif WinActive("ahk_group PressnHold") and !WinActive("ahk_group Browser")
+    if     WinActive(active) {
+      for i in   not_active {
+        if WinActive(i) {
+          return false
+        }
+      }
       return true
     } else {
       return false
     }
   }
   HotIf (*) => WinActive_Not("ahk_group PressnHold", "ahk_group Browser") ; exclude Vivaldi to allow using vimium jkl;
-  loop parse "il" { ; ⇧🠿i​⇧🠿l​
+  loop parse "l" { ; ⇧🠿l​
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
   HotIf
+  HotIf (*) => WinActive_Not("ahk_group PressnHold", "ahk_group Browser") ; exclude Vivaldi to allow using vimium jkl;
+  loop parse "i" { ; ⇧🠿i​
+    HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
+  }
+  HotIf
+  HotIf (*) => WinActive_Not("ahk_group PressnHold", "ahk_group Browser","ahk_exe sublime_text.exe") ; exclude Vivaldi to allow using vimium jkl; and Sublime to allow 'i' to exit Insert
+  loop parse "i" { ;  🠿i​
+    HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
+  }
+  HotIf
   ; blind_ := false
   ;;; 4 Match hotkeys defined above to actual symbols (see symbol.ahk)
-  hkChar🠿(hk) {
-    (dbg<5)?'':dbgTT(0,hk,t:=1)
+  hkChar🠿(hk_dirty) {
+    hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first without ＄ ˜
+    (dbg<5)?'':dbgTT(0,hk_dirty ' → ' hk,t:=1)
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     Switch hk, 0 {
       default  : return ; msgbox('nothing matched setChar🠿 hk=' . hk)
       ; —————————— Diacritic hk  c  key_list lblMap lblKey
-      case ＄ ˜  a⃣	: char→sym(hk,'a',Dia['a'	],unset,unset)
-      case ＄ ˜ ⇧a 	: char→sym(hk,'a',Dia['A'	],unset,unset)
-      case ＄ ˜  c⃣	: char→sym(hk,'c',Dia['c'	],unset,unset)
-      case ＄ ˜ ⇧c 	: char→sym(hk,'c',Dia['C'	],unset,unset)
-      case ＄ ˜  e⃣	: char→sym(hk,'e',Dia['e'	],unset,unset)
-      case ＄ ˜ ⇧e 	: char→sym(hk,'e',Dia['E'	],unset,unset)
-      case ＄ ˜  i⃣	: char→sym(hk,'i',Dia['i'	],unset,unset)
-      case ＄ ˜ ⇧i 	: char→sym(hk,'i',Dia['I'	],unset,unset)
-      case ＄ ˜  l⃣	: char→sym(hk,'l',Dia['l'	],unset,unset)
-      case ＄ ˜ ⇧l 	: char→sym(hk,'l',Dia['L'	],unset,unset)
-      case ＄ ˜  n⃣	: char→sym(hk,'n',Dia['n'	],unset,unset)
-      case ＄ ˜ ⇧n 	: char→sym(hk,'n',Dia['N'	],unset,unset)
-      case ＄ ˜  o⃣	: char→sym(hk,'o',Dia['o'	],unset,unset)
-      case ＄ ˜ ⇧o 	: char→sym(hk,'o',Dia['O'	],unset,unset)
-      case ＄ ˜  s⃣	: char→sym(hk,'s',Dia['s'	],unset,unset)
-      case ＄ ˜ ⇧s 	: char→sym(hk,'s',Dia['S'	],unset,unset)
-      case ＄ ˜  u⃣	: char→sym(hk,'u',Dia['u'	],unset,unset)
-      case ＄ ˜ ⇧u 	: char→sym(hk,'u',Dia['U'	],unset,unset)
-      case ＄ ˜  y⃣	: char→sym(hk,'y',Dia['y'	],unset,unset)
-      case ＄ ˜ ⇧y 	: char→sym(hk,'y',Dia['Y'	],unset,unset)
-      case ＄ ˜  z⃣	: char→sym(hk,'z',Dia['z'	],unset,unset)
-      case ＄ ˜ ⇧z 	: char→sym(hk,'z',Dia['Z'	],unset,unset)
+      case  a⃣	: char→sym(hk,'a',Dia['a'	],unset,unset)
+      case ⇧a 	: char→sym(hk,'a',Dia['A'	],unset,unset)
+      case  c⃣	: char→sym(hk,'c',Dia['c'	],unset,unset)
+      case ⇧c 	: char→sym(hk,'c',Dia['C'	],unset,unset)
+      case  e⃣	: char→sym(hk,'e',Dia['e'	],unset,unset)
+      case ⇧e 	: char→sym(hk,'e',Dia['E'	],unset,unset)
+      case  i⃣	: char→sym(hk,'i',Dia['i'	],unset,unset)
+      case ⇧i 	: char→sym(hk,'i',Dia['I'	],unset,unset)
+      case  l⃣	: char→sym(hk,'l',Dia['l'	],unset,unset)
+      case ⇧l 	: char→sym(hk,'l',Dia['L'	],unset,unset)
+      case  n⃣	: char→sym(hk,'n',Dia['n'	],unset,unset)
+      case ⇧n 	: char→sym(hk,'n',Dia['N'	],unset,unset)
+      case  o⃣	: char→sym(hk,'o',Dia['o'	],unset,unset)
+      case ⇧o 	: char→sym(hk,'o',Dia['O'	],unset,unset)
+      case  s⃣	: char→sym(hk,'s',Dia['s'	],unset,unset)
+      case ⇧s 	: char→sym(hk,'s',Dia['S'	],unset,unset)
+      case  u⃣	: char→sym(hk,'u',Dia['u'	],unset,unset)
+      case ⇧u 	: char→sym(hk,'u',Dia['U'	],unset,unset)
+      case  y⃣	: char→sym(hk,'y',Dia['y'	],unset,unset)
+      case ⇧y 	: char→sym(hk,'y',Dia['Y'	],unset,unset)
+      case  z⃣	: char→sym(hk,'z',Dia['z'	],unset,unset)
+      case ⇧z 	: char→sym(hk,'z',Dia['Z'	],unset,unset)
       ; —————————— Alt symbols (math, currency etc.)
-      case ＄ ˜  b⃣ 	: char→sym(hk,'b',Ch['Bullet'     	],unset,unset)
-      case ＄ ˜ ⇧b  	: char→sym(hk,'b',Ch['Misc'       	],unset,unset)
-      case ＄ ˜  d⃣ 	: char→sym(hk,'d',Ch['WinFile'    	],'Ch','WinFileLab')
-      case ＄ ˜ ⇧d  	: char→sym(hk,'d',Ch['WinFile'    	],'Ch','WinFileLab')
-      case ＄ ˜ v⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
-      case ＄ ˜ ⇧⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
-      case ＄ ˜  q⃣ 	: char→sym(hk,'q',Ch['XSymbols'   	],'Ch','XSymbolsLab')
-      case ＄ ˜  p⃣ 	: char→sym(hk,'p',Ch['Currency'   	],'Ch','CurrLab')
-      case ＄ ˜  x⃣ 	: char→sym(hk,'x',Ch['Tech'       	],'Ch','TechLab')
-      case ＄ ˜  t⃣ 	: char→sym(hk,'t',Ch['Math'       	],'Ch','MathLab')
-      case ＄ ˜ ⇧f  	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset)
-      case ＄ ˜  f⃣ 	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset)
-      case ＄ ˜  v⃣ 	: char→sym(hk,'v',Ch['Subscript'  	],'Ch','SubLab')
-      case ＄ ˜  g⃣ 	: char→sym(hk,'g',Ch['Superscript'	],'Ch','SupLab')
-      ;case ＄ ˜  m⃣	: char→sym(hk,'m',Ch['Dash'       	],Ch['DashLab'],'-')
-      case ＄ ˜ v‐  	: char→sym(hk,'-',Ch['Dash'       	],'Ch','DashLab')
-      ;case ＄ ˜  p⃣	: char→sym(hk,'p',Ch['XSymbols'   	],'Ch','XSymbolsLab')
-      case ＄ ˜  r⃣ 	: char→sym(hk,'r',Ch['Checks'     	],'Ch','ChecksLab')
-      case ＄ ˜  w⃣ 	: char→sym(hk,'w',Ch['Arrows'     	],'Ch','ArrowsLab')
-      case ＄ ˜ v‘  	: char→sym(hk, "'",Ch['QuotesS'   	],unset,unset)
-      case ＄ ˜ ⇧‘  	: char→sym(hk, "'",Ch['QuotesD'   	],unset,unset)
-      case ＄ ˜ ⇧ˋ  	: char→sym(hk,'``',Ch['Para'      	],unset,unset)
-      case ＄ ˜ ⇧5  	: char→sym(hk,'5',Ch['Percent'    	],unset,unset)
-      case ＄ ˜ ⇧4  	: char→sym(hk,'4',Ch['Currency'   	],unset,unset)
+      case  b⃣ 	: char→sym(hk,'b',Ch['Bullet'     	],unset,unset)
+      case ⇧b  	: char→sym(hk,'b',Ch['Misc'       	],unset,unset)
+      case  d⃣ 	: char→sym(hk,'d',Ch['WinFile'    	],'Ch','WinFileLab')
+      case ⇧d  	: char→sym(hk,'d',Ch['WinFile'    	],'Ch','WinFileLab')
+      case v⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
+      case ⇧⁄  	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
+      case  q⃣ 	: char→sym(hk,'q',Ch['XSymbols'   	],'Ch','XSymbolsLab')
+      case  p⃣ 	: char→sym(hk,'p',Ch['Currency'   	],'Ch','CurrLab')
+      case  x⃣ 	: char→sym(hk,'x',Ch['Tech'       	],'Ch','TechLab')
+      case  t⃣ 	: char→sym(hk,'t',Ch['Math'       	],'Ch','MathLab')
+      case ⇧f  	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset)
+      case  f⃣ 	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset)
+      case  v⃣ 	: char→sym(hk,'v',Ch['Subscript'  	],'Ch','SubLab')
+      case  g⃣ 	: char→sym(hk,'g',Ch['Superscript'	],'Ch','SupLab')
+      ;case  m⃣	: char→sym(hk,'m',Ch['Dash'       	],Ch['DashLab'],'-')
+      case v‐  	: char→sym(hk,'-',Ch['Dash'       	],'Ch','DashLab')
+      ;case  p⃣	: char→sym(hk,'p',Ch['XSymbols'   	],'Ch','XSymbolsLab')
+      case  r⃣ 	: char→sym(hk,'r',Ch['Checks'     	],'Ch','ChecksLab')
+      case  w⃣ 	: char→sym(hk,'w',Ch['Arrows'     	],'Ch','ArrowsLab')
+      case v‘  	: char→sym(hk, "'",Ch['QuotesS'   	],unset,unset)
+      case ⇧‘  	: char→sym(hk, "'",Ch['QuotesD'   	],unset,unset)
+      case ⇧ˋ  	: char→sym(hk,'``',Ch['Para'      	],unset,unset)
+      case ⇧5  	: char→sym(hk,'5',Ch['Percent'    	],unset,unset)
+      case ⇧4  	: char→sym(hk,'4',Ch['Currency'   	],unset,unset)
     }
   }
 }
