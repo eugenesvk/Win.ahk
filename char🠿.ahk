@@ -7,12 +7,12 @@
 ; Use SendEvent for SpecialChars-Alt to recognize keys
 setChar🠿()
 setChar🠿() { ; hold key to select a symbol from a popup menu
-  static k   	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
-   , s       	:= helperString
-   , pre     	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
-   , lbl🖰hide	:= ''
-   , cfg🖰h   	:= cfg🖰convert()
-  getKeys🖰hide(&lbl🖰hide) ; these hdotkeys override '🖰hide on 🖮', so we need to invoke pointer hiding here
+  static k     	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
+   , s         	:= helperString
+   , pre       	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
+   ; , lbl🖰hide	:= ''
+   ; , cfg🖰h   	:= cfg🖰convert()
+  ; getKeys🖰hide(&lbl🖰hide) ; these hdotkeys override '🖰hide on 🖮', so we need to invoke pointer hiding here
 
   HotIfWinActive("ahk_group PressnHold")
 
@@ -45,7 +45,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     dbgTT(5,hk,t:=1) ;
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
-    is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
+    ; is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
     Switch hk, 0 {
       default  : return ; msgbox('nothing matched setChar🠿 hk=' . hk)
       ; —————————— Diacritic hk  c  key_list lblMap lblKey 🖰hide
@@ -107,9 +107,9 @@ char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,blind_:=true) {
    , get⎀    	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
    , s       	:= helperString
 
-  if 🖰hide { ; hide a pointer if the same key is registered twice since only this function will be called
-    hk🖰PointerHide('') ; use hk function instead of 🖰PointerHide due to a bug in '🖰hide on 🖮'?
-  }
+  ; if 🖰hide { ; hide a pointer if the same key is registered twice since only this function will be called
+  ;   hk🖰PointerHide('') ; use hk function instead of 🖰PointerHide due to a bug in '🖰hide on 🖮'?
+  ; }
   static lbl_translit     	:= Map()
   if lbl_translit.Count   	= 0 { ; can set case only on empty maps
     lbl_translit.CaseSense	:= 0
