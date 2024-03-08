@@ -42,7 +42,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   HotIf
   ; blind_ := false
   hkChar🠿(hk) {
-    dbgTT(5,hk,t:=1) ;
+    (dbg<5)?'':dbgTT(0,hk,t:=1)
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     ; is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
