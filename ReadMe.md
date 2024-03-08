@@ -49,10 +49,11 @@ For a standalone use: double-click on [🖰hide on 🖮_launch](<./🖰hide on �
 To use with your existing AutoHotkey scripts: the import should do the trick
 
 ## Known issues
+  - detecting physical key states (to avoid showing a tooltip if you move your mouse while holding a key) is can be unreliable when used with modtaps, and when it fails, the mouse pointer/buttons will not be restored [see forum post](https://www.autohotkey.com/boards/viewtopic.php?f=82&t=127078). Workaround: disable this check or add modtap keys to the exclude list
   - Changing GUI element owner to AHK breaks modifiers, requiring adding sleep(1) https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123412
   - BUT this workaround prevents getting mouse pointer status correctly https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123908
     - potential workaround is to move pointer status check earlier
-  - `displayCounter` sometimes misbehaves and goes below -1, not sure whether this has any negative effects
+  - `displayCounter` sometimes misbehaves and goes below -1, not sure whether whether this has any negative effects
   - `🖰hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the standalone version [🖰hide on 🖮_launch](<./🖰hide on 🖮_launch.ahk>)
 
 ## Credits
