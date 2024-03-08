@@ -388,6 +388,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   🖰Δ↕ := abs(🖰y - 🖰y_)
   if (  (🖰Δ↔ < minΔ🖰x) ; don't show a mouse on tiny movements below these thresholds (in pixels)
     and (🖰Δ↕ < minΔ🖰y)) {
+    (dbg<_d)?'':(dbgtxt := '🖰Δ↔ ' 🖰Δ↔ ' < ' minΔ🖰x ' minΔ🖰x' ' @on🖰Mov⎋`n' '🖰Δ↕ ' 🖰Δ↕ ' < ' minΔ🖰y ' minΔ🖰y', dbgtt(_dt,dbgtxt,t:='∞',_i,x,y1), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i))
     return
   }
   if ( 🖰x_ != 🖰x
@@ -557,7 +558,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
    , y1	:= A_ScreenHeight*.91
    , i1	:= 3 ; tooltip index for on
    , i0	:= 4 ; ...               off
-   , _t	:= '∞' ; time for tooltip
+   , _t	:= 3 ;'∞' ; time for tooltip
    , attachGUI_🖰 := cfg🖰h['attachGUI_🖰']
    , isInit := false
    , _d 	:= 3 ; dbg level
