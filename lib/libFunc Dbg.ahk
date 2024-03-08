@@ -19,6 +19,7 @@ dbgTT(dbgMin:=0, Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
 }
 TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   static id_last := 0
+  , timers := Map()
   if idTT = 0 { ; no id given, increase by 1 to have multiple calls have different ids
     id_last += 1
   } else {
@@ -29,6 +30,10 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
     id_last := 1
   }
   id := id_last
+  if timers.Has(id) {
+    SetTimer(timers.Delete(id), 0) ;, log(0,'del timer id=' id)
+  }
+
   MouseGetPos(&mX, &mY, &mWin, &mControl)
     ; mWin This optional parameter is the name of the variable in which to store the unique ID number of the window under the mouse cursor. If the window cannot be determined, this variable will be made blank.
     ; mControl This optional parameter is the name of the variable in which to store the name (ClassNN) of the control under the mouse cursor. If the control cannot be determined, this variable will be made blank.
@@ -53,8 +58,10 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   } else {
     ToolTip(Text,mX+stepX*(id-1),mY+stepY*(id-1),id)
   }
-  if not Time = '∞' {
-    SetTimer () => ToolTip(,,,id), -Time*1000
+  if Text != ''{
+    if not Time = '∞' {
+      SetTimer(timers[id] := %A_ThisFunc%.Bind(,,id), -Time*1000) ;, log(0,'set timer id=' id ' for f=')
+    }
   }
 }
 
