@@ -126,7 +126,7 @@ hk🖰PointerHide(hk) {            ; Hide 🖰 pointer
   ; log(0,hk format(" 🕐3Δ{:.3f}",🕐3-🕐2) format(" 🕐2Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'hk🖰P')
 }
 🖰PointerHide(is🖰vis:='') {
-  static get⎀        	:= win.get⎀.Bind(win)
+  static get⎀        	:= win.get⎀.Bind(win), is⎀ := win.is⎀.Bind(win), is⎀UIA := win.is⎀UIA.Bind(win)
    , cfg🖰h           	:= cfg🖰convert()
    , modAllow🖰Pointer	:= cfg🖰h['modAllow🖰Pointer']
    , limit2text      	:= cfg🖰h['limit2text']
@@ -135,7 +135,7 @@ hk🖰PointerHide(hk) {            ; Hide 🖰 pointer
   if isAnyUserModiPressed(modAllow🖰Pointer) {
     (dbg<_d)?'':(dbgTT(_d,'modAllow🖰Pointer pressed, skipping hide ' preciseTΔ(),t:=2,,x:=0,y:=800))
   } else if limit2text {
-    if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
+    if is⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
       sys_app_btnHide(Off, is🖰vis)
     } else {
       (dbg<_d)?'':(dbgTT(_d,'outside a text field, skipping hide 1 ' preciseTΔ(),t:=2,,x:=0,y:=800))
