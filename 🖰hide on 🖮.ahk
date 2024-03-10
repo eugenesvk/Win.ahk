@@ -86,7 +86,7 @@ global Init	:= -2
  , isSys🖰BtnBlocked := false ; track whether buttons are being blocked (not always in sync with the pointer, especially if a GUI method is used (non-script actions can enable it, so can't just check whether a pointer is visible to decide whether to unblock buttons)
 
 sys_app_btnHide(OnOff, is🖰vis:='') { ; hide button functions and system/app pointers depending on config
-  static get⎀	:= win.get⎀.Bind(win)
+  static get⎀	:= win.get⎀.Bind(win), is⎀UIA := win.is⎀UIA.Bind(win)
    , cfg🖰h   	:= cfg🖰convert()
    , suppress	:= cfg🖰h['suppressionMethod']
    , _d      	:= 3
@@ -104,13 +104,14 @@ sys_app_btnHide(OnOff, is🖰vis:='') { ; hide button functions and system/app p
   dbgTT(_d,dbgtxt,t:='∞',i:=1,x:=0,y:=850)
 }
 
-hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
+hk🖰PointerHide(hk) {            ; Hide 🖰 pointer
   static K   	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , s       	:= helperString
    , cfg🖰h   	:= cfg🖰convert()
    , suppress	:= cfg🖰h['suppressionMethod']
-   , _d      	:= 3
-  ; log(0,ThisHotkey,A_ThisFunc,'hk🖰P')
+   , d3      	:= 3 , l3	:= 3
+   , _i      	:= 9
+  ; log(0,hk,A_ThisFunc,'hk🖰P')
   ; 🕐1 := preciseTΔ()
   if suppress = 'gui' or suppress = 'both' { ;;; workaround for a bug: checking for pointer visibility later may fail
     is🖰vis := is🖰PointerVisible() ; check if pointer is visible otherwise ShowCursor can stack hiding it requiring multiple calls to unstack
@@ -118,13 +119,11 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
     is🖰vis := ''
   }
   ; 🕐2 := preciseTΔ()
-  if dbg >= _d {
-    dbgTT(_d,'hk🖰P ' ThisHotkey ' ' preciseTΔ(), t:='∞',i:=9,0,0)
-  }
+  ; (dbg<min(d3,l3))?'':(hkclean := StrReplace(StrReplace(StrReplace(StrReplace(hk,' UP'),'*'),'~'),'$'), dbgtxt:='hk🖰P ' (GetKeyState(hkclean,"P")?'↓':'↑') hk ' ' preciseTΔ(), dbgTT(d3,dbgtxt, t:='∞',_i,0,0), log(l3,dbgtxt,_i))
   sleep(1) ;;; workaround for a bug: changing GUI element owner to AHK breaks modifiers autohotkey.com/boards/viewtopic.php?f=82&t=123412, but causes another bug: prevents getting mouse pointer status correctly autohotkey.com/boards/viewtopic.php?f=82&t=123908, potential fix is to get the pointer status earlier ↑
   🖰PointerHide(is🖰vis)
   ; 🕐3 := preciseTΔ()
-  ; log(0,ThisHotkey format(" 🕐3Δ{:.3f}",🕐3-🕐2) format(" 🕐2Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'hk🖰P')
+  ; log(0,hk format(" 🕐3Δ{:.3f}",🕐3-🕐2) format(" 🕐2Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'hk🖰P')
 }
 🖰PointerHide(is🖰vis:='') {
   static get⎀        	:= win.get⎀.Bind(win)
@@ -134,16 +133,12 @@ hk🖰PointerHide(ThisHotkey) {            ; Hide 🖰 pointer
    , suppress        	:= cfg🖰h['suppressionMethod']
    , _d              	:= 3 ;
   if isAnyUserModiPressed(modAllow🖰Pointer) {
-    if dbg >= _d {
-      dbgTT(_d,'modAllow🖰Pointer pressed, skipping hide ' preciseTΔ(),t:=2,,x:=0,y:=800)
-    }
+    (dbg<_d)?'':(dbgTT(_d,'modAllow🖰Pointer pressed, skipping hide ' preciseTΔ(),t:=2,,x:=0,y:=800))
   } else if limit2text {
     if get⎀(&⎀←,&⎀↑) { ; only hide if inside an editable text field
       sys_app_btnHide(Off, is🖰vis)
     } else {
-      if dbg >= _d {
-        dbgTT(_d,'outside a text field, skipping hide 1 ' preciseTΔ(),t:=2,,x:=0,y:=800)
-      }
+      (dbg<_d)?'':(dbgTT(_d,'outside a text field, skipping hide 1 ' preciseTΔ(),t:=2,,x:=0,y:=800))
     }
   } else {
     sys_app_btnHide(Off, is🖰vis)
@@ -334,6 +329,7 @@ HotIfWinNotActive("ahk_group no🖰HideOnType") ; turn on context sensitivity
 ,__∗                  	:= cfg🖰convert()['hkModPrefix']
 for _vkKey in getKeys🖰hide() { ; for every defined key, register a call to hide the mouse cursor
   Hotkey(˜ __∗ _vkKey, hk🖰PointerHide)
+  ; Hotkey(˜ __∗ _vkKey ' UP', hk🖰PointerHide)
   ; Hotkey(˜ __∗ GetKeyName(_scKey), hk🖰PointerHide)
   ; _dbgregistered_list1 .= GetKeyName(_vkKey) . " "
   ; _dbgregistered_list2 .= keyConstant._maprlng['en'].Get(_vkKey,'✗') . " "
@@ -365,14 +361,17 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
    , x        	:= A_ScreenWidth*.9
    , y        	:= A_ScreenHeight*.85
    , y1       	:= A_ScreenHeight*.9
+   , norea    	:= 0 ; avoid repeating same mouse move messages
+   , noreb    	:= 0 ;
   sleep(1) ;;; potential fix for another bug when moving the pointer from another app to the active app is🖰vis returns an invisible status on crossing the border between 2 apps, and then this triggers another 'shown GUI' event, thus breaking the counter
   is🖰vis := is🖰PointerVisible()
   if is🖰vis
     and not isSys🖰PointerHidden
     and not isSys🖰BtnBlocked { ; nothing to restore, pointer is not hidden, buttons not blocked
-    (dbg<min(_d,_dl))?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i  ))
+    (dbg<max(norea,min(_d,_dl)))?'':(norea:=1, dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i  ))
     return
   }
+  norea:=0
   (dbg  <min(_d,_dl))?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,dbgtxt,t:=5,_i-1,x,y-30), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1))
   for vkKey in gotKeys { ; for every defined key, check if it's being held while moving the mouse
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
@@ -383,6 +382,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
       }
     }
   }
+  noreb:=0
   global 🖰x_,🖰y_
   MouseGetPos(&🖰x, &🖰y)
   🖰Δ↔ := abs(🖰x - 🖰x_)
@@ -402,10 +402,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
       (dbg<_d)?'':(dbgtxt := '✓on🖰Moved gui ', dbgtt(_dt,dbgtxt,t:=3,_i+2,0,50), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i+2))
     }
     sys🖰Btn(On)
-      if dbg >= _d {
-        dbgtt(_d,'suppress=' suppress ' ' preciseTΔ(), t:=3,_i+2,0,150)
-        dbgTT(_d, "sys🖰P On " preciseTΔ(), Time:=1,_i+3,X:=0,Y:=850)
-      }
+      (dbg<_d)?'':(dbgtt(_d,'suppress=' suppress ' ' preciseTΔ(), t:=3,_i+2,0,150), dbgTT(_d, "sys🖰P On " preciseTΔ(), Time:=1,_i+3,X:=0,Y:=850))
     🖰x_ := 🖰x
     🖰y_ := 🖰y
   }
@@ -523,9 +520,7 @@ sys🖰Pointer(OnOff := On) {
   } else if changeTo = toHide {
     ; sys🖰Btn(Off)
   }
-  if dbg >= (dbgMin:=4) {
-    dbgTT(dbgMin, Text:=dbgOut, Time:=3,id:=3,X:=0,Y:=750)
-  }
+  (dbg<(dbgMin:=4))?'':(dbgTT(dbgMin,dbgOut,t:=3,i:=3,x:=0,y:=750))
   isInit	:= true
 }
 
@@ -551,12 +546,9 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
    , guiOwner 	:= 0
    ;, isHidden	:= 0
    , displayCounter := 0 ; track thread pointer counter, pointer is shown only if >=0, no way to get current value
-   , x 	:= A_ScreenWidth*.7
-   , y 	:= A_ScreenHeight*.9
-   , x0	:= 0
-   , y0	:= A_ScreenHeight*.9
-   , x1	:= A_ScreenWidth
-   , y1	:= A_ScreenHeight*.91
+   , x 	:= A_ScreenWidth*.7	, y 	:= A_ScreenHeight*.9
+   , x0	:= 0               	, y0	:= A_ScreenHeight*.9
+   , x1	:= A_ScreenWidth   	, y1	:= A_ScreenHeight*.91
    , i1	:= 3 ; tooltip index for on
    , i0	:= 4 ; ...               off
    , _t	:= 3 ;'∞' ; time for tooltip
@@ -575,10 +567,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
     guiBlankChild	:= Gui(guiopt)
     guiID        	:= WinGetID(guiBlankChild)
     guiBlankChild.NewTitle := "🖰hide on 🖮"
-    if dbg >= _d {
-      guiT := SubStr(guiID?WinGetTitle(guiID):'',-20)
-      dbgtxt := "recreated GUI `n" guiT, dbgtt(_d,dbgtxt,_t,5,x,0), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,5)
-    }
+    (dbg<min(_d,_dl))?'':(guiT:=SubStr(guiID?WinGetTitle(guiID):'',-20), dbgtxt := "recreated GUI `n" guiT, dbgtt(0,dbgtxt,_t,5,x,0), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,5))
   }
   guiOwner_pre := getWinID_Owner(guiID)
 
@@ -606,15 +595,11 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
       if displayCounter <= -1 { ; counter issue, likely an issue with being unable to hide the pointer or it reappearing
         _preGui := ' '
         displayCounter := DllCall("ShowCursor", "int",1)*0 + DllCall("ShowCursor", "int",0) ; leave it as is
-        if dbg >= _d {
-          variant := "✗✓ hide± #"
-        }
+        (dbg<min(_d,_dl))?'':(variant := "✗✓ hide± #")
       } else { ; no counter issues, decrement it to hide the pointer
         _preGui := DllCall("ShowCursor", "int",1)*0 + DllCall("ShowCursor", "int",0)
         displayCounter := DllCall("ShowCursor", "int",0) ;
-        if dbg >= _d {
-          variant := "✓ hide #"
-        }
+        (dbg<min(_d,_dl))?'':(variant := "✓ hide #")
       }
     } else { ; Pointer is hidden, do nothing except attempt to fix the counter issue
         if displayCounter <= -2 { ; ??? the app itself also changed the counter ??? or some other bug
@@ -624,11 +609,9 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
           _preGui := DllCall("ShowCursor", "int",0)*0 + DllCall("ShowCursor", "int",1)
           _preGui .= '_'
         }
-        if dbg >= _d {
-          variant := "✗ already hidden #"
-        }
+        (dbg<min(_d,_dl))?'':(variant := "✗ already hidden #")
     }
-    if dbg >= _d {
+    if dbg >= min(_d,_dl) {
       guiOwnerID := getWinID_Owner(guiID)
       guiOwnerT          := SubStr(guiOwnerID?WinGetTitle(guiOwnerID):'',-20)
       guiOwnerT_attached := SubStr(guiOwner  ?WinGetTitle(guiOwner  ):'',-20)
@@ -645,14 +628,10 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
         guiBlankChild.Opt("+Owner" . guiOwner)
         displayCounter := DllCall("ShowCursor", "int",1)
         guiBlankChild.Opt("+Owner") ; move gui to be owned by AHK
-        if dbg >= _d {
-          variant := "✓🖰vis shown GUI #"
-        }
+        (dbg<min(_d,_dl))?'':(variant:="✓🖰vis shown GUI #")
       } else { ; ... or ??? potentially resolve a bug where pointer was shown by some other means, but our gui blocks ???
         ; guiBlankChild.Opt("+Owner") ; ??? move gui to be owned by AHK
-        if dbg >= _d {
-          variant := "✗ not showing, already 🖰vis #"
-        }
+        (dbg<min(_d,_dl))?'':(variant:="✗ not showing, already 🖰vis #")
       }
     } else { ; Pointer is hidden, so need to show it
       if not winID = guiOwner { ; our gui is owned by another app (likely we switched apps)...
@@ -660,20 +639,16 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
         guiBlankChild.Opt("+Owner" . guiOwner) ;
         displayCounter := DllCall("ShowCursor", "int",1)
         guiBlankChild.Opt("+Owner") ; move gui to be owned by AHK
-        if dbg >= _d {
-          variant := "✓shown GUI #"
-        }
+        (dbg<min(_d,_dl))?'':(variant:="✓shown GUI #")
       } else { ; our gui is owned by the same app we attached it to when we hid the pointer
         guiBlankChild.Opt("+Owner" . guiOwner)
         displayCounter := DllCall("ShowCursor", "int",1)
         guiBlankChild.Opt("+Owner") ; move gui to be owned by AHK
         ; guiBlankChild.Show("NoActivate") ;;; debug show our gui
-        if dbg >= _d {
-          variant := "✓shown     #"
-        }
+        (dbg<min(_d,_dl))?'':(variant := "✓shown     #")
       }
     }
-    if dbg >= _d {
+    if dbg >= min(_d,_dl) {
       guiOwnerID         := getWinID_Owner(guiID)
       guiOwnerT          := SubStr(guiOwnerID?WinGetTitle(guiOwnerID):'',-20)
       guiOwnerT_attached := SubStr(guiOwner  ?WinGetTitle(guiOwner  ):'',-20)
