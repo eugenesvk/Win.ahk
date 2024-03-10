@@ -214,7 +214,8 @@ Win_TitleToggle(PosFix:=0, id:=unset, Sign:="^") {
       return
     }
     if (PosFix = 0) { ; avoid artifacts from adding/removing borders, no pos/size change
-      if not winID {
+      if ( not          winID
+        or not WinExist(winID)) { ; guard against a "not found" error
         return
       }
       WinMove(,,width:=wW-1,,wTitle:=winID)
