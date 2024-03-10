@@ -161,14 +161,16 @@ class ⌂ { ; 🠿
      , s    	:= helperString
     loop parse keys {
       kvk := vk[A_LoopField]
-      , hk↓  	:= ＄ kvk       ;p → $vk46
-      , hk↑  	:= ＄ kvk ' UP' ;p → $vk46 UP   $=kbd hook
+      , hk↓  	:= kvk       ;p → $vk46
+      , hk↑  	:= kvk ' UP' ;p → $vk46 UP   $=kbd hook
+      , hk↓r 	:= ＄ hk↓ ; register with hook, but otherwise store without any hooks since other HK function could've registered first with diferent prefixes
+      , hk↑r 	:= ＄ hk↑
       , token	:= s.key→token(A_LoopField) ;p for p
       if cb { ; turn hotkey context sensitivity if a callback is passed
         HotIf cb
       }
-      HotKey(hk↓, hkModTap,'I1') ;
-      HotKey(hk↑, hkModTap,'I1') ;
+      HotKey(hk↓r, hkModTap,'I1') ;
+      HotKey(hk↑r, hkModTap,'I1') ;
       if cb {
         HotIf
       }
@@ -241,29 +243,32 @@ get⌂Status() {
 
 preciseTΔ() ; start timer for debugging
 
-hkModTap(ThisHotkey) {
+hkModTap(hk_dirty) {
   static _ := 0
   , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
   , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
-  hk := ThisHotkey
-  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
-  if ⌂.hk_map.Has(ThisHotkey) {
-    hk_reg := ⌂.hk_map[ThisHotkey] ; {k:f, is↓:1 or 0} for $vk46
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+  static _d := 1, _dl:=0
+  hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first with ＄ ˜
+  if (hk_reg := ⌂.hk_map.Get(hk,'')) { ; {k:f, is↓:1 or 0} for $vk46
+    (dbg<min(_d,_dl))?'':(dbgtxt:='hk=‘' hk_dirty '’ → ‘' hk '’ hk_reg=‘' hk_reg.k '’' (hk_reg.is↓?'↓':'↑') ' lvl' A_SendLevel ' preK=' k→en(A_PriorKey) ' hk@hkModTap', dbgTT(_d,dbgtxt,t:=2,,🖥️w↔,🖥️w↕*0.3), log(_dl,dbgtxt))
     ; 🕐1 := preciseTΔ()
     setup⌂mod(&hk,hk_reg.k,hk_reg.is↓)
     ; 🕐2 := preciseTΔ()
-    ; log(0,'post setup⌂mod' hk ' ' hk_reg.k ' is' (hk_reg.is↓?'↓':'↑') 'prio=' vkrl['en'].Get(vk.get(A_PriorKey,''),'✗') format(" 🕐Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'h⃣k⃣⌂') ;
+    ; log(0,'post setup⌂mod ' dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'h⃣k⃣⌂')
   } else {
-    return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . ThisHotkey)
+    (dbg<min(_d,_dl))?'':(dbgtxt:='✗nothing matched setChar🠿 hk=‘' hk_dirty '’ → ‘' hk '’ lvl' A_SendLevel ' hk@hkModTap', dbgTT(_d,dbgtxt,t:=2,,🖥️w↔,🖥️w↕*0.3), log(_dl,dbgtxt))
+    return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . hk)
   }
 }
 
 cbHotIf(_token, HotkeyName) { ; callback for unregister🠿↕ ;f <+$vk46 and f <+$vk46 UP
   return ⌂.%_token%.is ; token is ︔ for ; to be used in var names
 }
-hkModTap_off(ThisHotkey) {
+hkModTap_off(hk_dirty) {
   static D	:= udbg⌂mod, C := ucfg⌂mod
-  hk_reg := ⌂.hk_map[ThisHotkey]
+  hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first with ＄ ˜
+  hk_reg := ⌂.hk_map[hk]
   ⌂_ := ⌂.%hk_reg.k%
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣
   static ⌂tHold := C.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := C.Get('ttdbg',0), sndlvl := C.Get('sndlvl',0)
@@ -272,7 +277,7 @@ hkModTap_off(ThisHotkey) {
     , tooltip⎀ := C.Get('tooltip⎀',1), tt⎀delay := C.Get('tt⎀delay',0) * 1000
     , ttdbg := C.Get('ttdbg',0)
   t⌂_ := A_TickCount - ⌂_.t
-  dbgTT(3,'🠿1bb) ⌂↓ >ΔH •⌂↑ 🕐' preciseTΔ() ' (hkModTap_off)`n' dbg⌂ ' ¦ ' hk_reg.k ' ¦ ' ThisHotkey ' (' t⌂_ (t⌂_<⌂ΔH?'<':'>') ⌂ΔH ') `n' ⌂_.send↑,t:=4,i:=13,0,🖥️w↕//2) ;
+  dbgTT(3,'🠿1bb) ⌂↓ >ΔH •⌂↑ 🕐' preciseTΔ() ' (hkModTap_off)`n' dbg⌂ ' ¦ ' hk_reg.k ' ¦ ' hk ' (' t⌂_ (t⌂_<⌂ΔH?'<':'>') ⌂ΔH ') `n' ⌂_.send↑,t:=4,i:=13,0,🖥️w↕//2) ;
   ; log(D.dsl,'⌂↑',,'✗🖮¦' ⌂_.send↑ '¦————— @hkModTap_off')
   SendInput(⌂_.send↑), ⌂_.is  := false, ⌂_.pos := ↑, ⌂_.t := A_TickCount ; 🠿1bb)
   , dbgTT(ttdbg?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
@@ -285,7 +290,7 @@ hkModTap_off(ThisHotkey) {
   }
   dbgTT_isMod('🠿1bb')
 }
-hkDoNothing(ThisHotkey) {
+hkDoNothing(hk) {
   dbgTT(4,'hkDoNothing 🕐' preciseTΔ(),,14,0,50) ;
   return
 }
