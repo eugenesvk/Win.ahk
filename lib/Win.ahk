@@ -6,35 +6,69 @@
 #include <winapi Struct>
 #include <libFunc Dbg>	; Functions: Debug
 class win {
-  static get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
-    static ptcProp	:= ["IsTextPatternAvailable","HasKeyboardFocus"]
+  static is⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) { ; true if caret is visible even if text isn't editable
+    return win.isget⎀(true,&⎀←,&⎀↑,&⎀↔,&⎀↕)
+  }
+  static get⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) { ; true if caret is visible and text is editable
+    return win.isget⎀(false,&⎀←,&⎀↑,&⎀↔,&⎀↕)
+  }
+  static isget⎀(is⎀only,&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
+    static ptcProp	:= ["IsTextPatternAvailable","IsTextPattern2Available","HasKeyboardFocus"]
      , ptcScope   	:= UIA.TreeScope.Element ; Element or Subtree (very slow on some web pages https://www.autohotkey.com/boards/viewtopic.php?f=82&t=114802&p=545176#p545176)
-     , ptcMode    	:= UIA.AutomationElementMode.None
-     , pointCache 	:= UIA.CreateCacheRequest(ptcProp,,ptcScope,ptcMode) ; (,patterns?,,,filter?)
+     , ptcMode    	:= UIA.AutomationElementMode.None ; no access to live object for performance, only cached prop/pattern are available
+     , pointCache 	:= UIA.CreateCacheRequest(ptcProp,,ptcScope,ptcMode) ; (,,,,filter?)
+     , _i         	:= 15
+     , x          	:= A_ScreenWidth*.9 , y	:= A_ScreenHeight*.75
+     , _dt        	:= 1 ; dbg level for tooltips
+     , _dl        	:= 1 ; dbg level for log
+     , _dl3       	:= 3 ;
 
     win.get⎀GUI(&⎀←,&⎀↑,&⎀→,&⎀↓,&⎀↔,&⎀↕,&⎀Blink,&⎀isVis) ; 1 get caret via GetGUIThreadInfo
-
     if IsSet(⎀isVis) and ⎀isVis {
-          return true
-    } else {
-      if win.get⎀Acc(&⎀←,&⎀↑, &⎀↔,&⎀↕) {                  ; 2 get caret via UIA
-        isUIAEditable := 1
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✓ get⎀GUI ⎀isVis get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return true
+    } else if (    is⎀only and win.is⎀UIA()) { ; 2 get editable caret via UIA even without coordinates
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✓ is⎀UIA get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return true
+    } else if (not is⎀only and win.get⎀UIA(&⎀←,&⎀↑, &⎀↔,&⎀↕)) { ; 2 get caret via UIA
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✓ get⎀UIA get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return true
+    } else if win.get⎀Acc(&⎀←,&⎀↑, &⎀↔,&⎀↕) { ; 3 get caret via Acc and check editable via UIA
+      if ⎀↔ = 0 { ; likely an invisible caret
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗ ⎀↔Acc=0 get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
+      }
+      try {
+        pt           	:= UIA.SmallestElementFromPoint(⎀←,⎀↑,,pointCache)
+        ;pt          	:= UIA.ElementFromPoint        (⎀←,⎀↑,,pointCache)
+        isUIAEditable	:= pt.CachedIsTextPatternAvailable && pt.CachedHasKeyboardFocus
+        ; pt?dbgtt(0,'smallest pt exists ' type(pt) ' edit? ' isUIAEditable ,2,4,0,75):'' ; UIA.IUIAutomationElement
+      }
+      if not isSet(isUIAEditable) or not isUIAEditable {
         try {
-          pt           	:= UIA.SmallestElementFromPoint(⎀←,⎀↑,,pointCache) ; alt ElementFromPoint
+          pt           	:= UIA.ElementFromPoint(⎀←,⎀↑,pointCache)
           isUIAEditable	:= pt.CachedIsTextPatternAvailable && pt.CachedHasKeyboardFocus
         }
-        if isUIAEditable {
+        ; pt?dbgtt(0,'pt exists edit? ' isUIAEditable ,5,5,0,100):''
+      }
+      if     isSet(isUIAEditable) and    isUIAEditable {
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✓ ⎀Acc UIAEditable ' ⎀← ' ' ⎀↑ ' ' ⎀↔ ' ' ⎀↕ ' get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return true
+      } else { ; ⎀ exists, but not editable
+        if is⎀only {
+          (dbg<min(_dt,_dl))?'':(dbgtxt := '✓ ⎀Acc notUIAEditable ' ⎀← ' ' ⎀↑ ' ' ⎀↔ ' ' ⎀↕ ' get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
           return true
-        } else { ; ⎀ exists, but not editable, reset to 0
-          ⎀←:=0 , ⎀↑:=0
+        } else {
+          (dbg<min(_dt,_dl))?'':(dbgtxt := '✗ ⎀Acc notUIAEditable ' ⎀← ' ' ⎀↑ ' ' ⎀↔ ' ' ⎀↕ ' get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
           return false
         }
-      } else { ; no ⎀ from either GUIthread or Acc, reset to 0
-          ⎀←:=0 , ⎀↑:=0
-          return false
       }
+    } else { ; no ⎀ from either GUIthread / UIA / Acc
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗✗✗ ⎀ get⎀⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
     }
   }
+
   static get⎀GUI(&⎀←,&⎀↑,&⎀→:=0,&⎀↓:=0 ; returned in Screen coordinates to match ACC, also avoids an issue where Active top window for some reson isn't the same dimensions as the window that holds the caret, so converting x,y to screen coordinates later results in the wrong outcome
     ,&⎀↔:=0,&⎀↕:=0,&⎀Blink:=0,&⎀isVis:=0) { ; autohotkey.com/boards/viewtopic.php?t=13004
     ; ⎀isVis sets to 1 only if caret Height > 1 (it's 1 in Help app even though there is no text input)
