@@ -74,6 +74,81 @@ class win {
     , ⎀isVis  	:= (⎀↕ > 1) ? 1 : 0 ; fix an issue with Help showing a caret of Height=1 even when there is none
     return ⎀← || ⎀↑ ;;; todo: what if 0,0 is a valid caret position?
   }
+
+  static is⎀UIA() { ; check only text pattern style, assuming this means there is a caret inside, no need to get coords
+    return win.isget⎀UIA(true)
+  }
+  static get⎀UIA(&⎀←:=0,&⎀↑:=0,&⎀↔:=0,&⎀↕:=0) { ; get caret coordinates
+    return win.isget⎀UIA(false,&⎀←,&⎀↑,&⎀↔,&⎀↕)
+  }
+  static isget⎀UIA(is⎀only,&⎀←:=0,&⎀↑:=0,&⎀↔:=0,&⎀↕:=0) { ; get caret position using UIA
+    static ptcProp	:= ["IsTextPatternAvailable","IsTextPattern2Available",'IsTextEditPatternAvailable',"HasKeyboardFocus"]
+     , ptcPattern 	:= ["Text","Text2"]
+     , ptcScope   	:= UIA.TreeScope.Element ; Element or Subtree (very slow on some web pages https://www.autohotkey.com/boards/viewtopic.php?f=82&t=114802&p=545176#p545176)
+     , ptcMode    	:= UIA.AutomationElementMode.None ; no access to live object for performance, only cached prop/pattern are available
+     , ptcMode    	:= UIA.AutomationElementMode.Full ;;;; TODO delete
+     , pointCache 	:= UIA.CreateCacheRequest(ptcProp,ptcPattern,ptcScope,ptcMode) ; (,,,,filter?)
+     , eIUnsupport	:= 0x80004002
+     , _i         	:= 16
+     , x          	:= A_ScreenWidth*.9 , y	:= A_ScreenHeight*.85
+     , _dt        	:= 1 ; dbg level for tooltips
+     , _dl        	:= 1 ; dbg level for log
+     , _dl3       	:= 3 ;
+
+    el := UIA.GetFocusedElement(pointCache) ; IUIAutomationElement
+    if (isText := el.CachedIsTextPatternAvailable) {
+      if is⎀only {
+        if (isTextEdit := el.CachedIsTextEditPatternAvailable) {
+          (dbg<min(_dt,_dl))?'':(dbgtxt := '✓UIA Text+TextEdit pattern isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+          return true ; only signal that caret is editable
+        }
+      }
+      if not (I_Text := el.CachedTextPattern) {
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA CachedTextPattern' ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
+      }
+    } else {
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA CachedIsTextPatternAvailable' ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
+    }
+    try {
+      CaretRange := I_Text.GetCaretRange(&isFocus:=0) ; isFocus=isActive, in some apps false even with a caret editable
+        ; TRUE if the text-based control that contains the caret has keyboard focus, otherwise FALSE
+        ; FALSE: caret that belongs to the text-based control might not be at the same location as the system caret
+        ; dbgtt(0,'supported interface is⎀Focus=' isFocus ' ' type(CaretRange) ' GetText=' CaretRange.GetText(),5,9,0,700)
+    } catch OSError as e {
+      if e.number = eIUnsupport {
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA no GetCaretRange unsup Error=¦' e.number '¦ msg¦' e.message '¦' ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
+      } else {
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA another error other Error=¦' e.number '¦ msg¦' e.message '¦' ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
+      }
+    }
+    isEdit := !el.ValueIsReadOnly ; todo: is this useful???
+    if isSet(CaretRange) {
+      if (caretRectArr := CaretRange.GetBoundingRectangles()).Length = 1 {
+        if ObjOwnPropCount(CaretRect := caretRectArr[1]) = 4 {
+          ⎀←:=CaretRect.x, ⎀↑:=CaretRect.y
+          ⎀↔:=CaretRect.w, ⎀↕:=CaretRect.h
+          ; if el.ValueIsReadOnly { ; todo: is this useful???
+            ; return false
+          ; }
+          return true
+        } else {
+          (dbg<min(_dt,_dl))?'':(dbgtxt := '±UIA unknown CaretRect length =' ObjOwnPropCount(CaretRect) ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+          return false
+        }
+      } else {
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✓Txt ±⎀ isEdit=' isEdit ' is⎀Focus=' isFocus '`n⎀Rect=¦' '¦' ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
+      }
+    } else {
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✓Txt ✗⎀API isEdit=' isEdit ' is⎀Focus=' isFocus ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        return false
+    }
+  }
+
   static get⎀Acc(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
     static OBJID_CARET := 0xFFFFFFF8
     ; CoordMode('Caret','Client')
