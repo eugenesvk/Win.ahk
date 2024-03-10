@@ -146,14 +146,19 @@ class win {
     }
   }
 
-  static get⎀Acc(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) {
-    static OBJID_CARET := 0xFFFFFFF8
+  static get⎀Acc(&⎀←?,&⎀↑?,&⎀↔?,&⎀↕?) {
+    static OBJID_CARET	:= 0xFFFFFFF8
+    static accState := {Invisible:32768}
     ; CoordMode('Caret','Client')
     AccObject	:= Acc_ObjectFromWindow(WinExist('A'), OBJID_CARET)
-    Pos      	:= Acc_Location(AccObject)
-    try ⎀← := Pos.x, ⎀↑ := Pos.y
-      , ⎀↔ := Pos.w, ⎀↕ := Pos.h
-    return ⎀← || ⎀↑ ;;; todo: what if 0,0 is a valid caret position?
+    Loc      	:= Acc_Location(AccObject)
+    try ⎀← := Loc.x, ⎀↑ := Loc.y
+      , ⎀↔ := Loc.w, ⎀↕ := Loc.h
+
+    if (Acc_State(AccObject) = accState.Invisible) {
+      return false
+    }
+    return (IsSet(⎀←) || IsSet(⎀↑))
   }
 
   static coordClient→Screen(cx,cy,&x,&y,winID) { ; convert client coordinates to screen
