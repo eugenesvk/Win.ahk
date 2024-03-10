@@ -1,7 +1,6 @@
 #Requires AutoHotKey 2.0.10
 
 #include <UIA>
-#include <Acc>
 #include <Acc2>
 #include <libFunc Dbg>	; Functions: Debug
 #include <constWin32T>
@@ -192,20 +191,6 @@ class win {
       , ⎀↔ := Loc.w, ⎀↕ := Loc.h
 
     if (Acc_State(AccObject) = accState.Invisible) {
-      return false
-    }
-    return (IsSet(⎀←) || IsSet(⎀↑))
-  }
-  static get⎀Acco(&⎀←?,&⎀↑?,&⎀↔?,&⎀↕?) { ; use the object-oriented Accessibility library
-    static OBJID_CARET := 0xFFFFFFF8
-    static accState := {Invisible:32768}
-    ; CoordMode('Caret','Client')
-    AccObject	:= Acc.ObjectFromWindow(WinExist('A'), OBJID_CARET)
-    Loc      	:= AccObject.Location
-    try ⎀← := Loc.x, ⎀↑ := Loc.y
-      , ⎀↔ := Loc.w, ⎀↕ := Loc.h
-
-    if (AccObject.State = accState.Invisible) {
       return false
     }
     return (IsSet(⎀←) || IsSet(⎀↑))
