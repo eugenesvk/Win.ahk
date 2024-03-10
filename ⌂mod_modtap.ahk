@@ -601,7 +601,8 @@ setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
             (dbg<min(D.ds,D.dsl))?'':(dbgtxt:='•8 ↕xz) ↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone`n🕐' this⌂t '<' ⌂ΔH ' PreKey ‘' k→en(A_PriorKey) '’ prio=c=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ ⌂is=' this⌂.is ' ⌂pos=' (this⌂.pos = ↓ ? '↓' : '↑') ' lvl' A_SendLevel '¦' ih⌂.MinSendLevel ' stack⌂<=1, c↕', dbgTT(D.ds,dbgtxt,t:=2,,0,🖥️w↕*.86),log(D.dsl,dbgtxt,'🖮↕¦' c '¦————— @setup⌂mo@handle⌂↑•7',tmpid))
             ;🕐15 := preciseTΔ()
           } ;
-        } else { ; 00) haven't been activated, no need to send self
+        } else { ; 00) haven't been activated, but need to send self Up so other scripts can read it
+          SendInput('{blind}{' . vkC . ' up}') ; {blind} to retain ⇧◆⎇⎈ positions
           ;🕐14 := preciseTΔ()
           this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false
           (dbg<min(d3,l3))?'':(dbgtxt:='•9✗ 00) ⌂↑ alone ⌂↓(' this⌂t ' < ' ⌂ΔH ') preK=‘' k→en(A_PriorKey) '’ prio=‘' prio '’ 🕐' preciseTΔ() ' input=‘' ih_input '’ ⌂is=' this⌂.is ' ⌂pos=' (this⌂.pos = ↓ ? '↓' : '↑') ' lvl' A_SendLevel '¦' ih⌂.MinSendLevel, dbgTT(d3,dbgtxt,t:=2,,x:=🖥️w↔,y:=850),log(l3,dbgtxt,,tmpid))
