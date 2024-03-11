@@ -487,6 +487,14 @@ k→en(key) { ; ф → a
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
   return vk→k.Get(vk.get(key,'✗'),'✗')
 }
+dbg⌂p(&⌂_) { ; common debug info for a ⌂ key
+  return (
+    (⌂_.is?'✓':'✗') '⌂is ' (⌂_.pos = ↓ ? '↓' : '↑') '⌂pos' ' lvl' A_SendLevel '¦' ⌂_.ih.MinSendLevel
+    ' preK=‘' k→en(A_PriorKey) '’ pre↓=‘' k→en(⌂_.prio↓) '’ pre↑=‘' k→en(⌂_.prio↑) '’'
+    ' input=‘' ⌂_.ih.input '’' ' 🕐' preciseTΔ()
+  )
+}
+
 setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
