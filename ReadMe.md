@@ -55,7 +55,7 @@ a↓ ⌂↓ a↑ ⌂↑ ↕     modtap starts after another key, should let the 
 a↓ ⌂↓ b↓ a↑ ⌂↑ ↕
          •   x_x) print nothing (a is printed outside of this script, b )
 ⎈↓ ⌂↓ ⎈↑⌂↑       not a tap, swallowed by the modifier
-         •   00)  print nothing
+         •   00)  print nothing, but send ⌂↑ so other apps can reset ⌂↓ state that they saw because our ⌂ hook wasn't active on ⌂↓
 ⌂↓       ⌂↑ ↕     single standalone tap, not hold
      <ΔH •  ↕01)  print ⌂
     •>ΔH    🠿0t)  enable ⌂ (⇧⌂ enabled on timer via input hook's timeout)
