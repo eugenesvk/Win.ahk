@@ -375,6 +375,10 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   norea:=0
   (dbg  <min(_d,_dl))?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,dbgtxt,t:=5,_i-1,x,y-30), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1))
   for vkKey in gotKeys { ; for every defined key, check if it's being held while moving the mouse
+    if (  vkKey = f⃣
+       or vkKey = j⃣ ) { ;;;todo bug: avoid an unresolved bug where ⎈f from modtaps doesn't reset the down state in this script
+      continue
+    }
     if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
       (dbg<max(noreb,min(_d,_dl)))?'':(noreb:=1, dbgtxt := vkKey '↓ lvl' A_SendLevel ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i))
       return
