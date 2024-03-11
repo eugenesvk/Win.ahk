@@ -119,7 +119,7 @@ hk🖰PointerHide(hk) {            ; Hide 🖰 pointer
     is🖰vis := ''
   }
   ; 🕐2 := preciseTΔ()
-  ; (dbg<min(d3,l3))?'':(hkclean := StrReplace(StrReplace(StrReplace(StrReplace(hk,' UP'),'*'),'~'),'$'), dbgtxt:='hk🖰P ' (GetKeyState(hkclean,"P")?'↓':'↑') hk ' ' preciseTΔ(), dbgTT(d3,dbgtxt, t:='∞',_i,0,0), log(l3,dbgtxt,_i))
+  ; (dbg<min(d3,l3))?'':(hkclean := StrReplace(StrReplace(StrReplace(StrReplace(hk,' UP'),'*'),'~'),'$'), dbgtxt:='hk🖰P ' (GetKeyState(hkclean,"P")?'↓':'↑') hk ' ' preciseTΔ(), dbgTT(d3,dbgtxt, t:=2,_i,0,0), log(l3,dbgtxt,_i))
   sleep(1) ;;; workaround for a bug: changing GUI element owner to AHK breaks modifiers autohotkey.com/boards/viewtopic.php?f=82&t=123412, but causes another bug: prevents getting mouse pointer status correctly autohotkey.com/boards/viewtopic.php?f=82&t=123908, potential fix is to get the pointer status earlier ↑
   🖰PointerHide(is🖰vis)
   ; 🕐3 := preciseTΔ()
@@ -424,24 +424,25 @@ sys🖰Pointer(OnOff := On) {
   }
 
   static curSID  	:= [ ;system_cursors learn.microsoft.com/en-us/windows/win32/menurc/about-cursors
-      Arrow      	:= 32512  	; IDC_ARROW   	MAKEINTRESOURCE(32512)	 Normal select
-    , Ibeam      	:= 32513  	; IDC_IBEAM   	MAKEINTRESOURCE(32513)	 Text select
-    , Wait       	:= 32514  	; IDC_WAIT    	MAKEINTRESOURCE(32514)	 Busy
-    , Cross      	:= 32515  	; IDC_CROSS   	MAKEINTRESOURCE(32515)	 Precision select
-    , UpArrow    	:= 32516  	; IDC_UPARROW 	MAKEINTRESOURCE(32516)	 Alternate select
-    , Size⤡      	:= 32642  	; IDC_SIZENWSE	MAKEINTRESOURCE(32642)	 Diagonal resize 1
-    , Size⤢      	:= 32643  	; IDC_SIZENESW	MAKEINTRESOURCE(32643)	 Diagonal resize 2
-    , Size↔      	:= 32644  	; IDC_SIZEWE  	MAKEINTRESOURCE(32644)	 Horizontal resize
-    , Size↕      	:= 32645  	; IDC_SIZENS  	MAKEINTRESOURCE(32645)	 Vertical resize
-    , Size⤨      	:= 32646  	; IDC_SIZEALL 	MAKEINTRESOURCE(32646)	 Move
-    , No         	:= 32648  	; IDC_NO      	MAKEINTRESOURCE(32648)	 Unavailable
-    , Hand       	:= 32649  	; IDC_HAND    	MAKEINTRESOURCE(32649)	 Link select
+      Arrow      	:= 32512  	; IDC_ARROW   	Normal select
+    , Ibeam      	:= 32513  	; IDC_IBEAM   	Text select
+    , Wait       	:= 32514  	; IDC_WAIT    	Busy
+    , Cross      	:= 32515  	; IDC_CROSS   	Precision select
+    , UpArrow    	:= 32516  	; IDC_UPARROW 	Alternate select
+    , Size⤡      	:= 32642  	; IDC_SIZENWSE	Diagonal resize 1
+    , Size⤢      	:= 32643  	; IDC_SIZENESW	Diagonal resize 2
+    , Size↔      	:= 32644  	; IDC_SIZEWE  	Horizontal resize
+    , Size↕      	:= 32645  	; IDC_SIZENS  	Vertical resize
+    , Size⤨      	:= 32646  	; IDC_SIZEALL 	Move
+    , No         	:= 32648  	; IDC_NO      	Unavailable
+    , Hand       	:= 32649  	; IDC_HAND    	Link select
     ; ↓ not in   	OCR_NORMAL	so can't be a restore target? learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor. Or just a doc omission?
-    , AppStarting	:= 32650  	; IDC_APPSTARTING	MAKEINTRESOURCE(32650)	 Working in background
-    , Help       	:= 32651  	; IDC_HELP       	MAKEINTRESOURCE(32651)	 Help select
-    , Pin        	:= 32671  	; IDC_PIN        	MAKEINTRESOURCE(32671)	 Location select
-    , Person     	:= 32672  	; IDC_PERSON     	MAKEINTRESOURCE(32672)	 Person select
-    ;, _handwrite	:= 32631  	;                	MAKEINTRESOURCE(32631)	 Handwriting
+    , AppStarting	:= 32650  	; IDC_APPSTARTING	 Working in background
+    , Help       	:= 32651  	; IDC_HELP       	 Help select
+    , Pin        	:= 32671  	; IDC_PIN        	 Location select
+    , Person     	:= 32672  	; IDC_PERSON     	 Person select
+    ;, _handwrite	:= 32631  	;                	 Handwriting
+    ;            	:= MAKEINTRESOURCE(Number)
   ]
    , hCursors := Array()
   hCursors.Capacity := curSID.Length
