@@ -119,7 +119,7 @@ hk🖰PointerHide(hk) {            ; Hide 🖰 pointer
     is🖰vis := ''
   }
   ; 🕐2 := preciseTΔ()
-  ; (dbg<min(d3,l3))?'':(hkclean := StrReplace(StrReplace(StrReplace(StrReplace(hk,' UP'),'*'),'~'),'$'), dbgtxt:='hk🖰P ' (GetKeyState(hkclean,"P")?'↓':'↑') hk ' ' preciseTΔ(), dbgTT(d3,dbgtxt, t:=2,_i,0,0), log(l3,dbgtxt,_i))
+  ; (dbg<min(d3,l3))?'':(hkclean := StrReplace(StrReplace(StrReplace(StrReplace(hk,' UP'),'*'),'~'),'$'), m:='hk🖰P ' (GetKeyState(hkclean,"P")?'↓':'↑') hk ' ' (GetKeyState(hkclean,"P")?'↓':'↑') hk '(phys) ' preciseTΔ(), dbgTT(d3,m, t:=2,_i,0,0), log(l3,m,_i))
   sleep(1) ;;; workaround for a bug: changing GUI element owner to AHK breaks modifiers autohotkey.com/boards/viewtopic.php?f=82&t=123412, but causes another bug: prevents getting mouse pointer status correctly autohotkey.com/boards/viewtopic.php?f=82&t=123908, potential fix is to get the pointer status earlier ↑
   🖰PointerHide(is🖰vis)
   ; 🕐3 := preciseTΔ()
@@ -348,27 +348,28 @@ HotIf ; turn off context sensitivity
 
 
 on🖰Moved() { ; Restore mouse pointer (and record its new position) unless keyboard key is held
-  static cfg🖰h	:= cfg🖰convert()
-   , minΔ🖰x   	:= cfg🖰h['minΔ🖰x']
-   , minΔ🖰y   	:= cfg🖰h['minΔ🖰y']
-   , suppress 	:= cfg🖰h['suppressionMethod']
-   , gotKeys  	:= getKeys🖰hide()
-   , _d       	:= 3
-   , _dt      	:= 2 ; dbg level for tooltips
-   , _dl      	:= 1
-   , _dl3     	:= 3
-   , _i       	:= 17
-   , x        	:= A_ScreenWidth*.9
-   , y        	:= A_ScreenHeight*.85
-   , y1       	:= A_ScreenHeight*.9
-   , norea    	:= 0 ; avoid repeating same mouse move messages
-   , noreb    	:= 0 ;
+  static K   	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , cfg🖰h   	:= cfg🖰convert()
+   , minΔ🖰x  	:= cfg🖰h['minΔ🖰x']
+   , minΔ🖰y  	:= cfg🖰h['minΔ🖰y']
+   , suppress	:= cfg🖰h['suppressionMethod']
+   , gotKeys 	:= getKeys🖰hide()
+   , _d      	:= 3
+   , _dt     	:= 2 ; dbg level for tooltips
+   , _dl     	:= 1
+   , _dl3    	:= 3
+   , _i      	:= 17
+   , x       	:= A_ScreenWidth*.9
+   , y       	:= A_ScreenHeight*.85
+   , y1      	:= A_ScreenHeight*.9
+   , norea   	:= 0 ; avoid repeating same mouse move messages
+   , noreb   	:= 0 ;
   sleep(1) ;;; potential fix for another bug when moving the pointer from another app to the active app is🖰vis returns an invisible status on crossing the border between 2 apps, and then this triggers another 'shown GUI' event, thus breaking the counter
   is🖰vis := is🖰PointerVisible()
   if is🖰vis
     and not isSys🖰PointerHidden
     and not isSys🖰BtnBlocked { ; nothing to restore, pointer is not hidden, buttons not blocked
-    (dbg<max(norea,min(_d,_dl)))?'':(norea:=1, dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i  ))
+    (dbg<max(norea,min(_d,_dl)))?'':(norea:=1, m:=(is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov⎋', dbgtt(_dt,m,t:=5,_i,x,y   ), log(_dl3,m ' 🕐' preciseTΔ(),,_i  ))
     return
   }
   norea:=0
@@ -390,7 +391,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   🖰Δ↕ := abs(🖰y - 🖰y_)
   if (  (🖰Δ↔ < minΔ🖰x) ; don't show a mouse on tiny movements below these thresholds (in pixels)
     and (🖰Δ↕ < minΔ🖰y)) {
-    (dbg<_d)?'':(dbgtxt := '🖰Δ↔ ' 🖰Δ↔ ' < ' minΔ🖰x ' minΔ🖰x' ' @on🖰Mov⎋`n' '🖰Δ↕ ' 🖰Δ↕ ' < ' minΔ🖰y ' minΔ🖰y', dbgtt(_dt,dbgtxt,t:='∞',_i,x,y1), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i))
+    (dbg<_d)?'':(m:='🖰Δ↔ ' 🖰Δ↔ ' < ' minΔ🖰x ' minΔ🖰x' ' @on🖰Mov⎋`n' '🖰Δ↕ ' 🖰Δ↕ ' < ' minΔ🖰y ' minΔ🖰y', dbgtt(_dt,m,t:='∞',_i,x,y1), log(_dl3,m ' 🕐' preciseTΔ(),,_i))
     return
   }
   if ( 🖰x_ != 🖰x
@@ -400,7 +401,7 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
     }
     if suppress = 'gui' or suppress = 'both' {
       app🖰Pointer(On, is🖰vis)
-      (dbg<_d)?'':(dbgtxt := '✓on🖰Moved gui ', dbgtt(_dt,dbgtxt,t:=3,_i+2,0,50), log(_dl3,dbgtxt ' 🕐' preciseTΔ(),,_i+2))
+      (dbg<_d)?'':(m:='✓on🖰Moved gui ', dbgtt(_dt,m,t:=3,_i+2,0,50), log(_dl3,m ' 🕐' preciseTΔ(),,_i+2))
     }
     sys🖰Btn(On)
       (dbg<_d)?'':(dbgtt(_d,'suppress=' suppress ' ' preciseTΔ(), t:=3,_i+2,0,150), dbgTT(_d, "sys🖰P On " preciseTΔ(), Time:=1,_i+3,X:=0,Y:=850))
@@ -558,7 +559,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
    , isInit := false
    , _d 	:= 3 ; dbg level
    , _d0	:= 3 ; dbg level for tooltips for off (just do debug log)
-   , _dl	:= 0 ; dbg level for logs
+   , _dl	:= 3 ; dbg level for logs
   if not isInit {
     isInit := true
     guiBlankChild.NewTitle := "🖰hide on 🖮"
@@ -569,7 +570,7 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
     guiBlankChild	:= Gui(guiopt)
     guiID        	:= WinGetID(guiBlankChild)
     guiBlankChild.NewTitle := "🖰hide on 🖮"
-    (dbg<min(_d,_dl))?'':(guiT:=SubStr(guiID?WinGetTitle(guiID):'',-20), dbgtxt := "recreated GUI `n" guiT, dbgtt(0,dbgtxt,_t,5,x,0), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,5))
+    (dbg<min(_d,_dl))?'':(guiT:=SubStr(guiID?WinGetTitle(guiID):'',-20), m:="recreated GUI `n" guiT, dbgtt(0,m,_t,5,x,0), log(_dl,m ' 🕐' preciseTΔ(),,5))
   }
   guiOwner_pre := getWinID_Owner(guiID)
 
