@@ -16,10 +16,15 @@ hkModTap(hk_dirty) {
     dbgtxt:= '↑' hk_dirty         ' l' A_SendLevel ' h' A_KeybdHookInstalled  ' hkModTap'
     ToolTip(dbgtxt, 0,265, 5)
     SetTimer () => ToolTip(,,,5), -2000
-    SendEvent('e') ;
+    ; SendEvent('{blind}e') ;
+    ; SendEvent('{e up}') ;
   } else {
     dbgtxt:= '↓' hk_dirty '     ' ' l' A_SendLevel ' h' A_KeybdHookInstalled  ' hkModTap'
     ToolTip(dbgtxt, 0,235, 6)
     SetTimer () => ToolTip(,,,6), -2000
+    ; SendEvent('{e down}') ;
+    Send('{e down}') ;
+    ; SendInput('{e down}') ;
+    ; Send('e') ;
   }
 }
