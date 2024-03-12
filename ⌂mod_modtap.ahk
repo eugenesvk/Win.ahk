@@ -485,7 +485,7 @@ vk→token(kvk) {
 
 k→en(key) { ; ф → a
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
-  return vk→k.Get(vk.get(key,'✗'),'✗')
+  return vk→k.Get(vk.get(key,''),key)
 }
 dbg⌂p(&⌂_) { ; common debug info for a ⌂ key
   return (
