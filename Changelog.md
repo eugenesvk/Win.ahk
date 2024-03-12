@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/eugenesvk/Win.ahk/compare/0.0.5-modtap...modtap
+[unreleased]: https://github.com/eugenesvk/Win.ahk/compare/0.0.6-modtap...modtap
 ## [Unreleased]
 <!-- - __Added__ -->
   <!-- + :sparkles:  -->
@@ -21,6 +21,9 @@ All notable changes to this project will be documented in this file
 <!-- - __Security__ -->
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
+
+[0.0.6-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.6-modtap
+## [0.0.6-modtap]
 - __Fixed__
   + :beetle: modtap key ↑ event being swallowed when mod isn't activated, e.g., in <kbd>⎈</kbd>↓ <kbd>f</kbd>↓ <kbd>⎈</kbd>↑ <kbd>f</kbd>↑
   + :beetle: some cases of undetectable cursor position
