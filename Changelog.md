@@ -21,6 +21,8 @@ All notable changes to this project will be documented in this file
 <!-- - __Security__ -->
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
+- __Fixed__
+  + :beetle: "physical" state of keys used in modtaps not reflecting their physical state. Convert to checks of logical state since "physical" is not really physical anyway
 
 [0.0.2-mhide]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.2-mhide
 ## [0.0.2-mhide]
