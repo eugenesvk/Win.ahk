@@ -373,15 +373,13 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
     return
   }
   norea:=0
-  (dbg  <min(_d,_dl))?'':(dbgtxt := (is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,dbgtxt,t:=5,_i-1,x,y-30), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i-1))
-  for vkKey in gotKeys { ; for every defined key, check if it's being held while moving the mouse
-    if (  vkKey = f⃣
-       or vkKey = j⃣ ) { ;;;todo bug: avoid an unresolved bug where ⎈f from modtaps doesn't reset the down state in this script
-      continue
-    }
-    if (IsDown := GetKeyState(vkKey,"P")) { ; still typing, don't flash a pointer
-      (dbg<max(noreb,min(_d,_dl)))?'':(noreb:=1, dbgtxt := vkKey '↓ lvl' A_SendLevel ' @on🖰Mov⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y), log(_dl,dbgtxt ' 🕐' preciseTΔ(),,_i))
-      return
+  (dbg  <min(_d,_dl))?'':(m:=(is🖰vis?'🖰👁':'🖰🙈') ' ' (isSys🖰PointerHidden?'sys🙈':'sys👁') ' ' (isSys🖰BtnBlocked?'🖯✗':'🖯✓') ' @on🖰Mov', dbgtt(_dt,m,t:=5,_i-1,x,y-30), log(_dl,m ' 🕐' preciseTΔ(),,_i-1))
+  if (prio:=vk.get(A_PriorKey,'')) { ; check if the last key is still being held while moving the mouse
+    if (is↓ := GetKeyState(prio)) { ; faster to check for a key state than iterate whether pressed key is part of our registered array. Can't use 'P' physical state since this script's inputhook sometimes receives ↓↑ events from another script, so it treats those as "logical" (it's actually impossible to track the real physical state)
+      if HasValue(gotKeys,prio) { ; if the held down key is part of our registered hotkeys
+        (dbg<max(noreb,min(_d,_dl)))?'':(noreb:=1, m:=prio '↓ lvl' A_SendLevel ' @on🖰Mov⎋', dbgtt(_dt,m,t:=5,_i,x,y), log(_dl,m ' 🕐' preciseTΔ(),,_i))
+        return
+      }
     }
   }
   noreb:=0
