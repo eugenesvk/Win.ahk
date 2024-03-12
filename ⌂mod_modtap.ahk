@@ -52,8 +52,8 @@ class udbg⌂mod { ; various debug constants like indices for tooltips
 
 ; Assign functions that will handle modtap keys
 ⌂.register🠿↕('fj','')
-⌂.register🠿↕('hi' ,cbHotIfVar) ; conditional modtap
-⌂.unregister🠿↕('fjhi') ; block repeats on 🠿, reset on ↑
+⌂.register🠿↕('i' ,cbHotIfVar) ; conditional modtap
+⌂.unregister🠿↕('fji') ; block repeats on 🠿, reset on ↑
 cbHotIfVar(HotkeyName) { ; callback for register🠿↕
   if nv_mode = 2 and WinActive("ahk_exe sublime_text.exe") { ; Insert mode in Sublime Text passed via winmsg
     return true
