@@ -323,7 +323,12 @@ Win_FWT(hwnd:="") { ;autohotkey.com/boards/viewtopic.php?p=123166#p123166
 
 Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than regular, Fix=1 to make Window position/size match border/-less
   static winDemax_id	:= Map()
-    , dp            	:= 1 ; debug tooltip levels
+    , dp            	:= 0 ; debug tooltip levels
+    , winSzFrame_Xpx	:= SysGet(smSzFrame_Xpx) ; sizing border around the perimeter of a window
+    , winSzFrame_Ypx	:= SysGet(smSzFrame_Ypx)
+    , OffT          	:= {x: winSzFrame_Xpx*2,y:0, w:-winSzFrame_Xpx*4 ,h:-winSzFrame_Ypx*2}	; has Title , move → by 1×, + Width by 2× and Height by 1× BorderOffset
+    , OffB          	:= {x:-winSzFrame_Xpx*2,y:0, w: winSzFrame_Xpx*4 ,h: winSzFrame_Ypx*2}	; Borderless, move ← by 1×, − Width by 2× and Height by 1× BorderOffset
+    , bOffset       	:= 10                                                                 	; Border width needed to adjust WinPos
   ; dbgGetSysMonVars()
 
   if !IsSet(id) { ; if no id passed, use Active window
@@ -331,15 +336,13 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than 
   }
   MinMax	:= WinGetMinMax(id) ; Min -1, Max 1, Neither 0
   winIDs	:= WinGetList(  id) ;;; already have an id, why do this?
-  winID 	:= winIDs[1]
+  if ( not         (winID := winIDs[1])
+    or not WinExist(winID)) { ; guard against a "not found" error
+    return
+  }
 
-  winSzFrame_Xpx	:= SysGet(smSzFrame_Xpx) ; sizing border around the perimeter of a window
-  winSzFrame_Ypx	:= SysGet(smSzFrame_Ypx)
   Style         	:= WinGetStyle(winID)
   StyleHex      	:= Format("{1:#x}", Style)
-  bOffset       	:= 10                                                                          	; Border width needed to adjust WinPos
-  OffT          	:= {x: winSzFrame_Xpx*2,y:0, w:-winSzFrame_Xpx*4          ,h:-winSzFrame_Ypx*2}	; has Title , move → by 1×, + Width by 2× and Height by 1× BorderOffset
-  OffB          	:= {x:-winSzFrame_Xpx*2,y:0, w: winSzFrame_Xpx*4 ,h: winSzFrame_Ypx*2}         	; Borderless, move ← by 1×, − Width by 2× and Height by 1× BorderOffset
 
   if ( ((sign = '+') and     (Style & WS_Borderless))    ; style already     set, no need to add    it
     or ((sign = '-') and not (Style & WS_Borderless))) { ; style already not set, no need to remove it
@@ -348,19 +351,15 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than 
   WinSetStyle(Sign WS_Borderless, winID)
   WinGetPos(&wX,&wY, &wW,&wH    , winID)
 
+  if not win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) {
+    return
+  }
   if (MinMax = 1) { ;     Maximized: Restore and Maximize back
     winDemax_id[id] := winID ; store demaxed winID so that we can max it back later
     WinRestore(wTitle:=winID)
     ; WinMaximize winID ; BUGs, covers taskbar, so replace maximizing back with manually setting max area without the taskbar
-    monAct_i	:= getFocusWindowMonitorIndex()
-    isMon   	:= MonitorGetWorkArea(monAct_i, &monWork←,&monWork↑,&monWork→,&monWork↓)
-    if (isMon = "") {
-      return
-    }
-    monWork_W	:= monWork→ - monWork←
-    monWork_H	:= monWork↓ - monWork↑
     ; if (PosFix = 0) { ; avoid artifacts from adding/removing borders, no pos/size change
-      WinMove(x:=0,y:=0,width:=monWork_W,height:=monWork_H,wTitle:=winID)
+      WinMove(x:=0,y:=0,🖥️w↔,🖥️w↕,wTitle:=winID)
     ; } else {
       ; WinMove 0,0,A_ScreenWidth,H-25, id ; X+13,Y+13,W-26,H-26 ;Still acts like maximized e.g. after Alt+Tab
     ; }
