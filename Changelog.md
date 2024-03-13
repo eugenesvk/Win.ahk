@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file
 - __Added__
   + :sparkles: win: `isget⎀UIA` cursor position function
   + :sparkles: win: an alternative Accessibility library's cursor position function
+  + :sparkles: win: add an option to `Win_TitleToggle` to clamp windows being resized above monitor's working area size
   + :sparkles: a listener to Window Messages to set a global variable that can be used to conditionally define keybinds
   + lib dbg: add `Obj→Str` alias
   + lib dbg: add `dbgTL` function that shows tooltip and prints to log
