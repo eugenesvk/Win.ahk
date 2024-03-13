@@ -289,31 +289,35 @@ Win_FWT(hwnd:="") { ;autohotkey.com/boards/viewtopic.php?p=123166#p123166
   }
 }
 
-; Borderless window is larger than regular, apply Fix=1 to make Window position/size match border/-less
-Win_TitleToggle(PosFix:=0, id:=unset, Sign:="^") {
+Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than regular, Fix=1 to make Window position/size match border/-less
   static winDemax_id	:= Map()
+    , dp            	:= 0 ; debug tooltip levels
   ; dbgGetSysMonVars()
 
   if !IsSet(id) { ; if no id passed, use Active window
     id	:= WinGetID("A")
   }
-  winTitleMatch	:= "ahk_id " id
-  MinMax       	:= WinGetMinMax(winTitleMatch) ; Min -1, Max 1, Neither 0
-  winIDs       	:= WinGetList(  winTitleMatch)
-  winID        	:= winIDs[1]
+  MinMax	:= WinGetMinMax(id) ; Min -1, Max 1, Neither 0
+  winIDs	:= WinGetList(  id) ;;; already have an id, why do this?
+  winID 	:= winIDs[1]
 
   winSzFrame_Xpx	:= SysGet(smSzFrame_Xpx) ; sizing border around the perimeter of a window
   winSzFrame_Ypx	:= SysGet(smSzFrame_Ypx)
   Style         	:= WinGetStyle(winID)
   StyleHex      	:= Format("{1:#x}", Style)
-  bOffset       	:= 10                                                                	; Border width needed to adjust WinPos
-  OffT          	:= {x: winSzFrame_Xpx*2,y:0, w:-winSzFrame_Xpx*4,h:-winSzFrame_Ypx*2}	; has Title , move → by 1×, + Width by 2× and Height by 1× BorderOffset
-  OffB          	:= {x:-winSzFrame_Xpx*2,y:0, w: winSzFrame_Xpx*4,h: winSzFrame_Ypx*2}	; Borderless, move ← by 1×, − Width by 2× and Height by 1× BorderOffset
+  bOffset       	:= 10                                                                          	; Border width needed to adjust WinPos
+  OffT          	:= {x: winSzFrame_Xpx*2,y:0, w:-winSzFrame_Xpx*4          ,h:-winSzFrame_Ypx*2}	; has Title , move → by 1×, + Width by 2× and Height by 1× BorderOffset
+  OffB          	:= {x:-winSzFrame_Xpx*2,y:0, w: winSzFrame_Xpx*4 ,h: winSzFrame_Ypx*2}         	; Borderless, move ← by 1×, − Width by 2× and Height by 1× BorderOffset
 
+  if ( ((sign = '+') and     (Style & WS_Borderless))    ; style already     set, no need to add    it
+    or ((sign = '-') and not (Style & WS_Borderless))) { ; style already not set, no need to remove it
+    return
+  }
   WinSetStyle(Sign WS_Borderless, winID)
-  WinGetPos(&wX,&wY, &wW,&wH, winID)
+  WinGetPos(&wX,&wY, &wW,&wH    , winID)
+
   if (MinMax = 1) { ;     Maximized: Restore and Maximize back
-    winDemax_id[winTitleMatch] := winID ; store demaxed winID so that we can max it back later
+    winDemax_id[id] := winID ; store demaxed winID so that we can max it back later
     WinRestore(wTitle:=winID)
     ; WinMaximize winID ; BUGs, covers taskbar, so replace maximizing back with manually setting max area without the taskbar
     monAct_i	:= getFocusWindowMonitorIndex()
@@ -326,11 +330,11 @@ Win_TitleToggle(PosFix:=0, id:=unset, Sign:="^") {
     ; if (PosFix = 0) { ; avoid artifacts from adding/removing borders, no pos/size change
       WinMove(x:=0,y:=0,width:=monWork_W,height:=monWork_H,wTitle:=winID)
     ; } else {
-      ; WinMove 0,0,A_ScreenWidth,H-25, winTitleMatch ; X+13,Y+13,W-26,H-26 ;Still acts like maximized e.g. after Alt+Tab
+      ; WinMove 0,0,A_ScreenWidth,H-25, id ; X+13,Y+13,W-26,H-26 ;Still acts like maximized e.g. after Alt+Tab
     ; }
-  } else          { ; NOT Maximized
-    if (winDemax_id.has(winTitleMatch)) and (winDemax_id[winTitleMatch] = winID) { ; maximize previously demaxed window
-      winDemax_id[winTitleMatch] := ""
+  } else          { ; NOT Maximized: adjust size
+    if (winDemax_id.get(id,0) = winID) { ; maximize previously demaxed window
+      winDemax_id[id] := ""
       WinMaximize(winID)
       return
     }
@@ -347,14 +351,30 @@ Win_TitleToggle(PosFix:=0, id:=unset, Sign:="^") {
       ; WinActivate winID
       ; WinRestore winID ; NOT reliable, sometimes restores in the background
       ; Doesn't work: WinRedraw/WinHide/WinShow "A"
-    } else {  ; change position/size to make border/-less windows the same
+    } else {  ; change position/size to make border/-less windows the same (clamp at working area height)
+      _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area
       if (Style & WS_Caption) { ; has Title
-        WinMove wX+OffT.x,,wW+OffT.w,wH+OffT.h, winID
-        dbgTT(3,Text:="Has title WS_CAPTION 0x00C00000, var.StyleHex={" StyleHex "}",Time:=2,id:=4,X:=1550,Y:=850)
+        wX_to	:= max(wX + OffT.x,     -   bOffset) ; don't move left-wards outside of screen
+        wW_to	:= min(wW + OffT.w,🖥️w↔ +   bOffset) ; don't increase width  beyond monitor's working area's
+        wH_to	:= min(wH + OffT.h,🖥️w↕ +   bOffset) ;                height
+        WinMove(wX_to, , wW_to,wH_to, winID)
+        (dbg>dp)?'':dbgtxt:="Has title WS_CAPTION 0x00C00000, var.StyleHex={" StyleHex "}" .
+          '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + OffT.x) '¦' (-bOffset) ')' .
+          ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
+          '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + OffT.w) '¦' (🖥️w↔ + bOffset) ')' .
+          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to)
       } else { ; Borderless
-        WinMove wX+OffB.x,,wW+OffB.w,wH+OffB.h, winID
-        dbgTT(3,Text:="Else, var.StyleHex={" StyleHex "}",Time:=2,id:=4,X:=1550,Y:=850)
+        wX_to	:= max(wX + OffB.x,     -   bOffset) ; don't move left-wards outside of screen
+        wW_to	:= min(wW + OffB.w,🖥️w↔ + 2*bOffset) ; don't increase width  beyond monitor's working area's
+        wH_to	:= min(wH + OffB.h,🖥️w↕ + 2*bOffset) ;                height
+        WinMove(wX_to, , wW_to,wH_to, winID)
+        (dbg>dp)?'':dbgtxt:="Else, var.StyleHex={"                            StyleHex "}" .
+          '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + OffB.x) '¦' (-bOffset) ')' .
+          ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
+          '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + OffB.w) '¦' (🖥️w↔ + 2*bOffset) ')' .
+          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to)
       }
+      (dbg<dp)?'':dbgTL(dp,dbgtxt,{🕐:10,id:4,x:1550,y:850,fn:A_ThisFunc})
     }
   }
   }
