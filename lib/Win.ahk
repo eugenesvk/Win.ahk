@@ -236,6 +236,7 @@ class win {
     isMon   	:= MonitorGetWorkArea(monAct_i, &🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓)
     🖥️w↔    	:= 🖥️w→ - 🖥️w←
     🖥️w↕    	:= 🖥️w↓ - 🖥️w↑
+    return isMon
   }
 }
 
