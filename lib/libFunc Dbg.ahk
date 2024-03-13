@@ -17,6 +17,18 @@ dbgTT(dbgMin:=0, Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
     TT(Text, Time,idTT,X,Y)
   }
 }
+dbgTL(dbgMin:=0, Text:="", named?) { ; show tooltip and print to debug
+  static def := {🕐:.5, id:0, x:-1, y:-1, fn:''}
+  if (dbg >= dbgMin) {
+    Time	:= HasProp(named,'Time')?named.Time:(HasProp(named,'t' )?named.t :(HasProp(named,'🕐')?named.🕐:def.Time))
+    id  	:= HasProp(named,'idTT')?named.idTT:(HasProp(named,'id')?named.id:                               def.id  )
+    x   	:= HasProp(named,'x'   )?named.x   :                                                             def.x
+    y   	:= HasProp(named,'y'   )?named.y   :                                                             def.y
+    fn  	:= HasProp(named,'fn'  )?named.fn  :                                                             def.fn
+    TT(Text,Time,id,x,y)
+    OutputDebug((id?id ': ':'') Text (fn?' @' fn:''))
+  }
+}
 TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   static id_last := 0
   , timers := Map()
