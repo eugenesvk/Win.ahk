@@ -22,9 +22,9 @@ Another approach is to __send the letter on__ key↓ and then <kbd>␈</kbd> __c
 
 This script tries to use 2 heuristics to detect a hold of a ⌂mod (but only for <kbd>f</kbd> as a ⌂<kbd>⇧</kbd>)
 
-1) time     definitely a HOLD if held longer than X
+1) time:     definitely a HOLD if held longer than X
 
-2) sequence maybe      a HOLD depending on whether the next key
+2) sequence: maybe a HOLD depending on whether the next key
 
   - is tapped <kbd>a↕</kbd> (pressed down and released), this is a Hold of ⌂<kbd>f</kbd>
   - or only pressed <kbd>a↓</kbd><kbd>f↑</kbd>, this is just fast `fa` typing where it's common to press the next button before the first one is released
