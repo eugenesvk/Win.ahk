@@ -35,22 +35,24 @@ ListLines 0                                  	; Potential performance boost
 
 #DllLoad "Imm32" ; Enables getting layout for consoles
 
-; lib functions not autoloaded anymore in v2.a128
-#include <libFunc>        	; General set of functions
-#include <libFunc App>    	; Functions: app-specific
-#include <libFunc Scroll> 	; Functions: Scrolling
-#include <libFunc Num>    	; Functions: Numeric
-#include <libFunc Dbg>    	; Functions: Debug
-#include <libFunc Native> 	; Functions: Native
-#include <Unicode>        	; Unicode text functions
-#include <Locale>         	; Various i18n locale functions and win32 constants
-#include <io>             	;
-#include <cfg FileExplore>	; toggle extension/hidden files in Win File Explorer
-#include <constKey>       	; various key constants
-#include <str>            	; string helper functions
-#include <sys>            	;
-#include <Win>            	; Remove window borders
-#include <PressH>         	; Special Char Selection
+; lib functions not autoloaded anymore
+#include <libFunc>         	; General set of functions
+#include <libFunc App>     	; Functions: app-specific
+#include <libFunc Scroll>  	; Functions: Scrolling
+#include <libFunc Num>     	; Functions: Numeric
+#include <libFunc Dbg>     	; Functions: Debug
+#include <libFunc Native>  	; Functions: Native
+#include <libFunc Callback>	; Functions: callbacks for various events
+#include <Unicode>         	; Unicode text functions
+#include <Locale>          	; Various i18n locale functions and win32 constants
+#include <io>              	;
+#include <cfg FileExplore> 	; toggle extension/hidden files in Win File Explorer
+#include <constKey>        	; various key constants
+#include <str>             	; string helper functions
+#include <sys>             	;
+#include <Win>             	; Remove window borders
+#include <PressH>          	; Special Char Selection
+#include <WinEvent>        	; Window-related events
 
 ; #include <SelectCharGUI>                 	;
 ; #include <GetLocaleInfo>                 	;
@@ -475,6 +477,7 @@ ListLines 0                                  	; Potential performance boost
   ; #+8::         	TotalCMD_CD(Path8)   	;❖⇧8​	vk38 ⟶ ?
 
 ; ————————————————————————— Windows —————————————————————————————————
+  WinEvent.Create(cbCreate_Borderless, App.ST.match) ; watch Sublime Text windows and apply borderless style
   #h::      	WinMinimize "A"                  	;❖h​ 	vk48	⟶ hide active window
   #+h::     	Win_HideOthers()                 	;❖⇧h​	vk48	⟶ /lib Hides all windows but the focused one
   ;^!w::    	Win_FWT()                        	;^⌥w​	vk57	⟶ Borderless the window under the mouse
