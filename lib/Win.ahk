@@ -613,18 +613,18 @@ getFocusWindowMonitorHandle() {
    hMon := DllCall('MonitorFromWindow', 'Ptr',WinExist("A"), 'UInt',MonDefTopPri, 'Ptr')
 }
 
-getFocusWindowMonitorIndex() { ; converted from stackoverflow.com/a/68547452
+getFocusWindowMonitorIndex(winID?) { ; converted from stackoverflow.com/a/68547452
   monCount := MonitorGetCount() ;Get number of monitor
-  WinGetPos(&🗔↖x,&🗔, &🗔Width,&🗔Height, "A") ; Get the position of the focus window
+  WinGetPos(&🗔↖x,&🗔, &🗔Width,&🗔Height, isSet(winID)?winID:"A") ; Get the position of the focus window
   monSubAreas := []  ; Make an array to hold the sub-areas of the window contained within each monitor
   Loop monCount { ;Iterate through each monitor
     MonitorGetWorkArea(A_Index, &🖥️←,&🖥️↑,&🖥️→,&🖥️↓) ; Get Monitor working area
 
     ;Calculate sub-area of the window contained within each monitor
-    xStart	:= max(🗔↖x           , 🖥️←)
-    yStart	:= max(🗔              , 🖥️↑)
-    xEnd  	:= min(🗔↖x + 🗔Width , 🖥️→)
-    yEnd  	:= min(🗔    + 🗔Height, 🖥️↓)
+    xStart	:= max(🗔↖x          	, 🖥️←)
+    yStart	:= max(🗔            	, 🖥️↑)
+    xEnd  	:= min(🗔↖x + 🗔Width 	, 🖥️→)
+    yEnd  	:= min(🗔   + 🗔Height	, 🖥️↓)
     area  	:= (xEnd - xStart)
              * (yEnd - yStart)
     monSubAreas.push({area:area, index:A_Index}) ;Remember these areas, and which monitor they were associated with
