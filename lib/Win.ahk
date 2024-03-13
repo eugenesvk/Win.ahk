@@ -348,6 +348,7 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than 
     or ((sign = '-') and not (Style & WS_Borderless))) { ; style already not set, no need to remove it
     return
   }
+  WinGetPos(&wXp:=0,&wYp:=0, &wWp:=0,&wHp:=0    , winID)
   WinSetStyle(Sign WS_Borderless, winID)
   WinGetPos(&wX,&wY, &wW,&wH    , winID)
 
@@ -370,49 +371,42 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than 
       return
     }
     if (PosFix = 0) { ; avoid artifacts from adding/removing borders, no pos/size change
-      if ( not          winID
-        or not WinExist(winID)) { ; guard against a "not found" error
-        return
-      }
-      WinMove(,,width:=wW-1,,wTitle:=winID)
-      WinMove(,,width:=wW  ,,wTitle:=winID)
-      ; Alternative way (but more noticeablele): Maximize and Restore
-      ; WinMaximize winID
-      ; WinRestore  winID
-      ; WinActivate winID
-      ; WinRestore winID ; NOT reliable, sometimes restores in the background
+      WinMove(,,width:=wW-1,,winID)
+      WinMove(,,width:=wW  ,,winID)
+      ; WinMaximize(winID), WinRestore (winID),  WinActivate(winID) ; Alternative (more noticeablele)
+      ; WinRestore(winID) ; NOT reliable, sometimes restores in the background
       ; Doesn't work: WinRedraw/WinHide/WinShow "A"
     } else {  ; change position/size to make border/-less windows the same (clamp at working area height)
-      _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area
       if (Style & WS_Caption) { ; has Title
-        wX_to	:= max(wX + OffT.x,     -   bOffset) ; don't move left-wards outside of screen
-        wY_to	:= wY
-        wW_to	:= min(wW + OffT.w,🖥️w↔ +   bOffset) ; don't increase width  beyond monitor's working area's
-        wH_to	:= min(wH + OffT.h,🖥️w↕ +   bOffset) ;                height
-        if (wW_to > 🖥️w↔) and (wX_to <= bOffset) { ; fix some apps with mistaken window border offsets
-          wW_to	:= 🖥️w↔
-          wX_to	:= 0
-        }
-        if (wH_to > 🖥️w↕) and (wY_to <= bOffset) { ; fix some apps with mistaken window border offsets
-          wH_to	:= 🖥️w↕
-          wY_to	:= 0
-        }
-        (dbg>dp)?'':dbgtxt:="Has title WS_CAPTION 0x00C00000, var.StyleHex={" StyleHex "}" .
-          '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + OffT.x) '¦' (-bOffset) ')' .
-          ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
-          '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + OffT.w) '¦' (🖥️w↔ +   bOffset) ')' .
-          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to) '`tmin(' (wH + OffT.h) '¦' (🖥️w↕ +   bOffset) ')'
+        xOff	:= OffT.x, xLim :=       -1*bOffset
+        wOff	:= OffT.w, wLim := 🖥️w↔ + 1*bOffset
+        hOff	:= OffT.h, hLim := 🖥️w↕ + 1*bOffset
+        ; if (wW_to > 🖥️w↔) and (wX_to <= bOffset) { ; fix some apps with mistaken window border offsets
+        ;   wW_to	:= 🖥️w↔
+        ;   wX_to	:= 0
+        ; }
+        ; if (wH_to > 🖥️w↕) and (wY_to <= bOffset) { ; fix some apps with mistaken window border offsets
+        ;   wH_to	:= 🖥️w↕
+        ;   wY_to	:= 0
+        ; }
+        (dbg>dp)?'':dbgtxt:="Has title WS_CAPTION 0x00C00000, var.StyleHex={" StyleHex "}"
+
       } else { ; Borderless
-        wX_to	:= max(wX + OffB.x,     -   bOffset) ; don't move left-wards outside of screen
-        wY_to	:= wY
-        wW_to	:= min(wW + OffB.w,🖥️w↔ + 2*bOffset) ; don't increase width  beyond monitor's working area's
-        wH_to	:= min(wH + OffB.h,🖥️w↕ + 2*bOffset) ;                height
-        (dbg>dp)?'':dbgtxt:="Else, var.StyleHex={"                            StyleHex "}" .
-          '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + OffB.x) '¦' (-bOffset) ')' .
-          ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
-          '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + OffB.w) '¦' (🖥️w↔ + 2*bOffset) ')' .
-          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to) '`tmin(' (wH + OffB.h) '¦' (🖥️w↕ + 2*bOffset) ')'
+        xOff	:= OffB.x, xLim :=       -1*bOffset
+        wOff	:= OffB.w, wLim := 🖥️w↔ + 2*bOffset
+        hOff	:= OffB.h, hLim := 🖥️w↕ + 2*bOffset
+        (dbg>dp)?'':dbgtxt:="Else, var.StyleHex={"                            StyleHex "}"
       }
+      wX_to	:= max(wX + xOff, xLim) ; don't move ← outside of screen
+      wY_to	:= wY
+      wW_to	:= min(wW + wOff,wLim) ; don't increase ↔ beyond monitor's working area
+      wH_to	:= min(wH + hOff,hLim) ;                ↕
+      (dbg>dp)?'':dbgtxt.= '' .
+        '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + xOff) '=(' wX '+' xOff ')' '¦' xLim ')' .
+        ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
+        '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + wOff) '=(' wW '+' wOff ')' '¦' wLim ')' .
+        '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to) '`tmin(' (wH + hOff) '=(' wH '+' hOff ')' '¦' hLim ')' .
+        '`n' '(pre) x' wXp ' y' wXp ' w' wWp ' h' wHp ' style=' StyleHex ' Frame x' winSzFrame_Xpx ' y' winSzFrame_Ypx
       WinMove(wX_to,wY_to, wW_to,wH_to, winID)
       (dbg<dp)?'':dbgTL(dp,dbgtxt,{🕐:10,id:4,x:1550,y:850,fn:A_ThisFunc})
     }
