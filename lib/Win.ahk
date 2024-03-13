@@ -290,7 +290,9 @@ Win_FWT(hwnd:="") { ;autohotkey.com/boards/viewtopic.php?p=123166#p123166
   }
 }
 
-Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than regular, Fix=1 to make Window position/size match border/-less
+Win_TitleToggle(PosFix:=0, id?, Sign:="^", PosFixOverflow:=1) { ; Borderless window is larger than regular, Fix=1 to make Window position/size match border/-less
+  ; PosFix          maintain identical "outer" window size, so removing a titlebar increases the client area to compensate
+  ; PosFixOverflow  limit to monitor's working area, so adding a titlebar won't make the window hide the bottom taskbar
   static winDemax_id	:= Map()
     , dp            	:= 0 ; debug tooltip levels
     , winSzFrame_Xpx	:= SysGet(smSzFrame_Xpx) ; sizing border around the perimeter of a window
@@ -340,11 +342,33 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than 
       return
     }
     if (PosFix = 0) { ; avoid artifacts from adding/removing borders, no pos/size change
-      WinMove(,,width:=wW-1,,winID)
-      WinMove(,,width:=wW  ,,winID)
-      ; WinMaximize(winID), WinRestore (winID),  WinActivate(winID) ; Alternative (more noticeablele)
-      ; WinRestore(winID) ; NOT reliable, sometimes restores in the background
-      ; Doesn't work: WinRedraw/WinHide/WinShow "A"
+      if PosFixOverflow {
+        if (wW   > 🖥️w↔) and (wX <= bOffset) {
+          wW_to	:= 🖥️w↔
+          wX_to	:= 0
+        }
+        if (wH   > 🖥️w↕) and (wY <= bOffset) {
+          wH_to	:= 🖥️w↕
+          wY_to	:= 0
+        }
+        if       (isSet(wW_to)
+          and     isSet(wH_to)) {
+          WinMove(wX_to,wY_to, wW_to-1,wH_to-1,winID)
+          WinMove(wX_to,wY_to, wW_to  ,wH_to  ,winID)
+        } else if isSet(wW_to) {
+          WinMove(wX_to,     , wW_to-1,       ,winID)
+          WinMove(wX_to,     , wW_to  ,       ,winID)
+        } else if isSet(wH_to) {
+          WinMove(     ,wY_to,        ,wH_to-1,winID)
+          WinMove(     ,wY_to,        ,wH_to  ,winID)
+        }
+      } else {
+        WinMove(,,width:=wW-1,,winID)
+        WinMove(,,width:=wW  ,,winID)
+        ; WinMaximize(winID), WinRestore (winID),  WinActivate(winID) ; Alternative (more noticeablele)
+        ; WinRestore(winID) ; NOT reliable, sometimes restores in the background
+        ; Doesn't work: WinRedraw/WinHide/WinShow "A"
+      }
     } else {  ; change position/size to make border/-less windows the same (clamp at working area height)
       if (Style & WS_Caption) { ; has Title
         xOff	:= OffT.x, xLim :=       -1*bOffset
