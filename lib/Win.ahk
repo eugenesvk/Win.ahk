@@ -322,7 +322,7 @@ Win_FWT(hwnd:="") { ;autohotkey.com/boards/viewtopic.php?p=123166#p123166
 
 Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than regular, Fix=1 to make Window position/size match border/-less
   static winDemax_id	:= Map()
-    , dp            	:= 0 ; debug tooltip levels
+    , dp            	:= 1 ; debug tooltip levels
   ; dbgGetSysMonVars()
 
   if !IsSet(id) { ; if no id passed, use Active window
