@@ -77,7 +77,10 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   }
 }
 
-Object2Str(Var){ ; autohotkey.com/boards/viewtopic.php?f=82&t=111713
+Object2Str(Var){
+  Obj→Str (Var)
+}
+Obj→Str(Var){ ; autohotkey.com/boards/viewtopic.php?f=82&t=111713
   Output := ""
   if !(Type(Var) ~="Map|Array|Object|String|Number|Integer|Float"){
     throw Error("Object type not supported.", -1, Format("<Object at 0x{:p}>", Type(Var)))
@@ -85,19 +88,19 @@ Object2Str(Var){ ; autohotkey.com/boards/viewtopic.php?f=82&t=111713
   if (Type(Var)="Array"){
     Output .= "["
     For Index, Value in Var{
-      Output .= ((Index=1) ? "" : ",") Object2Str(Value)
+      Output .= ((Index=1) ? "" : ",") Obj→Str(Value)
     }
     Output .= "]"
   } else if (Type(Var)="Map"){
     Output .= "Map("
     For Key , Value in Var {
-      Output .= ((A_index=1) ? "" : ",") Key "," Object2Str(Value)
+      Output .= ((A_index=1) ? "" : ",") Key "," Obj→Str(Value)
     }
     Output .= ")"
   } else if (Type(Var)="Object"){
     Output .= "{"
     For Key , Value in Var.Ownprops() {
-      Output .= ((A_index=1) ? "" : ",") Key ":" Object2Str(Value)
+      Output .= ((A_index=1) ? "" : ",") Key ":" Obj→Str(Value)
     }
     Output .= "}"
   } else if (Type(Var)="String"){
@@ -111,7 +114,7 @@ Object2Str(Var){ ; autohotkey.com/boards/viewtopic.php?f=82&t=111713
   if (Type(Var) ~="Map|Array" and ObjOwnPropCount(Var)>0){
     Output .= "{"
     For Key , Value in Var.Ownprops() {
-      Output .= ((A_index=1) ? "" : ",") Key ":" Object2Str(Value)
+      Output .= ((A_index=1) ? "" : ",") Key ":" Obj→Str(Value)
     }
     Output .= "}"
   }
@@ -574,7 +577,7 @@ EditGui(Input){
 dbgvar(args*) { ; autohotkey.com/boards/viewtopic.php?f=83&t=123206#p547596
   static LogFunc          	:= {msg:MsgBox, tt:Tooltip, print:(x)=>FileAppend(x,"*"), dbg:OutputDebug, log:(x)=>FileAppend(x,"tmp.log")}.msg
     , t                   	:= "txt"
-    , SerializeFunc       	:= (t="txt") ? Object2Str : Obj_Gui
+    , SerializeFunc       	:= (t="txt") ? Obj→Str : Obj_Gui
     , FormatFunc          	:= {Terse:(info)=>Format("{1} ⟹ {2}",info.expression,info.value), Verbose:(info)=>SerializeFunc(info)}.Terse
     , ReadLineFromFile    	:= (file,lineNo)=>StrSplit(FileRead(file),"`n","`r")[lineNo]
     , funcName            	:= A_ThisFunc
@@ -600,7 +603,7 @@ dbgvar(args*) { ; autohotkey.com/boards/viewtopic.php?f=83&t=123206#p547596
 dbgvar_o(args*) { ; autohotkey.com/boards/viewtopic.php?f=83&t=123206#p547596
   static LogFunc          	:= {msg:MsgBox, tt:Tooltip, print:(x)=>FileAppend(x,"*"), dbg:OutputDebug, log:(x)=>FileAppend(x,"tmp.log")}.msg
     , t                   	:= "obj"
-    , SerializeFunc       	:= (t="txt") ? Object2Str : Obj_Gui
+    , SerializeFunc       	:= (t="txt") ? Obj→Str : Obj_Gui
     , FormatFunc          	:= { Terse: (info) => Format("{1} ⟹ {2}", info.expression, info.value), Verbose: (info) => SerializeFunc(info) }.Terse
     , ReadLineFromFile    	:= (file, lineNo) => StrSplit(FileRead(file), "`n", "`r")[lineNo]
     , funcName            	:= A_ThisFunc
