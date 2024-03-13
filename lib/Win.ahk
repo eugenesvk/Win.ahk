@@ -370,25 +370,34 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^") { ; Borderless window is larger than 
       _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area
       if (Style & WS_Caption) { ; has Title
         wX_to	:= max(wX + OffT.x,     -   bOffset) ; don't move left-wards outside of screen
+        wY_to	:= wY
         wW_to	:= min(wW + OffT.w,🖥️w↔ +   bOffset) ; don't increase width  beyond monitor's working area's
         wH_to	:= min(wH + OffT.h,🖥️w↕ +   bOffset) ;                height
-        WinMove(wX_to, , wW_to,wH_to, winID)
+        if (wW_to > 🖥️w↔) and (wX_to <= bOffset) { ; fix some apps with mistaken window border offsets
+          wW_to	:= 🖥️w↔
+          wX_to	:= 0
+        }
+        if (wH_to > 🖥️w↕) and (wY_to <= bOffset) { ; fix some apps with mistaken window border offsets
+          wH_to	:= 🖥️w↕
+          wY_to	:= 0
+        }
         (dbg>dp)?'':dbgtxt:="Has title WS_CAPTION 0x00C00000, var.StyleHex={" StyleHex "}" .
           '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + OffT.x) '¦' (-bOffset) ')' .
           ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
-          '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + OffT.w) '¦' (🖥️w↔ + bOffset) ')' .
-          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to)
+          '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + OffT.w) '¦' (🖥️w↔ +   bOffset) ')' .
+          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to) '`tmin(' (wH + OffT.h) '¦' (🖥️w↕ +   bOffset) ')'
       } else { ; Borderless
         wX_to	:= max(wX + OffB.x,     -   bOffset) ; don't move left-wards outside of screen
+        wY_to	:= wY
         wW_to	:= min(wW + OffB.w,🖥️w↔ + 2*bOffset) ; don't increase width  beyond monitor's working area's
         wH_to	:= min(wH + OffB.h,🖥️w↕ + 2*bOffset) ;                height
-        WinMove(wX_to, , wW_to,wH_to, winID)
         (dbg>dp)?'':dbgtxt:="Else, var.StyleHex={"                            StyleHex "}" .
           '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + OffB.x) '¦' (-bOffset) ')' .
           ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
           '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + OffB.w) '¦' (🖥️w↔ + 2*bOffset) ')' .
-          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to)
+          '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to) '`tmin(' (wH + OffB.h) '¦' (🖥️w↕ + 2*bOffset) ')'
       }
+      WinMove(wX_to,wY_to, wW_to,wH_to, winID)
       (dbg<dp)?'':dbgTL(dp,dbgtxt,{🕐:10,id:4,x:1550,y:850,fn:A_ThisFunc})
     }
   }
