@@ -217,8 +217,8 @@ class win {
   static getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) { ; get active monitor's working area (excluding bottom taskbar)
     monAct_i	:= getFocusWindowMonitorIndex()
     isMon   	:= MonitorGetWorkArea(monAct_i, &🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓)
-    🖥️w↔    	:= 🖥️w→-🖥️w←
-    🖥️w↕    	:= 🖥️w↓-🖥️w↑
+    🖥️w↔    	:= 🖥️w→ - 🖥️w←
+    🖥️w↕    	:= 🖥️w↓ - 🖥️w↑
   }
 }
 
