@@ -81,6 +81,11 @@ if alt⌂↓          another modtap key is active (but not switched to a hold y
 ⌂↓       ⌂↑ ↕     single standalone tap, not hold
      <ΔH •  _↕01)  print ⌂
     •>ΔH    _🠿0t)  enable ⌂ (⇧⌂ enabled on timer via input hook's timeout of the alt⌂)
+⌂↓ a⌂↓ ⌂↑ a⌂↑ ↕   should be ⌂,a⌂ as that's just fast typing
+•            0a)  =above print nothing, don't know the future yet, just activate input hook
+<ΔH•         ?0b) =above print nothing, don't know whether to print ⇧A or ⌂,a⌂, the hold depends on the next key sequence
+       •    _↕2a) ≠print ⌂, but not a⌂ as it's a mod and may become a hold
+           •       treat a⌂ as a regular ⌂, so this depends on a⌂ timings
 ```
 
 ## Install
