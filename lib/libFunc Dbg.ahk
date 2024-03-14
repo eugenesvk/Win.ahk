@@ -9,7 +9,7 @@ dbgMsg(dbgMin:=0, Text:="", Title:="", Options:="") {
 
 log(dbgMin:=0, Text:="", fn:='',idTT:=0,X:=0,Y:=0) { ; print to debug, so leave unused vars as well
   if (dbg >= dbgMin) {
-    OutputDebug((idTT?idTT ': ':'') Text (fn?' @' fn:''))
+    OutputDebug(Text (idTT?idTT ': ':'') (fn?' @' fn:''))
   }
 }
 dbgTT(dbgMin:=0, Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
@@ -26,24 +26,22 @@ dbgTL(dbgMin:=0, Text:="", named?) { ; show tooltip and print to debug
     y   	:= HasProp(named,'y'   )?named.y   :                                                             def.y
     fn  	:= HasProp(named,'fn'  )?named.fn  :                                                             def.fn
     TT(Text,Time,id,x,y)
-    OutputDebug((id?id ': ':'') Text (fn?' @' fn:''))
+    OutputDebug(Text (id?id ': ':'') (fn?' @' fn:''))
   }
 }
 TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
-  static id_last := 0
+  static id_last := 0, id_max := 20
   , timers := Map()
   if idTT = 0 { ; no id given, increase by 1 to have multiple calls have different ids
-    id_last += 1
+    (id_last>=id_max) ? id_last:=1 : id_last+=1 ; reset id over max
+    id := id_last
   } else {
-    id_last := idTT
+    id := idTT
   }
-  if id_last <  1 or
-     id_last > 20 { ; reset id
-    id_last := 1
-  }
-  id := id_last
   if timers.Has(id) {
     SetTimer(timers.Delete(id), 0) ;, log(0,'del timer id=' id)
+  ; } else {
+    ; log(0,' starting timer id ' id ' idTT=' idTT)
   }
 
   MouseGetPos(&mX, &mY, &mWin, &mControl)
@@ -62,7 +60,7 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
            "SubStr:" SubStr("o200", 2) )
   if        (X>=0
           && Y>=0) {
-    ToolTip(Text, X,Y,id)
+    ToolTip(Text, X             , Y             ,id)
   } else if (X>=0) {
     ToolTip(Text, X             ,mY+stepY*(id-1),id)
   } else if (Y>=0) {
