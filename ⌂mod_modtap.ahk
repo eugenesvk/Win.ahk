@@ -102,7 +102,6 @@ class ⌂ { ; 🠿
   static cb↑      	:= Map()
   static cb↓      	:= Map()
   static map      	:= Map()
-  static hk_map   	:= Map() ; store registered keypairs 'vk46'='f'
 
   static Call(key,mod) {
     token := this.key2token.get(key,key)
@@ -130,7 +129,7 @@ class ⌂ { ; 🠿
       try {
         i⌂.🔣        	:= helperString.modi_ahk→sym(    i⌂.mod) ; ‹⇧
         i⌂.🔣ahk     	:= helperString.modi_ahk→sym_ahk(i⌂.mod) ; <+
-        i⌂.flag     	:= f%i⌂.🔣%
+        i⌂.flag     	:= f%i⌂.🔣% ; f‹⇧ = 1
       } catch       	Error as err { ; not a home row mod, so doesn't have mod prefixex/flags
         i⌂.🔣        	:= ''
         i⌂.🔣ahk     	:= ''
@@ -160,44 +159,39 @@ class ⌂ { ; 🠿
     static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
      , s    	:= helperString
     loop parse keys {
-      kvk := vk[A_LoopField]
-      , hk↓  	:= kvk       ;p → $vk46
-      , hk↑  	:= kvk ' UP' ;p → $vk46 UP   $=kbd hook
-      , hk↓r 	:= ＄ hk↓ ; register with hook, but otherwise store without any hooks since other HK function could've registered first with diferent prefixes
-      , hk↑r 	:= ＄ hk↑
-      , token	:= s.key→token(A_LoopField) ;p for p
+      kvk  	:= vk[A_LoopField]
+      hk↓  	:= ＄ kvk       ;f → $vk46
+      hk↑  	:= ＄ kvk ' UP' ;f → $vk46 UP   $=kbd hook
+      hk↓fn	:= hkModTap.bind(A_LoopField,kvk,is↓:=1) ; allows passing key and is↓ direction to the hk callback
+      hk↑fn	:= hkModTap.bind(A_LoopField,kvk,is↓:=0) ; instead of parsing it inside and worrying about hotkey prefixes registered by other scripts
       if cb { ; turn hotkey context sensitivity if a callback is passed
         HotIf cb
       }
-      HotKey(hk↓r, hkModTap,'I1') ;
-      HotKey(hk↑r, hkModTap,'I1') ;
+      HotKey(hk↓, hk↓fn,'I1')
+      HotKey(hk↑, hk↑fn,'I1')
       if cb {
         HotIf
       }
-      ⌂.hk_map[hk↓]        	:= {k:A_LoopField, is↓:1}
-      ⌂.hk_map[hk↑]        	:= {k:A_LoopField, is↓:0}
-      ⌂.hk_map[A_LoopField]	:= {↓:hk↓, ↑:hk↑}
     }
   }
   static unregister🠿↕(keys) {
-    static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
+    static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
      , s    	:= helperString
      ; , k := helperString.key→token.Bind(helperString)
     static ⌂tHold := ucfg⌂mod.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := ucfg⌂mod.Get('ttdbg',0), sndlvl := ucfg⌂mod.Get('sndlvl',0)
     loop parse keys { ;
-      pre_ahk := ⌂.%A_LoopField%.🔣ahk ; <+ for f and >+ for j
-      hk_reg := ⌂.hk_map[A_LoopField]
-      , hk↓     	:= pre_ahk hk_reg.↓  ; >+ ＄ vk       for j
-      , hk↑     	:= pre_ahk hk_reg.↑  ; >+ ＄ vk ' UP'
-      , token   	:= s.key→token(A_LoopField) ;f for f
-      , cbHotIf_	:= cbHotIf.Bind(token)
+      mod_ahk 	:= ⌂.%A_LoopField%.🔣ahk ; <+ for f and >+ for j
+      kvk     	:= vk[A_LoopField]
+      hk↓     	:= ＄ mod_ahk kvk      	;f → >+ $vk46
+      hk↑     	:= ＄ mod_ahk kvk ' UP'	;f → >+ $vk46 UP $=kbd hook
+      hk↓fn   	:= hkDoNothing ; allows passing key and is↓ direction to the hk callback
+      hk↑fn   	:= hkModTap_off.bind(A_LoopField,kvk,is↓:=0) ; instead of parsing it inside and worrying about hotkey prefixes registered by other scripts
+      token   	:= s.key→token(A_LoopField) ;f for f
+      cbHotIf_	:= cbHotIf.Bind(token)
       HotIf cbHotIf_ ; filter down/up events for
-      HotKey(hk↓, hkDoNothing , "I" sndlvl) ; do nothing while home row mod is active _1)
-      HotKey(hk↑, hkModTap_off, "I" sndlvl) ; reset home row mod if it's active on UP _2)
+      HotKey(hk↓, hk↓fn, "I" sndlvl) ; do nothing while home row mod is active _1)
+      HotKey(hk↑, hk↑fn, "I" sndlvl) ; reset home row mod if it's active on UP _2)
       HotIf
-      ⌂.hk_map[hk↓]        	:= {k:A_LoopField, is↓:1}
-      ⌂.hk_map[hk↑]        	:= {k:A_LoopField, is↓:0}
-      ⌂.hk_map[A_LoopField]	:= {↓:hk↓, ↑:hk↑}
       ; dbgtt(0,Obj2Str(⌂.hk_map[A_LoopField]),5)
     }
   }
@@ -243,33 +237,25 @@ get⌂Status() {
 
 preciseTΔ() ; start timer for debugging
 
-hkModTap(hk_dirty) {
+hkModTap(k_,kvk,is↓,hk_dirty) {
   static _ := 0
   , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
   , _ := win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
   static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
   static _d := 1, _dl:=1
-  hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first with ＄ ˜
-  if (hk_reg := ⌂.hk_map.Get(hk,'')) { ; {k:f, is↓:1 or 0} for $vk46
-    (dbg<min(_d,_dl))?'':(m:='hk=‘' hk_dirty '’ → ‘' hk '’ hk_reg=‘' hk_reg.k '’' (hk_reg.is↓?'↓':'↑') ' lvl' A_SendLevel ' preK=' k→en(A_PriorKey) ' hk@hkModTap', dbgTT(_d,m,2,,🖥️w↔,🖥️w↕*0.3), log(_dl,m))
-    ; 🕐1 := preciseTΔ()
-    setup⌂mod(&hk,hk_reg.k,hk_reg.is↓)
-    ; 🕐2 := preciseTΔ()
-    ; log(0,'post setup⌂mod ' m format(" 🕐Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'h⃣k⃣⌂')
-  } else {
-    (dbg<min(_d,_dl))?'':(m:='✗nothing matched setChar🠿 hk=‘' hk_dirty '’ → ‘' hk '’ lvl' A_SendLevel ' hk@hkModTap', dbgTT(_d,m,t:=2,,🖥️w↔,🖥️w↕*0.3), log(_dl,m))
-    return ; msgbox('nothing matched setChar🠿 ThisHotkey=' . hk)
-  }
+  (dbg<min(_d,_dl))?'':(m:='‘' k_ '’(' kvk ')' (is↓?'↓':'↑') ' L' A_SendLevel ' preK=' k→en(A_PriorKey) ' hk@hkModTap', dbgTT(_d,m,2,,🖥️w↔,🖥️w↕*0.3), log(_dl,m))
+  ; 🕐1 := preciseTΔ()
+  setup⌂mod(k_,kvk,is↓) ; k_=f kvk=vk46 is↓=0 or 1
+  ; 🕐2 := preciseTΔ()
+  ; log(0,'post setup⌂mo ' m format(" 🕐Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'h⃣k⃣⌂')
 }
 
 cbHotIf(_token, HotkeyName) { ; callback for unregister🠿↕ ;f <+$vk46 and f <+$vk46 UP
   return ⌂.%_token%.is ; token is ︔ for ; to be used in var names
 }
-hkModTap_off(hk_dirty) {
+hkModTap_off(k_,kvk,is↓,hk_dirty) {
   static D	:= udbg⌂mod, C := ucfg⌂mod
-  hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first with ＄ ˜
-  hk_reg := ⌂.hk_map[hk]
-  ⌂_ := ⌂.%hk_reg.k%
+  ⌂_ := ⌂.%k_%
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣
   static ⌂tHold := C.Get('holdTimer',0.5), ⌂ΔH := ⌂tHold * 1000, ttdbg := C.Get('ttdbg',0), sndlvl := C.Get('sndlvl',0)
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
@@ -277,7 +263,7 @@ hkModTap_off(hk_dirty) {
     , tooltip⎀ := C.Get('tooltip⎀',1), tt⎀delay := C.Get('tt⎀delay',0) * 1000
     , ttdbg := C.Get('ttdbg',0)
   t⌂_ := A_TickCount - ⌂_.t
-  dbgTT(3,'🠿1bb) ⌂↓ >ΔH •⌂↑ 🕐' preciseTΔ() ' (hkModTap_off)`n' dbg⌂ ' ¦ ' hk_reg.k ' ¦ ' hk ' (' t⌂_ (t⌂_<⌂ΔH?'<':'>') ⌂ΔH ') `n' ⌂_.send↑,t:=4,i:=13,0,🖥️w↕//2) ;
+  dbgTT(3,'🠿1bb) ⌂↓ >ΔH •⌂↑ 🕐' preciseTΔ() ' (hkModTap_off)`n' dbg⌂ ' ¦ ' k_ ' ¦ ' kvk ' (' t⌂_ (t⌂_<⌂ΔH?'<':'>') ⌂ΔH ') `n' ⌂_.send↑,t:=4,i:=13,0,🖥️w↕//2) ;
   ; log(D.dsl,'⌂↑',,'✗🖮¦' ⌂_.send↑ '¦————— @hkModTap_off')
   SendInput(⌂_.send↑), ⌂_.is  := false, ⌂_.pos := ↑, ⌂_.t := A_TickCount ; 🠿1bb)
   , dbgTT(ttdbg?0:5,ttdbg?'`n':'',t:='∞',D.i↗,🖥️w↔ - 40, 20)
@@ -364,7 +350,7 @@ Key↓_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') {
   }
 }
 Key↑_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') { ;
-  static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+  static K	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
     , s   	:= helperString
     , C   	:= ucfg⌂mod, D	:= udbg⌂mod
     , 🖥️w←,🖥️w↑,🖥️w→,🖥️w↓,🖥️w↔,🖥️w↕
@@ -379,7 +365,7 @@ Key↑_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') { ;
   dbg⌂ := ⌂_.k ' ' ⌂_.🔣 (⌂_.pos=↓?'↓':'↑') ;
   kvk_s := 'vk' hex(kvk), sc_s := 'sc' hex(ksc)
   ⌂_.K↑.push(kvk)
-  if ⌂_.pos = ↓ { ; 1a)f
+  if ⌂_.pos = ↓ { ; 1a)
     dbg_min := min(D.ds,dbl)
     variant := '', pri₌ := '', 🕐 := (dbg >= dbg_min) ? preciseTΔ() : ''
     if dbg >= dbg_min { ; get debug values early otherwise ⌂_.K↓ can get reset on slow tooltip ops
@@ -407,19 +393,16 @@ Key↑_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') { ;
           ; log(D.dsl,'ignoreall send ⌂k↑=¦' ⌂_.vk '¦@lvl' ih.MinSendLevel,,'   ————— @Key↑_⌂')
           ; setup⌂mod(⌂_.vk ' UP',⌂_.k,is↓:='0') ; alternative way to cancel by calling the function directly
       } else if ignored.Has(⌂_.flag) and
-         ignored[⌂_.flag].Has(kvk_s) { ;       ignore this modtap+key combo
+         ignored[           ⌂_.flag].Has(kvk_s) { ;       ignore this modtap+key combo
         variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
         if ignore🛑 { ; force-cancel modtap
-          _SendLevel := A_SendLevel
-          SendLevel ih.MinSendLevel ; tweak sendlevel to allow the script to accept the generated Up event
-          SendEvent('{' ⌂_.vk ' UP}') ;
-          SendLevel _SendLevel
-          ; log(D.dsl,'ignore🛑 send ⌂k↑=¦' ⌂_.vk '¦@lvl' ih.MinSendLevel,,'   ————— @Key↑_⌂')
+          _sl:=A_SendLevel, SendLevel(ih.MinSendLevel), SendEvent('{' ⌂_.vk ' UP}'), SendLevel(_sl)
+          (dbg<D.dsl)?'':(log(D.dsl,'🖮‘' ⌂_.k '’↑@L' ih.MinSendLevel '_' _sl '————— ignore🛑',A_ThisFunc))
           ; setup⌂mod(⌂_.vk ' UP',⌂_.k,is↓:='0') ; alternative way to cancel by calling the function directly
         }
       } else {                         ; don't ignore this modtap+key combo
         variant :=  '🠿1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
-        ; log(D.dsl,'prio≠⌂.k ✓HasVal⌂.K↓ ⌂↓=' vkrl['en'].Get(kvk_s,'✗') '¦',,'✓🖮¦' ⌂_.send↓ '¦—————@Key↑_⌂')
+        ; log(D.dsl,'prio≠⌂.k ✓HasVal⌂.K↓ ⌂↓=' vkrl['en'].Get(kvk_s,'✗') '¦',A_ThisFunc,'✓🖮¦' ⌂_.send↓ '¦—————')
         SendInput(⌂_.send↓ '{' kvk_s sc_s '}'), ⌂_.is := true ; splitting send↓ and key bugs due to slow tooltip⎀
         if tooltip⎀ {
           ; (dbg<dbb)?'':(🕐1:=preciseTΔ(), dbg_ih:=ih.input, dbg_k↓:=Obj2Str(kvk→label(⌂_.K↓)))
@@ -438,8 +421,8 @@ Key↑_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') { ;
       }
     }
     if dbg >= dbl {
-      dbgTT(dbl,variant ' (' dbgsrc ') 🕐' 🕐
-        '`n' dbg⌂ ' ↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ' pri₌ ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`nsend↓: ' ⌂_.send↓ keynm ' ¦ih: ' ih.input,t:=4,D.ik,A_ScreenWidth - 40) ;
+      dbgTL(dbl,variant ' (' dbgsrc ') 🕐' 🕐
+        '`n' dbg⌂ ' ↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ' pri₌ ⌂_.k ' prio⌂↓‘' prio↓ '’`nK↓' ⌂K↓ '`nK↑' ⌂K↑ '`nsend↓: ' ⌂_.send↓ keynm ' ¦ih: ' ih.input,{t:4,idTT:D.ik,x:A_ScreenWidth - 40}) ;i
     }
     if dbg >= D.ds {
       dbgTT(D.ds,variant ' 🕐' 🕐
@@ -450,7 +433,8 @@ Key↑_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') { ;
       keynm 	:= vk→k.Get('vk' hex(kvk),'✗')
       prionm	:= vk→k.Get(vk.get(A_PriorKey,''),'✗') ;
       t⌂_   	:= A_TickCount - ⌂_.t
-      dbgMsg(dbl,'✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑ ⌂↑ 🕐' preciseTΔ() '`n' dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k,'Key↑⌂')
+      dbgtxt :='✗do nothing`n 2b) ⌂↓ a↓ ⌂↑ •a↑' '`n' dbg⌂p(&⌂_) dbg⌂ ' 🕐' t⌂_ ' ' keynm '↑(' kvk_s ' ' sc_s ') prio ‘' prionm '’ ≠' ⌂_.k
+      dbgMsg(dbl,dbgtxt),log(dbl,dbgtxt,dbgsrc '→' A_ThisFunc)
     }
   }
 }
@@ -489,13 +473,13 @@ k→en(key) { ; ф → a
 }
 dbg⌂p(&⌂_) { ; common debug info for a ⌂ key
   return (
-    (⌂_.is?'✓':'✗') '⌂is ' (⌂_.pos = ↓ ? '↓' : '↑') '⌂pos' ' lvl' A_SendLevel '¦' ⌂_.ih.MinSendLevel
+    (⌂_.pos=↓?'↓':'↑') '⌂' ⌂_.k ' ' (⌂_.is?'✓':'✗') '⌂' ⌂_.🔣 ' L' A_SendLevel '¦' ⌂_.ih.MinSendLevel
     ' preK=‘' k→en(A_PriorKey) '’ pre↓=‘' k→en(⌂_.prio↓) '’ pre↑=‘' k→en(⌂_.prio↑) '’'
     ' input=‘' ⌂_.ih.input '’' ' 🕐' preciseTΔ()
   )
 }
 
-setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
+setup⌂mod(c,vkC,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
   static K  	:= keyConstant, vk:=K._map, vkr:=K._mapr, vkl:=K._maplng, vkrl:=K._maprlng, vk→k:=vkrl['en'], sc:=K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , bin→dec	:= numFunc.bin→dec.Bind(numFunc), dec→bin := numFunc.dec→bin.Bind(numFunc), nbase := numFunc.nbase.Bind(numFunc)
    , s      	:= helperString
@@ -516,7 +500,6 @@ setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
       ; L1024 def don't need many since after a short hold timer a permanent mode will set, the hoook will reset
    , stack⌂  	:= [] ; track the level of a modtap key's IHooks in the stack (also used to set minsendlevel to allow sending keys to only the most recent hook)
    , dbgorder	:= Map()
-  ; dbgTT(0,hk ' ' c ' ' is↓,t:='∞',i:=7,0,0) ;
   ;🕐1 := preciseTΔ()
 
   if not isInit {
@@ -525,50 +508,51 @@ setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     isInit	:= true
   }
 
-  vkC := vk[c] ; c=f, vkC=vk46
   this_token := ⌂.map['vk→token'].Get(vkC, '')
   if not this_token { ;
     throw ValueError("Unknown modtap key!", -1, c ' ' vkC)
   }
-  this⌂ := ⌂.%this_token%
-  ih⌂        	:= this⌂.ih
-  dbg⌂       	:= '⌂' this⌂.k this⌂.🔣 ;
+  ⌂_ := ⌂.%this_token%
+  ih⌂        	:= ⌂_.ih
+  dbg⌂       	:= '⌂' ⌂_.k ⌂_.🔣 ;
   modtapflags	:= get⌂Status() ; {isAny‹,isAny›,bit}
   bit⌂       	:= modtapflags.bit
   isAny‹     	:= modtapflags.isAny‹
   isAny›     	:= modtapflags.isAny›
-  isThis‹    	:= this⌂.flag & bit‹
-  isThis›    	:= this⌂.flag & bit›
+  isThis‹    	:= ⌂_.flag & bit‹
+  isThis›    	:= ⌂_.flag & bit›
   isOpp      	:= (isThis‹ and isAny›)
     or       	   (isThis› and isAny‹)
-  if dbg >= min(d3,l3) {
+  if dbg >= min(d4,l4) {
     static tmpid := 2
     (tmpid > 5)?(tmpid := 2):''
-    (dbg<min(d3,l3))?'':(m:='•2 ' c ' ' vkC ' is' (is↓?'↓':'↑') ' ⌂' (this⌂.pos=↓?'↓':'↑') (this⌂.is?'🠿':'') ' isOpp' isOpp ' stack' stack⌂.Length ' lvl' A_SendLevel ' 🕐' preciseTΔ() '`n@setup⌂'
-      ,dbgTT(d3,m,'∞',tmpid,🖥️w↔*(1  - dbgorder.Get(c,0)[1]*.24)
-      ,                     🖥️w↕*(.5 + dbgorder.Get(c,0)[2]*.05 + is↓ * .06)),log(l3,m,,tmpid))
+    (dbg<min(d3,l3))?'':(m:=c (is↓?'↓':'↑') ' ' dbg⌂p(&⌂_) ' isOpp' isOpp ' stack' stack⌂.Length
+      ,dbgTT(d3,m,3,tmpid,🖥️w↔*(1  - dbgorder.Get(c,0)[1]*.24)
+      ,                   🖥️w↕*(.5 + dbgorder.Get(c,0)[2]*.05 + is↓ * .06)),log(l3,m,A_ThisFunc '•2',tmpid))
     tmpid += 1
   }
 
-  handle⌂↑(&this⌂,&ih,&ihID,this⌂t) { ; allows calling called either when a single ⌂ or combined
-    if this⌂.force↑ { ; already handled ⌂↑ via an artifical send in ignore🛑 condition, so reset it and return without printing an extra ⌂.k
-      this⌂.force↑ := false
-      (dbg<min(d5,l5))?'':(m:='•3 @setup⌂mo@handle⌂↑ return this⌂.force↑ already handled ⌂↑ via an artifical send in ignore🛑 condition, so reset it', dbgTT(d5,m,4,6), log(D.l5,m,6))
+  handle⌂↑(&⌂_,&ih,&ihID,⌂_t) { ; allows calling called either when a single ⌂ or combined
+    if ⌂_.force↑ { ; already handled ⌂↑ via an artifical send in ignore🛑 condition, so reset it and return without printing an extra ⌂.k
+      ⌂_.force↑ := false
+      (dbg<min(d5,l5))?'':(m:='⎋ ⌂_.force↑ already handled ⌂↑ via an artifical send in ignore🛑 condition, so reset it', dbgTT(d5,m,4,6), log(D.l5,m,A_ThisFunc '•3'))
+      ⌂_.pos := ↑, ⌂_.t := A_TickCount, ⌂_.is := false
       return
     }
-    if (is↓phys := GetKeyState(this⌂.k,'P')) {
-      this⌂.force↑ := true
+    if (is↓phys := GetKeyState(⌂_.k,'P')) {
+      ⌂_.force↑ := true
     }
-    ; dbgtt(0,'K↓ reset=' Obj2Str(kvk→label(this⌂.K↓)) ' 🕐' preciseTΔ(),10,16,0,250)
-    this⌂.prio↓ := '', this⌂.prio↑ := A_PriorKey, this⌂.K↓ := Array(), this⌂.K↑ := Array()
+    ; dbgtt(0,'K↓ reset=' Obj2Str(kvk→label(⌂_.K↓)) ' 🕐' preciseTΔ(),10,16,0,250)
+    ⌂_.prio↓ := '', ⌂_.prio↑ := A_PriorKey, ⌂_.K↓ := Array(), ⌂_.K↑ := Array()
     ih_input := ''
     if ih⌂.InProgress { ;
       ih_input	:= ih⌂.Input
-      (dbg<min(d5,l5,D.dihl))?'':(m:='•4 ×IH handle⌂↑, input=' ih_input ' stack' stack⌂.Length ' 🕐' preciseTΔ(), dbgTT(d5,m,4,7), log(D.l5,m,7), log(D.dihl,'force stop↑' dbg⌂ ' with ih¦' ih_input '¦',,'✗ih—————•⌂↑'))
       ih⌂.Stop() ; stack cleaned up when handling ih.reason so that it's possible to stop at Key↓↑ functions
+      (dbg<min(d5,l5,D.dihl))?'':(m:='×IH input=' ih_input ' stack' stack⌂.Length ' 🕐' preciseTΔ(), dbgTT(d5,m,4,7), log(l5,m,7), log(D.dihl,'✗ih—————•⌂↑ force stop↑' dbg⌂ ' with ih¦' ih_input '¦',A_ThisFunc '•4'))
     }
-    if this⌂.is { ; 🠿1ba)
-      SendInput(this⌂.send↑)
+    if ⌂_.is { ; 🠿1ba)
+      ⌂_.pos := ↑, ⌂_.t := A_TickCount, ⌂_.is := false
+      SendInput(⌂_.send↑)
       if tooltip⎀ {
         if tt⎀delay { ; hide the caret tooltip before it's shown if delay hasn't expired yet
           set⎀TT(0)
@@ -576,83 +560,81 @@ setup⌂mod(&hk,c,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
         win.get⎀(&⎀←,&⎀↑,&⎀↔,&⎀↕), dbgTT(0,'',t:='∞',D.i↗,⎀←-9,⎀↑-30) ; and hide a non-delayed one
         ; dbgtt(0,'⎀ reset 🕐' preciseTΔ(),10,15,0,285) ;
       }
-      this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false
-      (dbg<min(D.ds,D.dsl))?'':(m:='•6 🠿1ba) ⌂↑ after sequenced ⌂🠿(' this⌂t (this⌂t<⌂ΔH?'<':'>') ⌂ΔH ') ' dbg⌂p(&this⌂), dbgTT(d5,m,2,,🖥️w↔,850), log(D.dsl,m ' ✓⌂is, send↑=',,'🖮¦' this⌂.send↑ '¦————— @setup⌂mo@handle⌂↑•5'))
+      (dbg<min(D.ds,D.dsl))?'':(m:='🠿1ba) ⌂↑ after sequenced ⌂🠿(' ⌂_t (⌂_t<⌂ΔH?'<':'>') ⌂ΔH ') ' dbg⌂p(&⌂_) '`n🖮¦' ⌂_.send↑ '¦—————', dbgTT(d5,m,2,,🖥️w↔,850), log(D.dsl,m ' ✓⌂is, send↑=',A_ThisFunc '•6'))
       dbgTT_isMod('🠿1ba')
-    } else {
+    } else { ; not ⌂_.is
       if (prio := vk.get(A_PriorKey,'')) = vkC {
-        if this⌂.pos = ↓ { ; ↕xz) ↕01)
-          this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false
-          if stack⌂.Length > 1 { ; another modtap key is active, send this modtap as a regular key to the top active callback
-            alt⌂ := stack⌂[-2], alt⌂ih := alt⌂.ih
+        if ⌂_.pos = ↓ { ; ↕xz) ↕01) _↕2a)
+          ⌂_.pos := ↑, ⌂_.t := A_TickCount, ⌂_.is := false
+          if stack⌂.Length > 1 { ; another modtap key exists
+            alt⌂ := %stack⌂[-2]%, alt⌂ih := alt⌂.ih
             vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC), token := alt⌂.token ; decimal value
             Key↑_⌂(alt⌂ih, &vk_d, &sc_d, &token, '↕xz') ; invoke callback directly, but use another modtap's IHooks (ours is already disabled)
             (dbg<min(d3,l3))?'':(m:='✗ _↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone while ' alt⌂.dbg '↓`n🕐' this⌂t '<' ⌂ΔH ' ' dbg⌂p(&this⌂), dbgTT(d3,m,2,,0,🖥️w↕*.86),log(l3,m,,tmpid))
           } else {
-            SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
-            (dbg<min(D.ds,D.dsl))?'':(m:='•8 ↕xz) ↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone`n🕐' this⌂t '<' ⌂ΔH ' prio=c' dbg⌂p(&this⌂) ' stack⌂<=1, c↕', dbgTT(D.ds,m,2,,0,🖥️w↕*.86),log(D.dsl,m,'🖮↕¦' c '¦————— @setup⌂mo@handle⌂↑•7',tmpid))
+            SendInput(  '{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
+            (dbg<min(D.ds,D.dsl))?'':(m:='↕xz) ↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone`n🕐' ⌂_t '<' ⌂ΔH ' prio=c' dbg⌂p(&⌂_) ' stack⌂<=1, c↕' '`n🖮↕¦' c '¦—————', dbgTT(D.ds,m,2,,0,🖥️w↕*.86),log(D.dsl,m,A_ThisFunc '•7'))
           }
         } else { ; 00) haven't been activated, but need to send self Up so other scripts can read it
+          ⌂_.pos := ↑, ⌂_.t := A_TickCount, ⌂_.is := false
           SendInput('{blind}{' . vkC . ' up}') ; {blind} to retain ⇧◆⎇⎈ positions
-          this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false
-          (dbg<min(d3,l3))?'':(m:='00) •⌂↑ alone ' dbg⌂p(&this⌂), dbgTT(d3,m,2,,🖥️w↔,850),log(l3,m,,tmpid))
+          (dbg<min(d3,l3))?'':(m:='00) •⌂↑ alone ' dbg⌂p(&⌂_), dbgTT(d3,m,2,,🖥️w↔,850),log(l3,m))
           dbgTT_isMod('00)')
         }
       } else { ; ↕2a) ⌂↓ a↓ •⌂↑ a↑   fast typing ⌂,a
-        this⌂.pos := ↑, this⌂.t := A_TickCount, this⌂.is := false
-        keynm := vk→k.Get(prio,'✗')
-        (dbg<min(D.ds,D.dsl))?'':(m:='•10 ↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' keynm ' (' vk→k.Get(prio,'✗') ') PriK, print self+input ‘' c '’+‘' ih_input '’ ' dbg⌂p(&this⌂), dbgTT(D.ds,m,4,,0),log(D.dsl,m,,tmpid))
-        dbgTT_isMod('↕2a)')
-        SendLevel 1 ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activate
+        ⌂_.pos := ↑, ⌂_.t := A_TickCount, ⌂_.is := false
+        _sl:=A_SendLevel, SendLevel(1) ; main ⌂'s hook is monitoring at level 1, let it catch our sends to properly test whether ⌂ should be activate
         SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
-        SendInput(ih_input) ;
-        SendLevel 0 ;
+        SendInput(ih_input), SendLevel(_sl)
+        (dbg<min(D.ds,D.dsl))?'':(m:='↕2a) ⌂↓ a↓ •⌂↑ a↑ (typing)`n' '🖮‘' c '’+‘' ih_input '’@L' 1 '_' _sl '—————(self+input) ' dbg⌂p(&⌂_), dbgTT(D.ds,m,4,,0),log(D.dsl,m,A_ThisFunc '•10'))
+        dbgTT_isMod('↕2a)')
       }
     }
-    ; log(0,'timings' format(" 🕐15Δ{:.3f}",🕐15-🕐14) format(" 🕐14Δ{:.3f}",🕐14-🕐13) format(" 🕐13Δ{:.3f}",🕐13-🕐12) format(" 🕐12Δ{:.3f}",🕐12-🕐11),A_ThisFunc,'handle⌂↑') ;
+    ; log(0,'timings' format(" 🕐15Δ{:.3f}",🕐15-🕐14) format(" 🕐14Δ{:.3f}",🕐14-🕐13) format(" 🕐13Δ{:.3f}",🕐13-🕐12) format(" 🕐12Δ{:.3f}",🕐12-🕐11),A_ThisFunc) ;
   }
 
   if not is↓ { ;
     ;🕐2 := preciseTΔ()
-    this⌂t := A_TickCount - this⌂.t
-    handle⌂↑(&this⌂,&ih,&ihID,this⌂t) ;
+    ⌂_t := A_TickCount - ⌂_.t
+    handle⌂↑(&⌂_,&ih,&ihID,⌂_t) ;
     dbgTT_isMod('↑')
     ;🕐3 := preciseTΔ()
     ;🕐4 := preciseTΔ()
   } else { ; is↓
-    this⌂.pos := ↓, this⌂.t := A_TickCount, this⌂.prio↓ := A_PriorKey, this⌂.prio↑ := ''
+    ⌂_.pos := ↓, ⌂_.t := A_TickCount, ⌂_.prio↓ := A_PriorKey, ⌂_.prio↑ := ''
     dbgTT_isMod('↓')
-    for i⌂ in stack⌂ { ; since the setup⌂mo has a higher priority that active IHookss, the is↑ event that triggers the Key↑_⌂ callback will not print this mod key by confusing it with the 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕' variant (it checks whether there are key↓ events that match the key↑ event, and there would be now key↓). So we need to manually add a modtap key↓ record to each of the active modtaps
+    for ref⌂ in stack⌂ { ; since the setup⌂mo has a higher priority that active IHooks, the is↑ event that triggers the Key↑_⌂ callback will not print this mod key by confusing it with the 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕' variant (it checks whether there are key↓ events that match the key↑ event, and there would be now key↓). So we need to manually add a modtap key↓ record to each of the active modtaps
+      i⌂ := %ref⌂%
       i⌂.K↓.push(GetKeyVK(vkC)) ; GetKeyVK = same integer format as kvk in Key↓_⌂ callbacks
     }
-    stack⌂.Push(this⌂)
+    stack⌂.Push(&⌂_)
     ih⌂.MinSendLevel	:= stack⌂.Length + 1
     ;🕐2 := preciseTΔ()
     ih⌂.Start()	       	; 0a) •⌂↓ do nothing yet, just activate IHooks
     dbg⌂ih     	:= dbg⌂	;
-    (dbg<min(d5,D.dihl))?'':(m:='•12' dbg⌂ '¦' dbg⌂ih '`nIH with callback cb⌂' this⌂.k '_K↓ ↑ stack' stack⌂.Length ' 🕐' preciseTΔ(), dbgTT(d5,m,2,D.i1↓,🖥️w↔//2,🖥️w↕*.89), log(D.dihl,m,,'✓ih—————•⌂↓'))
+    (dbg<min(d5,D.dihl))?'':(m:=dbg⌂ '¦' dbg⌂ih '`nIH with callback cb⌂' ⌂_.k '_K↓ ↑ stack' stack⌂.Length ' +' ⌂_.k ' 🕐' preciseTΔ(), dbgTT(d5,m,2,D.i1↓,🖥️w↔//2,🖥️w↕*.89), log(D.dihl,'✓ih—————•⌂↓ ' m,A_ThisFunc '•12'))
     ;🕐3 := preciseTΔ()
     ih⌂.Wait()		; Waits until the Input is terminated (InProgress is false)
     ;🕐4 := preciseTΔ()
 
     if (ih⌂.EndReason  = "Timeout") { ;0t) Timed out after ⌂tHold
-      SendInput(this⌂.send↓), this⌂.is := true ;, dbgTT(d4,this⌂.🔣,t:='∞',D.i↗,🖥️w↔ - 40, 20)
+      SendInput(⌂_.send↓), ⌂_.is := true ;, dbgTT(d4,⌂_.🔣,t:='∞',D.i↗,🖥️w↔ - 40, 20)
       _ := stack⌂.Pop()
-      tooltip⎀?(win.get⎀(&⎀←,&⎀↑,&⎀↔,&⎀↕), dbgTT(0,this⌂.🔣,'∞',D.i↗,⎀←-9,⎀↑-30)):''
+      tooltip⎀?(win.get⎀(&⎀←,&⎀↑,&⎀↔,&⎀↕), dbgTT(0,⌂_.🔣,'∞',D.i↗,⎀←-9,⎀↑-30)):''
       dbgTT_isMod('0t')
-      (dbg<min(d5,D.dihl,D.dsl))?'':(m:=dbg⌂ ' ¦ ' dbg⌂ih '`n×IH ‘' ih⌂.EndReason '’ Input=¦' ih⌂.Input '¦  stack' stack⌂.Length ' ', dbgTT(d5,m,4,D.i0↓,🖥️w↔//2,🖥️w↕), log(D.dihl,m,,'✗ih—————🕐'), log(D.dsl,'this⌂↓ Timeout ⌂↓',,'🖮¦' this⌂.send↓ '¦————— •13@setup⌂mo'))
+      (dbg<min(d5,D.dihl,D.dsl))?'':(m:=dbg⌂ ' ¦ ' dbg⌂ih '`n×IH ‘' ih⌂.EndReason '’ Input=¦' ih⌂.Input '¦  stack' stack⌂.Length ' −' %_%.k, dbgTT(d5,m,4,D.i0↓,🖥️w↔//2,🖥️w↕), log(D.dihl,m,A_ThisFunc,'✗ih—————🕐'), log(D.dsl,'🖮¦' ⌂_.send↓ '¦————— ⌂_↓ Timeout ⌂↓',A_ThisFunc '•13'))
     } else if (ih⌂.EndReason = "Stopped") {
       dbg⌂ih:='', ihID := {⌂:'',dbg:''}, _ := stack⌂.Pop() ; cleanup after handle⌂↑ or early ⌂🠿 in Key↑⌂
-      (dbg<min(d5,D.dihl))?'':(m:=dbg⌂ ' ¦ ' dbg⌂ih '`n×IH ‘' ih⌂.EndReason '’ Input=¦' ih⌂.Input '¦  stack' stack⌂.Length ' 🕐' preciseTΔ(), dbgTT(d5,m,4,D.i0↓,🖥️w↔//2,🖥️w↕), log(D.dihl,m,,'✗ih—————🛑'))
+      (dbg<min(d5,D.dihl))?'':(m:=dbg⌂ ' ¦ ' dbg⌂ih '`n×IH ‘' ih⌂.EndReason '’ Input=¦' ih⌂.Input '¦  stack' stack⌂.Length ' −' %_%.k ' 🕐' preciseTΔ(), dbgTT(d5,m,4,D.i0↓,🖥️w↔//2,🖥️w↕), log(D.dihl,m,A_ThisFunc,'✗ih—————🛑'))
     ; } else if (ih⌂.EndReason = "Match") { ; Input matches one of the items in MatchList
     ; } else if (ih⌂.EndReason = "Max") { ; Input reached max length and it does not match any of the items in MatchList
     ; } else if (ih⌂.EndReason = "EndKey") { ; One of the EndKeys was pressed to terminate the Input
     } else { ;
       _ := stack⌂.Pop() ;???
-      (dbg<min(d5,D.dihl))?'':(m:=dbg⌂ ' ¦ ' dbg⌂ih '`n×IH else, Input=' ih⌂.Input '  stack' stack⌂.Length ' 🕐' preciseTΔ(), dbgTT(d5,m,4,D.i0↓,🖥️w↔//2,🖥️w↕), log(D.dihl,m,,'✗ih—————E'))
+      (dbg<min(d5,D.dihl))?'':(m:=dbg⌂ ' ¦ ' dbg⌂ih '`n×IH else, Input=' ih⌂.Input '  stack' stack⌂.Length ' −' %_%.k ' 🕐' preciseTΔ(), dbgTT(d5,m,4,D.i0↓,🖥️w↔//2,🖥️w↕), log(D.dihl,m,A_ThisFunc,'✗ih—————E'))
       ; return ih⌂.Input ; Returns any text collected since the last time Input was started
     }
   }
   ;🕐5 := preciseTΔ()
-  ; log(0,'timings' format(" 🕐5Δ{:.3f}",🕐5-🕐4) format(" 🕐4Δ{:.3f}",🕐4-🕐3) format(" 🕐3Δ{:.3f}",🕐3-🕐2) format(" 🕐2Δ{:.3f}",🕐2-🕐1),A_ThisFunc,'setup⌂mod') ;
+  ; log(0,'timings' format(" 🕐5Δ{:.3f}",🕐5-🕐4) format(" 🕐4Δ{:.3f}",🕐4-🕐3) format(" 🕐3Δ{:.3f}",🕐3-🕐2) format(" 🕐2Δ{:.3f}",🕐2-🕐1),A_ThisFunc) ;
 }
