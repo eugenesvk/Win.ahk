@@ -22,6 +22,11 @@ All notable changes to this project will be documented in this file
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
 
+- __Fixed__
+  + :beetle: sequence of modtap taps being mistreated, a released modtap treated as being just because the stack array hasn't been cleaned up yet
+  + :beetle: modtap not being ignored by another modtap
+  + :beetle: `ignore🛑` not being used with ignoreall
+
 [0.0.6-modtap]: https://github.com/eugenesvk/Win.ahk/releases/tag/0.0.6-modtap
 ## [0.0.6-modtap]
 - __Fixed__
