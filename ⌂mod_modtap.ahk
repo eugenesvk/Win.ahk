@@ -568,9 +568,14 @@ setup⌂mod(c,vkC,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
           ⌂_.pos := ↑, ⌂_.t := A_TickCount, ⌂_.is := false
           if stack⌂.Length > 1 { ; another modtap key exists
             alt⌂ := %stack⌂[-2]%, alt⌂ih := alt⌂.ih
-            vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC), token := alt⌂.token ; decimal value
-            Key↑_⌂(alt⌂ih, &vk_d, &sc_d, &token, '↕xz') ; invoke callback directly, but use another modtap's IHooks (ours is already disabled)
-            (dbg<min(d3,l3))?'':(m:='✗ _↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone while ' alt⌂.dbg '↓`n🕐' this⌂t '<' ⌂ΔH ' ' dbg⌂p(&this⌂), dbgTT(d3,m,2,,0,🖥️w↕*.86),log(l3,m,,tmpid))
+            if alt⌂.pos = ↓ { ; and is active, send this modtap as a regular key to the top active callback
+              vk_d := GetKeyVK(vkC), sc_d := GetKeySC(vkC), token := alt⌂.token ; decimal value
+              Key↑_⌂(alt⌂ih, &vk_d, &sc_d, &token, '↕xz@' ⌂_.k) ; invoke callback directly, but use another modtap's IHooks (ours is already disabled)
+              (dbg<min(d3,l3))?'':(m:='✗ _↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone while ' alt⌂.dbg '↓`n🕐' ⌂_t '<' ⌂ΔH ' ' dbg⌂p(&⌂_), dbgTT(d3,m,2,,0,🖥️w↕*.86),log(l3,m,A_ThisFunc))
+            } else { ; but was released, so ignore it ad act as usual
+              SendInput('{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ;
+              (dbg<min(D.ds,D.dsl))?'':(m:='_↕2a) ⌂↓ <ΔH a⌂↓ •⌂↑`n' dbg⌂ '↑ alone after ' alt⌂.dbg '↑`n🕐' ⌂_t '<' ⌂ΔH ' ' dbg⌂p(&⌂_), dbgTT(d3,m,2,,0,🖥️w↕*.86),log(l3,m,A_ThisFunc))
+            }
           } else {
             SendInput(  '{blind}' '{' . vkC . ' down}{' . vkC . ' up}') ; (~ does this) type the char right away to avoid delays (to be deleted later on match), use {blind} to retain ⇧◆⎇⎈ positions)
             (dbg<min(D.ds,D.dsl))?'':(m:='↕xz) ↕01) ⌂↓ <ΔH •⌂↑`n' dbg⌂ '↑ alone`n🕐' ⌂_t '<' ⌂ΔH ' prio=c' dbg⌂p(&⌂_) ' stack⌂<=1, c↕' '`n🖮↕¦' c '¦—————', dbgTT(D.ds,m,2,,0,🖥️w↕*.86),log(D.dsl,m,A_ThisFunc '•7'))
