@@ -384,14 +384,13 @@ Key↑_⌂(ih,&kvk,&ksc,  &token, dbgsrc:='') { ;
     } else if not HasValue(⌂_.K↓,kvk) { ;
       variant   := 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕', pri₌ := '≠'
     } else {
-      if ⌂_.HasOwnProp('ignoreall') { ;lkl
+      if ⌂_.HasOwnProp('ignoreall')             { ;       ignore this modtap+key combo
         variant := '✗all 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
-          _SendLevel := A_SendLevel
-          SendLevel ih.MinSendLevel ; tweak sendlevel to allow the script to accept the generated Up event
-          SendEvent('{' ⌂_.vk ' UP}') ;
-          SendLevel _SendLevel
-          ; log(D.dsl,'ignoreall send ⌂k↑=¦' ⌂_.vk '¦@lvl' ih.MinSendLevel,,'   ————— @Key↑_⌂')
+        if ignore🛑 { ; force-cancel modtap, tweak sendlevel to allow the script to accept the generated Up event
+          _sl:=A_SendLevel, SendLevel(ih.MinSendLevel), SendEvent('{' ⌂_.vk ' UP}'), SendLevel(_sl)
+          (dbg<D.dsl)?'':(log(D.dsl,'🖮‘' ⌂_.k '’↑@L' ih.MinSendLevel '_' _sl '————— ignore🛑all',A_ThisFunc))
           ; setup⌂mod(⌂_.vk ' UP',⌂_.k,is↓:='0') ; alternative way to cancel by calling the function directly
+        }
       } else if ignored.Has(⌂_.flag) and
          ignored[           ⌂_.flag].Has(kvk_s) { ;       ignore this modtap+key combo
         variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑'
