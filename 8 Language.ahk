@@ -22,24 +22,21 @@ isRu() {
 *LControl::{ ; keys are named Control, so using LCtrl wouldn't match
   SetKeyDelay(-1)
   Send("{Blind}{LCtrl down}")
-  dbgtt(0,"↓‹⎈",'∞',5,0,A_ScreenHeight*.9)
+  (dbg<1)?'':(dbgtt(0,"↓‹⎈",'∞',5,0,A_ScreenHeight*.9))
   ; KeyWait("LCtrl") ;;; todo bugs shows ↓, but z prints z instead of undo
 }
 *RControl::{
-  SetKeyDelay(-1)
+  SetKeyDelay(-1),
   Send("{Blind}{RCtrl down}")
-  dbgtt(0,"↓⎈›",'∞',6,50,A_ScreenHeight*.9)
+  (dbg<1)?'':(dbgtt(0,"↓⎈›",'∞',6,50,A_ScreenHeight*.9))
   ; KeyWait("RCtrl")
 }
 ~*LCtrl up::LCtrlUp()
 LCtrlUp() {
-  🕐1 := A_TickCount
+  (dbg<1)?'':(🕐1 := A_TickCount)
   SetKeyDelay(-1) ; no delay
   Send "{Blind}{LCtrl up}"
-  ; dbgtt(0,"↑‹⎈",'∞',5,0,A_ScreenHeight*.9)
-  dbgtt(0,"",,5),dbgtt(0,"",,4),dbgtt(0,"",,3) ;
-  dbgtt(0,"",'∞',5,0,A_ScreenHeight*.9)
-  dbgtt(0,"",'∞',4,0,A_ScreenHeight*.8)
+  (dbg<1)?'':(dbgtt(0,'',,3),dbgtt(0,'',,4),dbgtt(0,'',,5))
   dbgtxt := ''
   if A_PriorHotkey = ("*" A_PriorKey)
     && A_TimeSincePriorHotkey<120
@@ -48,8 +45,7 @@ LCtrlUp() {
       || GetKeyState("Alt"     	,"P")
       || GetKeyState("LWin"    	,"P")
       || GetKeyState("CapsLock"	,"P") ) {
-    LayoutSwitch(enU)
-    dbgtxt .= 'LayoutSwitch'
+    LayoutSwitch(enU) , (dbg<1)?'':(dbgtxt .= 'LayoutSwitch')
     }
   ; dbgtt(0,A_PriorHotkey ' ' A_PriorKey, 5) ;
   if   A_PriorHotkey = "LControl & Tab"
@@ -57,21 +53,18 @@ LCtrlUp() {
     || A_PriorHotkey = "LCtrl & Tab"
     || A_PriorHotkey = "LCtrl & q" {
     if GetKeyState("Shift") {
-      dbgtxt .= '⇧↑⎇↑'
-      Send("{LShift up}{LAlt up}")
+      Send("{LShift up}{LAlt up}") , (dbg<1)?'':(dbgtxt .= '⇧↑⎇↑')
     } else {
-      dbgtxt .= '  ⎇↑'
-      Send(           "{LAlt up}")
+      Send(           "{LAlt up}") , (dbg<1)?'':(dbgtxt .= '  ⎇↑')
     }
   }
-  🕐2 := A_TickCount
-  OutputDebug('post ' format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' ' dbgtxt ' @' A_ThisFunc)
+  (dbg<1)?'':(🕐2 := A_TickCount)
+  (dbg<1)?'':(OutputDebug('post ' format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' ' dbgtxt ' @' A_ThisFunc))
 }
 ~*RCtrl up::{
   SetKeyDelay(-1) ; no delay
   Send "{Blind}{RCtrl up}"
-  ; dbgtt(0,"↑⎈›",'∞',6,50,A_ScreenHeight*.9)
-  dbgtt(0,"",,6) ;
+  (dbg<1)?'':(dbgtt(0,'',,6))
   if A_PriorHotkey = ("*" A_PriorKey) ;RAlt = *RAlt
     && A_TimeSincePriorHotkey<120
     && !(GetKeyState("Shift"   	,"P")
@@ -82,7 +75,7 @@ LCtrlUp() {
     LayoutSwitch(ruU)
     ; Send "^{vkF2}" ; For Japanese, send ^{vkF2} to ensure Hiragana mode after switching. You can also send !{vkF1} for Katakana. If you use other languages, this statement can be safely omitted.
   }
-  ; dbgtt(0,'A_PriorKey`t' A_PriorKey ' `nA_PriorHotkey`t' A_PriorHotkey,3)
+  (dbg<1)?'':(dbgtt(0,'A_PriorKey`t' A_PriorKey ' `nA_PriorHotkey`t' A_PriorHotkey,3))
 }
 
 LayoutSwitch(target?) {
