@@ -478,6 +478,9 @@ ListLines 0                                  	; Potential performance boost
 
 ; ————————————————————————— Windows —————————————————————————————————
   WinEvent.Create(cbCreate_Borderless, App.ST.match) ; watch Sublime Text windows and apply borderless style
+  WinEvent.Create(cbCreate_Borderless, App.DOpus.match) ;
+  WinEvent.Create(cbCreate_Borderless, App.Everything.match) ;
+  WinEvent.Create(cbCreate_Borderless, App.MSHelp.match) ;
   #h::      	WinMinimize "A"                  	;❖h​ 	vk48	⟶ hide active window
   #+h::     	Win_HideOthers()                 	;❖⇧h​	vk48	⟶ /lib Hides all windows but the focused one
   ;^!w::    	Win_FWT()                        	;^⌥w​	vk57	⟶ Borderless the window under the mouse
