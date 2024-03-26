@@ -1,5 +1,22 @@
 #Requires AutoHotKey 2.1-alpha.4
 
+hkmyAltTab(hk) {
+  myAltTab()
+}
+myAltTab() {
+  ;🕐1 := A_TickCount
+  ; SetKeyDelay(-1)
+  if        GetKeyState("Shift","P") { ; move ←
+    Send("{LAlt down}{LShift down}{Tab}")   ;,🕐2 := A_TickCount, dbgtt(0,"←¹↓‹⇧₊‹⎇⭾",'∞',4,0,A_ScreenHeight*.85)
+  } else if GetKeyState("Shift"    ) { ; move →
+    Send("{LAlt down}{LShift up}{Tab}")     ;,🕐2 := A_TickCount, dbgtt(0,"→²↓   ‹⎇⭾",'∞',4,0,A_ScreenHeight*.85)
+  } else {                             ; move →
+    Send("{LAlt down}"           "{Tab}")   ;,🕐2 := A_TickCount, dbgtt(0,"→³↓  ‹⎇⭾",'∞',4,0,A_ScreenHeight*.85)
+  }
+  ;OutputDebug('post ' format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc)
+  ; KeyWait("LCtrl") ;
+}
+
 ; +#Tab::AppWindowSwitcher(→)	;⇧❖​ 	⭾​ ⟶ Switch to Next     App's Window (↑ Z-order)
 ; #Tab:: AppWindowSwitcher(←)	;  ❖​	⭾​ ⟶ Switch to Previous App's Window (↓ Z-order)
 ; #vk4b::AppWindowSwitcher(→)	;  ❖​	k​  ⟶ Switch to Next     App's Window (↑ Z-order)
