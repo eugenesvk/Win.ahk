@@ -1,23 +1,16 @@
 #Requires AutoHotKey 2.0
 #include <Locale>	; Various i18n locale functions and win32 constants
 ; Various key constants for more ergonomic input or avoiding keyboard layout issues in key definition
-global ___ := 0
- , ⇧       	     	:= "Shift"
- , ⎈ := ⌃  	     	:= "Ctrl"
- , ◆ := ❖  	:= ⌘ 	:= "LWin"
- , ⎇ := ⌥  	     	:= "Alt"
- , ‹⇧      	     	:= "LShift"
- , ‹⎈ := ‹⌃	     	:= "LCtrl"
- , ‹◆ := ‹❖	:= ‹⌘	:= "LWin"
- , ‹⎇ := ‹⌥	     	:= "LAlt"
- , ⇧›      	     	:= "RShift"
- , ⎈› := ⌃›	     	:= "RCtrl"
- , ◆› := ❖›	:= ⌘›	:= "RWin"
- , ⎇› := ⌥›	     	:= "RAlt"
- , ☰       	     	:= "AppsKey"
- , ∗       	     	:= '*'
- , ˜       	     	:= '~'
- , ＄       	     	:= '$'
+set_key_global()
+set_key_global() { ; register global variables
+  global ___ := 0
+   , ⇧     	    	:= "Shift"	, ‹⇧      	     	:= "LShift"	, ⇧›      	     	:= "RShift"
+   , ⎈ := ⌃	    	:= "Ctrl" 	, ‹⎈ := ‹⌃	     	:= "LCtrl" 	, ⎈› := ⌃›	     	:= "RCtrl"
+   , ◆ := ❖	:= ⌘	:= "LWin" 	, ‹◆ := ‹❖	:= ‹⌘	:= "LWin"  	, ◆› := ❖›	:= ⌘›	:= "RWin"
+   , ⎇ := ⌥	    	:= "Alt"  	, ‹⎇ := ‹⌥	     	:= "LAlt"  	, ⎇› := ⌥›	     	:= "RAlt"
+   , ☰:="AppsKey"
+   , ∗:='*', ˜	:='~', ＄:='$'
+}
 set_vk_global()
 set_vk_global() { ; register global variables in the format of q⃣  to a virtual key format for later use to avoid lookups and have shorter codes. When syntax doesn't allow, use v+unicode like v〔
   static k := helperString.key→ahk.Bind(helperString)
