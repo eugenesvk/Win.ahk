@@ -13,7 +13,7 @@ isRu() {
   }
 
 ^CapsLock::
-!CapsLock::{
+!CapsLock::                     	{	;⎇⇪​	vk09 ⟶ Ctrl+Tab Restore
   ; SetCapsLockState "AlwaysOff"	;[CapsLock] disable
   LayoutSwitch()
   ; SendInput '#{Space}'	;[Alt+CapsLock] to switch Keyboard Layout (Win+Space)
