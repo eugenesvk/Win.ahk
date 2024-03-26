@@ -45,6 +45,10 @@
     }
   ; ~LShift & WheelLeft ; moved to PC-only @aWin.ahk due to conflict with Bootcamp
   #HotIf
+#HotIf WinActive("ahk_class Photoshop") ;[App Photoshop]
+  ~LShift & WheelUp::  	^WheelUp
+  ~LShift & WheelDown::	^WheelDown
+#HotIf
 
 ^WheelUp::return
 ^WheelDown::return
