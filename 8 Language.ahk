@@ -20,6 +20,8 @@ isRu() {
   }
 
 LayoutSwitch() {
+
+LayoutSwitch(target?) {
   static locInf := localeInfo.m  ; Constants Used in the LCType Parameter of lyt.getLocaleInfo, lyt.getLocaleInfoEx, and SetLocaleInfo learn.microsoft.com/en-us/windows/win32/intl/locale-information-constants
    , kbdCountry	:= "sEnCountryNm"	;
    , kbdDisplay	:= "sEnDisplayNm"	;
@@ -27,14 +29,26 @@ LayoutSwitch() {
   local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
   local targetWin := "A" ; Active window to PostMessage to, need to be changed for '#32770' class (dialog window)
 
-  if not WinExist(targetWin) {
-    SendInput '#{Space}'
-    return
-  }
   if WinActive("ahk_class #32770") {  ; dialog window class requires sending a message to the active window via ControlGetFocus
     targetWin := ControlGetFocus("A") ; Retrieves which control of the target window has keyboard focus, if any
   }
-  if (curlayout = enU) {
+  if not WinExist(targetWin) { ; no window to post message to, use shortcuts
+    if not isSet(target) {
+      SendInput('#{Space}')
+    } else if target = enU {
+      ; SendInput('{LShift down}{LAlt down}6{LShift up}{LAlt up}') ; set in system config
+      SendInput('+!6')
+    } else if target = ruU { ;
+      ; SendInput('{LShift down}{LAlt down}7{LShift up}{LAlt up}')
+      SendInput('+!7')
+    }
+    ; return
+  }
+  if isSet(target) {
+    PostMessage changeInputLang, 0, target,       , targetWin
+    return
+  }
+  if        (curlayout = enU) {
     PostMessage changeInputLang, 0, ruU,       , targetWin
     ;           Msg,            w/, lParam ,Control, WinTitle
     ; dbgTT(0,"Current enU, switching to ruU")
