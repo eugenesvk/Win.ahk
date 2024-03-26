@@ -1,5 +1,11 @@
 #Requires AutoHotKey 2.1-alpha.4
 
+; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window.
+#HotIf WinExist("ahk_group AltTabWindow")
+; ~*Esc::Send "{Alt up}"  ; When the menu is cancelled, release the Alt key automatically.
+*Esc::Send "{Esc}{Alt up}"  ; Without tilde (~), Escape would need to be sent.
+#HotIf
+
 hkmyAltTab(hk) {
   myAltTab()
 }
