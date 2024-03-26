@@ -14,22 +14,24 @@ GroupAdd "Explorer"     	, "ahk_exe TOTALCMD64.EXE"
 GroupAdd "Explorer"     	, "ahk_class CabinetWClass"
 GroupAdd "TextEditor"   	, "ahk_exe sublime_text.exe"
 GroupAdd "TextEditor"   	, "ahk_exe notepad++.exe"
-GroupAdd "MSOffice"     	, "ahk_class OpusApp"              	; Word
-GroupAdd "MSOffice"     	, "ahk_exe EXCEL.EXE"              	; Excel
-GroupAdd "PressnHold"   	, "ahk_exe notepad++.exe"          	; Char-Hold works ONLY here
-GroupAdd "PressnHold"   	, "ahk_exe sublime_text.exe"       	; SublimeText
-GroupAdd "PressnHold"   	, "ahk_class PX_WINDOW_CLASS"      	; SublimeText
-GroupAdd "PressnHold"   	, "ahk_class Chrome_WidgetWin_1"   	; Chrome
-GroupAdd "PressnHold"   	, "ahk_class XLMAIN"               	; Excel
-GroupAdd "PressnHold"   	, "ahk_exe EXCEL.EXE"              	; Excel
-GroupAdd "PressnHold"   	, "ahk_class OpusApp"              	; Word
-GroupAdd "PressnHold"   	, "ahk_class Notepad++"            	; Notepad++
-GroupAdd "PressnHold"   	, "ahk_class WordPadClass"         	; WordPad
-GroupAdd "PressnHold"   	, "ahk_group Browser"              	;
-; GroupAdd "PressnHold" 	, "ahk_class keypirinha_wndcls_run"	; keypirinha
-GroupAdd "ScrollH"      	, "ahk_group MSOffice"             	;
-GroupAdd "ScrollH"      	, "ahk_class WindowsForms10.Window"	;
-GroupAdd "ScrollH"      	, "ahk_exe paintdotnet.exe"        	;
+GroupAdd "MSOffice"     	, "ahk_class OpusApp"                 	; Word
+GroupAdd "MSOffice"     	, "ahk_exe EXCEL.EXE"                 	; Excel
+GroupAdd "PressnHold"   	, "ahk_exe notepad++.exe"             	; Char-Hold works ONLY here
+GroupAdd "PressnHold"   	, "ahk_exe sublime_text.exe"          	; SublimeText
+GroupAdd "PressnHold"   	, "ahk_class PX_WINDOW_CLASS"         	; SublimeText
+GroupAdd "PressnHold"   	, "ahk_class Chrome_WidgetWin_1"      	; Chrome
+GroupAdd "PressnHold"   	, "ahk_class XLMAIN"                  	; Excel
+GroupAdd "PressnHold"   	, "ahk_exe EXCEL.EXE"                 	; Excel
+GroupAdd "PressnHold"   	, "ahk_class OpusApp"                 	; Word
+GroupAdd "PressnHold"   	, "ahk_class Notepad++"               	; Notepad++
+GroupAdd "PressnHold"   	, "ahk_class WordPadClass"            	; WordPad
+GroupAdd "PressnHold"   	, "ahk_class HH Parent ahk_exe hh.exe"	; Windows Help
+GroupAdd "PressnHold"   	, "ahk_group Browser"                 	;
+; GroupAdd "PressnHold" 	, "ahk_class keypirinha_wndcls_run"   	; keypirinha
+GroupAdd "ScrollH"      	, "ahk_group MSOffice"                	;
+GroupAdd "ScrollH"      	, "ahk_class WindowsForms10.Window"   	;
+GroupAdd "ScrollH"      	, "ahk_exe paintdotnet.exe"           	;
+GroupAdd "ScrollH"      	, "ahk_class Photoshop"               	;
 GroupAdd "Games"        	, "ahk_exe EoCApp.exe"
 GroupAdd "Games"        	, "ahk_exe BloodstainedRotN-Win64-Shipping.exe"
 GroupAdd "Games"        	, "ahk_exe SpaceChem.exe"
