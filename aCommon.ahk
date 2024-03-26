@@ -526,7 +526,9 @@ ListLines 0                                  	; Potential performance boost
   #SuspendExempt  ; Exempt the following hotkey from Suspend.
   ; Tab & vkDE::	Suspend -1	;^⌥⇧'​	vkDE ⟶ Suspend other ListHotkeys'
   ; Tab & Esc:: 	Suspend -1	;^⌥⇧⎋​	vkDE ⟶ Suspend other ListHotkeys'
-  #Esc::Suspend -1 ;#⎋
+  #Esc::{ ;#⎋
+    Suspend(-1), WinEvent.Pause(-1)
+  }
 
   ; !z:: ;;; temporary fast reloads
   !F1::     	;‹⎇F1​   	vk70
