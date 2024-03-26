@@ -153,8 +153,7 @@ global getDefIMEWnd := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle"
   , mbX2           	:= 0x0040	; MK_XBUTTON2; second X     button is down
   , msgSelect      	:= 0x00B1	; EM_SETSEL; set text selection
   , bytes⁄char     	:= 2
-  , →              	:=  1
-  , ←              	:= -1
-  , ↑              	:=  2
-  , ↓              	:= -2
-
+  , ←              	:= -1    	, → 	:= 1
+  , ↓              	:= -2    	, ↑ 	:= 2
+  , s←             	:= "Left"	, s→	:= "Right"
+  , s↓             	:= "Down"	, s↑	:= "Up"
