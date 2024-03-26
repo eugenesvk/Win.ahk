@@ -3,15 +3,28 @@
 SetCapsLockState "AlwaysOff"  ;[CapsLock] disable
 
 #HotIf !WinActive("ahk_group Games") ; disable in Games
-Capslock::{                   ; ~not fire a hotkey until it's released
+class c⇪ {
+  static _ := 0
+  , ↑ 	:= 1
+  , 🕐↓	:= 0
+}
+Capslock::{ ; set time of the first down event to track when hold duration
+  if c⇪.↑ {
+    c⇪.🕐↓ := A_TickCount
+    c⇪.↑ := 0
+  }
+}
+Capslock Up::{                   ; ~not fire a hotkey until it's released
+  c⇪.↑ := 1
   ; ↓ not needed? DownTemp=Down except for ⇧◆⎇⎈, where it tells subsequent sends that the key is not permanently down, and may be released whenever a keystroke calls for it: Send {Ctrl DownTemp}, Send {Left} ⟶ ←, not ⎈← keystroke
   ; SendInput '{Ctrl DownTemp}{Shift DownTemp}{Alt DownTemp}{LWin DownTemp}'
-  KeyWait('CapsLock') ; Wait for CapsLock to be released
   ; SendInput '{Ctrl Up}{Shift Up}{Alt Up}{LWin Up}'
   if (A_PriorKey = "Capslock") { ;⇪​	vk14 ⟶ k (vk4B) Run Keypirinha on single ⇪ press
-    SendInput '^+!#{vk4B}'
-  }
-  ; if '~' is applied to a custom modifier key (prefix key) which is also used as its own hotkey, that hotkey will fire when the key is pressed instead of being delayed until the key is released
+    if (c⇪.🕐Δ := A_TickCount - c⇪.🕐↓) < 500 {
+      SendInput '^+!#{vk4B}'
+    }
+  } ; if '~' is applied to a custom modifier key (prefix key) which is also used as its own hotkey, that hotkey will fire when the key is pressed instead of being delayed until the key is released
+  c⇪.🕐↓ := 0
   }
 #vk14::{                             ;◆⇪​	vk14 ⟶ Activate CapsLock
   if GetKeyState("vk14","T") = 1 {
