@@ -48,7 +48,22 @@ setAppSwitcher() {
   }
 }
 
-; #HotIf WinActive("ahk_group ⌥⭾AppSwitcher") ; BUG autohotkey.com/boards/viewtopic.php?f=82&t=120739 Invoking ShiftAltTab changes direction for regular Alt+Tab
+#HotIf WinActive("ahk_group ⌥⭾AppSwitcher") ; BUG autohotkey.com/boards/viewtopic.php?f=82&t=120739 Invoking ShiftAltTab changes direction for regular Alt+Tab
+; #HotIf WinActive("ahk_exe explorer.exe ahk_class MultitaskingViewFrame")
+  LControl & q::{
+    SetKeyDelay(-1)
+    if        GetKeyState("Shift","P") { ; move →
+      Send("{LAlt down}"           "{Tab}")   ;, dbgtt(0,"→¹↓  ‹⎇⭾",'∞',3,90,A_ScreenHeight*.85)
+    } else if GetKeyState("Shift"    ) { ; move ←
+      Send("{LAlt down}{LShift down}{Tab}")   ;, dbgtt(0,"←²↓‹⇧‹⎇⭾",'∞',3,90,A_ScreenHeight*.85)
+    } else                             { ; move ←
+      Send("{LAlt down}{LShift down}{Tab}")   ;, dbgtt(0,"←³↓‹⇧‹⎇⭾",'∞',3,90,A_ScreenHeight*.85)
+    }
+    ; KeyWait("LCtrl") ;
+    ; Send('{LAlt down}+{Tab}')
+  }
+#HotIf
+
 #HotIf WinActive("ahk_exe explorer.exe ahk_class MultitaskingViewFrame")
   ; !vk49::dbgShowWinZOrder()	;  ❖​	i  ⟶ Switch between the last 2 Windows of the same App
   ; LAlt & q::ShiftAltTab    	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
