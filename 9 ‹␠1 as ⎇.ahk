@@ -13,7 +13,7 @@ add_‹␠1_as_⎇()
 add_‹␠1_as_⎇() { ; ‹⎇ remapped to ‹⎈ via SharpKeys
   static K 	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
    , s     	:= helperString ; K.▼ = vk['▼']
-   , hkf   	:= keyFunc.customHotkeyFull ; [key_combo <^vk09, key_combo_FNm hk‹⎈⭾]
+   , hkf   	:= keyFunc.customHotkeyFull ; → [key_combo <^vk09, key_combo_FNm hk‹⎈⭾]
    , hkSend	:= keyFunc.hkSend, hkSendI := keyFunc.hkSendI
 
   preMod := ‹␠1 ;  physical ⎇, but maybe be remapped to other key in the Registry eg ⎈
