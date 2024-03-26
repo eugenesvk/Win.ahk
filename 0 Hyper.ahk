@@ -85,8 +85,22 @@ Capslock Up::{                   ; ~not fire a hotkey until it's released
   ; ~CapsLock & vk54::Run('"' AppConEmu '"')    	;⇪t​	vk54 ⟶ Run App
 
 ; Toggle Window Title Bar ()
-  ~CapsLock & vkBD::WinSetStyle("-" WS_Borderless, "A")  ;⇪-​	vkBD ⟶ Window Title Bar Off
-  ~CapsLock & vkBB::WinSetStyle("+" WS_Borderless, "A")  ;⇪=​	vkBB ⟶ Window Title Bar On
+  ; ~CapsLock & vkBD::WinSetStyle("-" WS_Borderless, "A")  ;⇪-​	vkBD ⟶ Window Title Bar Off
+  ; ~CapsLock & vkBB::WinSetStyle("+" WS_Borderless, "A")  ;⇪=​	vkBB ⟶ Window Title Bar On
+  ~CapsLock & vkBD::{
+    if (⇧↓ := GetKeyState('LShift','P')) {
+      Win_TitleToggle(FixPos:=0,,"-")  ;⇪-​	vkBD ⟶ Window Title Bar Off
+    } {
+      Win_TitleToggle(FixPos:=1,,"-")  ;⇪-​	vkBD ⟶ Window Title Bar Off
+    }
+  }
+  ~CapsLock & vkBB::{
+    if (⇧↓ := GetKeyState('LShift','P')) {
+      Win_TitleToggle(FixPos:=0,,"+")  ;⇪=​	vkBB ⟶ Window Title Bar On
+    } {
+      Win_TitleToggle(FixPos:=1,,"+")  ;⇪=​	vkBB ⟶ Window Title Bar On
+    }
+  }
 
 ; Navigation
   ~CapsLock & Left:: 	SendInput '^+{Tab}'	;⇪←​	vk25 ⟶ ^⇧⭾ Tab Left
