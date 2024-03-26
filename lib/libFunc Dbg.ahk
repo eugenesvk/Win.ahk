@@ -1,5 +1,4 @@
 #Requires AutoHotKey 2.1-alpha.4
-
 ; ————————————————————————— Debugging Functions —————————————————————————
 dbgMsg(dbgMin:=0, Text:="", Title:="", Options:="") {
   if (dbg >= dbgMin) {
