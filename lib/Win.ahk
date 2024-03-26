@@ -127,7 +127,12 @@ class win {
      , _dl        	:= 1 ; dbg level for log
      , _dl3       	:= 3 ;
 
-    el := UIA.GetFocusedElement(pointCache) ; IUIAutomationElement
+    try {
+      el := UIA.GetFocusedElement(pointCache) ; IUIAutomationElement
+    } catch Error as e {
+      dbgtt(0,"✗ GetFocusedElement " e)
+      return false
+    }
     if (isText := el.CachedIsTextPatternAvailable) {
       if is⎀only {
         if (isTextEdit := el.CachedIsTextEditPatternAvailable) {
@@ -309,7 +314,7 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^", PosFixOverflow:=1) { ; Borderless win
   ; PosFix          maintain identical "outer" window size, so removing a titlebar increases the client area to compensate
   ; PosFixOverflow  limit to monitor's working area, so adding a titlebar won't make the window hide the bottom taskbar
   static winDemax_id	:= Map()
-    , dp            	:= 0 ; debug tooltip levels
+    , dp            	:= 1 ; debug tooltip levels
     , winSzFrame_Xpx	:= SysGet(smSzFrame_Xpx) ; sizing border around the perimeter of a window
     , winSzFrame_Ypx	:= SysGet(smSzFrame_Ypx)
     , OffT          	:= {x: winSzFrame_Xpx*2,y:0, w:-winSzFrame_Xpx*4 ,h:-winSzFrame_Ypx*2}	; has Title , move → by 1×, + Width by 2× and Height by 1× BorderOffset
@@ -357,7 +362,7 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^", PosFixOverflow:=1) { ; Borderless win
       return
     }
     if (PosFix = 0) { ; avoid artifacts from adding/removing borders, no pos/size change
-      if PosFixOverflow {
+      if PosFixOverflow { ; unless windows overflows screen and this is set
         if (wW   > 🖥️w↔) and (wX <= bOffset) {
           wW_to	:= 🖥️w↔
           wX_to	:= 0
@@ -370,20 +375,31 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^", PosFixOverflow:=1) { ; Borderless win
           and     isSet(wH_to)) {
           WinMove(wX_to,wY_to, wW_to-1,wH_to-1,winID)
           WinMove(wX_to,wY_to, wW_to  ,wH_to  ,winID)
+          (dbg>dp)?'':dbgtxt:= 'overflows ↔ (' wW ' > ' 🖥️w↔ ') ↕ (' wH '>' 🖥️w↕ ')'
         } else if isSet(wW_to) {
           WinMove(wX_to,     , wW_to-1,       ,winID)
           WinMove(wX_to,     , wW_to  ,       ,winID)
+          (dbg>dp)?'':dbgtxt:= 'overflows ↔ (' wW ' > ' 🖥️w↔ ')'
         } else if isSet(wH_to) {
           WinMove(     ,wY_to,        ,wH_to-1,winID)
           WinMove(     ,wY_to,        ,wH_to  ,winID)
+          (dbg>dp)?'':dbgtxt:= 'overflows ↕ (' wH '>' 🖥️w↕ ')'
+        } else {
+          (dbg>dp)?'':dbgtxt:= 'no overflows'
+          WinMove(     ,     , wW-1   ,       ,winID)
+          WinMove(     ,     , wW     ,       ,winID)
         }
       } else {
-        WinMove(,,width:=wW-1,,winID)
-        WinMove(,,width:=wW  ,,winID)
+        WinMove(       ,     , wW-1   ,       ,winID)
+        WinMove(       ,     , wW     ,       ,winID)
+        (dbg>dp)?'':dbgtxt:= 'no overflow / no fix'
         ; WinMaximize(winID), WinRestore (winID),  WinActivate(winID) ; Alternative (more noticeablele)
         ; WinRestore(winID) ; NOT reliable, sometimes restores in the background
         ; Doesn't work: WinRedraw/WinHide/WinShow "A"
       }
+      (dbg>dp)?'':dbgtxt.= '' .
+        '`n' '(pre) x' wXp ' y' wXp ' w' wWp ' h' wHp ' style=' StyleHex ' Frame x' winSzFrame_Xpx ' y' winSzFrame_Ypx
+      (dbg<dp)?'':dbgTL(dp,dbgtxt,{🕐:5,id:5,x:1550,y:750,fn:A_ThisFunc})
     } else {  ; change position/size to make border/-less windows the same (clamp at working area height)
       if (Style & WS_Caption) { ; has Title
         xOff	:= OffT.x, xLim :=       -1*bOffset
@@ -409,14 +425,14 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^", PosFixOverflow:=1) { ; Borderless win
       wY_to	:= wY
       wW_to	:= min(wW + wOff,wLim) ; don't increase ↔ beyond monitor's working area
       wH_to	:= min(wH + hOff,hLim) ;                ↕
+      WinMove(wX_to,wY_to, wW_to,wH_to, winID)
       (dbg>dp)?'':dbgtxt.= '' .
         '`n' ' x `t: ' format('{:4}',wX) ' to ' format('{:4}',wX_to) '`tmax(' (wX + xOff) '=(' wX '+' xOff ')' '¦' xLim ')' .
         ; '`n' ' x `t: ' format('{:4}',wY) ' to ' format('{:4}',wY_to) .
         '`n' ' w↔`t: ' format('{:4}',wW) ' to ' format('{:4}',wW_to) '`tmin(' (wW + wOff) '=(' wW '+' wOff ')' '¦' wLim ')' .
         '`n' ' w↕`t: ' format('{:4}',wH) ' to ' format('{:4}',wH_to) '`tmin(' (wH + hOff) '=(' wH '+' hOff ')' '¦' hLim ')' .
         '`n' '(pre) x' wXp ' y' wXp ' w' wWp ' h' wHp ' style=' StyleHex ' Frame x' winSzFrame_Xpx ' y' winSzFrame_Ypx
-      WinMove(wX_to,wY_to, wW_to,wH_to, winID)
-      (dbg<dp)?'':dbgTL(dp,dbgtxt,{🕐:10,id:4,x:1550,y:850,fn:A_ThisFunc})
+      (dbg<dp)?'':dbgTL(dp,dbgtxt,{🕐:3,id:4,x:1550,y:850,fn:A_ThisFunc})
     }
   }
   }
@@ -646,23 +662,25 @@ getFocusWindowMonitorHandle() {
    hMon := DllCall('MonitorFromWindow', 'Ptr',WinExist("A"), 'UInt',MonDefTopPri, 'Ptr')
 }
 
-getFocusWindowMonitorIndex(winID?) { ; converted from stackoverflow.com/a/68547452
+getFocusWindowMonitorIndex(winID_?) { ; converted from stackoverflow.com/a/68547452
+  winID := isSet(winID_) ? winID_ : "A"
+  if not winExist(winID) { ; guard against a missing active window
+    return 1
+  }
   monCount := MonitorGetCount() ;Get number of monitor
-  WinGetPos(&🗔↖x,&🗔, &🗔Width,&🗔Height, isSet(winID)?winID:"A") ; Get the position of the focus window
+  WinGetPos(&🗔↖x,&🗔, &🗔↔,&🗔↕, winID) ; Get the position of the focus window
   monSubAreas := []  ; Make an array to hold the sub-areas of the window contained within each monitor
   Loop monCount { ;Iterate through each monitor
     MonitorGetWorkArea(A_Index, &🖥️←,&🖥️↑,&🖥️→,&🖥️↓) ; Get Monitor working area
-
-    ;Calculate sub-area of the window contained within each monitor
-    xStart	:= max(🗔↖x          	, 🖥️←)
-    yStart	:= max(🗔            	, 🖥️↑)
-    xEnd  	:= min(🗔↖x + 🗔Width 	, 🖥️→)
-    yEnd  	:= min(🗔   + 🗔Height	, 🖥️↓)
-    area  	:= (xEnd - xStart)
-             * (yEnd - yStart)
+    xBeg	:= max(🗔↖x     	, 🖥️←) ;Calculate sub-area of the window contained within each monitor
+    yBeg	:= max(🗔       	, 🖥️↑)
+    xEnd	:= min(🗔↖x + 🗔↔	, 🖥️→)
+    yEnd	:= min(🗔   + 🗔↕	, 🖥️↓)
+    area	:= (xEnd - xBeg)
+             * (yEnd - yBeg)
     monSubAreas.push({area:area, index:A_Index}) ;Remember these areas, and which monitor they were associated with
   }
-  if(monSubAreas.Length == 1) { ;If there is only one monitor in the array, then you already have your answer
+  if (monSubAreas.Length == 1) { ;If there is only one monitor in the array, then you already have your answer
     return monSubAreas[1].index
   } else { ; Otherwise, loop to figure out which monitor's recorded sub-area was largest
     winningMon 	:= 0
