@@ -1,5 +1,29 @@
 #Requires AutoHotKey 2.1-alpha.4
 #include <Locale>	; Various i18n locale functions and win32 constants
+; !3::showkeynums("'a▼⭾⇪")
+showkeynums(keys) { ; show a table of keys and vk/sc codes, accepts key symbols
+  static K 	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , s     	:= helperString ; K.▼ = vk['▼']
+   , hkf   	:= keyFunc.customHotkeyFull
+   , hkSend	:= keyFunc.hkSend, hkSendI := keyFunc.hkSendI
+  k := '▼'
+  dbgtxt := '', dbgcount := 1
+  max⁄line := 1
+  dbgtxt .= 'key `tVK`t`tSC`t'         '`n'
+  dbgtxt .= '    `tdec`thex`tdec`thex' '`n'
+  loop parse keys {
+    vks := vk[A_LoopField]
+    ; k_ahk := s.key→ahk(vks)
+    k_ahk := GetKeyName(vks)
+    vk_n := GetKeyVK(k_ahk)
+    sc_n := GetKeySC(k_ahk)
+    nums := Format("`t{:3}`t{:2x} `t{:3}`t{:2x}", vk_n,vk_n, sc_n,sc_n)
+    dbgtxt .= A_LoopField nums
+    dbgtxt .= (Mod(dbgcount,max⁄line)=0) ? '`n' : '   ', dbgcount += 1 ; insert a newline every max⁄line keys
+  }
+  msgbox(dbgtxt)
+}
+
 ; Various key constants for more ergonomic input or avoiding keyboard layout issues in key definition
 set_key_global()
 set_key_global() { ; register global variables
