@@ -581,8 +581,8 @@ ListLines 0                                  	; Potential performance boost
   ; $#2::	ControlSend('{Blind}#{' . SubStr(A_ThisHotkey,3) . '}',,"A")	;❖2​	vk32 ⟶ #2
 #HotIf
 #HotIf WinActive("ahk_class Photoshop") ;[App Photoshop]
-  <^1::   	SendInput '^+{Tab}'      	;​‹⎈1​	vk31 ⟶ prev document
-  <^2::   	SendInput '^{Tab}'       	;​‹⎈2​	vk32 ⟶ next document
+  <^1::	SendInput '^+{Tab}'	;​‹⎈1​	vk31 ⟶ prev document
+  <^2::	SendInput '^{Tab}' 	;​‹⎈2​	vk32 ⟶ next document
 #HotIf
 #HotIf WinActive("ahk_exe EXCEL.EXE") ;[App Excel] Reset some of the shortcuts to originals
   ;#HotIfWinActive, ahk_class HwndWrapper[DefaultDomain;;2d58ffd7-2857-405f-9298-df01cb46d314]
