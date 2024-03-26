@@ -1,7 +1,7 @@
 #Requires AutoHotKey 2.1-alpha.4
 
+#include <WinEvent>
 #include <libFunc Dbg>
-
 ; ————————————————————————— WinEvent callback Functions —————————————————————————
 cbCreate_Borderless(evt, winID, tick) { ; apply borderless style to a window
   static _d := 1
