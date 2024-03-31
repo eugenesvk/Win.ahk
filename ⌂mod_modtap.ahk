@@ -489,8 +489,6 @@ setup⌂mod(c,vkC,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
    , _       	:= win.getMonWork(&🖥️w←,&🖥️w↑,&🖥️w→,&🖥️w↓,&🖥️w↔,&🖥️w↕) ; Get Monitor working area ;;; static, ignores monitor changes
    , ⌂tHold  	:= cfg.Get('holdTimer',0.5) ;
    , ⌂ΔH     	:= ⌂tHold * 1000
-   , ignored 	:= getCfgIgnored()
-   , ignore🛑 	:= cfg.Get('ignore🛑','true')
    , tooltip⎀	:= cfg.Get('tooltip⎀',1), tt⎀delay := cfg.Get('tt⎀delay',0) * 1000
    , ttdbg   	:= cfg.Get('ttdbg',0) ;
    , d3      	:= 3 , l3	:= 3 ; custom dbg tooltip/log levels for testing commands
@@ -612,25 +610,6 @@ setup⌂mod(c,vkC,is↓) { ; hk=$vk46 or $vk46 UP   c=f   is↓=0 or 1
     dbgTT_isMod('↓')
     for ref⌂ in stack⌂ { ; since the setup⌂mo has a higher priority that active IHooks, the is↑ event that triggers the Key↑_⌂ callback will not print this mod key by confusing it with the 'x_x) a↓ ⌂↓ b↓ •a↑ ⌂↑ ↕' variant (it checks whether there are key↓ events that match the key↑ event, and there would be now key↓). So we need to manually add a modtap key↓ record to each of the active modtaps
       i⌂ := %ref⌂%
-      if i⌂.HasOwnProp('ignoreall') { ; ignore modtap, treat as a regular key for an already active modtap
-        variant := '✗all 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑  (⌂ ignores a)'
-        if ignore🛑 { ; force-cancel modtap, tweak sendlevel to allow the script to accept the generated Up event
-          variant .= '🛑all'
-          _sl:=A_SendLevel, SendLevel(i⌂.ih.MinSendLevel), SendEvent('{' i⌂.vk ' UP}'), SendLevel(_sl)
-        }
-        (dbg<D.dsl)?'':(log(D.dsl,variant '`n🖮‘' i⌂.k '’↑@L' i⌂.ih.MinSendLevel '_' _sl '—————',A_ThisFunc))
-        return
-      } else if ignored.Has(i⌂.flag) and
-         ignored[           i⌂.flag].Has(vkC) { ; ignore modtap, treat as a regular key for an already active modtap
-        variant := '✗ 1aa) ⌂↓ a↓ <ΔH•a↑ ⌂↑  (⌂ ignores a)'
-        if ignore🛑 { ; force-cancel modtap, tweak sendlevel to allow the script to accept the generated Up event
-          variant .= '🛑'
-          _sl:=A_SendLevel, SendLevel(i⌂.ih.MinSendLevel), SendEvent('{' i⌂.vk ' UP}'), SendLevel(_sl)
-        }
-        (dbg<D.dsl)?'':(log(D.dsl,variant '`n🖮‘' i⌂.k '’↑@L' i⌂.ih.MinSendLevel '_' _sl '—————',A_ThisFunc))
-        return ;
-      }
-
       i⌂.K↓.push(GetKeyVK(vkC)) ; GetKeyVK = same integer format as kvk in Key↓_⌂ callbacks
     }
     stack⌂.Push(&⌂_)
