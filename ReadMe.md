@@ -26,11 +26,18 @@ This script also fixes the issue with the main mouse pointer becoming "blocky" i
 
 ## Install
 
-For a standalone use:
+For standalone "double-click-to-run" use:
 
-  - Copy this repository
+  - Install [AutoHotkey v2](https://www.autohotkey.com/download/ahk-v2.exe)
+  - Download 
+    - latest stable version: open [releases](https://github.com/eugenesvk/Win.ahk/releases) and find the latest release with a tag similar to `0.0.3-mhide` or a name similar to "Standalone: Hide mouse pointer while typing" and download `Assets`→`Source code (zip)`
+    - latest beta version: [mhide_kbd.zip](https://github.com/eugenesvk/Win.ahk/archive/refs/heads/mhide_kbd.zip) of `mhide_kbd` of this repository
+  - Unzip the downloaded zip file anywhere you like
+  - (optional) to autostart on Windows login:
+    - create a Shortcut (`.lnk`) to `🖰hide on 🖮_launch.ahk`
+    - copy this `🖰hide on 🖮_launch.lnk` to your `%AppData%\Microsoft\Windows\Start Menu\Programs\Startup` (which should expand to `C:\Users\YOUR_USER_NAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`)
 
-To use with your existing AutoHotkey scripts:
+To use with your _existing_ AutoHotkey scripts:
 
   - Copy libraries from `lib` to your own `lib` sub-folder
   - Copy `gVar` to your own `gVar` folder
