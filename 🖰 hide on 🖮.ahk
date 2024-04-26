@@ -15,9 +15,9 @@ global ucfg🖰hide := Map(
   ; gui               	        	  create our own gui, attach it to the app's window, and hide the pointer (might break some functionality when hiding, e.g., sending key events via mouse extra buttons)
   ; sys               	        	  hide system scheme pointers (Ibeam, Arrow, etc.), but fails with app-specific ones like a Cross🞧 in Excel
   ; both              	        	  use both sys and gui
- , 'attachGUI_🖰'      	, 0     	;|0|1 attach our gui element to: Active window has keyboard focus and if mouse is hovering over a different window
+ , 'attachGUI_🖰'      	, 0     	;|0|1 attach gui element to: if winActive(🖮 focus) ≠ win🖰Hover
   ; active window     	  0     	 hides the pointer even if the active window is different, but then keyboard events from the mouse (e.g., ␈ with a side mouse buttons) aren't blocked (they are blocked by the gui element, but the gui element belongs to inactive window while typing happens in the active window)
-  ; window @ pointer  	  1     	 doesn't hide the pointer of the active window (if different), but blocks keyboard events from the mouse
+  ; window @ 🖰pointer 	  1     	 doesn't hide the pointer of the active window (if different), but blocks keyboard events from the mouse
  ; restore 🖰 pointer  	        	only if mouse moved by more than ↓ thresholds (in pixels); 0 = show right away
  , 'minΔ🖰x'           	, 0     	;
  , 'minΔ🖰y'           	, 0     	;
@@ -92,16 +92,14 @@ sys_app_btnHide(OnOff, is🖰vis:='') { ; hide button functions and system/app p
    , _d      	:= 3
   dbgtxt := '✗ btn'
   if suppress = 'sys' or suppress = 'both' {
-    sys🖰Pointer(OnOff)
-    dbgtxt .= ' sys'
+    sys🖰Pointer(OnOff         ), dbgtxt .= ' sys'
   }
   if suppress = 'gui' or suppress = 'both' {
-    app🖰Pointer(OnOff, is🖰vis)
-    dbgtxt .= ' app'
+    app🖰Pointer(OnOff, is🖰vis), dbgtxt .= ' app'
   }
     sys🖰Btn(    OnOff)
   dbgtxt .= ' suppress=' suppress ' ' preciseTΔ()
-  dbgTT(_d,dbgtxt,t:='∞',i:=1,x:=0,y:=850)
+  (dbg<_d)?'':(dbgTT(_d,dbgtxt,t:='∞',i:=1,x:=0,y:=A_ScreenHeight*.81))
 }
 
 hk🖰PointerHide(hk) {            ; Hide 🖰 pointer
