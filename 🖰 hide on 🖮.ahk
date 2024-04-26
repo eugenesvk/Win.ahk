@@ -236,6 +236,9 @@ isAnyUserModiPressed(user_modi,i:=1) { ; check if any of the user modifiers curr
    , sys       	:= helperSystem
    , str       	:= helperString
    , ahk_modi  	:= Map()
+  if not user_modi {
+    return false
+  }
 
   ; convert user modifier to a list of ahk modifiers
   if not isInit.Get(i,false) {
