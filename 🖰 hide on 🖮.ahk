@@ -7,7 +7,7 @@ global ucfg🖰hide := Map(
    ;                  	   ‹⎈   	  for Left  Control
    ;                  	    ⇧›  	  for Right Shift
  ; disable 🖰 buttons  	        	while the pointer is hidden
- , 'cfgDisable🖰Btn'   	, "LMR" 	; clicks          , string of L/M/R for Left/Middle/Right button
+ , 'cfgDisable🖰Btn'   	, "MR"  	; clicks          , string of L/M/R for Left/Middle/Right button
  , 'cfgDisable🖱'      	, "UDLR"	; wheel scrolling , string of U/D/L/R for directions Up/Down/Left/Right
  ;                    	        	;
  , 'limit2text'       	, true  	; hide only in text fields (don't hide when using alpha keys to execute commands)
