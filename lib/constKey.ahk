@@ -1,5 +1,8 @@
 #Requires AutoHotKey 2.1-alpha.4
-#include <Locale>	; Various i18n locale functions and win32 constants
+#include <libFunc>	; General set of functions
+#include <Locale> 	; Various i18n locale functions and win32 constants
+#include <str>    	; string helper functions
+
 ; !3::showkeynums("'a▼⭾⇪")
 showkeynums(keys) { ; show a table of keys and vk/sc codes, accepts key symbols
   static K 	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
