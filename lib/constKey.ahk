@@ -291,9 +291,14 @@ class keyConstant {
     for key in ['APPS','AppsKey','☰'] {
       vk[key]	:= 'vk5D'	; VK_APPS	0x5D	Context Menu
     }
-
-      for key in ['CAPITAL','CapsLock','Caps','⇪'] {
+    for key in ['CAPITAL','CapsLock','Caps','⇪'] {
       vk[key]	:= 'vk14'	; VK_CAPITAL	0x14	Caps Lock
+    }
+    for key in ['NumLock','⇭'] {
+      vk[key]	:= 'vk90'	; VK_NUMLOCK	0x90	Num Lock
+    }
+    for key in ['SCROLL','ScrollLock','⇳🔒'] { ; '⤓' conflicts with end
+      vk[key]	:= 'vk91'	; VK_SCROLL	0x91	Scrol Lock
     }
 
       ; autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
@@ -398,8 +403,9 @@ class keyConstant {
       i1         	:= A_Index
       i0         	:= A_Index - 1
       key_val_hex	:= Format("{1:x}", start + i0)
-      loop parse 'F🌐ƒⓕⒻ🄵🅕🅵' {
-        vk[A_LoopField . i1]	:= 'vk' . key_val_hex
+      ; loop parse 'F🌐ƒⓕⒻ🄵🅕🅵' { ; bugs due to unicode chars, which are split into invalid parts
+      for k in ['F','🌐','ƒ','ⓕ','Ⓕ','🄵','🅕','🅵'] {
+        vk[k . i1]	:= 'vk' . key_val_hex
       }
     }
 
@@ -419,11 +425,9 @@ class keyConstant {
     vk['MEDIA_STOP']         	:= 'vkB2'	; VK_MEDIA_STOP         	0xB2	Stop
     vk['MODECHANGE']         	:= 'vk1F'	; VK_MODECHANGE         	0x1F	Mode Change
     vk['NONCONVERT']         	:= 'vk1D'	; VK_NONCONVERT         	0x1D	Non Convert
-    vk['NUMLOCK']            	:= 'vk90'	; VK_NUMLOCK            	0x90	Num Lock
     vk['OEM_FJ_JISHO']       	:= 'vk92'	; VK_OEM_FJ_JISHO       	0x92	Jisho
     vk['PAUSE']              	:= 'vk13'	; VK_PAUSE              	0x13	Pause
     vk['PRINT']              	:= 'vk2A'	; VK_PRINT              	0x2A	Print
-    vk['SCROLL']             	:= 'vk91'	; VK_SCROLL             	0x91	Scrol Lock
     vk['SLEEP']              	:= 'vk5F'	; VK_SLEEP              	0x5F	Sleep
     vk['SNAPSHOT']           	:= 'vk2C'	; VK_SNAPSHOT           	0x2C	Print Screen
     vk['VOLUME_DOWN']        	:= 'vkAE'	; VK_VOLUME_DOWN        	0xAE	Volume Down
@@ -436,11 +440,11 @@ class keyConstant {
     for LngNm in labels_enabled { ; en / ru (but only if such layouts exist)
       vkrevlng[LngNm]	:= Map()
     }
-    for keyNm, vkCode in vk {
-      vkrev[vkCode]	:= keyNm ; create a reverse map
+    for keyNm, vkCode in vk { ; Back vk08
+      vkrev[              vkCode ]	:= keyNm ;     [vk08] = Back create a reverse map
       for LngNm in labels_enabled { ; en / ru (but only if such layouts exist)
-          vkrevlng[LngNm][vkCode]	:= keyNm ;
-        for keyNml, vkCodel in vklng[LngNm] {
+          vkrevlng[LngNm][vkCode ]	:= keyNm ; [en][vk08] = Back
+        for keyNml, vkCodel in vklng[LngNm] { ; q vk51
           vkrevlng[LngNm][vkCodel]	:= keyNml ; overwrite dupes with layout-specific combo since same VK has layout-specific key
         }
       }
