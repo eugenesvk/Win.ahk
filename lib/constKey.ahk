@@ -43,17 +43,28 @@ set_vk_global() { ; register global variables in the format of q⃣  to a virtua
 class keyConstant {
   ; learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
   ; kbdedit.com/manual/low_level_vk_list.html
-  static __new() { ; get all vars and store their values in this .Varname as well ‘vk’ map, and add aliases
+  static __new() { ; fill the map
+    this.fillKeyList()
+  }
+  static fillKeyList() { ; get all vars and store their values in this .Varname as well ‘vk’ map, and add aliases
     ; k	:= keyConstant ; various key name constants
     ; k.a → vk41
     ; k	:= keyConstant._map
     ; k['a'] → vk41
-    static vk := Map(), sc := Map(), vkrev := Map(), labels := Map()
-    vk.CaseSense    	:= 0 ; make key matching case insensitive
-    vkrev.CaseSense 	:= 0 ; reverse, vk → key
-    sc.CaseSense    	:= 0
-    labels.CaseSense	:= 0
-
+    static vk := Map(), vklng := Map(), sc := Map(), vkrev := Map(), vkrevlng := Map(), labels := Map(), ahk_token := Map()
+     , isInit := false
+    if isInit {
+      return
+    } else {
+      isInit := true
+    }
+    vk.CaseSense       	:= 0 ; make key matching case insensitive
+    vklng.CaseSense    	:= 0
+    vkrev.CaseSense    	:= 0 ; reverse, vk → key
+    vkrevlng.CaseSense 	:= 0
+    sc.CaseSense       	:= 0
+    labels.CaseSense   	:= 0
+    ahk_token.CaseSense	:= 0 ; key tokens that can be used in var/function names like a︔ := ';'
     labels['en'] := "
       ( Join ` LTrim
        `1234567890-=
@@ -68,18 +79,26 @@ class keyConstant {
         фывапролджэ\
         ячсмитьбю.
        )"
-
+    ahk_token['en'] := "
+      ( Join ` LTrim
+       ˋ1234567890‐₌
+        qwertyuiop〔〕
+        asdfghjkl︔’⧵
+        zxcvbnm ⸴．⁄
+       )"
     ; Get dynamically actual VKs for the labels from ↑ for each active system layout
     ; though store it only in simplified 'en'/'ru' (are IDs needed?)
     ;;; add non alpha? just use the currently mapped ones, don't depend on a layout
     lyt_enabled := lyt.getlist() ; system loaded that are available in the language bar
+    labels_enabled := []
     for lytID, layout in lyt_enabled {
-      ; lytID    	:= layout['id']
-      LngNm      	:= layout['LangShort'] ;en
-      LngLong    	:= layout['LangLong'] ;english
-      KLID       	:= layout['KLID'] ; 00000409
-      vk[LngNm]  	:= Map() ; or use unique ? KLID check ;;;
+      ; lytID	:= layout['id']
+      LngNm  	:= layout['LangShort'] ;en
+      LngLong	:= layout['LangLong'] ;english
+      KLID   	:= layout['KLID'] ; 00000409
       if labels.Has(LngNm) {
+        labels_enabled.Push(LngNm)
+        vklng[LngNm]	:= Map() ; or use unique ? KLID check ;;;
         for key in StrSplit(labels[LngNm]) {
           vk_full	:= DllCall("VkKeyScanExW" ; SHORT VkKeyScanExW( ;;; preload?
            ; low-order  byte contains virtual-key code
@@ -89,7 +108,7 @@ class keyConstant {
            ,  "ptr",lytID)   	;   [in] HKL   dwhkl	; Input localeID used to translate the character. This parameter can be any input locale identifier previously returned by the LoadKeyboardLayout function
           if not vk_full = -1 {
             vk_code	:= vk_full & 0xFF
-            vk[LngNm][key] := 'vk' hex(vk_code)
+            vklng[LngNm][key] := 'vk' hex(vk_code)
           }
         }
       }
@@ -138,9 +157,9 @@ class keyConstant {
       vk[ru]         	:= 'vk' . key_val_hex
     }
 
-    vk['NONAME']  	:= 'vkFC'	; VK_NONAME  	0xFC	NoName
+      vk['NONAME']  	:= 'vkFC'	; VK_NONAME  	0xFC	NoName
 
-    for key in ['ADD','🔢+','🔢₊'] {
+      for key in ['ADD','🔢+','🔢₊'] {
       vk[key]	:= 'vk6B'	; VK_ADD	0x6B	Numpad +
       sc[key]	:= 'sc' hex(GetKeySC(vk[key]))
     }
@@ -203,7 +222,7 @@ class keyConstant {
     vk['SEPARATOR']     	:= 'vk6C'	; VK_SEPARATOR     	0x6C	Separator
     vk['ZOOM']          	:= 'vkFB'	; VK_ZOOM          	0xFB	Zoom
 
-    for key in ['OEM_MINUS','-','‐'] {
+      for key in ['OEM_MINUS','-','‐'] {
       vk[key]	:= 'vkBD'	; VK_OEM_MINUS	0xBD	OEM_MINUS (_ -)
     }
     for key in ['OEM_PLUS','=','₌','+','🔢=','🔢₌'] {
@@ -228,7 +247,7 @@ class keyConstant {
       vk[key]	:= 'vk06'	; VK_XBUTTON2	0x06	X Button 2 **
     }
 
-    for key in ['Tab','⭾','↹'] {
+      for key in ['Tab','⭾','↹'] {
       vk[key]	:= 'vk09'	; VK_TAB	0x09	Tab
     }
     for key in ['SPACE','␠','␣'] {
@@ -250,7 +269,7 @@ class keyConstant {
       vk[key]	:= 'vkBA'	; VK_OEM_1	0xBA	OEM_1 (: ;)
     }
 
-    for key in ['OEM_102'] {
+      for key in ['OEM_102'] {
       vk[key]	:= 'vkE2'	; VK_OEM_102	0xE2	OEM_102 (> <)
     }
     for key in ['OEM_3','ё','``','ˋ','˜'] {
@@ -274,12 +293,17 @@ class keyConstant {
     for key in ['APPS','AppsKey','☰'] {
       vk[key]	:= 'vk5D'	; VK_APPS	0x5D	Context Menu
     }
-
     for key in ['CAPITAL','CapsLock','Caps','⇪'] {
       vk[key]	:= 'vk14'	; VK_CAPITAL	0x14	Caps Lock
     }
+    for key in ['NumLock','⇭'] {
+      vk[key]	:= 'vk90'	; VK_NUMLOCK	0x90	Num Lock
+    }
+    for key in ['SCROLL','ScrollLock','⇳🔒'] { ; '⤓' conflicts with end
+      vk[key]	:= 'vk91'	; VK_SCROLL	0x91	Scrol Lock
+    }
 
-    ; autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
+      ; autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
     ; hook handles each key either by virtual key code or by scan code, not both. All keys listed in the g_key_to_sc array are handled by SC, meaning that pressing one of these keys will not trigger a hook hotkey which was registered by VK
       ; g_key_to_sc: NumpadEnter, Del, Ins, Up, Down, Left, Right, Home, End, PgUp and PgDn
     for key in ['DOWN','▼','↓'] {
@@ -328,7 +352,7 @@ class keyConstant {
     }
 
 
-    _left 	:= ['‹','<']
+      _left 	:= ['‹','<']
     _right	:= ['›','>']
     for key in ['SHIFT','⇧'] {
       for l in _left {
@@ -363,7 +387,7 @@ class keyConstant {
       }
     }
 
-    vk['BROWSER_HOME']     	:= 'vkAC'	; VK_BROWSER_HOME     	0xAC  	Browser Home
+      vk['BROWSER_HOME']     	:= 'vkAC'	; VK_BROWSER_HOME     	0xAC  	Browser Home
     ;                     	         	Name                  	#Value	Description
     vk['_none_']           	:= 'vkFF'	; VK__none_           	0xFF  	no VK mapping
     vk['ACCEPT']           	:= 'vk1E'	; VK_ACCEPT           	0x1E  	Accept
@@ -381,8 +405,9 @@ class keyConstant {
       i1         	:= A_Index
       i0         	:= A_Index - 1
       key_val_hex	:= Format("{1:x}", start + i0)
-      loop parse 'F🌐ƒⓕⒻ🄵🅕🅵' {
-        vk[A_LoopField . i1]	:= 'vk' . key_val_hex
+      ; loop parse 'F🌐ƒⓕⒻ🄵🅕🅵' { ; bugs due to unicode chars, which are split into invalid parts
+      for k in ['F','🌐','ƒ','ⓕ','Ⓕ','🄵','🅕','🅵'] {
+        vk[k . i1]	:= 'vk' . key_val_hex
       }
     }
 
@@ -402,11 +427,9 @@ class keyConstant {
     vk['MEDIA_STOP']         	:= 'vkB2'	; VK_MEDIA_STOP         	0xB2	Stop
     vk['MODECHANGE']         	:= 'vk1F'	; VK_MODECHANGE         	0x1F	Mode Change
     vk['NONCONVERT']         	:= 'vk1D'	; VK_NONCONVERT         	0x1D	Non Convert
-    vk['NUMLOCK']            	:= 'vk90'	; VK_NUMLOCK            	0x90	Num Lock
     vk['OEM_FJ_JISHO']       	:= 'vk92'	; VK_OEM_FJ_JISHO       	0x92	Jisho
     vk['PAUSE']              	:= 'vk13'	; VK_PAUSE              	0x13	Pause
     vk['PRINT']              	:= 'vk2A'	; VK_PRINT              	0x2A	Print
-    vk['SCROLL']             	:= 'vk91'	; VK_SCROLL             	0x91	Scrol Lock
     vk['SLEEP']              	:= 'vk5F'	; VK_SLEEP              	0x5F	Sleep
     vk['SNAPSHOT']           	:= 'vk2C'	; VK_SNAPSHOT           	0x2C	Print Screen
     vk['VOLUME_DOWN']        	:= 'vkAE'	; VK_VOLUME_DOWN        	0xAE	Volume Down
@@ -416,16 +439,25 @@ class keyConstant {
     for keyNm, vkCode in vk { ; Back , vk08
       this.%keyNm%	:= vkCode ; convert map into object properties
     }
-    for LngNm in labels { ; en / ru
-      vkrev[LngNm]	:= Map()
-      for keyNm, vkCode in vk[LngNm] {
-        vkrev[LngNm][vkCode]	:= keyNm ; create a reverse map
+    for LngNm in labels_enabled { ; en / ru (but only if such layouts exist)
+      vkrevlng[LngNm]	:= Map()
+    }
+    for keyNm, vkCode in vk { ; Back vk08
+      vkrev[              vkCode ]	:= keyNm ;     [vk08] = Back create a reverse map
+      for LngNm in labels_enabled { ; en / ru (but only if such layouts exist)
+          vkrevlng[LngNm][vkCode ]	:= keyNm ; [en][vk08] = Back
+        for keyNml, vkCodel in vklng[LngNm] { ; q vk51
+          vkrevlng[LngNm][vkCodel]	:= keyNml ; overwrite dupes with layout-specific combo since same VK has layout-specific key
+        }
       }
     }
 
-    this._map   	:= vk
-    this._mapr  	:= vkrev
-    this._mapsc 	:= sc
-    this._labels	:= labels
+    this._map      	:= vk
+    this._maplng   	:= vklng
+    this._mapr     	:= vkrev
+    this._maprlng  	:= vkrevlng
+    this._mapsc    	:= sc
+    this._labels   	:= labels
+    this._ahk_token	:= ahk_token
   }
 }
