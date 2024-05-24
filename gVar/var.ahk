@@ -1,33 +1,6 @@
 #Requires AutoHotKey 2.0
 ;Window management
   global Monitor_DefaultToNearest	:= 0x00000002
-  ;bitflags                      	;
-    , f∗                         	:=    1	;                1 any modifiers allowed
-    , f˜                         	:=    2	;             10 passthru native key
-    , f＄                         	:=    4	;            100 keyboard hook on
-  ;bitflags           	modifier
-    , f‹⇧             	:=    1   	;              1 left shift
-    , f‹⎇             	:=    2   	;             10 left alt
-    , f‹⎈             	:=    4   	;            100 left ctrl
-    , f‹◆             	:=    8   	;           1000 left super ❖◆ (win ⊞)
-    , f⇧›             	:=   16   	;          10000 right shift
-    , f⎇›             	:=   32   	;         100000 right alt
-    , f⎈›             	:=   64   	;        1000000 right ctrl
-    , f◆›             	:=  128   	;       10000000 right super ❖◆ (win ⊞)
-    , f‹👍             	:=  256   	;      100000000 left Oyayubi 親指
-    , f👍›             	:=  512   	;     1000000000 right Oyayubi 親指
-    , fkana           	:= 1024   	;    10000000000 kana fかな
-    , f⇧              	:= f‹⇧|f⇧›	;          1   1 any  shift
-    , f⎇              	:= f‹⎇|f⎇›	;         10  10 any  alt
-    , f⎈              	:= f‹⎈|f⎈›	;        100 100 any  ctrl
-    , f◆              	:= f‹◆|f◆›	;       10001000 any  super
-    , f👍              	:= f‹👍|f👍›	;   1100000000 any  Oyayubi
-    ; , fzz›          	:= 2048   	;   100000000000 z
-    ; , f⇪            	:= 4096   	;  1000000000000 caps lock
-    ; , f🔢            	:= 8192   	; 10000000000000 num  lock
-    ; fかな kana
-    ,  bit‹ := f‹⇧ | f‹⎇ | f‹⎈ | f‹◆
-    ,  bit› := f⇧› | f⎇› | f⎈› | f◆›
 
   global TTx          	:= 2100	; Alt ToolTip X coordinates
     , TTy             	:= 1275	;             Y coordinates
