@@ -42,9 +42,9 @@
 global getDefIMEWnd := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle", "Str","Imm32", "Ptr"), "AStr","ImmGetDefaultIMEWnd", "Ptr") ; HWND ImmGetDefaultIMEWnd(HWND Arg1) docs.microsoft.com/en-us/windows/win32/api/imm/nf-imm-immgetdefaultimewnd. Invoke: DllCall(getDefIMEWnd, "Ptr",fgWin)
   , CreateProcessW_proc := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle", "Str","kernel32", "Ptr"), "AStr","CreateProcessW", "Ptr") ; docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
   , QPerfC_proc := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle", "Str","kernel32", "Ptr"), "AStr","QueryPerformanceCounter", "Ptr") ; docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
-  , bytes⁄char     	:= 2
-  , →              	:=  1
-  , ←              	:= -1
-  , ↑              	:=  2
-  , ↓              	:= -2
+  , bytes⁄char	:= 2
+  , ←              	:= -1    	, → 	:= 1
+  , ↓              	:= -2    	, ↑ 	:= 2
+  , s←             	:= "Left"	, s→	:= "Right"
+  , s↓             	:= "Down"	, s↑	:= "Up"
 
