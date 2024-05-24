@@ -379,7 +379,7 @@ class keyConstant {
       vk[key]	:= 'vk2E' 	; VK_DELETE	0x2E	Delete
       sc[key]	:= 'sc153'	;
     }
-    for key in ['RETURN','Enter','⏎','↩','⌤','␤','NumpadEnter','🔢⏎','🔢↩','🔢Enter'] {
+    for key in ['RETURN','Enter','⏎','↩','⌤','␤','␍','NumpadEnter','🔢⏎','🔢↩','🔢Enter'] {
       vk[key]	:= 'vk0D' 	; VK_RETURN	0x0D	Enter
       sc[key]	:= 'sc11C'	;          	    	NumpadEnter
     }
