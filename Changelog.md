@@ -21,6 +21,8 @@ All notable changes to this project will be documented in this file
 <!-- - __Security__ -->
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
+- __Changed__
+  + add a space in `🖰 hide on 🖮` to allow matching on `hide` in some launchers
 
 [0.0.3-mhide]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.3-mhide
 ## [0.0.3-mhide]
