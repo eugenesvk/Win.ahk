@@ -1,5 +1,7 @@
 #Requires AutoHotKey 2.0
-#include <Locale>	; Various i18n locale functions and win32 constants
+#include <libFunc>	; General set of functions
+#include <Locale> 	; Various i18n locale functions and win32 constants
+#include <str>    	; string helper functions
 ; Various key constants for more ergonomic input or avoiding keyboard layout issues in key definition
 set_key_global()
 set_key_global() { ; register global variables
