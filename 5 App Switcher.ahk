@@ -44,12 +44,12 @@ setAppSwitcher() {
   loop parse "⭾kj" { ;⭾
     HotKey(s.key→ahk(‹␠3 k[A_LoopField]), AppSwitcher)
   }
-    HotKey(s.key→ahk('⇧❖​ ⭾'), AppSwitcher)
+    HotKey(s.key→ahk('⇧❖​ ⭾'           ), AppSwitcher)
   AppSwitcher(ThisHotkey) {
     Switch ThisHotkey  {
       default  : return
       ; default  : msgbox('nothing matched AppSwitcher ThisHotkey=' . ThisHotkey)
-      case s.key→ahk('⇧❖​ ⭾​') 	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
+      case s.key→ahk('⇧ ❖​ ⭾​')	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
       case s.key→ahk('  ❖​ ⭾​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
       case s.key→ahk('  ❖​ k​')	: AppWindowSwitcher(→)	;   ...    to Next     App's Window (↑ Z-order)
       case s.key→ahk('  ❖​ j​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
