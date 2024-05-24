@@ -75,3 +75,14 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   }
 }
 
+err2str(err) { ; convert Error to a string (test whether a field exists before using it)
+  dbgtxt := ''
+  fields := ['Reason','Message','Extra']
+  len := fields.Length
+  for i, field in fields {
+    if (err.HasOwnProp(field)) {
+      dbgtxt .= err.%field% (i=len?'':' ¦ ')
+    }
+  }
+  return dbgtxt
+}
