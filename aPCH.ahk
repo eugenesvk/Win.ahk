@@ -14,8 +14,6 @@
 */
 
 ; moved to PC-only from aCommon due to conflict with Bootcamp
-  ^Tab:: 	SendInput '{Ctrl Down}{Tab}{Ctrl Up}'                      	;^⭾​ 	vk09 ⟶ Ctrl+Tab Restore
-  ^+Tab::	SendInput '{Ctrl Down}{Shift Down}{Tab}{Ctrl Up}{Shift Up}'	;⇧^⭾​	vk09 ⟶ Ctrl+Shift+Tab Restore
   ; ~LShift & WheelLeft::{   ; Scroll left (on Hover)
     ; ScrollHCombo("L", "Pg",Rep:=1, WheelHMult:=1, MSOMult:=1)
     ; }
