@@ -41,12 +41,12 @@ To use with your _existing_ AutoHotkey scripts:
 
   - Copy libraries from `lib` to your own `lib` sub-folder
   - Copy `gVar` to your own `gVar` folder
-  - Copy [🖰hide on 🖮](<./🖰hide on 🖮.ahk>) to your main AutoHotkey folder
-  - Import the main script `#include %A_scriptDir%\🖰hide on 🖮.ahk	; Hide idle mouse cursor when typing`
+  - Copy [🖰 hide on 🖮](<./🖰 hide on 🖮.ahk>) to your main AutoHotkey folder
+  - Import the main script `#include %A_scriptDir%\🖰 hide on 🖮.ahk	; Hide idle mouse cursor when typing`
 
 ## Configure
 
-Change the default values of the `ucfg🖰hide` configuration `Map` at the top of [🖰hide on 🖮](<./🖰hide on 🖮.ahk>) and relaunch/reload the script. Each value has a comment explaining what it does and what values are allowed
+Change the default values of the `ucfg🖰hide` configuration `Map` at the top of [🖰 hide on 🖮](<./🖰 hide on 🖮.ahk>) and relaunch/reload the script. Each value has a comment explaining what it does and what values are allowed
 The keys that trigger hiding the pointer are in the `keys_m['en']` map for the English locale and include all alphanumeric keys as well as ␈␡␠
 
 ## Use
@@ -60,7 +60,7 @@ To use with your existing AutoHotkey scripts: the import should do the trick
   - BUT this workaround prevents getting mouse pointer status correctly https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123908
     - potential workaround is to move pointer status check earlier
   - `displayCounter` sometimes misbehaves and goes below -1, not sure whether whether this has any negative effects
-  - `🖰hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the standalone version [🖰 hide on 🖮_launch](<./🖰 hide on 🖮_launch.ahk>)
+  - `🖰 hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the standalone version [🖰 hide on 🖮_launch](<./🖰 hide on 🖮_launch.ahk>)
 
 ## Credits
   - [Windows-Cursor-Hider](https://github.com/Stefan-Z-Camilleri-zz/Windows-Cursor-Hider) the old simpler v1 version of the same idea
