@@ -5,7 +5,7 @@
 
 preciseTΔ(n:=3) {
   static start := nativeFunc.GetSystemTimePreciseAsFileTime()
-  t := round(nativeFunc.GetSystemTimePreciseAsFileTime() - start,n)
+  t := round(     nativeFunc.GetSystemTimePreciseAsFileTime() - start,n)
   return t
 }
 
