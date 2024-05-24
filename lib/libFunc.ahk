@@ -90,7 +90,7 @@ class keyFunc {
   }
 }
 ; ————————————————————————— Functions —————————————————————————
-RunActivMin(App, WorkDir:="", Size:="", Title:=0, PosFix:=0, Menu:=1, Match:="exe", CLIOpts:="") {
+RunActivMin(App, WorkDir:="", Size:="", Title:=1, PosFix:=0, Menu:=1, Match:="exe", CLIOpts:="") {
   ; App = C:\Path To\App\app.exe, add quotes to avoid running C:\Path.exe
     ; Size: Regular size unless Max/Min/Hide; Match: type of window matching (by exe, pid or window ID)
     ; CLIOpts - additional command line options
@@ -124,7 +124,7 @@ RunActivMin(App, WorkDir:="", Size:="", Title:=0, PosFix:=0, Menu:=1, Match:="ex
         if hWin {
           Win_MenuToggle(hWin)
         } else {
-          TT("NoMenu`nTimed out without hiding the menu",dbgT,4,TTx,TTy+TTyOff*(4-2))
+          dbgTT(0,"NoMenu`nTimed out without hiding the menu",dbgT,4,TTx,TTy+TTyOff*(4-2))
         }
       }
       if (Title = 0) {
@@ -132,7 +132,7 @@ RunActivMin(App, WorkDir:="", Size:="", Title:=0, PosFix:=0, Menu:=1, Match:="ex
           ; Win_TitleToggle(PosFix)
           Win_TitleToggleAll(App, PosFix, "-")
         } else {
-          TT("NoTitle`nTimed out without applying a window style",dbgT,4,TTx,TTy+TTyOff*(4-2))
+          dbgTT(0,"NoTitle`nTimed out without applying a window style",dbgT,4,TTx,TTy+TTyOff*(4-2))
         }
       }
     }
@@ -164,7 +164,7 @@ RunActivMin(App, WorkDir:="", Size:="", Title:=0, PosFix:=0, Menu:=1, Match:="ex
             Win_TitleToggleAll(App, PosFix, "-")
           }
         } else {
-          TT("Debug: Timed out without applying a window style",dbgT,5,TTx,TTy+TTyOff*(5-2))
+          dbgTT(0,"Debug: Timed out without applying a window style",dbgT,5,TTx,TTy+TTyOff*(5-2))
         }
       } else {
         ; dbgTT(3,"Debug:2.4`nappTitle ∃: " . lastWinID . ", but Title isn't noTitle" . Title,dbgT,5,TTx,TTy+TTyOff*(5-2))
@@ -179,7 +179,7 @@ RunActivMin(App, WorkDir:="", Size:="", Title:=0, PosFix:=0, Menu:=1, Match:="ex
           if hWin {
             Win_MenuToggle(hWin)
           } else {
-            TT("Debug:2.2 WinNotActive in 5s`n HideMen`nTimed out without hiding the menu",dbgT,4,TTx,TTy+TTyOff*(4-2))
+            dbgTT(0,"Debug:2.2 WinNotActive in 5s`n HideMen`nTimed out without hiding the menu",dbgT,4,TTx,TTy+TTyOff*(4-2))
           }
         }
         if (Title = 0) {
@@ -187,7 +187,7 @@ RunActivMin(App, WorkDir:="", Size:="", Title:=0, PosFix:=0, Menu:=1, Match:="ex
             ; Win_TitleToggle(PosFix)
             Win_TitleToggleAll(App, PosFix, "-")
           } else {
-            TT("Debug:2.2 WinNotActive in 5s`n NoTitle`nimed out without applying a window style",dbgT,4,TTx,TTy+TTyOff*(4-2))
+            dbgTT(0,"Debug:2.2 WinNotActive in 5s`n NoTitle`nimed out without applying a window style",dbgT,4,TTx,TTy+TTyOff*(4-2))
           }
         }
       }
