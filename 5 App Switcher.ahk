@@ -1,4 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
+#include <constKey>                        	; various key constants
+#include %A_scriptDir%\gVar\varWinGroup.ahk	; App groups for window matching
 
 ; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window.
 #HotIf WinExist("ahk_group AltTabWindow")
