@@ -32,8 +32,8 @@ OpusDir_CD(CDTo) { ; AppDOpus
         Sleep 1000 ; wait untill new Lister is launched
       }
     Run('"' . AppDOpusRt . '"' . " /acmd Go " '"' CDTo '"' " NewTab=findexisting,tofront")
-    Sleep 300
-    Run('"' . AppDOpusRt . '"' . " /acmd CloseTabSiblings")
+    ; Sleep 300
+    ; Run('"' . AppDOpusRt . '"' . " /acmd CloseTabSiblings")
   }
   ;Quit Opus or OpusRT from scripts
   ;AppDOpusRt /dblclk=off
