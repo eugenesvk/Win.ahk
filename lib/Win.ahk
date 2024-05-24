@@ -95,7 +95,7 @@ class win {
     try {
       el := UIA.GetFocusedElement(pointCache) ; IUIAutomationElement
     } catch Error as e {
-      dbgtt(0,"✗ GetFocusedElement " e)
+      dbgtt(0,"✗ GetFocusedElement " err2str(e,'mwe'))
       return false
     }
     if (isText := el.CachedIsTextPatternAvailable) {
@@ -120,12 +120,15 @@ class win {
         ; dbgtt(0,'supported interface is⎀Focus=' isFocus ' ' type(CaretRange) ' GetText=' CaretRange.GetText(),5,9,0,700)
     } catch OSError as e {
       if e.number = eIUnsupport {
-        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA no GetCaretRange unsup Error=¦' e.number '¦ msg¦' e.message '¦' ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA no GetCaretRange unsup Error=¦' err2str(e,'nm') ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
         return false
       } else {
-        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA another error other Error=¦' e.number '¦ msg¦' e.message '¦' ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+        (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA another OSError=¦' err2str(e,'nm') ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
         return false
       }
+    } catch Error as e {
+      (dbg<min(_dt,_dl))?'':(dbgtxt := '✗UIA another Error=¦' err2str(e,'nm') ' isget⎀UIA⎋', dbgtt(_dt,dbgtxt,t:=5,_i,x,y   ), log(_dl3,dbgtxt,,_i  ))
+      return false
     }
     isEdit := !el.ValueIsReadOnly ; todo: is this useful???
     if isSet(CaretRange) {
