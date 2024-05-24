@@ -15,14 +15,13 @@ add_HomeRowCursor() {
   } ; Blind mode avoids releasing mods if they started out in the down position (unless mod is excluded). +s::Send
   blind := '{Blind' blind_ex '}' ; with modifiers, exclude self from Blind commands
 
-  mHomeRow := Map(
-     'g',K.␡
+  mHomeRow := Map('g',K.␡,'h',K.␈
     ,'i',K.⏎
-    ,'h',K.␈
     ,'j',sc['▼'],'k',sc['▲'],'l',sc['◀'],';',sc['▶'] ; fail with VKs
     ,'o',sc['⇤'],'p',sc['⇥']
     ,'m',vk['🖱↓'],',',vk['🖱↑'],'.',vk['🖱←'],'/',vk['🖱→']
-    )
+    ,'n',sc['⇟'],'y',sc['⇞']
+    ) ;
   for k_from, k_to in mHomeRow {
     r := hkf("*",pre k_from,"") ; (with modifiers)
     hkSend(r[1], blind '{' k_to '}')
@@ -43,7 +42,7 @@ add_⎈›PassThrough() {
   } ; Blind mode avoids releasing mods if they started out in the down position (unless mod is excluded). +s::Send
   blind := '{Blind' blind_ex '}' ; with modifiers, exclude self from Blind commands
 
-  loop parse "wertasdfzxcvbn" { ; *with modifiers
+  loop parse "wertasdfxcvb" { ; *with modifiers, reserve 'z' for undo n⇟
     r := hkf('*',pre A_LoopField,""), hkSend(r[1], blind '{' A_LoopField '}')
   }
 }
