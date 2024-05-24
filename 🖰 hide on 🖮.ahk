@@ -577,7 +577,14 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
   if attachGUI_🖰 {
     winID := WinGetID("A")
   } else {
-    MouseGetPos(,,&winID,)
+    try { ; sometimes get "Access is denied"
+      MouseGetPos(,,&winID,)
+    } catch as err {
+      dbgtxt := err2str(err)
+      dbgtxt .= ' ¦ ' A_ThisFunc
+      dbgTT(0, dbgtxt, 🕐:=10,id:=5,x:=-1,y:=-1)
+      return
+    }
   }
   if not winID {
     log(_dl,'app🖰Pointer ↩ no winID')
