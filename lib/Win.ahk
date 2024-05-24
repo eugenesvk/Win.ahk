@@ -244,7 +244,8 @@ getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to act
       hSwitched := true
       DetectHiddenWindows true
     }
-    winID := (winIDarg = "")
+    winID := (  (winIDarg = "")
+             || (winIDarg = "A"))
             ? WinExist("A")
             : winIDarg + 0
               ? WinExist("ahk_id " winIDarg)
@@ -663,12 +664,13 @@ getFocusWindowMonitorHandle() {
 }
 
 getFocusWindowMonitorIndex(winID_?) { ; converted from stackoverflow.com/a/68547452
-  winID := isSet(winID_) ? winID_ : "A"
+  winID := isSet(winID_) ? winID_ : getWinID()
+  monCount := MonitorGetCount() ;Get number of monitor
   if not winExist(winID) { ; guard against a missing active window
     return 1
+  } else {
+    WinGetPos(&🗔↖x,&🗔, &🗔↔,&🗔↕, winID) ; Get the position of the focus window
   }
-  monCount := MonitorGetCount() ;Get number of monitor
-  WinGetPos(&🗔↖x,&🗔, &🗔↔,&🗔↕, winID) ; Get the position of the focus window
   monSubAreas := []  ; Make an array to hold the sub-areas of the window contained within each monitor
   Loop monCount { ;Iterate through each monitor
     MonitorGetWorkArea(A_Index, &🖥️←,&🖥️↑,&🖥️→,&🖥️↓) ; Get Monitor working area
