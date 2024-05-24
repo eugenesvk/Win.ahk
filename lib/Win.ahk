@@ -92,7 +92,12 @@ class win {
      , _dl        	:= 1 ; dbg level for log
      , _dl3       	:= 3 ;
 
-    el := UIA.GetFocusedElement(pointCache) ; IUIAutomationElement
+    try {
+      el := UIA.GetFocusedElement(pointCache) ; IUIAutomationElement
+    } catch Error as e {
+      dbgtt(0,"✗ GetFocusedElement " e)
+      return false
+    }
     if (isText := el.CachedIsTextPatternAvailable) {
       if is⎀only {
         if (isTextEdit := el.CachedIsTextEditPatternAvailable) {
@@ -229,23 +234,25 @@ getFocusWindowMonitorHandle() {
    hMon := DllCall('MonitorFromWindow', 'Ptr',WinExist("A"), 'UInt',MonDefTopPri, 'Ptr')
 }
 
-getFocusWindowMonitorIndex(winID?) { ; converted from stackoverflow.com/a/68547452
+getFocusWindowMonitorIndex(winID_?) { ; converted from stackoverflow.com/a/68547452
+  winID := isSet(winID_) ? winID_ : "A"
+  if not winExist(winID) { ; guard against a missing active window
+    return 1
+  }
   monCount := MonitorGetCount() ;Get number of monitor
-  WinGetPos(&🗔↖x,&🗔, &🗔Width,&🗔Height, isSet(winID)?winID:"A") ; Get the position of the focus window
+  WinGetPos(&🗔↖x,&🗔, &🗔↔,&🗔↕, winID) ; Get the position of the focus window
   monSubAreas := []  ; Make an array to hold the sub-areas of the window contained within each monitor
   Loop monCount { ;Iterate through each monitor
     MonitorGetWorkArea(A_Index, &🖥️←,&🖥️↑,&🖥️→,&🖥️↓) ; Get Monitor working area
-
-    ;Calculate sub-area of the window contained within each monitor
-    xStart	:= max(🗔↖x          	, 🖥️←)
-    yStart	:= max(🗔            	, 🖥️↑)
-    xEnd  	:= min(🗔↖x + 🗔Width 	, 🖥️→)
-    yEnd  	:= min(🗔   + 🗔Height	, 🖥️↓)
-    area  	:= (xEnd - xStart)
-             * (yEnd - yStart)
+    xBeg	:= max(🗔↖x     	, 🖥️←) ;Calculate sub-area of the window contained within each monitor
+    yBeg	:= max(🗔       	, 🖥️↑)
+    xEnd	:= min(🗔↖x + 🗔↔	, 🖥️→)
+    yEnd	:= min(🗔   + 🗔↕	, 🖥️↓)
+    area	:= (xEnd - xBeg)
+             * (yEnd - yBeg)
     monSubAreas.push({area:area, index:A_Index}) ;Remember these areas, and which monitor they were associated with
   }
-  if(monSubAreas.Length == 1) { ;If there is only one monitor in the array, then you already have your answer
+  if (monSubAreas.Length == 1) { ;If there is only one monitor in the array, then you already have your answer
     return monSubAreas[1].index
   } else { ; Otherwise, loop to figure out which monitor's recorded sub-area was largest
     winningMon 	:= 0
