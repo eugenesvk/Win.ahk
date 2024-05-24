@@ -339,6 +339,129 @@ class helperString {
     outModi_ahk_arr_full.Push(lastMod)
     return outModi_ahk_arr_full
   }
+
+
+  static symSp(s) { ; convert a symbol to it's approximate space width using variable-width spaces
+    static isInit := false
+     ,ch2sp := Map()
+    if not isInit {
+      isInit := true
+      ch2sp.CaseSense := 0
+      ch2sp['‹'] := (
+            ' ') ; [    ]
+      ch2sp['›'] := (
+            ' ')
+      ch2sp['⇧'] := (
+            '   ')
+      ch2sp['◆'] := (
+            '   ')
+      ch2sp['⎇'] := (
+            '   ')
+      ch2sp['⎈'] := (
+            '   ')
+      ch2sp['⇪'] := (
+            ' ')
+      ch2sp['⇭'] := (
+            ' ')
+      ch2sp['⇳🔒'] := (
+            '  ')
+    }
+    outtxt := ''
+    loop parse s {
+      outtxt .= ch2sp.Get(A_LoopField, ' ')
+    }
+    return outtxt
+  }
+  static whichModStatus() { ; convert mod flags into a string with both hook ("physical") and logical views
+    static K  	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+     , s      	:= helperString ; K.▼ = vk['▼']
+     , →␠     	:= s.symSp.Bind(s)
+     , modi   	:= ['⇧','◆','⎇','⎈'] ; todo replace with constkey symbols
+     , toggles	:= ['⇪','⇭','⇳🔒']
+    dbglogic:='logic`t', dbghook:='hook`t', dbgcount := 1
+    ; 'P' state isn't really physical (it's impossible to track at AHK level), but what Keyboard Hook reports and AHK records (so another hook from another app may interfere)
+    for i,m in modi {
+      l        	:= '‹' m
+      l_ahk    	:= s.modis→ahk(l)
+      dbglogic 	.= (GetKeyState(l_ahk    ) ? (l ' '):(→␠(l) ' '))
+      dbghook  	.= (GetKeyState(l_ahk,"P") ? (l ' '):(→␠(l) ' '))
+      ;dbglogic	.= (GetKeyState(l_ahk    ) ? (l ' '):'  ' ' ')
+      ;dbghook 	.= (GetKeyState(l_ahk,"P") ? (l ' '):'  ' ' ')
+    }
+    for i,m in modi {
+      m       	:= modi[modi.length - i + 1] ; reverse
+      r       	:=     m '›',
+      r_ahk   	:= s.modis→ahk(r)
+      dbglogic	.= (GetKeyState(r_ahk    ) ? (r ' '):'   ')
+      dbghook 	.= (GetKeyState(r_ahk,"P") ? (r ' '):'   ')
+      dbghook 	.= (Mod(dbgcount,8)=0) ? '`n' : ''
+    }
+    for m in toggles {
+      l       	:= m
+      l_ahk   	:= s.key→ahk(l)
+      dbglogic	.= (GetKeyState(l_ahk    ) ? (l ' '):'   ')
+      dbghook 	.= (GetKeyState(l_ahk,"P") ? (l ' '):'   ')
+    }
+    return {h:dbghook,p:dbghook, l:dbglogic}
+  }
+
+  static whichModText(fmod) { ; convert mod flags into a string with 2 rows for left/right variants
+    modTxt := '‹'
+    modTxt .= (fmod & f‹⇧  	) ? '⇧'   	: '  ' ;left shift
+    modTxt .= (fmod & f‹⎈  	) ? '⎈'   	: '  ' ;left ctrl
+    modTxt .= (fmod & f‹◆  	) ? '◆'   	: '  ' ;left super ❖◆ (win ⊞)
+    modTxt .= (fmod & f‹⎇  	) ? '⎇'   	: '  ' ;left alt
+    modTxt .= (fmod & f‹👍  	) ? '👍'   	: '  ' ;left Oyayubi 親指
+    modTxt .= (fmod & f⇪   	) ? '⇪'   	: ' ' ;caps lock
+    modTxt .= (fmod & fkana	) ? 'kana'	: ' ' ;kana fかな
+    modTxt                 	.= '`n '  	;
+    modTxt .= (fmod & f⇧›  	) ? '⇧'   	: '  ' ;right shift
+    modTxt .= (fmod & f⎈›  	) ? '⎈'   	: '  ' ;right ctrl
+    modTxt .= (fmod & f◆›  	) ? '◆'   	: '  ' ;right super ❖◆ (win ⊞)
+    modTxt .= (fmod & f⎇›  	) ? '⎇'   	: '  ' ;right alt
+    modTxt .= (fmod & f👍›  	) ? '👍'   	: '  ' ;right Oyayubi 親指
+    modTxt                 	.= '›'    	;
+    modTxt .= (fmod & f🔢   	) ? '🔢'   	: ' ' ;num  lock
+    return modTxt
+  }
+  static whichModTextLine(fmod) { ; convert mod flags into a single line string
+    modTxt := ''
+    if (fmod & f⇧	) {
+      modTxt     	           .= '⇧'
+    } else       	{
+     (fmod & f‹⇧ 	) ? modTxt .= '‹⇧'	: ''
+     (fmod & f⇧› 	) ? modTxt .= '⇧›'	: ''
+    }
+    if (fmod & f⎈	) {
+      modTxt     	           .= '⎈'
+    } else       	{
+     (fmod & f‹⎈ 	) ? modTxt .= '‹⎈'	: ''
+     (fmod & f⎈› 	) ? modTxt .= '⎈›'	: ''
+    }
+    if (fmod & f◆	) {
+      modTxt     	           .= '◆'
+    } else       	{
+     (fmod & f‹◆ 	) ? modTxt .= '‹◆'	: ''
+     (fmod & f◆› 	) ? modTxt .= '◆›'	: ''
+    }
+    if (fmod & f⎇	) {
+      modTxt     	           .= '⎇'
+    } else       	{
+     (fmod & f‹⎇ 	) ? modTxt .= '‹⎇'	: ''
+     (fmod & f⎇› 	) ? modTxt .= '⎇›'	: ''
+    }
+    if (fmod & f👍	) {
+      modTxt     	           .= '👍'
+    } else       	{
+     (fmod & f‹👍 	) ? modTxt .= '‹👍'	: ''
+     (fmod & f👍› 	) ? modTxt .= '👍›'	: ''
+    }
+    modTxt .= ' '
+    ((fmod & fkana	) ? modTxt .= 'kana'	: '')
+    ((fmod & f⇪   	) ? modTxt .= '⇪'   	: '')
+    ((fmod & f🔢   	) ? modTxt .= '🔢'   	: '')
+    return modTxt
+  }
 }
 
 hexx(num) { ; returns hex in 0xABab
