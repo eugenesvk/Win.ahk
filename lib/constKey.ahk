@@ -29,12 +29,11 @@ set_flag_global() { ; register global modifier flags
     , f◆    	:= f‹◆|f◆›	;       10001000 any  super
     , f👍    	:= f‹👍|f👍›	;   1100000000 any  Oyayubi
     ; , fzz›	:= 2048   	;   100000000000 z
-    ; , f⇪  	:= 4096   	;  1000000000000 caps lock
-    ; , f🔢  	:= 8192   	; 10000000000000 num  lock
+    , f⇪    	:= 4096   	;  1000000000000 caps lock
+    , f🔢    	:= 8192   	; 10000000000000 num  lock
     ; fかな kana
     ,  bit‹ := f‹⇧ | f‹⎇ | f‹⎈ | f‹◆
     ,  bit› := f⇧› | f⎇› | f⎈› | f◆›
-
 }
 set_key_global()
 set_key_global() { ; register global variables
