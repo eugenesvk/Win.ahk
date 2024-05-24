@@ -216,7 +216,14 @@ WinLock() { ;requires two elevated tasks in the Task Scheduler
     Add arguments: ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 00000000 /f
   */
 
-  vIsDisabled := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableLockWorkstation")
+  try {
+    vIsDisabled := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableLockWorkstation")
+  } catch Error as err {
+    dbgtxt := err2str(err)
+    dbgtxt .= ' ¦ ' A_ThisFunc
+    dbgTT(0, dbgtxt, 10,5,x:=-1,y:=-1)
+    return
+  }
   if (vIsDisabled) { ; enable 'lock workstation' (=Win+L) and lock
     Try RunWait('schtasks /Run /TN "\es\WinLock Enable"',,"Hide") ; REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 00000000 /f
     Sleep(300)
