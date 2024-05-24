@@ -89,6 +89,72 @@ class keyFunc {
       ; nonmod     	  5
       return [key_combo_out, key_combo_FNm]
     }
+
+    this.anyMod      := anyMod
+    static anyMod(isP?) { ; true: any modifier is down ('P'-physically)
+      P := isSet(isP)?'P':''
+      if isSet(isP) {
+           GetKeyState("Shift"   	,'P')
+        || GetKeyState("Ctrl"    	,'P')
+        || GetKeyState("Alt"     	,'P')
+        || GetKeyState("LWin"    	,'P')
+        || GetKeyState("CapsLock"	,'P')
+      } else {
+           GetKeyState("Shift"   	)
+        || GetKeyState("Ctrl"    	)
+        || GetKeyState("Alt"     	)
+        || GetKeyState("LWin"    	)
+        || GetKeyState("CapsLock"	)
+      }
+    }
+    this.whichModAny := whichModAny
+    static whichModAny(isP?) { ; true: any modifier is down ('P'-physically)
+      P := isSet(isP)?'P':''
+      flag_mode := 0
+      if isSet(isP) {
+        GetKeyState("Shift"   	,'P')?flag_mode |= f⇧:''
+        GetKeyState("Ctrl"    	,'P')?flag_mode |= f⎈:''
+        GetKeyState("Alt"     	,'P')?flag_mode |= f⎇:''
+        GetKeyState("LWin"    	,'P')?flag_mode |= f‹◆:''
+        GetKeyState("RWin"    	,'P')?flag_mode |= f◆›:''
+        GetKeyState("CapsLock"	,'P')?flag_mode |= f⇪:''
+      } else {
+        GetKeyState("Shift"   	    )?flag_mode |= f⇧:''
+        GetKeyState("Ctrl"    	    )?flag_mode |= f⎈:''
+        GetKeyState("Alt"     	    )?flag_mode |= f⎇:''
+        GetKeyState("LWin"    	    )?flag_mode |= f‹◆:''
+        GetKeyState("RWin"    	    )?flag_mode |= f◆›:''
+        GetKeyState("CapsLock"	    )?flag_mode |= f⇪:''
+      }
+      return flag_mode
+    }
+    this.whichMod    := whichMod
+    static whichMod(isP?) { ; true: left/right modifier is down ('P'-physically)
+      P := isSet(isP)?'P':''
+      flag_mode := 0
+      if isSet(isP) {
+        GetKeyState("LShift"   	,'P')?flag_mode |= f‹⇧:''
+        GetKeyState("LCtrl"    	,'P')?flag_mode |= f‹⎈:''
+        GetKeyState("LAlt"     	,'P')?flag_mode |= f‹⎇:''
+        GetKeyState("LWin"    	,'P')?flag_mode |= f‹◆:''
+        GetKeyState("CapsLock"	,'P')?flag_mode |= f⇪:''
+        GetKeyState("RShift"  	,'P')?flag_mode |= f⇧›:''
+        GetKeyState("RCtrl"   	,'P')?flag_mode |= f⎈›:''
+        GetKeyState("RAlt"    	,'P')?flag_mode |= f⎇›:''
+        GetKeyState("RWin"    	,'P')?flag_mode |= f◆›:''
+      } else {
+        GetKeyState("LShift"  	    )?flag_mode |= f‹⇧:''
+        GetKeyState("LCtrl"   	    )?flag_mode |= f‹⎈:''
+        GetKeyState("LAlt"    	    )?flag_mode |= f‹⎇:''
+        GetKeyState("LWin"    	    )?flag_mode |= f‹◆:''
+        GetKeyState("RShift"  	    )?flag_mode |= f⇧›:''
+        GetKeyState("RCtrl"   	    )?flag_mode |= f⎈›:''
+        GetKeyState("RAlt"    	    )?flag_mode |= f⎇›:''
+        GetKeyState("RWin"    	    )?flag_mode |= f◆›:''
+        GetKeyState("CapsLock"	    )?flag_mode |= f⇪:''
+      }
+      return flag_mode
+    }
   }
 }
 ; ————————————————————————— Functions —————————————————————————
