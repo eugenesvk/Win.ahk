@@ -9,8 +9,7 @@ class helperColletions {
   }
 }
 
-; autohotkey.com/boards/viewtopic.php?f=82&t=94114&p=418207
-class OrderedMap extends Map {
+class OrderedMap extends Map { ; autohotkey.com/boards/viewtopic.php?f=82&t=94114&p=418207
   __New(KVPairs*) {
     super.__New(KVPairs*)
 
@@ -52,7 +51,7 @@ class OrderedMap extends Map {
       for i, Element in this.KeyArray {
         areSame := (Element is String)
           ? !StrCompare(Element, key, CaseSense)
-          : (Element = key)
+          :            (Element = key)
 
         if areSame {
           this.KeyArray.RemoveAt(i)
@@ -62,8 +61,8 @@ class OrderedMap extends Map {
 
       return RemovedValue
     }
-    catch KeyError as Err
-      throw KeyError(Err.Message, -1, Err.Extra)
+    catch Error as Err
+      throw Error(Err.Message, -1, Err.Extra)
   }
 
   Set(KVPairs*) {
@@ -93,9 +92,10 @@ class OrderedMap extends Map {
       if keyEnum(&key) {
         val := this[key]
         return true
+      } else {
+        return false
       }
     }
-
     return keyValEnum
   }
 }
