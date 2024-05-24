@@ -1,4 +1,7 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
+#include <libFunc App>	; Functions: app-specific
+
+shell	:= ComObject("Shell.Application") ;;; remove after loading form the main script
 ; ————— Make Tab into a custom prefix key
   ; Treated as *Tab, *Wildcard: Fire the hotkey even if extra modifiers are being held down
   ; Tab & r::	(run)	;⭾1​	vk31 ⟶ Open Path1 in DirectoryOpus
@@ -28,7 +31,23 @@
   }
   #HotIf
 
-  Tab::    	SendInput '{Tab}'        	;*⌥⭾​	vk09 ⟶ Tab Restore (on release)
+  Tab Up:: {	;*⌥⭾​	vk09 ⟶ Tab Restore (on release without ~)
+    static _d := 1 ; 0 to hide tooltips, 1 to hide debug with dbg=0
+    ,anyMod	:= keyFunc.anyMod
+    dbgk := '↑⭾'
+    isMod := anyMod(0)
+    isModP := anyMod(1)
+    if   A_PriorHotkey = '~*LCtrl up'
+      && A_PriorKey  = 'Tab'
+      && A_TimeSincePriorHotkey<120 { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
+      dbgk := '✗' dbgk ' pre_hk=' A_PriorHotkey ' ¦k=' A_PriorKey ' 🕐' A_TimeSincePriorHotkey ;~*LCtrl up
+    } else {
+      ; dbgtt(0,'✓' A_PriorHotkey ' ¦ ' A_PriorKey,🕐:=3,10,150,A_ScreenHeight*.9) ;~*LCtrl up
+      SendInput '{Tab}'
+    }
+    dbgk .= isMod ' ' isModP ;
+    (dbg<_d)?'':(log(0,dbgk)), (dbg<_d+1)?'':(dbgtt(0,dbgk,🕐:=3,9,95,A_ScreenHeight*.9))
+  }
   *!Tab::  	SendInput '{Blind}!{Tab}'	;*⌥⭾​	vk09 ⟶ *⌥Tab Restore (* can use with other mods)
   ; *^Tab::	SendInput '{Blind}^{Tab}'	;*^⭾​	vk09 ⟶ *^Tab Restore
   *#Tab::  	SendInput '{Blind}#{Tab}'	;*#⭾​	vk09 ⟶ *#Tab Restore
