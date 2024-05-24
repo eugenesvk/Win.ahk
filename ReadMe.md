@@ -34,8 +34,8 @@ For standalone "double-click-to-run" use:
     - latest beta version: [mhide_kbd.zip](https://github.com/eugenesvk/Win.ahk/archive/refs/heads/mhide_kbd.zip) of `mhide_kbd` of this repository
   - Unzip the downloaded zip file anywhere you like
   - (optional) to autostart on Windows login:
-    - create a Shortcut (`.lnk`) to `🖰hide on 🖮_launch.ahk`
-    - copy this `🖰hide on 🖮_launch.lnk` to your `%AppData%\Microsoft\Windows\Start Menu\Programs\Startup` (which should expand to `C:\Users\YOUR_USER_NAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`)
+    - create a Shortcut (`.lnk`) to `🖰 hide on 🖮_launch.ahk`
+    - copy this `🖰 hide on 🖮_launch.lnk` to your `%AppData%\Microsoft\Windows\Start Menu\Programs\Startup` (which should expand to `C:\Users\YOUR_USER_NAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`)
 
 To use with your _existing_ AutoHotkey scripts:
 
@@ -51,7 +51,7 @@ The keys that trigger hiding the pointer are in the `keys_m['en']` map for the E
 
 ## Use
 
-For a standalone use: double-click on [🖰hide on 🖮_launch](<./🖰hide on 🖮_launch.ahk>)
+For a standalone use: double-click on [🖰 hide on 🖮_launch](<./🖰 hide on 🖮_launch.ahk>)
 
 To use with your existing AutoHotkey scripts: the import should do the trick
 
@@ -60,7 +60,7 @@ To use with your existing AutoHotkey scripts: the import should do the trick
   - BUT this workaround prevents getting mouse pointer status correctly https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123908
     - potential workaround is to move pointer status check earlier
   - `displayCounter` sometimes misbehaves and goes below -1, not sure whether whether this has any negative effects
-  - `🖰hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the standalone version [🖰hide on 🖮_launch](<./🖰hide on 🖮_launch.ahk>)
+  - `🖰hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the standalone version [🖰 hide on 🖮_launch](<./🖰 hide on 🖮_launch.ahk>)
 
 ## Credits
   - [Windows-Cursor-Hider](https://github.com/Stefan-Z-Camilleri-zz/Windows-Cursor-Hider) the old simpler v1 version of the same idea
