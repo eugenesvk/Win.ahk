@@ -11,9 +11,11 @@
 hkmyAltTab(hk) {
   myAltTab()
 }
-myAltTab() {
-  ;🕐1 := A_TickCount
-  ; SetKeyDelay(-1)
+myAltTab() { ; without sending ⎈↑ AppSwitcher becomes "sticky"
+  static _d := 0
+  (dbg<_d)?'':(🕐1 := A_TickCount)
+  SetKeyDelay(-1)
+  isKey↓.⎇↹ := 1
   if        GetKeyState("Shift","P") { ; move ←
     Send("{LAlt down}{LShift down}{Tab}")   ;,🕐2 := A_TickCount, dbgtt(0,"←¹↓‹⇧₊‹⎇⭾",'∞',4,0,A_ScreenHeight*.85)
   } else if GetKeyState("Shift"    ) { ; move →
@@ -21,8 +23,9 @@ myAltTab() {
   } else {                             ; move →
     Send("{LAlt down}"           "{Tab}")   ;,🕐2 := A_TickCount, dbgtt(0,"→³↓  ‹⎇⭾",'∞',4,0,A_ScreenHeight*.85)
   }
-  ;OutputDebug('post ' format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc)
-  ; KeyWait("LCtrl") ;
+  dbgtxt .= ' (isKey↓.⎇↹)'
+  (dbg<_d)?'':(OutputDebug(dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc))
+  ; (dbg<_d)?'':dbgtt(0,dbgtxt,'∞',4,0,A_ScreenHeight*.85)
 }
 
 ; +#Tab::AppWindowSwitcher(→)	;⇧❖​ 	⭾​ ⟶ Switch to Next     App's Window (↑ Z-order)
@@ -59,14 +62,19 @@ setAppSwitcher() {
 #HotIf WinActive("ahk_group ⌥⭾AppSwitcher") ; BUG autohotkey.com/boards/viewtopic.php?f=82&t=120739 Invoking ShiftAltTab changes direction for regular Alt+Tab
 ; #HotIf WinActive("ahk_exe explorer.exe ahk_class MultitaskingViewFrame")
   LControl & q::{
+    static _d := 0
+    (dbg<_d)?'':(🕐1 := A_TickCount)
     SetKeyDelay(-1)
+    isKey↓.⎇q := 1
     if        GetKeyState("Shift","P") { ; move →
-      Send("{LAlt down}"           "{Tab}")   ;, dbgtt(0,"→¹↓  ‹⎇⭾",'∞',3,90,A_ScreenHeight*.85)
+      Send("{LAlt down}"           "{Tab}")   ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓  ‹⎇⭾ →¹")
     } else if GetKeyState("Shift"    ) { ; move ←
-      Send("{LAlt down}{LShift down}{Tab}")   ;, dbgtt(0,"←²↓‹⇧‹⎇⭾",'∞',3,90,A_ScreenHeight*.85)
+      Send("{LAlt down}{LShift down}{Tab}")   ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓‹⇧‹⎇⭾ ←²")
     } else                             { ; move ←
-      Send("{LAlt down}{LShift down}{Tab}")   ;, dbgtt(0,"←³↓‹⇧‹⎇⭾",'∞',3,90,A_ScreenHeight*.85)
+      Send("{LAlt down}{LShift down}{Tab}")   ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓‹⇧‹⎇⭾ ←³")
     }
+    dbgtxt .= ' (isKey↓.⎇q)'
+    (dbg<_d)?'':(OutputDebug(dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc))
     ; KeyWait("LCtrl") ;
     ; Send('{LAlt down}+{Tab}')
   }
