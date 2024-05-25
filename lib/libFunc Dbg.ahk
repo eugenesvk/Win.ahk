@@ -76,7 +76,7 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
 
 err2str(err,f:='rme') { ; convert Error to a string (test whether a field exists before using it)
   dbgtxt := ''
-  fields := ['Reason','Message','Extra','What','Number']
+  fields := ['Reason','Message','Extra','What']
   len := fields.Length
   for i, field in fields {
     ch1 := SubStr(field,1,1)
