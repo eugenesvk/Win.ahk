@@ -467,7 +467,7 @@ class keyConstant {
     vk['VOLUME_MUTE']        	:= 'vkAD'	; VK_VOLUME_MUTE        	0xAD	Volume Mute
     vk['VOLUME_UP']          	:= 'vkAF'	; VK_VOLUME_UP          	0xAF	Volume Up
 
-    for keyNm, vkCode in vk { ; Back , vk08
+    for keyNm, vkCode in vk { ; Back vk08
       this.%keyNm%	:= vkCode ; convert map into object properties
     }
     for LngNm in labels_enabled { ; en / ru (but only if such layouts exist)
