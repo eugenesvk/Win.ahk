@@ -18,6 +18,18 @@ isRu() {
   LayoutSwitch()
   ; SendInput '#{Space}'	;[Alt+CapsLock] to switch Keyboard Layout (Win+Space)
   }
+tryPostMsg(msg,w,l,Win,Contr?) {
+  try {
+    if isSet(Contr) {
+      PostMessage(msg, w,l, Contr,Win)
+    } else {
+      PostMessage(msg, w,l,      ,Win)
+    }
+  } catch as err {
+    dbgtxt := err2str(err) ' ¦ ' A_ThisFunc
+    dbgTT(0, dbgtxt, 🕐:=10,id:=5,x:=-1,y:=-1)
+  }
+}
 LayoutSwitch(target?) {
   static locInf := localeInfo.m  ; Constants Used in the LCType Parameter of lyt.getLocaleInfo, lyt.getLocaleInfoEx, and SetLocaleInfo learn.microsoft.com/en-us/windows/win32/intl/locale-information-constants
    , kbdCountry	:= "sEnCountryNm"	;
