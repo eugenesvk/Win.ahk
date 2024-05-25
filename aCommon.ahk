@@ -7,7 +7,7 @@ A_MenuMaskKey := "vkE8"                      	; vkE8=unassigned. Stop sending LC
 ; SetCapsLockState "AlwaysOff"               	; [CapsLock] disable
 InstallKeybdHook(Install:=true, Force:=false)	; Install hook even if nothing uses it (can view recent keys)
 #UseHook True                                	; Any keyboard hotkeys use hook
-A_KeyHistory :=  25                          	; Limit history to last X (need >10 for Hyper)
+KeyHistory(500)                              	; Limit history to last X (need >10 for Hyper) ;;; temp
 ListLines 0                                  	; Potential performance boost
 ; SendMode("Input")                          	; Superior speed and reliability. Use SendPlay for games to emulate keystrokes. Too fast for GUI selection of Diacritics, use SendInput individually
 ; SetTitleMatchMode(2)                       	; |2| win title can contain WinTitle anywhere inside it to be a match
