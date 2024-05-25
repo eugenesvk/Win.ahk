@@ -1,5 +1,8 @@
 # templates github.com/github/gitignore
 Hotstring.ahk
+varPathMac.ahk
+varPathWin.ahk
+varPathWinK.ahk
 \[old\]
 data
 # test folder
