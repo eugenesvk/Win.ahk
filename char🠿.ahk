@@ -15,8 +15,17 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   ; getKeys🖰hide(&lbl🖰hide) ; these hdotkeys override '🖰hide on 🖮', so we need to invoke pointer hiding here
 
   HotIfWinActive("ahk_group PressnHold")
-
-  loop parse "abce/nosuyz'" { ; ⇧🠿a​⇧🠿b​⇧🠿c​⇧🠿e​⇧🠿/​⇧🠿n​⇧🠿o​⇧🠿s​⇧🠿u​⇧🠿y​⇧🠿z​⇧🠿'​
+  ; `12345 67890 -=
+  ;⇧+   ++
+  ;  qwert yuiop []
+  ;  +++++ ++ ++
+  ;  asdfg hjkl; '\
+  ;  ++  +
+  ;⇧    +
+  ;  zxcvb nm,./
+  ;   ++++ +   +
+  ;⇧    +
+  loop parse "abce/nosuyz'" { ; ⇧🠿a​⇧🠿b​⇧🠿c​⇧🠿e​⇧🠿/​⇧🠿n​⇧🠿o​⇧🠿s​⇧🠿u​⇧🠿y​⇧🠿z​⇧🠿'​  ;;; remove z to test a bug with ‹⎈
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
