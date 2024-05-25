@@ -573,9 +573,9 @@ ListLines 0                                  	; Potential performance boost
 #HotIf WinActive("ahk_exe sublime_text.exe") ;[App] ⇧+⇪ opens Command Palette
   ;#HotIfWinActive, ahk_class PX_WINDOW_CLASS
   ;# WinKey, ^ Control, ! Alt, + Shift, <> left/right key of a pair
-  +Capslock::   	SendInput '^+{vk50}'	;⇧⇪​	vk50 ⟶ ^⇧p Command Palette	()
-  Capslock & p::	SendInput '^+{vk50}'	;⇪p​	vk50 ⟶^⇧p Command Palette 	()
-  ; #Right::    	SendInput '^{Tab}'  	;⇧[​	vkDB ⟶ { Left Bracket     	(U+007B)
+  ;+Capslock::   	SendInput '^+{vk50}'	;⇧⇪​	vk50 ⟶ ^⇧p Command Palette	()
+  ;Capslock & p::	SendInput '^+{vk50}'	;⇪p​	vk50 ⟶^⇧p Command Palette 	()
+  ; #Right::     	SendInput '^{Tab}'  	;⇧[​	vkDB ⟶ { Left Bracket     	(U+007B)
 
   ; ; Avoid GlobalWinKey by sending Self directly to window control (SubStr filter out $#)
   ; $#2::	ControlSend('{Blind}#{' . SubStr(A_ThisHotkey,3) . '}',,"A")	;❖2​	vk32 ⟶ #2
