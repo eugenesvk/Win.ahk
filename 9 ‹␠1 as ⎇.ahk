@@ -1,7 +1,4 @@
 #Requires AutoHotKey 2.1-alpha.4
-
-#include %A_scriptDir%\5 App Switcher.ahk	; Awitch app windows (e.g., only within an app)
-
 ;LControl & Tab::      	myAltTab()	;^⭾​	vk09 ⟶ Ctrl+Tab AppSwitcher, defined in '9 ‹␠1 as ⎇' to allow flexible first key from space
 ;LCtrl & Tab::AltTab   	; ⎈⭾​  ⟶ Switch to Next     window (due to AltTab can't use Send) ;bugs if Language switcher is on for short taps, rebind directly in the Ctrl function
 ;LCtrl & q::ShiftAltTab	;  ⌥​q​                                                    	 ⟶ Switch to Previous window (← in the switcher)
