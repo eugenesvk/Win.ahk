@@ -77,43 +77,41 @@ LCtrlUp() {
   }
   (dbg<1)?'':(dbgtt(0,'A_PriorKey`t' A_PriorKey ' `nA_PriorHotkey`t' A_PriorHotkey,3))
 }
-
 LayoutSwitch(target?) {
   static locInf := localeInfo.m  ; Constants Used in the LCType Parameter of lyt.getLocaleInfo, lyt.getLocaleInfoEx, and SetLocaleInfo learn.microsoft.com/en-us/windows/win32/intl/locale-information-constants
    , kbdCountry	:= "sEnCountryNm"	;
    , kbdDisplay	:= "sEnDisplayNm"	;
   ; SendInput '{LWin Down}{Space}{LWin Up}'
   local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
-  local targetWin := "A" ; Active window to PostMessage to, need to be changed for '#32770' class (dialog window)
-
+  local targetWin := "A" ; Active window to PostMsg to, need to be changed for '#32770' class (dialog window)
   if WinActive("ahk_class #32770") {  ; dialog window class requires sending a message to the active window via ControlGetFocus
     targetWin := ControlGetFocus("A") ; Retrieves which control of the target window has keyboard focus, if any
   }
+  ishidden_old := DetectHiddenWindows(true) ; avoid not being able to find target window if it's a tray app
   if not WinExist(targetWin) { ; no window to post message to, use shortcuts
     if not isSet(target) {
       SendInput('#{Space}')
-    } else if target = enU {
-      ; SendInput('{LShift down}{LAlt down}6{LShift up}{LAlt up}') ; set in system config
+    } else if target = enU { ; SendInput('{LShift down}{LAlt down}6{LShift up}{LAlt up}') ; set in system config
       SendInput('+!6')
-    } else if target = ruU { ;
-      ; SendInput('{LShift down}{LAlt down}7{LShift up}{LAlt up}')
+    } else if target = ruU { ; SendInput('{LShift down}{LAlt down}7{LShift up}{LAlt up}')
       SendInput('+!7')
     }
-    ; return
+    return
   }
   if isSet(target) {
-    PostMessage changeInputLang, 0, target,       , targetWin
+    tryPostMsg(changeInputLang, 0, target, targetWin)
     return
   }
   if        (curlayout = enU) {
-    PostMessage changeInputLang, 0, ruU,       , targetWin
+    tryPostMsg(changeInputLang, 0, ruU   , targetWin)
     ;           Msg,            w/, lParam ,Control, WinTitle
     ; dbgTT(0,"Current enU, switching to ruU")
   } else if (curlayout = ruU) {
-    PostMessage changeInputLang, 0, enU,       , targetWin
+    tryPostMsg(changeInputLang, 0, enU   , targetWin)
     ; dbgTT(0,"Current ruU, switching to enU")
   } else {
     dbgTT(0,"Layout neither enU nor ruU, not switching anything")
   }
   ; LocaleDbg()
+  DetectHiddenWindows(ishidden_old)
   }
