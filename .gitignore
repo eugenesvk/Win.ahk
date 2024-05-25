@@ -1,6 +1,7 @@
 # templates github.com/github/gitignore
 Hotstring.ahk
 \[old\]
+data
 # test folder
 \[test\]
 # project's built/temp docs
