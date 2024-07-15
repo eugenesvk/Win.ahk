@@ -385,7 +385,13 @@ on🖰Moved() { ; Restore mouse pointer (and record its new position) unless key
   }
   noreb:=0
   global 🖰x_,🖰y_
-  MouseGetPos(&🖰x, &🖰y)
+  try {
+    MouseGetPos(&🖰x, &🖰y) ; sometimes gets access denied errors
+  } catch as err {
+    dbgtxt := err2str(err) ' ¦ ' A_ThisFunc
+    dbgTT(0, dbgtxt, 🕐:=10,id:=5,x:=-1,y:=-1)
+    return
+  }
   🖰Δ↔ := abs(🖰x - 🖰x_)
   🖰Δ↕ := abs(🖰y - 🖰y_)
   if (  (🖰Δ↔ < minΔ🖰x) ; don't show a mouse on tiny movements below these thresholds (in pixels)
