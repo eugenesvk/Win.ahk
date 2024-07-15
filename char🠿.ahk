@@ -67,7 +67,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     ; is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
     Switch hk, 0 {
-      default  : return ; msgbox('nothing matched setChar🠿 hk=' . hk)
+      default  : return ; dbgtt(0,'nothing matched setChar🠿 hk=' . hk, 4) ;
       ; Hotkey created → key name and ordering of its modifier symbols gets fixed
       ; —————————— Diacritic hk  c  key_list lblMap lblKey 🖰hide
       case  a⃣	: char→sym(hk,'a',Dia['a'	],unset,unset,false) ;InStr(lbl🖰hide,'a'))
