@@ -121,6 +121,21 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       case ⎈›⎇›␠⃣	: char→sym(hk,'␠',Ch['Space'      	],'Ch','SpaceLab2',false,false,false) ;
     }
   }
+  hkChar↓(hk_dirty) {
+    hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first without ＄ ˜
+    (dbg<5)?'':dbgTT(0,hk_dirty ' → ' hk,t:=1)
+    ; flag := s.getKeyPrefixFlag(hk)
+    ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
+    ; is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
+    Switch hk, 0 {
+      default  : return ; dbgtt(0,'nothing matched setChar🠿 hk=' . hk, 4) ;
+      ; Hotkey created → key name and ordering of its modifier symbols gets fixed
+      ; —————————— Alt symbols (math, currency etc.)
+      ;          	           hk  c  key_list  	 lblMap lblKey 🖰hide
+      case ⎈›⎇›␠⃣	: char→sym(hk,'␠',Ch['Space'	],'Ch','SpaceLab2',false,false,false) ;
+      ;
+    }
+  }
 }
 
 global keyOnHold := ''
