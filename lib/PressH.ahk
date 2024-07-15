@@ -3,13 +3,14 @@
 
 #include <Win>
 #include %A_scriptDir%\gVar\PressH.ahk
-PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:=true) { ; output→CharChoicet
+PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:=true, can␠ins:=true) { ; output→CharChoicet
   ; Arg     	Type/Val      	Comment |default value|  ¦alt value¦
   ; pChars  	array         	symbols to insert ['⎋','❖','⌽'...]
   ; pTrigger	char          	key that triggered this function, used to exclude it from the index
   ; pLabel  	array         	key labels to use instead of the usual index (1-9a-z)
   ; pHorV   	|H|V          	Horizontal/Vertical layout of the listboxes
   ; pis␈    	|true|        	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
+  ; can␠ins 	|true|        	Space pressed when GUI is shown inserts the first item, otherwise it only selects it (filtered out just like arrow keys)
   ; pCaret  	|1,uia¦2¦[0,0]	Position CharacterPicker @ Text Caret position 1 or 'uia' UIA/Accessibility, 2 no UIA, [x,y] use explicit coords
 
   static k   	:= keyConstant._map, lyt_lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
@@ -94,6 +95,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
   ; tooltip(A_TimeSincePriorHotkey)
   ; HotIfWinActive		; deactivate context sensitivity for hotkeys
 
+  ArrowHKeys := "~Down~Up~Left~Right"
   HotIfWinActive       	 GuiTitle    	; Catch Arrow hotkeys while GUI is active
     Hotkey("~BackSpace"	, Nav_Exit)  	; Exit on ⌫
     Hotkey("~Enter"    	, Nav_Pick)  	; Enter inserts selection (if exists) alt button solution?
@@ -101,7 +103,12 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
     Hotkey("~Down"     	, Nav_Return)	;
     Hotkey("~Left"     	, Nav_Return)	;
     Hotkey("~Right"    	, Nav_Return)	;
-  HotIfWinActive       	             	; deactivate context sensitivity for hotkeys
+    if ! can␠ins {
+      hks := "*Space" ; ignore modifiers
+      Hotkey(hks	, Nav_Return)
+      ArrowHKeys	.= hks
+    }
+  HotIfWinActive		; deactivate context sensitivity for hotkeys
 
   CharChoice:= "", colIndex:=[], colSymbol:=[], skipLbl := 0
   NuChars := pChars.Length
@@ -211,15 +218,15 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
     waitingState := true ; Tracks whether the function has finished
   }
 
+  fnS := PressH_Select.bind(Picker,&ArrowHKeys,&pChars)	; Binds parameters to PressH_Select
   ; Add triggers that control what happens when a GUI/list element is activated
-    Picker.OnEvent("Close", Gui_Close)        	; On Close goes to Gui_Close (Picker)
-    Picker.OnEvent("Escape",Gui_Close)        	;    Escape (Picker)
-    ;         , (*) => Picker.Destroy())      	; alternative function call
-    fnS := PressH_Select.bind(Picker, &pChars)	; Binds parameters to PressH_Select
-    LBI.OnEvent("DoubleClick", fnS)           	; Select with a double-click
-    LBV.OnEvent("DoubleClick", fnS)           	;   passes (GuiCtrlObj, Info), where Info for ListBox is item position
-    LBI.OnEvent("Change", fnS)                	;             a selection chang
-    LBV.OnEvent("Change", fnS)                	;   passes (GuiCtrlObj, Info), where Info has no meaning for ListBox
+    Picker.OnEvent("Close", Gui_Close)  	; On Close goes to Gui_Close (Picker)
+    Picker.OnEvent("Escape",Gui_Close)  	;    Escape (Picker)
+    ;         , (*) => Picker.Destroy())	; alternative function call
+    LBI.OnEvent("DoubleClick", fnS)     	; Select with a double-click
+    LBV.OnEvent("DoubleClick", fnS)     	;   passes (GuiCtrlObj, Info), where Info for ListBox is item position
+    LBI.OnEvent("Change", fnS)          	;             a selection chang
+    LBV.OnEvent("Change", fnS)          	;   passes (GuiCtrlObj, Info), where Info has no meaning for ListBox
 
   Picker.Show(LocLB "AutoSize")	;GuiTitle a, xCenter yCenter, GuiTitle
   dbgTT(2,"Debug: Post Picker.Show`nPicker.Title`t" Picker.Title "`npChars[1]`t" pChars[1],TTdelay)
@@ -230,7 +237,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
       if (dbg>0) {
         TestPrint(SavedGUI, Chars, "LB_Pick", "T2.5")
       }
-      PressH_Select(Picker, &Chars) ; can't access ByRef_parameterChars inside a nested function
+      PressH_Select(Picker, &ArrowHKeys, &Chars) ; can't access ByRef_parameterChars inside a nested function
     }
     return
   }
@@ -261,33 +268,33 @@ PressH_getPickerLoc(x,y,BoxWDPI) { ; giver caret coordinates and picker box widt
   return LocLB
 }
 
-PressH_Select(Picker, &pChars, *) { ;t * allows extra parameters sent by OnEvents
+PressH_Select(Picker, &ArrowHKeys, &pChars, *) { ;t * allows extra parameters sent by OnEvents
   global is␈, TTdelay,TTx,TTy, SavedGUI := Picker.Submit(0) ; (0) doesn't hide the window
   Arrows     	:= "", AlphaThis := "", AlphaPrior := ""
-  ArrowHKeys 	:= "~Down~Up~Left~Right"
   AlphaHKeys 	:= "$a$b$c$d$e$f$g$i$j$k$l$m$n$o$p"
   KeysTimeOut	:= ""
-  if (dbg>0) {
-    KeysTimeOut := "HK_This`t" . A_ThisHotkey . "(" . Arrows . AlphaThis . ")`n`t" . A_TimeSinceThisHotkey . " ms`nHK_Last`t" . A_PriorHotkey . "(" . AlphaPrior . ")`n`t" . A_TimeSincePriorHotkey . " ms"
-  }
+  _d  := 1 ;
+  _d1 := 1 ;
+  (dbg<_d)?'':(dbgtt(0,'hk= ' A_ThisHotkey ' name=¦' GetKeyName(A_ThisHotkey) '¦',3))
+  (dbg<_d)?'':(KeysTimeOut := "HK_This`t" . A_ThisHotkey . "(" . Arrows . AlphaThis . ")`n`t" . A_TimeSinceThisHotkey . " ms`nHK_Last`t" . A_PriorHotkey . "(" . AlphaPrior . ")`n`t" . A_TimeSincePriorHotkey . " ms")
 
   ;——— Loop inside ListBox with arrow keys
   if InStr(ArrowHKeys, A_ThisHotkey) {
     Arrows:="Arrows"
   }
   if (Arrows=="Arrows" And A_TimeSinceThisHotkey>=0 And A_TimeSinceThisHotkey<=99)  {
-    dbgTT(1,SavedGUI, pChars, "ArrowHKeys", TTdelay)
+    dbgTT(_d1,SavedGUI, pChars, "ArrowHKeys", TTdelay)
     return
   }
   if InStr(AlphaHKeys, A_ThisHotkey) {
     AlphaThis:="AlphaThis"
-    dbgMsg(1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows1", "T0.5")
+    dbgMsg(_d1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows1", "T0.5")
   }
   if (A_PriorHotkey!="" and InStr(AlphaHKeys, A_PriorHotkey)) {
     AlphaPrior := "AlphaPrior"
   }
   if (AlphaThis=="AlphaThis" and AlphaPrior=="AlphaPrior" and A_TimeSincePriorHotkey>=0 and A_TimeSincePriorHotkey<=800)  {
-    dbgMsg(1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows2", "T0.5")
+    dbgMsg(_d1,"A_ThisHK`t" A_ThisHotkey "`nKeysTimeOut`t" KeysTimeOut, "LoopArrows2", "T0.5")
     return
   }
 
