@@ -377,10 +377,11 @@ class helperString {
      , s      	:= helperString ; K.▼ = vk['▼']
      , →␠     	:= s.symSp.Bind(s)
      , modi   	:= ['⇧','◆','⎇','⎈'] ; todo replace with constkey symbols
-     , toggles	:= ['⇪','⇭','⇳🔒']
+     , toggles	:= ['⇪','⇭','⇳🔒','c⎉','⭾']
+     , combo⎈ 	:= ['c⎉']
     dbglogic:='logic`t', dbghook:='hook`t', dbgcount := 1
     ; 'P' state isn't really physical (it's impossible to track at AHK level), but what Keyboard Hook reports and AHK records (so another hook from another app may interfere)
-    for i,m in modi {
+    for i,m in modi { ; left modifiers
       l        	:= '‹' m
       l_ahk    	:= s.modis→ahk(l)
       dbglogic 	.= (GetKeyState(l_ahk    ) ? (l ' '):(→␠(l) ' '))
@@ -388,7 +389,7 @@ class helperString {
       ;dbglogic	.= (GetKeyState(l_ahk    ) ? (l ' '):'  ' ' ')
       ;dbghook 	.= (GetKeyState(l_ahk,"P") ? (l ' '):'  ' ' ')
     }
-    for i,m in modi {
+    for i,m in modi { ; right modifiers
       m       	:= modi[modi.length - i + 1] ; reverse
       r       	:=     m '›',
       r_ahk   	:= s.modis→ahk(r)
