@@ -74,6 +74,9 @@ ListLines 0                                  	; Potential performance boost
 ; LWin & LCtrl::SendInput('{LWin down}{LCtrl down}{Left down}{Lwin up}{LCtrl up}{Left up}')
 ; LWin & LAlt::SendInput('{LWin down}{LCtrl down}{Right down}{LWin up}{LCtrl up}{Right up}')
 
+; ————————————————————————— Helpers —————————————————————————————
+  *ScrollLock::ShowModStatus() ; 91  046  ScrollLock
+  *CtrlBreak::ShowModStatus() ; 03  046  CtrlBreak
 ; ————————————————————————— Key changes —————————————————————————————
   #include %A_scriptDir%\char🠿.ahk      	; Diacritics+chars on key hold
   #include %A_scriptDir%\Char-AltTT.ahk 	; Diacritics+chars@Tooltip on Alt+Shift+?+3rd, e.g. ⌥⇧u+e=ë (Umlaut on e)
