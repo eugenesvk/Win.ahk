@@ -59,9 +59,11 @@ class winAPIconst { ; Various win32 API constants from a memory-mapped file
      ,this.CLSID  	:= DllCall.Bind(this.lib𝑓, 'Str','CLSID' , 'Str',unset, 'UInt',this.ℯsz,'Ptr',unset, 'Ptr')
      ,this.IID    	:= DllCall.Bind(this.lib𝑓, 'Str','IID_I' , 'Str',unset, 'UInt',this.ℯsz,'Ptr',unset, 'Ptr')
      ,this.Locale 	:= DllCall.Bind(this.lib𝑓, 'Str','LOCALE', 'Str',unset, 'UInt',this.ℯsz,'Ptr',unset, 'Ptr')
+     ,this.Folder 	:= DllCall.Bind(this.lib𝑓, 'Str','FOLDERID', 'Str',unset, 'UInt',this.ℯsz,'Ptr',unset, 'Ptr')
      ,this.free   	:= DllCall.Bind(this.libNm '\dealloc_lib_str', 'Ptr',unset)
 
      ,this.Loc            	:= this.Locale
+     ,this.Fd             	:= this.Folder
      ,this.dealloc_lib_str	:= this.free
 
     if this.hModule == 0 {
@@ -81,6 +83,14 @@ class winAPIconst { ; Various win32 API constants from a memory-mapped file
   }
   getKey_Loc(key) {
     𝑓:=this.Locale
+    return this.getKey(𝑓,key)
+  }
+  getKey_Folder(key) {
+    𝑓:=this.Folder
+    return this.getKey(𝑓,key)
+  }
+  getKey_Fd(key) {
+    𝑓:=this.Fd
     return this.getKey(𝑓,key)
   }
   getKey_CLSID(key) {
