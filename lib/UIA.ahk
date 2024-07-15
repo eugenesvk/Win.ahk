@@ -429,7 +429,7 @@ static EncodePath(path) {
             "V" corresponds in Base64IntToChar to 31 which is Type Document, "E" is ScrollBar,
             "0" is Button, "q" is 50 which is the first index number, and positive indices start with 2.
     */
-    local out, i
+    local out, i, module
     static Base64IntToChar := Map(0,'0',1,'1',2,'2',3,'3',4,'4',5,'5',6,'6',7,'7',8,'8',9,'9',10,'A',11,'B',12,'C',13,'D',14,'E',15,'F',16,'G',17,'H',18,'I',19,'J',20,'K',21,'L',22,'M',23,'N',24,'O',25,'Q',26,'R',27,'S',28,'T',29,'U',30,'V',31,'W',32,'X',33,'Y',34,'Z',35,'a',36,'b',37,'c',38,'d',39,'e',40,'f',41,'g',42,'h',43,'i',44,'j',45,'k',46,'l',47,'m',48,'n',49,'o',50,'q',51,'r',52,'s',53,'t',54,'u',55,'v',56,'w',57,'x',58,'y',59,'z',60,'/',61,'?',62,'<',63,'>',64,'=')
     if !(path is Array)
         path := [path]
@@ -544,14 +544,14 @@ static Filter(elementArray, function) {
 
 /**
  * Can be used to set or get the current scripts DPI awareness to fix problems with invalid coordinates in
- * multi-monitor setups. 
+ * multi-monitor setups.
  * Possible values (read more: https://learn.microsoft.com/en-us/windows/win32/hidpi/dpi-awareness-context):
  * DPI_AWARENESS_CONTEXT_UNAWARE = -1
  * DPI_AWARENESS_CONTEXT_SYSTEM_AWARE = -2 (default)
  * DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE = -3
  * DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = -4
  * DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED = -5
- * 
+ *
  */
 static DPIAwareness {
     set => DllCall("SetThreadDpiAwarenessContext", "ptr", value, "ptr")
@@ -611,17 +611,17 @@ static ClearAllHighlights() => this.IUIAutomationElement.Prototype.Highlight("cl
 
 /**
  * Create a property condition from an AHK object
- * @param condition Object or Array that contains property conditions.  
- * * A single property condition consists of an object where the key is the property name, and value is the property value:  
- *     `{Name:"Test"}` => Creates a condition where the Name property must match "Test" exactly  
- * * Everything inside {} is an "and" condition  
- *     `{Type:"Button", Name:"Something"}` => Name must match "Something" AND Type must be Button  
- * * Everything inside [] is an "or" condition  
- *     `[{Name:"Test"}, {Name:"Something"}]` Name must match "Test" OR Name must match "Something"  
- * * Object key "not" creates a not condition  
+ * @param condition Object or Array that contains property conditions.
+ * * A single property condition consists of an object where the key is the property name, and value is the property value:
+ *     `{Name:"Test"}` => Creates a condition where the Name property must match "Test" exactly
+ * * Everything inside {} is an "and" condition
+ *     `{Type:"Button", Name:"Something"}` => Name must match "Something" AND Type must be Button
+ * * Everything inside [] is an "or" condition
+ *     `[{Name:"Test"}, {Name:"Something"}]` Name must match "Test" OR Name must match "Something"
+ * * Object key "not" creates a not condition
  *
- * * matchmode key (short form: mm) can be one of UIA.MatchMode values (except StartsWith and RegEx) and defines the MatchMode:  
- *     2=can contain anywhere in string; 3=exact match  
+ * * matchmode key (short form: mm) can be one of UIA.MatchMode values (except StartsWith and RegEx) and defines the MatchMode:
+ *     2=can contain anywhere in string; 3=exact match
  * * casesense key (short form: cs) defines case sensitivity (default: case-sensitive/True): True=case sensitive; False=case insensitive
  *
  * @param value If this is set then UIA.CreatePropertyCondition will be called instead, with "condition" being the Property name.
@@ -3605,7 +3605,15 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
 
     ; Retrieves the control pattern interface of the specified pattern from the cache of this UI Automation element.
     ; GetCachedPatternAs doesn't have a use in this library, use GetCachedPattern instead
+<<<<<<< HEAD
     GetCachedPatternAs(patternId, riid) {	; not completed
+||||||| parent of 6d502f7 (lib: update UIA)
+    GetCachedPatternAs(patternId, riid) {	; not completed
+        local name, GUID, patternObject
+=======
+    GetCachedPatternAs(patternId, riid) {   ; not completed
+        local name, GUID, patternObject
+>>>>>>> 6d502f7 (lib: update UIA)
         try {
             if IsInteger(patternId)
                 name := UIA.Pattern[patternId]
@@ -4953,13 +4961,13 @@ class IUIAutomationCacheRequest extends UIA.IUIAutomationBase {
  * Creates a new event handler, that when registered will call the supplied function on the registered event.
  * @param funcObj The callback function that will get called on events.
  *      The function needs to accept a certain number of parameters that depends on which event will be registered.
- * 		HandleAutomationEvent(sender, eventId)
- *		HandleFocusChangedEvent(sender)
- *		HandlePropertyChangedEvent(sender, propertyId, newValue)
- *		HandleStructureChangedEvent(sender, changeType, runtimeId)
- *		HandleTextEditTextChangedEvent(sender, changeType, eventStrings)
- *		HandleChangesEvent(sender, uiaChanges, changesCount)
- *		HandleNotificationEvent(sender, notificationKind, notificationProcessing, displayString, activityId)
+ *      HandleAutomationEvent(sender, eventId)
+ *      HandleFocusChangedEvent(sender)
+ *      HandlePropertyChangedEvent(sender, propertyId, newValue)
+ *      HandleStructureChangedEvent(sender, changeType, runtimeId)
+ *      HandleTextEditTextChangedEvent(sender, changeType, eventStrings)
+ *      HandleChangesEvent(sender, uiaChanges, changesCount)
+ *      HandleNotificationEvent(sender, notificationKind, notificationProcessing, displayString, activityId)
  * @param handlerType This needs to be provided if the handler is going to be used with something other than UIA.AddAutomationEventHandler()
  *      For UIA.AddAutomationEventHandler leave this empty (default value).
  *      For UIA.Add...EventHandler, specify the ... part: FocusChanged, StructureChanged, TextEditTextChanged, Changes, Notification.
@@ -5200,7 +5208,7 @@ class IUIAutomationCustomNavigationPattern extends UIA.IUIAutomationBase {
     Microsoft documentation: https://docs.microsoft.com/en-us/windows/win32/api/uiautomationclient/nn-uiautomationclient-iuiautomationdockpattern
 */
 class IUIAutomationDockPattern extends UIA.IUIAutomationBase {
-    static	__IID := "{fde5ef97-1464-48f6-90bf-43d0948e86ec}"
+    static  __IID := "{fde5ef97-1464-48f6-90bf-43d0948e86ec}"
 
     ; ---------- DockPattern properties ----------
 
@@ -5683,7 +5691,7 @@ class IUIAutomationLegacyIAccessiblePattern extends UIA.IUIAutomationBase {
 }
 
 class IUIAutomationMultipleViewPattern extends UIA.IUIAutomationBase {
-    static	__IID := "{8d253c91-1dc5-4bb5-b18f-ade16fa495e8}"
+    static  __IID := "{8d253c91-1dc5-4bb5-b18f-ade16fa495e8}"
 
     ; ---------- MultipleViewPattern properties ----------
 
@@ -5732,7 +5740,7 @@ class IUIAutomationMultipleViewPattern extends UIA.IUIAutomationBase {
     Microsoft documentation: https://docs.microsoft.com/en-us/windows/win32/api/uiautomationclient/nn-uiautomationclient-iuiautomationobjectmodelpattern
 */
 class IUIAutomationObjectModelPattern extends UIA.IUIAutomationBase {
-    static	__IID := "{71c284b3-c14d-4d14-981e-19751b0d756d}"
+    static  __IID := "{71c284b3-c14d-4d14-981e-19751b0d756d}"
     ; Retrieves an interface used to access the underlying object model of the provider.
     GetUnderlyingObjectModel() {
         local retVal
@@ -6652,7 +6660,7 @@ class IUIAutomationTextRange extends UIA.IUIAutomationBase {
     ; Moves one endpoint of the current text range to the specified endpoint of a second text range.
     ; If the endpoint being moved crosses the other endpoint of the same text range, that other endpoint is moved also, resulting in a degenerate (empty) range and ensuring the correct ordering of the endpoints (that is, the start is always less than or equal to the end).
     ; EndPoint must be one of UIA.TextPatternRangeEndpoint values: Start, End
-    MoveEndpointByRange(srcEndPoint, range, targetEndPoint) {	; TextPatternRangeEndpoint , IUIAutomationTextRange , TextPatternRangeEndpoint
+    MoveEndpointByRange(srcEndPoint, range, targetEndPoint) {   ; TextPatternRangeEndpoint , IUIAutomationTextRange , TextPatternRangeEndpoint
         ComCall(15, this, "int", UIA.TypeValidation.TextPatternRangeEndpoint(srcEndPoint), "ptr", range, "int", UIA.TypeValidation.TextPatternRangeEndpoint(targetEndPoint))
     }
 
@@ -7208,7 +7216,7 @@ class Viewer {
     }
     ; Handles adding elements with actions to the macro Edit
     ButMacroAddElement_Click(GuiCtrlObj?, Info?) {
-        local match
+        local match, selectedElPath, winElVariable, winElText, processName
         if !this.Stored.HasOwnProp("CapturedElement")
             return
         processName := WinGetProcessName(this.Stored.mwId)
@@ -7218,7 +7226,8 @@ class Viewer {
             this.EditMacroScript.Text := RTrim(this.EditMacroScript.Text, "`r`n`t ") "`r`n`r`n" winElText
         else
             this.EditMacroScript.Text := RTrim(this.EditMacroScript.Text, "`r`n`t ")
-        winElVariable := winElVariable (SubStr(this.SBMain.Text, 9) ? ".ElementFromPath(" SubStr(this.SBMain.Text, 9) ")" : "") (this.DDLMacroAction.Text ? "." this.DDLMacroAction.Text : "")
+        selectedElPath := SubStr(this.SBMain.Text, 9)
+        winElVariable := winElVariable (selectedElPath && StrLen(selectedElPath) > 2 ? ".ElementFromPath(" selectedElPath ")" : "") (this.DDLMacroAction.Text ? "." this.DDLMacroAction.Text : "")
         if InStr(this.DDLMacroAction.Text, "Dump")
             winElVariable := "MsgBox(" winElVariable ")"
         this.EditMacroScript.Text := this.EditMacroScript.Text "`r`n" RegExReplace(winElVariable, "(?<!``)`"", "`"") "`r`n"
@@ -7599,7 +7608,7 @@ class Viewer {
             this.Stored.TreeView := []
             this.TVUIA.Add("Error: unspecified error (window not found?)")
         }
-        
+
         this.TVUIA.Opt("+Redraw")
         this.SBMain.SetText("  Path: ")
         this.TreeViewSelectCapturedElement()
