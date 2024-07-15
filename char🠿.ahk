@@ -26,6 +26,10 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   loop parse "``45" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
+  loop parse "␠" { ; ⎈›⎇›␠​​ ⟶ various space symbols	(x) ;
+    ; HotKey(pre s.key→ahk('⎈›⎇›' k[A_LoopField]), hkChar🠿, "T2")
+    HotKey(pre s.key→ahk('⎈›⎇›' k[A_LoopField]), hkChar↓, "T2") ;;; todo make it work on press, need to rewrite logic in the function below that hkChar↓ calls
+  }
   HotIf
   WinActive_Not(active, not_active*) { ; = #Hotif WinActive("ahk_group PressnHold") and !WinActive("ahk_group Browser")
     if     WinActive(active) {
