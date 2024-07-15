@@ -118,6 +118,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       case ⇧ˋ    	: char→sym(hk,'``',Ch['Para'      	],unset,unset,false) ;InStr(lbl🖰hide,'``') & is∗)
       case ⇧5    	: char→sym(hk,'5',Ch['Percent'    	],unset,unset,false) ;InStr(lbl🖰hide,'5') & is∗)
       case ⇧4    	: char→sym(hk,'4',Ch['Currency'   	],unset,unset,false) ;InStr(lbl🖰hide,'4') & is∗)
+      case ⎈›⎇›␠⃣	: char→sym(hk,'␠',Ch['Space'      	],'Ch','SpaceLab2',false,false,false) ;
     }
   }
 }
