@@ -21,8 +21,9 @@ loop 8 {
   , Ch['QuotesD']    	:= ["«","»","“","”","„"]                             	;"
   , Ch['Dash']       	:= ["−","–","—","⁃"]                                 	;- minus, en/em dash, Hyphen Bullet
   , Ch['DashLab']    	:= ["=","n","m","b"]                                 	;
-  , Ch['Space']      	:= [" "," "," "," "," "," "," ","​","␣"]             	;? ¦m¦n¦r¦1¦.¦t¦h¦0¦ (Em¦En¦nbSp¦Figure¦Punctuation¦Thin¦Hair¦Zero-Width¦OpenBoxU+2423 (jkorpela.fi/chars/spaces.html))
-  , Ch['SpaceLab']   	:= ["m","n"," ","1",".","t","h","0","u"]             	;¦ ¦ ¦ ¦ ¦ ¦ ¦ ¦​¦    [    ]
+  , Ch['Space']      	:= [" "," "," "," "," "," "," "," ","​","␣"]         	;⎈›⎇›␠⬓ ¦m¦n¦r¦1¦.¦t¦h¦0¦ (Em¦En¦nbSp¦Figure¦Punctuation¦Thin¦Hair¦Zero-Width¦OpenBoxU+2423 (jkorpela.fi/chars/spaces.html))
+  , Ch['SpaceLab']   	:= ["m","n"," ","1","f",".","t","h","0","u"]         	;¦ ¦ ¦ ¦ ¦ ¦ ¦ ¦​¦    [    ]
+  , Ch['SpaceLab2']  	:= ["m","n","b","1","f",".","t","h","0","u"]         	;
   , Ch['Percent']    	:= ["%","‰","‱","°"]                                 	;% percentiles
   , Ch['Currency']   	:= ["₽","€","£","$","¢","¥","Ƀ"]                     	;h or Shift+4 currency
   , Ch['CurrLabN']   	:= ["1","2","3","4","5","6","7"]                     	; ... in Numbers
@@ -85,8 +86,8 @@ loop 8 {
     ,                	    "-"     ,"="]
   , Ch['ArrowsSp']   	:= [4,8,12,16]
   ; others
-  ,Ch['Checks'     	]:=["℃","℉","©","✓","✗","°","¯","¨","′","″","‶"]            	;r ′prime ″dbl, ‶rev dlb, ℃ 1char
-  ,Ch['ChecksLab'  	]:=["c","f","r","y","n","d","7","8","'",'"']                	;Label for Misc
+  ,Ch['Checks'     	]:=["℃","℉","©","✓","✗","°","¯","¨","¨","′","″","‴","⁗","‵","‶","‷","ʹ","ʺ"] ;r ′prime ″dbl, ‶rev dlb, ℃ 1char ʹmodiprime to replace ь in romanization
+  ,Ch['ChecksLab'  	]:=["c" ,"f","r","y","n","d","7" ,"8","u",";","'","\","/",":",'"',"|","[","]"] ;Label for Misc
   ,Ch['Para'       	]:=["~","§","†","¶","$","‡","⁋"]                            	;⇧`(~) paragraphs Dagger, Pilcrow Sign, Double Dagger, Reversed Pilcrow Sign
   ,Ch['Tech'       	]:=["⏦","⎓","©","✓","✗","⤫","°","⟲","⟳","🔄"                 	;
   ,                	    "🖱","🖰","🖮","☸","⬓","¯","¨","′","″","‶"]                	;x ⎓(U+2393) DC, ⏦(U+23E6) AC
