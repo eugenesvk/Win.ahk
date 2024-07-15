@@ -18,11 +18,11 @@ myAltTab() { ; without sending ⎈↑ AppSwitcher becomes "sticky"
   SetKeyDelay(-1)
   isKey↓.⎇↹ := 1
   if        GetKeyState("Shift","P") { ; move ←
-    Send("{Blind}{LCtrl up}{LAlt down}{LShift down}" "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓‹⇧₊‹⎇⭾ ←¹")
+    SendEvent("{Blind}{LCtrl up}{LAlt down}{LShift down}" "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓‹⇧₊‹⎇⭾ ←¹")
   } else if GetKeyState("Shift"    ) { ; move →
-    Send("{Blind}{LCtrl up}{LAlt down}{LShift up}"   "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇⭾ →²")
+    SendEvent("{Blind}{LCtrl up}{LAlt down}{LShift up}"   "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇⭾ →²")
   } else {                             ; move →
-    Send("{Blind}{LCtrl up}{LAlt down}"              "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇⭾ →³")
+    SendEvent("{Blind}{LCtrl up}{LAlt down}"              "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇⭾ →³")
   }
   dbgtxt .= ' (isKey↓.⎇↹)'
   (dbg<_d)?'':(OutputDebug(dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc))
@@ -77,7 +77,7 @@ setAppSwitcher() {
     dbgtxt .= ' (isKey↓.⎇q)'
     (dbg<_d)?'':(OutputDebug(dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc))
     ; KeyWait("LCtrl") ;
-    ; Send('{LAlt down}+{Tab}')
+    ; SendEvent('{LAlt down}+{Tab}')
   }
 #HotIf
 
