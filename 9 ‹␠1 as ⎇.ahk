@@ -84,7 +84,7 @@ on⎈›↓() {
 on‹⎈↑() {
   static _d := 1
    ,anyMod := keyFunc.anyMod
-   ,min_t := 90
+   ,min_t := 100
   (dbg<_d)?'':(🕐1 := A_TickCount)
   SetKeyDelay(-1) ; no delay
   SendEvent("{Blind}{LCtrl up}")
@@ -116,7 +116,7 @@ on‹⎈↑() {
 on⎈›↑() {
   static _d := 1
    ,anyMod := keyFunc.anyMod
-   ,min_t := 90
+   ,min_t := 100
   (dbg<_d)?'':(🕐1 := A_TickCount)
   SetKeyDelay(-1) ; no delay
   SendEvent("{Blind}{RCtrl up}")
