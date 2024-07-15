@@ -125,13 +125,13 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
 global keyOnHold := ''
 char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can␠ins:=true,blind_:=true) {
   global keyOnHold ; store info on which key is being held to avoid repeating it
-  static k   	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
-   , get⎀    	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
-   , s       	:= helperString
-
+  static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
+   , get⎀ 	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
+   , s    	:= helperString
   ; if 🖰hide { ; hide a pointer if the same key is registered twice since only this function will be called
   ;   hk🖰PointerHide('') ; use hk function instead of 🖰PointerHide due to a bug in '🖰hide on 🖮'?
   ; }
+  ; dbgtt(0,'got char→sym hk`t=' hk ' `nkeyOnHold`t=' keyOnHold '`nvkC`t=' vkC, 3) ;
   static lbl_translit     	:= Map()
   if lbl_translit.Count   	= 0 { ; can set case only on empty maps
     lbl_translit.CaseSense	:= 0
