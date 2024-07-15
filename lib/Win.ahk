@@ -683,7 +683,12 @@ getFocusWindowMonitorHandle() {
 }
 
 getFocusWindowMonitorIndex(winID_?) { ; converted from stackoverflow.com/a/68547452
-  winID := isSet(winID_) ? winID_ : getWinID()
+  try {
+    winID := isSet(winID_) ? winID_ : getWinID()
+  } catch Error as e {
+    dbgtt(0,"✗ getFocusWindowMonitorIndex " err2str(e,'mwe'))
+    return 1
+  }
   monCount := MonitorGetCount() ;Get number of monitor
   if not winExist(winID) { ; guard against a missing active window
     return 1
