@@ -54,7 +54,7 @@ on‹⎈↓() { ; keys are named Control, so using LCtrl wouldn't match
    ,kk := '‹⎈'
    ,kvk := s.key→ahk(kk)
   SetKeyDelay(-1)
-  Send("{Blind}{LCtrl down}")
+  SendEvent("{Blind}{LCtrl down}")
   if (dbg>=_d) {
     is↓H := (GetKeyState(kvk,'P')?'↓':'')
     is↓L := (GetKeyState(kvk    )?'↓':'')
@@ -71,7 +71,7 @@ on⎈›↓() {
    ,kk := '⎈›'
    ,kvk := s.key→ahk(kk)
   SetKeyDelay(-1)
-  Send("{Blind}{RCtrl down}")
+  SendEvent("{Blind}{RCtrl down}")
   if (dbg>=_d) {
     is↓H := (GetKeyState(kvk,'P')?'↓':'')
     is↓L := (GetKeyState(kvk    )?'↓':'')
@@ -87,7 +87,7 @@ on‹⎈↑() {
    ,min_t := 90
   (dbg<_d)?'':(🕐1 := A_TickCount)
   SetKeyDelay(-1) ; no delay
-  Send("{Blind}{LCtrl up}")
+  SendEvent("{Blind}{LCtrl up}")
   (dbg<_d+1)?'':(dbgtt(0,'',,3),dbgtt(0,'',,4),dbgtt(0,'',,5))
   dbgtxt := '↑‹⎈'
   if   A_PriorHotkey = "LControl & Tab" ; mapped to hkmyAltTab and sends ↓⎇
@@ -97,9 +97,9 @@ on‹⎈↑() {
     || isKey↓.⎇↹
     || isKey↓.⎇q {
     if GetKeyState("Shift") {
-      Send("{LShift up}{LAlt up}") , (dbg<_d)?'':(dbgtxt .= ' ↑‹⇧‹⎇')
+      SendEvent("{LShift up}{LAlt up}") , (dbg<_d)?'':(dbgtxt .= ' ↑‹⇧‹⎇')
     } else {
-      Send(           "{LAlt up}") , (dbg<_d)?'':(dbgtxt .= '   ↑‹⎇')
+      SendEvent(           "{LAlt up}") , (dbg<_d)?'':(dbgtxt .= '   ↑‹⎇')
     }
     (dbg<_d)?'':(dbgtxt .= ' (is↓.⎇↹' isKey↓.⎇↹ ' is↓.⎇q' isKey↓.⎇q ')')
     isKey↓.⎇↹ := 0, isKey↓.⎇q := 0 ; reset
@@ -119,7 +119,7 @@ on⎈›↑() {
    ,min_t := 90
   (dbg<_d)?'':(🕐1 := A_TickCount)
   SetKeyDelay(-1) ; no delay
-  Send("{Blind}{RCtrl up}")
+  SendEvent("{Blind}{RCtrl up}")
   (dbg<_d+1)?'':(dbgtt(0,'',,6))
   dbgtxt := '↑⎈›'
   isTap := (A_PriorHotkey = ("*" A_PriorKey)) ;RAlt = *RAlt
