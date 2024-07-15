@@ -53,16 +53,16 @@ add_Numpad() {
 
   lbl🔢› := "
     ( Join ` LTrim ; spaces are removed, so both lists must match in length, to disable remove a key/symbol pair
-    7 890
+    7 8
     yuiop
      jkl;
     nm,./␠
     )"
   sym🔢› := "
     ( Join ` LTrim
-    / *-+
-    =123-
-     456+
+    / *
+    -123+
+     456=
     ⏎789.0
     )"
   lbl🔢› := StrReplace(lbl🔢›, ' ','')
@@ -70,8 +70,11 @@ add_Numpad() {
 
   for i,lbl in StrSplit(lbl🔢›) {
     r := hkf('',pre lbl,""), hkSend(r[1], blind '{' vk['🔢' SubStr(sym🔢›,i,1)] '}')
-  } ; ␈ isn't a numpad key, so map h→␈ manually
+  } ; ␈ not a numpad keys, so map h→␈ manually (same for others)
+    r := hkf('',pre 'g',""), hkSend(r[1], blind '{' vk['␡'] '}')
     r := hkf('',pre 'h',""), hkSend(r[1], blind '{' vk['␈'] '}')
+    r := hkf('',pre '9',""), hkSend(r[1], blind '+{' vk['9'] '}')
+    r := hkf('',pre '0',""), hkSend(r[1], blind '+{' vk['0'] '}')
 
   sym🔢›mod := Map(1,'0',2,'.',3,'/') ; modifier keys require special & syntax
   for lbl, sym in sym🔢›mod {
