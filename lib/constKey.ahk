@@ -68,6 +68,7 @@ set_vk_global() { ; register global variables in the format of q⃣  to a virtua
     , ⇧1:=k('⇧1'),⇧2:=k('⇧2'),⇧3:=k('⇧3'),⇧4:=k('⇧4'),⇧5:=k('⇧5')
     , ⇧6:=k('⇧6'),⇧7:=k('⇧7'),⇧8:=k('⇧8'),⇧9:=k('⇧9'),⇧0:=k('⇧0'),⇧‐:=k('⇧-'),v₌:=k('⇧=')
     , ⇧〔:=k('⇧['),⇧〕:=k('⇧]')
+    , ⎈›⎇›␠⃣:=k('⎈›⎇›␠'), ⇧␠⃣:=k('⇧␠')
 }
 ; msgbox('q⃣ →' q⃣  ' 1→' v1⃣  ' ``→' vˋ ' `'→' v‘ ' =→' v₌ '⇧a→' ⇧a ' v‐→' v‐)
 
@@ -333,6 +334,9 @@ class keyConstant {
     }
     for key in ['SCROLL','ScrollLock','⇳🔒'] { ; '⤓' conflicts with end
       vk[key]	:= 'vk91'	; VK_SCROLL	0x91	Scrol Lock
+    }
+    for key in ['ControlBreak','c⎉'] { ; Control-Break signal on ⎈⇳🔒 separate from Scroll Lock
+      vk[key]	:= 'vk03'	;
     }
 
       ; autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
