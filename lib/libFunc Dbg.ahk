@@ -1,5 +1,15 @@
 #Requires AutoHotKey 2.1-alpha.4
+#include <libFunc>	; General set of functions
 ; ————————————————————————— Debugging Functions —————————————————————————
+ShowModStatus() { ; show a tooltip with the status of "physical" (inputhook's view) and logical modifiers
+  static K 	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
+   , s     	:= helperString ; K.▼ = vk['▼']
+   , hkf   	:= keyFunc.customHotkeyFull
+   , hkSend	:= keyFunc.hkSend, hkSendI := keyFunc.hkSendI
+  keystatus := s.whichModStatus()
+  dbgtt(0,keystatus.p '`n' keystatus.l,5,10,0,0)
+}
+
 dbgMsg(dbgMin:=0, Text:="", Title:="", Options:="") {
   if (dbg >= dbgMin) {
     MsgBox(Text, Title, Options)
