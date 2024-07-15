@@ -53,9 +53,18 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
     ; log(0,' starting timer id ' id ' idTT=' idTT)
   }
 
-  MouseGetPos(&mX, &mY, &mWin, &mControl)
+  try { ; sometimes get "Access is denied"
+    MouseGetPos(&mX, &mY, &mWin, &mControl)
     ; mWin This optional parameter is the name of the variable in which to store the unique ID number of the window under the mouse cursor. If the window cannot be determined, this variable will be made blank.
     ; mControl This optional parameter is the name of the variable in which to store the name (ClassNN) of the control under the mouse cursor. If the control cannot be determined, this variable will be made blank.
+  } catch as err {
+    dbgtxt := err2str(err)
+    dbgtxt .= ' ¦ ' A_ThisFunc
+    Text .= dbgtxt
+    mX := 0
+    mY := 0
+  }
+
   stepX := 0, stepY := 50 ; offset each subsequent ToolTip # from mouse cursor
   xFlag := SubStr(X, 1,1), yFlag := SubStr(Y, 1,1)
   if (xFlag="o") {
