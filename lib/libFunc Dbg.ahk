@@ -89,6 +89,9 @@ err2str(err,f:='rme') { ; convert Error to a string (test whether a field exists
   return dbgtxt
 }
 
+Obj2Str(Var){
+  Obj→Str (Var)
+}
 Object2Str(Var){
   Obj→Str (Var)
 }
