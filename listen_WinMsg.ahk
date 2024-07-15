@@ -1,9 +1,10 @@
+#Requires AutoHotkey v2.0
 ; Change global variable based on external message to use conditional keybind that can be switched from another app
 global nv_mode := 0 ; Sublime Text's plugin NeoVintageous' mode
 
-msgIDtxt := "nv_a61171a06fc94216a3433cf83cd16e35" ; must be set to the same value in NeoVintageous
 listen_to_NeoVintageous()
 listen_to_NeoVintageous() {
+  static msgIDtxt := "nv_a61171a06fc94216a3433cf83cd16e35" ; must be set to the same value in NeoVintageous
   static msgID := DllCall("RegisterWindowMessage", "Str",msgIDtxt), MSGFLT_ALLOW := 1
   ; dbgtt(0,"msgID=" msgID, t:=5)
   if winID_self:=WinExist(A_ScriptHwnd) { ; need to allow some messages through due to AHK running with UIA access https://stackoverflow.com/questions/40122964/cross-process-postmessage-uipi-restrictions-and-uiaccess-true
