@@ -34,9 +34,9 @@ shell	:= ComObject("Shell.Application") ;;; remove after loading form the main s
   Tab Up:: {	;*⌥⭾​	vk09 ⟶ Tab Restore (on release without ~)
     static _d := 1 ; 0 to hide tooltips, 1 to hide debug with dbg=0
     ,anyMod	:= keyFunc.anyMod
-    dbgk := '↑⭾'
-    isMod := anyMod(0)
-    isModP := anyMod(1)
+    ,dbgk := '↑⭾'
+    isMod := (dbg<_d)?'':anyMod(0)
+    isModP := (dbg<_d)?'':anyMod(1)
     if   A_PriorHotkey = '~*LCtrl up'
       && A_PriorKey  = 'Tab'
       && A_TimeSincePriorHotkey<120 { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
