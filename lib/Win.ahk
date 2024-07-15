@@ -264,16 +264,16 @@ getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to act
       DetectHiddenWindows true
     }
     winID := (  (winIDarg = "")
-             || (winIDarg = "A"))
-            ? WinExist("A")
-            : winIDarg + 0
-              ? WinExist("ahk_id " winIDarg)
-              : WinExist(          winIDarg)
+        ||      (winIDarg = "A"))
+      ? WinExist("A")
+      : winIDarg + 0
+        ? WinExist("ahk_id " winIDarg)
+        : WinExist(          winIDarg)
     if h and hSwitched { ; restore if switched
       DetectHiddenWindows false
     }
     if (winID = 0) {
-      throw ValueError("Window not found " winIDarg, -1)
+      throw ValueError("Window not found id=" winID " id_arg=" winIDarg " h=" h, -1)
     } else {
       return winID
     }
