@@ -6,10 +6,7 @@
 ;^+Tab::               	SendInput '{Ctrl Down}{Shift Down}{Tab}{Ctrl Up}{Shift Up}'	;⇧^⭾​	vk09 ⟶ Ctrl+Shift+Tab Restore
 ; AppsKey & vkBF::^vkBF ;
 
-class isKey↓ { ; manually track the status of combos that are activated via my hotkeys since these can't be tracked reliably via A_PriorHotkey as a mousewheel hotkey in the interim breaks it
-  static ⎇↹ := 0
-  static ⎇q := 0
-}
+#include %A_scriptDir%\gVar\isKey.ahk	; track key status programmatically
 
 add_‹␠1_as_⎇()
 add_‹␠1_as_⎇() { ; ‹⎇ remapped to ‹⎈ via SharpKeys
