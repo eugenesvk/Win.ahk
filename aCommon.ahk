@@ -9,7 +9,9 @@ InstallKeybdHook(Install:=true, Force:=false)	; Install hook even if nothing use
 #UseHook True                                	; Any keyboard hotkeys use hook
 KeyHistory(500)                              	; Limit history to last X (need >10 for Hyper) ;;; temp
 ListLines 0                                  	; Potential performance boost
-; SendMode("Input")                          	; Superior speed and reliability. Use SendPlay for games to emulate keystrokes. Too fast for GUI selection of Diacritics, use SendInput individually
+; SendMode("Input")                          	; blocks interspersion, useful for sending long test, but requires hook reinstall, which takes time and can bug other things, see autohotkey.com/boards/viewtopic.php?f=96&t=127074&p=562790. Superior speed and reliability. SendPlay for games to emulate keystrokes. Too fast for GUI selection of Diacritics, use SendInput individually
+SendMode("Event")                            	; avoid rehooking bugs
+SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
 ; SetTitleMatchMode(2)                       	; |2| win title can contain WinTitle anywhere inside it to be a match
 
 ;Auto-Execute Section (AES), continues until Return, Exit, hotkey/hotstring label
