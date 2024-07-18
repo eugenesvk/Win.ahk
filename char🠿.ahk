@@ -1,6 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
 ; v1.1@23-10
-; PressH_ChPick function located in /lib, TimerHold defined in AES section of aCommon.ahk
+#include <PressH> ; PressH_ChPick function located in /lib, TimerHold defined in AES section of aCommon.ahk
 #MaxThreadsPerHotkey 2 ; 2 Allows A₁BA₂ fast typing, otherwise A₂ doesn't register
 #InputLevel 1          ; Set the level for the following hotkeys so that they can activate lower-level hotstrings (autohotkey.com/docs/commands/SendLevel.htm)
 
