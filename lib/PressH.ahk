@@ -275,6 +275,7 @@ PressH_Select(Picker, &ArrowHKeys, &pChars, *) { ;t * allows extra parameters se
   KeysTimeOut	:= ""
   _d  := 1 ;
   _d1 := 1 ;
+  _d2 := 0 ;
   (dbg<_d)?'':(dbgtt(0,'hk= ' A_ThisHotkey ' name=¦' GetKeyName(A_ThisHotkey) '¦',3))
   (dbg<_d)?'':(KeysTimeOut := "HK_This`t" . A_ThisHotkey . "(" . Arrows . AlphaThis . ")`n`t" . A_TimeSinceThisHotkey . " ms`nHK_Last`t" . A_PriorHotkey . "(" . AlphaPrior . ")`n`t" . A_TimeSincePriorHotkey . " ms")
 
@@ -307,7 +308,7 @@ PressH_Select(Picker, &ArrowHKeys, &pChars, *) { ;t * allows extra parameters se
   if (CharChoice = "") {
     Exit
   }
-  dbgTT(2,"PreSend: KeysTimeOut`n" KeysTimeOut, TTdelay,2,TTx,TTy)
+  dbgTT(_d2,"PreSend: KeysTimeOut`n" KeysTimeOut, TTdelay,2,TTx,TTy)
   if is␈ {
     Send('{BackSpace}' CharChoice)	;A_TimeSincePriorHotkey (add 2nd {BackSpace})
   } else {
