@@ -114,7 +114,7 @@ add_TypES() { ; use english labels and precompute revers maps to easier match ho
       pre    	:= rev_arr[1]
       key    	:= rev_arr[2]
       dbgtxt := ThisHotkey "|`n" pre "`tpre`n" key '`tkey in Ru'
-      SendText(keys_m['ru'][pre][key])
+      SendEvent('{Text}' keys_m['ru'][pre][key])
     } else {
       if not vkrloc_en.Has(ThisHotkey) {
         return
@@ -123,7 +123,7 @@ add_TypES() { ; use english labels and precompute revers maps to easier match ho
       pre    	:= rev_arr[1]
       key    	:= rev_arr[2]
       dbgtxt := ThisHotkey "|`n" pre "`tpre`n" key '`tkey in En'
-      SendText(keys_m['en'][pre][key])
+      SendEvent('{Text}' keys_m['en'][pre][key])
     } ; SendText('{Blind}' avoid releasing modifiers, might bug in some apps
     ; dbgTT(0,dbgtxt,t:=3)
   }
