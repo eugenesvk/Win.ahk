@@ -109,10 +109,10 @@ err2str(err,f:='rme') { ; convert Error to a string (test whether a field exists
 }
 
 Obj2Str(Var){
-  Obj→Str (Var)
+  return Obj→Str(Var)
 }
 Object2Str(Var){
-  Obj→Str (Var)
+  return Obj→Str(Var)
 }
 Obj→Str(Var){ ; autohotkey.com/boards/viewtopic.php?f=82&t=111713
   Output := ""
