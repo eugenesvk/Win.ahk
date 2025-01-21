@@ -88,18 +88,18 @@ loop 8 {
   ; others
   ,Ch['Checks'     	]:=["℃","℉","©","✓","✗","°","¯","¨","¨","′","″","‴","⁗","‵","‶","‷","ʹ","ʺ"] ;r ′prime ″dbl, ‶rev dlb, ℃ 1char ʹmodiprime to replace ь in romanization
   ,Ch['ChecksLab'  	]:=["c" ,"f","r","y","n","d","7" ,"8","u",";","'","\","/",":",'"',"|","[","]"] ;Label for Misc
-  ,Ch['Para'       	]:=["~","§","†","¶","$","‡","⁋"]                            	;⇧`(~) paragraphs Dagger, Pilcrow Sign, Double Dagger, Reversed Pilcrow Sign
-  ,Ch['Tech'       	]:=["⏦","⎓","©","✓","✗","⤫","°","⟲","⟳","🔄"                 	;
-  ,                	    "🖱","🖰","🖮","☸","⬓","¯","¨","′","″","‶"]                	;x ⎓(U+2393) DC, ⏦(U+23E6) AC
-  ,Ch['TechLab'    	]:=["a","d","r","y" ,"n","c","d","9" ,"0","-"               	;
-  ,                	    "m","n","j","w","k","7","8","'",'"']                    	;
+  ,Ch['Para'       	]:=["~","§","†","¶","$","‡","⁋"]                             	;⇧`(~) paragraphs Dagger, Pilcrow Sign, Double Dagger, Reversed Pilcrow Sign
+  ,Ch['Tech'       	]:=["⏦","⎓","©","✓","✗","⤫","°","⟲","⟳","🔄"                  	;
+  ,                	    "🖱","🖰","🖮","☸","⬓","¯","¨","′","″","‶"]                 	;x ⎓(U+2393) DC, ⏦(U+23E6) AC
+  ,Ch['TechLab'    	]:=["a","d","r","y" ,"n","c","d","9" ,"0","-"                	;
+  ,                	    "m","n","j","w","k","7","8","'",'"']                     	;
   ,Ch['WinFile'    	]:=["∗","∗","⧵","¦","꞉" ,"꞉","”","“","‹","›","⁄","⸮","⸮","．"]	;d LegalReplacement
-  ,Ch['WinFileLab' 	]:=["8","*","\","|",";",":","'","l","<",">","/","?","7","."]	; Illegal Filename Chars (Windows)
-  ,Ch['WinFile1'   	]:=["∗","⧵","¦","꞉","”","“","‹","›","⁄","⸮","⸮","．"]        	;d LegalReplacement
-  ,Ch['WinFileLab1'	]:=["8","\","|",";","'","l","<",">","/","?","7","."]        	; Illegal Filename Chars (Windows)
-  ,Ch['WinFileLab2'	]:=["*","\","|",":",'"',"'","<",">","/","?","."]            	; Illegal Filename Chars (Windows)
-  ,Ch['Bullet'     	]:=["•","‣","⁌","⁍","⁘","⁙","⁚","⁛","⁝","⁞","※","⁜"]        	;b Bullet, Triangular Bullet, Reference Mark, Black Leftwards Bullet, Black Rightwards Bullet, 4/5/2 Dot Punctuation, 4 Dot Mark, Dotted Cross, Tricolon, Vertical Four Dots
-  ,Ch['Misc'       	]:=["♪","♫","⁁","‸","⎀","⁂","⁑","⁒","⁖"]                    	;B Caret Insertion Point, Asterism, Two Asterisks Aligned Vertically, Commercial Minus Sign, Three Dot Punctuation
+  ,Ch['WinFileLab' 	]:=["8","*","\","|",";",":","'","l","<",">","/","?","7","."] 	; Illegal Filename Chars (Windows)
+  ,Ch['WinFile1'   	]:=["∗","⧵","¦","꞉","”","“","‹","›","⁄","⸮","⸮","．"]         	;d LegalReplacement
+  ,Ch['WinFileLab1'	]:=["8","\","|",";","'","l","<",">","/","?","7","."]         	; Illegal Filename Chars (Windows)
+  ,Ch['WinFileLab2'	]:=["*","\","|",":",'"',"'","<",">","/","?","."]             	; Illegal Filename Chars (Windows)
+  ,Ch['Bullet'     	]:=["•","‣","⁌","⁍","⁘","⁙","⁚","⁛","⁝","⁞","※","⁜"]         	;b Bullet, Triangular Bullet, Reference Mark, Black Leftwards Bullet, Black Rightwards Bullet, 4/5/2 Dot Punctuation, 4 Dot Mark, Dotted Cross, Tricolon, Vertical Four Dots
+  ,Ch['Misc'       	]:=["♪","♫","⁁","‸","⎀","⁂","⁑","⁒","⁖"]                     	;B Caret Insertion Point, Asterism, Two Asterisks Aligned Vertically, Commercial Minus Sign, Three Dot Punctuation
 
 setBir()
 setBir() { ; Typography Layout. Lab - label‹›≤≥
