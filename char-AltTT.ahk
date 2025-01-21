@@ -129,8 +129,8 @@ csub(map,splitMode:="A",lineLen:=40,listenTimer:="") {
   ; Read a single char with global ListenTimerShort if listenTimer is not set
   c := ListenChar(listenTimer="" ? ListenTimerShort : listenTimer)
   if (c) { ; char $c typed before timeout
-    if (i := InStr(map, c, true)) { ; Search $c in passed string $map, case
-      SendText SubStr(map, i+1, 1) ; Get next char with diacritics and save to $c
+    if (i := InStr(map, c, isCaSe:=true)) { ; Search $c in passed string $map
+      SendText(SubStr(map, i+1, 1)) ; Get next char with diacritics
     }
   }
   Tooltip()
