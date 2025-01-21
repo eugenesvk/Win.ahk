@@ -76,6 +76,28 @@ csubA(map) { ; generate Tooltip (lower+Upper) from a string of diacritics
   TipCombo := TipL "`n" TipU
   csub(TipCombo,'M')
 }
+csubmap(inter_map,inter_str,splitMode:="A",lineLen:=40,listenTimer:="") {
+  if (splitMode = "M") { ; Manual split mode, `n newline chars are inside map
+    Tooltip(inter_str)
+  } else { ; Automatic split mode with map split by lineLen number of chars
+    mapMulti	:= [] ; Tooltip map
+    TTMulti 	:= "" ; Tooltip
+    Loops   	:= Round(StrLen(inter_str)/lineLen) + 1
+    Loop Loops {
+      mapMulti.Push SubStr(inter_str, 1+lineLen*(A_Index-1), lineLen)
+      TTMulti .= mapMulti[A_Index] "`n"
+    }
+    Tooltip(Trim(TTMulti,"`n"))
+  }
+  c := ListenChar(listenTimer="" ? ListenTimerShort : listenTimer) ; Read a char with global timer as a fallback
+  if (c) { ; char $c typed before timeout
+    if inter_map.Has(c) { ; search $c in passed map $inter_map
+      SendText(inter_map[c]) ; print the found char with diacritics
+    }
+  }
+  Tooltip()
+  Return
+}
 csub(map,splitMode:="A",lineLen:=40,listenTimer:="") {
   ;Gui := Gui()
   ;Gui.Opt("+LastFound +AlwaysOnTop -Caption +ToolWindow")  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
