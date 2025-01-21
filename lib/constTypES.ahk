@@ -15,20 +15,20 @@ class lytTypES { ; Typographic layout
       ;             ` 	: might have to add all spaces manually or replace ` after setting up a layer
     this._map         	:= TypES
 
-    TypES['base'] := lbl
+    TypES['base'] := lbl ; ↓ make sure this matches labels['en'] @ constKey to avoid symbol shifts
     TypES['⎇›'] := Map('en',"
       ( Join ` LTrim
         `¹²³$‰↑§∞←→—≠
-        ⎋∑€®™¥ѵіѳ′[]÷
+        ⎋∑€®™¥ѵіѳ′[]
         ≈§°£π₽„“”‘’
-        Ω×©↓ß¶−«»⁄
+        ÷Ω×©↓ß¶−«»⁄
        )"
      ,'ru',"
       ( Join ` LTrim
         ~¹²³$‰↑&∞←→—≠
-        ⎋∑€®™¥ѵіѳ′[]÷
+        ⎋∑€®™¥ѵіѳ′[]
         ≈§°£π₽„“”‘’
-        Ω×©↓ß¶−«»/
+        ÷Ω×©↓ß¶−«»/
        )"
      )
 
