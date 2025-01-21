@@ -38,22 +38,26 @@
 !+k::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong) ;⌥⇧k​ VK4B ⟶ TypES with ⌥
 !+l::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong) ;⌥⇧l​ VK4C ⟶ TypES with ⌥⇧
 
-intersperse(pLabel, pVal, pSplit:=0, pOffset:=0, pLang:="En"){ ;[a b]+[1 2]=[a1 b2]
-  ; insert newline splits at tSplit#s; pOffset labels to avoid e.g. ` in `12
+intersperse(pLabel, pVal, pSplit:=0, pOffset:=0, pLang:="En", &outMap:=Map()) { ;[a b]+[1 2]=[a1 b2]
+  ; insert newline splits at tSplit#s; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs when indexing a string by "char" cuts unicode chars in half
   arComb := "", delim := "", AllKeys := Keyboard
   if (pLang = "Ru") {  ; Use Russian layout for index values
     AllKeys := KeyboardR
   }
-  For ind,val in pVal {
+  for ind,val in pVal {
     if (HasValue(pSplit,ind) >0 ) {	; if Split hints array has this index value ...
       delim := '`n'                	; use newline to split
     } else {
       delim := " "
     }
     if (ind > pLabel.Length) { ; use Full Keyboard for index when not enough Labels
-      arComb := arComb . AllKeys[ind+pOffset] . val . delim
+      lbl := AllKeys[ind+pOffset]
+      arComb := arComb . lbl . val . delim
+      outMap[lbl] := val
     } else {
-      arComb := arComb . pLabel[ind] . val . delim
+      lbl := pLabel[ind]
+      arComb := arComb . lbl . val . delim
+      outMap[lbl] := val
     }
   }
   return arComb
