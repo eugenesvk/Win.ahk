@@ -3,7 +3,7 @@
 #include <WinEvent>
 #include <libFunc Dbg>
 ; ————————————————————————— WinEvent callback Functions —————————————————————————
-cbCreate_Borderless(evt, winID, tick) { ; apply borderless style to a window
+cbCreate_Borderless(winID, evt, tick) { ; apply borderless style to a window
   static _d := 1
   loop 10 {
     sleep(A_Index*25)
