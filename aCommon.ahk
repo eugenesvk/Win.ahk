@@ -177,7 +177,7 @@ SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
   $!\::     	SendInput "/"
   ; !+vkBF::	;⌥/​	vkBF ⟶ ´ acute	?(using VK + scancode)
   $!+\::    	SendInput('¦') ; "÷"
-  ;^!+vk20:: 	SendInput '{U+2007}'	;^⌥⇧␣​	vk20 ⟶   Figure Space            	2007
+  ;^!+vk20::	SendInput '{U+2007}'	;^⌥⇧␣​	vk20 ⟶   Figure Space            	2007
   ^Esc::    	SendInput '{Esc}'   	;^⎋​  	 ⟶ ⎋ (disable Start Menu)        	  1B
   $!+vkDB:: 	SendInput '{U+007B}'	;⌥⇧[​ 	vkDB ⟶ { Left  Curly  Bracket    	  7B
   $!+vkDD:: 	SendInput '{U+007D}'	;⌥⇧]​ 	vkDD ⟶ } Right Curly  Bracket    	  7D
