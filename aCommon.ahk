@@ -60,7 +60,7 @@ ListLines 0                                  	; Potential performance boost
 #include %A_scriptDir%\8 Language.ahk      	; Alt-CapsLock switch layout Ru-En only
 #include %A_scriptDir%\Hotstring.ahk       	;
 #include %A_scriptDir%\9 ‹␠1 as ⎇.ahk      	; physical ⎇ (mapped to ⎈) as ⎇ restore
-#include %A_scriptDir%\5 App Switcher.ahk  	; Awitch app windows (e.g., only within an app)
+#include %A_scriptDir%\5 App Switcher.ahk  	; Switch in-app windows
 ; #include %A_scriptDir%\QuickSwitch.ahk   	; Listary Quick Switch alternative
 ; #include %A_scriptDir%\🖰hide on 🖮.ahk    	; Hide idle mouse cursor when typing
 #include %A_scriptDir%\listen_WinMsg.ahk   	; Listen to window messages and set global vars accordingly
