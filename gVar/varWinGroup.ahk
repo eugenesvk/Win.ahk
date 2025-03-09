@@ -37,13 +37,13 @@ GroupAdd "Games"        	, "ahk_exe BloodstainedRotN-Win64-Shipping.exe"
 GroupAdd "Games"        	, "ahk_exe SpaceChem.exe"
 GroupAdd "Games"        	, "ahk_exe C:\Games\Steam\SteamApps\common\Duskers\Duskers.exe"
 GroupAdd "WinTerm"      	, "ahk_exe WindowsTerminal.exe"
-; Apps that auto double 	  brackets                                              	;
-GroupAdd "BracketDouble"	, "ahk_exe sublime_text.exe"                            	; SublimeText
-; Alt-Tab               	                                                        	;
+; Apps that auto double 	  brackets                  	;
+GroupAdd "BracketDouble"	, "ahk_exe sublime_text.exe"	; SublimeText
+; Alt-Tab ;
 GroupAdd "⌥⭾AppSwitcher"	, "ahk_exe explorer.exe ahk_class XamlExplorerHostIslandWindow"	; Windows 11
-GroupAdd "⌥⭾AppSwitcher"	, "ahk_exe explorer.exe ahk_class MultitaskingViewFrame"	; Windows 10
-GroupAdd "⌥⭾AppSwitcher"	, "ahk_exe explorer.exe ahk_class TaskSwitcherWnd"      	; Windows Vista, 7, 8.1
-GroupAdd "⌥⭾AppSwitcher"	, "ahk_exe explorer.exe ahk_class #32771"               	; Older, or with classic alt-tab enabled
+GroupAdd "⌥⭾AppSwitcher"	, "ahk_exe explorer.exe ahk_class MultitaskingViewFrame"       	; Windows 10
+GroupAdd "⌥⭾AppSwitcher"	, "ahk_exe explorer.exe ahk_class TaskSwitcherWnd"             	; Windows Vista, 7, 8.1
+GroupAdd "⌥⭾AppSwitcher"	, "ahk_exe explorer.exe ahk_class #32771"                      	; Older, or with classic alt-tab enabled
 
 
 ; Window group arrays/dictionaries for faster/easier match without loops
