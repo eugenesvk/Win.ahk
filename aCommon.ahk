@@ -198,7 +198,7 @@ SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
   !vkBB::   	SendInput '{U+2260}'	;⌥=​  	vkBB ⟶ ≠ not=                    	2260
   ; !+vkBB::	SendInput '{U+2248}'	;⌥⇧=​ 	vkBB ⟶ ≈ approx                  	2248
   !+vkBB::  	SendInput '{U+00B1}'	;⌥⇧=​ 	vkBB ⟶ ± plus-minus              	  B1
-  +3::      	SendInput '{Raw}#'  	;⇧3​  	vk33 ⟶ # US number-sign          	  23
+  <+3::     	SendInput '{Raw}#'  	;⇧3​  	vk33 ⟶ # US number-sign          	  23
   <!+3::    	SendInput '№'       	;⌥⇧3​ 	vk33 ⟶ № RU Numero Sign          	2116
 
   ;;; currently there is no universal way to get TextEdit property, need to test with UIautomation how to limit
