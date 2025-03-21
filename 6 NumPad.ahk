@@ -71,8 +71,8 @@ add_Numpad() {
   for i,lbl in StrSplit(lbl🔢›) {
     r := hkf('',pre lbl,""), hkSend(r[1], blind '{' vk['🔢' SubStr(sym🔢›,i,1)] '}')
   } ; ␈ not a numpad keys, so map h→␈ manually (same for others)
-    r := hkf('',pre 'g',""), hkSend(r[1], blind '{' vk['␡'] '}')
-    r := hkf('',pre 'h',""), hkSend(r[1], blind '{' vk['␈'] '}')
+    r := hkf('',pre 'g',""), hkSend(r[1], blind  '{' vk['␡'] '}')
+    r := hkf('',pre 'h',""), hkSend(r[1], blind  '{' vk['␈'] '}')
     r := hkf('',pre '9',""), hkSend(r[1], blind '+{' vk['9'] '}')
     r := hkf('',pre '0',""), hkSend(r[1], blind '+{' vk['0'] '}')
 
