@@ -56,14 +56,14 @@ add_Numpad() {
     7 8
     yuiop
      jkl;
-    nm,./␠
+    bnm,./␠
     )"
   sym🔢› := "
     ( Join ` LTrim
     / *
     -123+
      456=
-    ⏎789.0
+    ⏎.789.0
     )"
   lbl🔢› := StrReplace(lbl🔢›, ' ','')
   sym🔢› := StrReplace(sym🔢›, ' ','')
@@ -76,7 +76,7 @@ add_Numpad() {
     r := hkf('',pre '9',""), hkSend(r[1], blind '+{' vk['9'] '}')
     r := hkf('',pre '0',""), hkSend(r[1], blind '+{' vk['0'] '}')
 
-  sym🔢›mod := Map(1,'0',2,'.',3,'/') ; modifier keys require special & syntax
+  sym🔢›mod := Map(1,'.',2,'.',3,'/') ; modifier keys require special & syntax
   for lbl, sym in sym🔢›mod {
     r := hkf('',pre ' ' ␠›%lbl%,''), hkSend(r[1], blind '{' vk['🔢' sym] '}')
   }
