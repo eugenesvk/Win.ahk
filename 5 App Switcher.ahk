@@ -42,7 +42,7 @@ setAppSwitcher() {
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
 
-  loop parse "⭾kj" { ;⭾
+  loop parse "⭾kj" { ; Fast switching between windows without showing AppSwitcher+Desktops
     HotKey(s.key→ahk(‹␠3 k[A_LoopField]), AppSwitcher)
   }
     HotKey(s.key→ahk('⇧❖​ ⭾'           ), AppSwitcher)
