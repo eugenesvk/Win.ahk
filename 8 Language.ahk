@@ -19,10 +19,13 @@ isRu() {
   ; SendInput '#{Space}'	;[Alt+CapsLock] to switch Keyboard Layout (Win+Space)
   }
 tryPostMsg(msg,w,l,Win,Contr?) {
+  static _d := 3
   try {
     if isSet(Contr) {
+      (dbg<_d)?'':dbgTT(_d,"using Contr",🕐:=3)
       PostMessage(msg, w,l, Contr,Win)
     } else {
+      (dbg<_d)?'':dbgTT(_d,"no Contr",🕐:=3)
       PostMessage(msg, w,l,      ,Win)
     }
   } catch as err {
