@@ -195,11 +195,12 @@ SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
   ^!-::     	SendInput '{U+2212}'	;^⌥-​ 	vkBD ⟶ − minus                   	2212
   !-::      	SendInput '{U+2014}'	;⌥⇧-​ 	vkBD ⟶ — em-dash                 	2014
   !+-::     	SendInput '{U+2013}'	;⌥-​  	vkBD ⟶ – en-dash                 	2013
-  !vkBB::   	SendInput '{U+2260}'	;⌥=​  	vkBB ⟶ ≠ not=                    	2260
+  >!vkBB::  	SendInput '{U+2260}'	;⌥=​  	vkBB ⟶ ≠ not=                    	2260
   ; !+vkBB::	SendInput '{U+2248}'	;⌥⇧=​ 	vkBB ⟶ ≈ approx                  	2248
   !+vkBB::  	SendInput '{U+00B1}'	;⌥⇧=​ 	vkBB ⟶ ± plus-minus              	  B1
-  <+3::     	SendInput '{Raw}#'  	;⇧3​  	vk33 ⟶ # US number-sign          	  23
-  <!+3::    	SendInput '№'       	;⌥⇧3​ 	vk33 ⟶ № RU Numero Sign          	2116
+  <+3::     	SendInput '{U+0023}'	;‹⇧3​ 	vk33 ⟶ # US number-sign          	  23
+  >+3::     	SendInput '{U+2116}'	; ⇧›3​	vk33 ⟶ № RU Numero Sign          	2116
+  ;{U+nnnn}→SendInput() or WM_CHAR is used to send the char and the current Send mode has no effect. Characters sent this way usually do not trigger shortcut keys or hotkeys.
 
   ;;; currently there is no universal way to get TextEdit property, need to test with UIautomation how to limit
   ; HWND := ControlGetFocus("A")
