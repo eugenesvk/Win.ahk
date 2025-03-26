@@ -42,7 +42,7 @@ setAppSwitcher() {
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
 
-  loop parse "⭾kj" { ; Fast switching between windows without showing AppSwitcher+Desktops
+  loop parse "⭾kjq" { ; Fast switching between windows without showing AppSwitcher+Desktops
     HotKey(s.key→ahk(‹␠3 k[A_LoopField]), AppSwitcher)
   }
     HotKey(s.key→ahk('⇧❖​ ⭾'           ), AppSwitcher)
@@ -50,8 +50,10 @@ setAppSwitcher() {
     Switch ThisHotkey  {
       default  : return
       ; default  : msgbox('nothing matched AppSwitcher ThisHotkey=' . ThisHotkey)
-      case s.key→ahk('⇧ ❖​ ⭾​')	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
       case s.key→ahk('  ❖​ ⭾​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
+      case s.key→ahk('  ❖​ q​')	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
+      case s.key→ahk('⇧ ❖​ ⭾​')	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
+      case s.key→ahk('⇧ ❖​ q​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
       case s.key→ahk('  ❖​ k​')	: AppWindowSwitcher(→)	;   ...    to Next     App's Window (↑ Z-order)
       case s.key→ahk('  ❖​ j​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
       case s.key→ahk('  ❖​ i​')	: SwapTwoAppWindows() 	;   ...    between 2   App's Windows
