@@ -151,7 +151,7 @@ add_printModifier() { ; Print a key symbol when this key is pressed with a modif
       Map('suffix','‹','pSelf',true ,'pRest',true ,'sym','⇧⇧ ⎈⌃ ◆❖⌘ ⎇⌥')
       ;                  ↑ insert self    with    ⎇›
       ;                     insert rest ↓ with ⇧›⎇›
-    , Map('suffix','' ,'pSelf',true ,'pRest',true ,'sym','⭾↹ ⇪⇪ ␠␣ ␈⌫ ⏎↩⌤␤␍')
+    , Map('suffix','' ,'pSelf',true ,'pRest',true ,'sym','⭾↹ ⇪⇪ ␠␣ ␈⌫ ⏎↩⌤␤␍␊')
     , Map('suffix','' ,'pSelf',false,'pRest',true ,'sym','☰☰')
     ]
   symSubMap['sc'] := [ ; use scan codes autohotkey.com/boards/viewtopic.php?f=76&t=18836&p=91282&hilit=keyboard+hook+home+end#p91282
