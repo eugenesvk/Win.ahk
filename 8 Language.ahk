@@ -1,17 +1,7 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
+#include <Locale>	; Various i18n locale functions and win32 constants
+
 ; Remap Capslock to keyboard layout switching between User layouts (learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f)
-
-; HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Keyboard Layouts
-; HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\Nls
-; NB! ↓ loads a layout, disable if you've removed this layout manually in Settings and don't need it to reappear!
-; en	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1) ; kbdus.dll
-; ru	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
-enU 	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1)
-ruU 	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1)
-isRu() {
-  return (lyt.GetCurLayout() = ruU) ? 'Ru' : ''
-  }
-
 ^CapsLock::
 !CapsLock::                     	{	;⎇⇪​	vk09 ⟶ Ctrl+Tab Restore
   ; SetCapsLockState "AlwaysOff"	;[CapsLock] disable

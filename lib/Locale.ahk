@@ -3,6 +3,16 @@
 #include <constWin32alt>
 wapi	:= win32Constant ; various win32 API constants
 
+; HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Keyboard Layouts
+; HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\Nls
+; NB! ↓ loads a layout, disable if you've removed this layout manually in Settings and don't need it to reappear!
+enU	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1) ; kbdus.dll
+ruU	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
+isRu() {
+  return (lyt.GetCurLayout() = ruU) ? 'Ru' : ''
+  }
+
+
 class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
   static INPUTLANGCHANGE_FORWARD	:= 0x0002
    , INPUTLANGCHANGE_BACKWARD   	:= 0x0004
