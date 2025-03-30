@@ -343,7 +343,11 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^", PosFixOverflow:=1) { ; Borderless win
   ; dbgGetSysMonVars()
 
   if !IsSet(id) { ; if no id passed, use Active window
-    id	:= WinGetID("A")
+    try {
+      id	:= WinGetID("A")
+    } catch TargetError as e {
+      return
+    }
   }
   MinMax	:= WinGetMinMax(id) ; Min -1, Max 1, Neither 0
   winIDs	:= WinGetList(  id) ;;; already have an id, why do this?
