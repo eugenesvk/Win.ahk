@@ -135,11 +135,15 @@ AppWindowSwitcher(dir:=→) {
     return
   }
 
-  winA_id    	:= WinGetID(         "A")
-  winA_proc  	:= WinGetProcessName("A")
-  winA_procP 	:= WinGetProcessPath("A")
-  winA_procID	:= WinGetPID(        "A")
-  winA_cls   	:= WinGetClass(      "A")
+  try {
+    winA_id    	:= WinGetID(         "A")
+    winA_proc  	:= WinGetProcessName("A")
+    winA_procP 	:= WinGetProcessPath("A")
+    winA_procID	:= WinGetPID(        "A")
+    winA_cls   	:= WinGetClass(      "A")
+  } catch TargetError as e {
+    return
+  }
 
   ; dbgtt(0,winA_proc . " ¦ " . winA_procP . " ¦ " . winA_cls . " ¦ " . winA_procID,t:=5)
   if winA_proc = "explorer.exe" { ; Explorer needs an extra condition to only count actual File Explorer windows
