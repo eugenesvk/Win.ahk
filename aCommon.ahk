@@ -453,7 +453,7 @@ SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
 
 ; ————————————————————————— Folders —————————————————————————————————
   ;#`::Run(Utils . "Directory Opus\DOpusrt.exe /acmd Go LASTACTIVELISTER NEW") ;❖`​ vk? ⟶ ?
-  ; Tab & X::     	OpusDir_CD(Path1)    	;@Tab.ahk
+  ; ⭾X::          	OpusDir_CD(Path1)    	;see @Tab.ahk
   ; #0::          	RunActivMin(AppDOpus)	;❖0​ 	vk30 ⟶ ?
   ; #1::          	OpusDir_CD(Path1)    	;❖1​ 	vk31 ⟶ ?
   ; #2::          	OpusDir_CD(Path2)    	;❖2​ 	vk32 ⟶ ?
