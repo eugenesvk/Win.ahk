@@ -499,8 +499,8 @@ Win_MenuToggle(hWin) { ; Hide/Show Window's menu bar
 Win_HideOthers() {  ; hides all windows except for the focused one
   SetWinDelay 0
   active_id   	:= WinGetID("A")
-  active_style	:= WinGetStyle("ahk_id" active_id)
-  if !WinExist("ahk_id" active_id)                          ; restore if no windows
+  active_style	:= WinGetStyle("ahk_id " active_id)
+  if !WinExist("ahk_id " active_id)                          ; restore if no windows
     WinRestore "A"                                          ; A=The Active Window
   ; MsgBox "The active window's ID is " active_id
   if (active_style & 0x20000){                              ; ? WS_MINIMIZEBOX
@@ -509,16 +509,16 @@ Win_HideOthers() {  ; hides all windows except for the focused one
       WinID := WinIDx[A_Index]
       If active_id = WinID
         Continue
-      wstyle := WinGetStyle("ahk_id" WinID)
+      wstyle := WinGetStyle("ahk_id " WinID)
       if (wstyle & 0x20000) {
-        wstate := WinGetMinMax("ahk_id" WinID)
+        wstate := WinGetMinMax("ahk_id " WinID)
         If wstate=-1                                         ; ignore minimized windows
           Continue
-        wclass := WinGetClass("ahk_id" WinID)
+        wclass := WinGetClass("ahk_id " WinID)
         If wclass="Shell_TrayWnd"
           Continue
-        If WinExist("ahk_id" WinID)
-          WinMinimize("ahk_id" WinID)
+        If WinExist("ahk_id " WinID)
+          WinMinimize("ahk_id " WinID)
       }
     }
   }
