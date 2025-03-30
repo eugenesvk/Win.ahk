@@ -397,19 +397,31 @@ Win_TitleToggle(PosFix:=0, id?, Sign:="^", PosFixOverflow:=1) { ; Borderless win
         }
         if       (isSet(wW_to)
           and     isSet(wH_to)) {
+          if !WinExist("ahk_id " winID) {
+            return
+          }
           WinMove(wX_to,wY_to, wW_to-1,wH_to-1,winID)
           WinMove(wX_to,wY_to, wW_to  ,wH_to  ,winID)
           (dbg>dp)?'':dbgtxt:= 'overflows ↔ (' wW ' > ' 🖥️w↔ ') ↕ (' wH '>' 🖥️w↕ ')'
         } else if isSet(wW_to) {
+          if !WinExist("ahk_id " winID) {
+            return
+          }
           WinMove(wX_to,     , wW_to-1,       ,winID)
           WinMove(wX_to,     , wW_to  ,       ,winID)
           (dbg>dp)?'':dbgtxt:= 'overflows ↔ (' wW ' > ' 🖥️w↔ ')'
         } else if isSet(wH_to) {
+          if !WinExist("ahk_id " winID) {
+            return
+          }
           WinMove(     ,wY_to,        ,wH_to-1,winID)
           WinMove(     ,wY_to,        ,wH_to  ,winID)
           (dbg>dp)?'':dbgtxt:= 'overflows ↕ (' wH '>' 🖥️w↕ ')'
         } else {
           (dbg>dp)?'':dbgtxt:= 'no overflows'
+          if !WinExist("ahk_id " winID) {
+            return
+          }
           WinMove(     ,     , wW-1   ,       ,winID)
           WinMove(     ,     , wW     ,       ,winID)
         }
