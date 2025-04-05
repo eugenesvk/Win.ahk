@@ -533,7 +533,12 @@ SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
   ; Tab & vkDE::	Suspend -1	;^⌥⇧'​	vkDE ⟶ Suspend other ListHotkeys'
   ; Tab & Esc:: 	Suspend -1	;^⌥⇧⎋​	vkDE ⟶ Suspend other ListHotkeys'
   #Esc::{ ;#⎋
-    Suspend(-1), WinEvent.Pause(-1)
+    ; Suspend(-1), WinEvent.Pause(-1), Pause(-1) ; doesn't sync between various pause states
+    if A_IsPaused || A_IsSuspended || WinEvent.IsPaused {
+      Suspend(0), WinEvent.Pause(0), Pause(0)
+    } else {
+      Suspend(1), WinEvent.Pause(1), Pause(1)
+    }
   }
 
   ; !z:: ;;; temporary fast reloads
