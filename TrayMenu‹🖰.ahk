@@ -1,4 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.18
+#include <Locale>
 
 OnMessage(0x404, OnTrayClickLeft)
 OnTrayClickLeft(wParam, lParam, nMsg, hwnd) {
@@ -35,10 +36,10 @@ class TrayManager {
   __New() {
     this.trayMenu := Menu()
     ; dbgtt(0,"TrayManager New",5,5,0,0)
-    MyCallbackRu := menuLayoutSwitchTgt.bind(,,,ruU)
-    MyCallbackEn := menuLayoutSwitchTgt.bind(,,,enU)
-    this.trayMenu.Add("&Д → lng"    , menuLayoutSwitch)
-    this.trayMenu.Add("&L → lng"    , menuLayoutSwitch)
+    MyCallbackRu := cbMenuLayoutSwitchTgt.bind(,,,ruU)
+    MyCallbackEn := cbMenuLayoutSwitchTgt.bind(,,,enU)
+    this.trayMenu.Add("&Д → lng"    , cbMenuLayoutSwitch)
+    this.trayMenu.Add("&L → lng"    , cbMenuLayoutSwitch)
     this.trayMenu.Add("&R → Русский", MyCallbackRu)
     this.trayMenu.Add("&F → Русский", MyCallbackRu)
     this.trayMenu.Add("&E → English", MyCallbackEn)
