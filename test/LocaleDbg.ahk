@@ -10,7 +10,7 @@ LocaleDbg() {
   local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
   local targetWin := "A" ; Active window to PostMessage to, need to be changed for '#32770' class (dialog window)
 
-    SizeT   	:= 2
+    SizeT 	:= 2
   sLng    	:= lyt.getLocaleInfo('en'           	,idLang)
   sLngLong	:= lyt.getLocaleInfo('English'      	,idLang)
   sCtr    	:= lyt.getLocaleInfo('United States'	,idLang)
