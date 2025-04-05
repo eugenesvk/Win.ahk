@@ -14,6 +14,8 @@ LocaleDbg() {
   sLng    	:= lyt.getLocaleInfo('en'           	,idLang)
   sLngLong	:= lyt.getLocaleInfo('English'      	,idLang)
   sCtr    	:= lyt.getLocaleInfo('United States'	,idLang)
+  sCtrA   	:= lyt.getLocaleInfo('USA'          	,idLang) ; USA
+  sCtrA2  	:= lyt.getLocaleInfo('US'           	,idLang) ; US
   sLngLoc 	:= lyt.getLocaleInfo('Deutsch'      	,idLang)
   iC      	:= lyt.getLocaleInfo("IDialingCode" 	,idLang)
   klID    	:= lyt.getKLIDfromHKL(curlayout)
@@ -29,10 +31,12 @@ LocaleDbg() {
   . "sLng`t"    	sLng                                     	"`n" ; en
   . "sLngLong`t"	sLngLong                                 	"`n" ; English
   . "sCountry`t"	sCtr                                     	"`n" ; United States
+  . "sCtrA`t"   	sCtrA                                    	"`n" ; USA
+  . "sCtrA2`t"  	sCtrA2                                   	"`n" ; US
   . "sLngLoc`t" 	sLngLoc                                  	"`n" ; Deutsch
   . "sDial#`t"  	iC                                       	"`n" ; 1
   , 2050,900)
-  SetTimer () => ToolTip(), -2000
+  SetTimer () => ToolTip(), -6000
   }
 
 /*
