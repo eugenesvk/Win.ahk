@@ -68,6 +68,7 @@ SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
 #include %A_scriptDir%\listen_WinMsg.ahk   	; Listen to window messages and set global vars accordingly
 ;#include %A_scriptDir%\xReformatPrompt.ahk	; (use exe for another thread) Auto✗ prompts with a ‘Format disk’ button
 #include %A_scriptDir%\TrayMenu‹🖰.ahk      	; Custom left-click tray menu for language change
+#include %A_scriptDir%\TrayMenu🖰›.ahk      	; Custom right-click tray menu, renamed and language change
 
 ; #include %A_scriptDir%\Game\init_game.ahk	; Games
 
