@@ -285,14 +285,18 @@ class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
     }
     threadID     	:= DllCall("GetWindowThreadProcessId"	,  "Ptr",winID_fg, "Ptr",0) ; DWORD GetWindowThreadProcessId(HWND hWnd, LPDWORD lpdwProcessId) docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid
     inputLocaleID	:= DllCall("GetKeyboardLayout"       	, "UInt",threadID, 'Ptr') ; HKL=Ptr (some examples mistakenly use UInt=4, need the full '0xfffffffff0c00409' value), hKL = handle to a keyboard layout for the thread
-      ;|SubLangID|PrimaryLangID| enU: 0xfffffffff0c0 0409
-      ;+---------+-------------+ ruU: 0xfffffffff0c1 0419
+      ;│SubLangID│PrimaryLangID│ enU: 0xfffffffff0c0 0409
+      ;└─────────┴─────────────┘ ruU: 0xfffffffff0c1 0419
       ;15     10 9             0 bit
     idLang 	:= inputLocaleID & 0xFFFF	; Language Identifier for the input language docs.microsoft.com/en-us/windows/win32/intl/language-identifiers
     lytPhys	:= inputLocaleID >> 16   	; device handle to the physical layout. Bitwise right shift by 16 bits = 4 hex characters (=size of lWord) . User can associate any input language with a physical layout, eg, an English-speaking user who very occasionally works in French can set the input language of the keyboard to French without changing the physical layout of the keyboard. This means the user can enter text in French using the familiar English layout
     ; 0=default
     ; dbgtxt	.= Format("hW={1:#x} lw={2:#x}`ninputLocaleID={3:#x}`nthreadID: {4:}`n", lytPhys, idLang, inputLocaleID, threadID)
     ; dbgTT(0,dbgtxt,t:=3,id:=4)
+    ; LCID 4-byte value
+      ;  0  1  2  3     4  5  6  7 ¦₁  8  9 10 11               	- 12₂ reserved, must be 0
+      ; 12 13 14 15 ¦₂                                          	-  4₂ Sort ID
+      ; 16 17 18 19    20 21 22 23 ¦₃ 24 25 26 27 28 29 30 31 ¦₄	- 16₂ Language ID
     return inputLocaleID
     }
   ; ——————————————— public method GetInputHKL ———————————————
