@@ -100,7 +100,8 @@
 global getDefIMEWnd := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle", "Str","Imm32", "Ptr"), "AStr","ImmGetDefaultIMEWnd", "Ptr") ; HWND ImmGetDefaultIMEWnd(HWND Arg1) docs.microsoft.com/en-us/windows/win32/api/imm/nf-imm-immgetdefaultimewnd. Invoke: DllCall(getDefIMEWnd, "Ptr",fgWin)
   , CreateProcessW_proc := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle", "Str","kernel32", "Ptr"), "AStr","CreateProcessW", "Ptr") ; docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
   , QPerfC_proc := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle", "Str","kernel32", "Ptr"), "AStr","QueryPerformanceCounter", "Ptr") ; docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
-  , changeInputLang	:= 0x50  	; WM_INPUTLANGCHANGEREQUEST
+  , changeInputLang	:= 0x0050	; WM_INPUTLANGCHANGEREQUEST
+  , inLangChange   	:= 0x0051 ; WM_INPUTLANGCHANGE
   , msgWheelH      	:= 0x20E 	; WM_MOUSEHWHEEL, docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehwheel
   , msgScrollH     	:= 0x0114	; WM_HSCROLL (=scrollbar button press, by line very slow, by page fast, might need to be sent to the control, not just the window), docs.microsoft.com/en-us/windows/win32/controls/wm-hscroll
   , msgScrollV     	:= 0x0115	; WM_VSCROLL, docs.microsoft.com/en-us/windows/win32/controls/wm-vscroll
