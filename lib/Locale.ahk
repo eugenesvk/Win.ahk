@@ -11,6 +11,12 @@ ruU	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
 isRu() {
   return (lyt.GetCurLayout() = ruU) ? 'Ru' : ''
   }
+cbMenuLayoutSwitch(ItemName, ItemPos, MyMenu) {
+  LayoutSwitch()
+}
+cbMenuLayoutSwitchTgt(ItemName, ItemPos, MyMenu, tgt) {
+  LayoutSwitch(tgt)
+}
 
 
 class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
