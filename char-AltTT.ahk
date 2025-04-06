@@ -62,7 +62,7 @@ alt_tt_popup(name:="", pOffset:=0) {
   csub(intersperse(lbl, val, sep, pOffset,,, &splitMode), splitMode) ;
 }
 
-intersperse(pLabel, pVal, pSplit:=0, pOffset:=0, pLang:="En", &outMap:=Map(), &splitMode:="A") { ;[a b]+[1 2]=[a1 b2]
+intersperse(pLabel, pVal, pSplit:=[], pOffset:=0, pLang:="En", &outMap:=Map(), &splitMode:="A") { ;[a b]+[1 2]=[a1 b2]
   ; insert newline splits at tSplit#s or when encountering an empty "" string or  records separator
   ; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs: indexing a string by "char" cuts unicode chars in half
   ; splitMode is changed to "M"anual if any separator is encountered
