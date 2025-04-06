@@ -116,13 +116,12 @@ intersperse(pLabel, pVal, pSplit:=[], pOffset:=0, &outMap:=Map(), &splitMode:="A
   ; insert newline splits at tSplit#s or when encountering an empty "" string or  records separator
   ; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs: indexing a string by "char" cuts unicode chars in half
   ; splitMode is changed to "M"anual if any separator is encountered
-  static seps := [␞,""]
   arComb := ""
   AllKeys := isRu() ? KeyboardR : Keyboard  ; Use language-specific layout for index values
   sep№ := 0 ; cumulative № of skips to adjust index position
   for i,val in pVal {
     no_lbl     	:= 0
-    if         	HasValue(seps  ,val) {
+    if         	val = ␞ {
       sep№--   	; allows specifying separator only in the values, but not the labels
       splitMode	:="M"
       no_lbl   	:= 1
