@@ -45,7 +45,7 @@ alt_tt_popup(name:="", pOffset:=0) {
   } else   	{
     return 	;
   }        	;
-  i_lbl    	:= name . "Lab" isRu() ; Math2LabRu
+  i_lbl    	:= name . "Lab" lRu() ; Math2LabRu
   if       	Ch.has(i_lbl) {
     lbl    	:= Ch[i_lbl]
   } else   	{
@@ -59,16 +59,16 @@ alt_tt_popup(name:="", pOffset:=0) {
   i_sep    	:= name . "Sp" ; Math2Sp
   sep      	:= Ch.has(i_sep) ? Ch[i_sep] : []
   splitMode	:= (sep.Length > 0) ? "M" : "A"
-  csub(intersperse(lbl, val, sep, pOffset,,, &splitMode), splitMode) ;
+  csub(intersperse(lbl, val, sep, pOffset,, &splitMode), splitMode) ;
 }
 
-intersperse(pLabel, pVal, pSplit:=[], pOffset:=0, pLang:="En", &outMap:=Map(), &splitMode:="A") { ;[a b]+[1 2]=[a1 b2]
+intersperse(pLabel, pVal, pSplit:=[], pOffset:=0, &outMap:=Map(), &splitMode:="A") { ;[a b]+[1 2]=[a1 b2]
   ; insert newline splits at tSplit#s or when encountering an empty "" string or  records separator
   ; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs: indexing a string by "char" cuts unicode chars in half
   ; splitMode is changed to "M"anual if any separator is encountered
   static seps := [␞,""]
   arComb := ""
-  AllKeys := (pLang = "Ru") ? KeyboardR : Keyboard  ; Use language-specific layout for index values
+  AllKeys := isRu() ? KeyboardR : Keyboard  ; Use language-specific layout for index values
   sep№ := 0 ; cumulative № of skips to adjust index position
   for i,val in pVal {
     no_lbl     	:= 0
