@@ -19,8 +19,8 @@ loop 8 {
     Ch.CaseSense    	:= 0 ; make key matching case insensitive
     Ch["QuotesS"    	]:=["‹","›","‘","’","‚","‛"]                         	;' str→arrCh() ~10 times longer
   , Ch["QuotesD"    	]:=["«","»","“","”","„"]                             	;"
-  , Ch["Dash"       	]:=["−","–","—","⁃"]                                 	;- minus, en/em dash, Hyphen Bullet
-  , Ch["DashLab"    	]:=["=","n","m","b"]                                 	;
+  , Ch["Dash"       	]:=["−","–","—","‒","⁃"]                             	;- minus, en/em dash, Figure Dash, Hyphen Bullet
+  , Ch["DashLab"    	]:=["=","n","m","f","b"]                             	;
   , Ch["Space"      	]:=[" "," "," "," "," "," "," "," ","​","␣"]         	;⎈›⎇›␠⬓ ¦m¦n¦r¦1¦.¦t¦h¦0¦ (Em¦En¦nbSp¦Figure¦Punctuation¦Thin¦Hair¦Zero-Width¦OpenBoxU+2423 (jkorpela.fi/chars/spaces.html))
   , Ch["SpaceLab"   	]:=["m","n"," ","1","f",".","t","h","0","u"]         	;¦ ¦ ¦ ¦ ¦ ¦ ¦ ¦​¦    [    ]
   , Ch["SpaceLab2"  	]:=["m","n","b","1","f",".","t","h","0","u"]         	;
