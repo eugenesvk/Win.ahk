@@ -131,3 +131,4 @@ global getDefIMEWnd := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle"
   , ↓              	:= -2    	, ↑ 	:= 2
   , s←             	:= "Left"	, s→	:= "Right"
   , s↓             	:= "Down"	, s↑	:= "Up"
+  , ␞              	:= "" ; Record Separator Chr(0x001E)
