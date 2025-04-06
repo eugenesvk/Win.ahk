@@ -4,14 +4,14 @@
 #include <Win>
 #include %A_scriptDir%\gVar\PressH.ahk
 PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:=true, can␠ins:=true) { ; output→CharChoicet
-  ; Arg     	Type/Val      	Comment |default value|  ¦alt value¦
-  ; pChars  	array         	symbols to insert ['⎋','❖','⌽'...]
-  ; pTrigger	char          	key that triggered this function, used to exclude it from the index
-  ; pLabel  	array         	key labels to use instead of the usual index (1-9a-z)
-  ; pHorV   	|H|V          	Horizontal/Vertical layout of the listboxes
-  ; pis␈    	|true|        	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
-  ; can␠ins 	|true|        	Space pressed when GUI is shown inserts the first item, otherwise it only selects it (filtered out just like arrow keys)
-  ; pCaret  	|1,uia¦2¦[0,0]	Position CharacterPicker @ Text Caret position 1 or 'uia' UIA/Accessibility, 2 no UIA, [x,y] use explicit coords
+  ;Arg     	Type/Val      	Comment ≝default
+  ;pChars  	array         	symbols to insert [⎋,❖,⌽...]
+  ;pTrigger	char          	key that triggered this function, used to exclude it from the index
+  ;pLabel  	array         	key labels to use instead of the usual index (1-9a-z)
+  ;pHorV   	≝H¦V          	Horizontal/Vertical layout of the listboxes
+  ;pis␈    	≝true         	Delete last printed char by ‘Send '{BackSpace}'’ before inserting CharChoice (disable if this function is invoked via another method that doesn't type a char)
+  ;can␠ins 	≝true         	Space pressed when GUI is shown inserts the first item, otherwise it only selects it (filtered out just like arrow keys)
+  ;pCaret  	≝1,uia¦2¦[0,0]	Position CharacterPicker @ Text Caret position 1 or 'uia' UIA/Accessibility, 2 no UIA, [x,y] use explicit coords
 
   static k   	:= keyConstant._map, lyt_lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
    , s       	:= helperString
@@ -175,9 +175,9 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
     BoxVW	:= " w" CharGUIWidthV " "   	; Value row width
     BoxIR	:= BoxVR := " R" NuChars " "	; # of rows
     VXtra	:= " x+0 "                  	; attach Value row to the right
-    Picker.SetFont(CharGUIFontColI " s" CharGUIFontSize, CharGUIFontName)
-    LBI := Picker.Add("ListBox", BoxIW BoxIR "AltSubmit vChoiceA " GuiOptX, colIndex)
-    Picker.SetFont(CharGUIFontColV " s" CharGUIFontSize " w400", CharGUIFontName)
+    Picker.SetFont("C" CharGUIFontColI " s" CharGUIFontSize, CharGUIFontName)
+    LBI := Picker.Add("ListBox", BoxIW BoxIR "AltSubmit vChoiceA "      GuiOptX, colIndex)
+    Picker.SetFont("C" CharGUIFontColV " s" CharGUIFontSize " w400", CharGUIFontName)
     LBV := Picker.Add("ListBox", BoxVW BoxVR "AltSubmit vChoiceB" VXtra GuiOptX, colSymbol)
   } else { ; Horizontal alignment, 1. Value 2. Index (like in macOS)
     BoxW   	:= CharGUIWidthColH * NuChars
@@ -202,10 +202,10 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
       LocLB := PressH_getPickerLoc(pCaret[1],pCaret[2],BoxWDPI)
     }
     ; show Index row second to match macOS style
-    Picker.SetFont(CharGUIFontColV " s" CharGUIFontSize " w400", CharGUIFontName)
+    Picker.SetFont("C" CharGUIFontColV " s" CharGUIFontSize " w400", CharGUIFontName)
     LBV := Picker.Add("ListBox", BoxVW BoxVR "AltSubmit vChoiceB" VXtra GuiOptX, colSymbol)
-    Picker.SetFont(CharGUIFontColI " s" CharGUIFontSize, CharGUIFontName)
-    LBI := Picker.Add("ListBox", BoxIW BoxIR "AltSubmit vChoiceA " GuiOptX, colIndex)
+    Picker.SetFont("C" CharGUIFontColI " s" CharGUIFontSize, CharGUIFontName)
+    LBI := Picker.Add("ListBox", BoxIW BoxIR "AltSubmit vChoiceA "      GuiOptX, colIndex)
     ; adjust column width in horizontal view
     hwndLBI := ControlGetHwnd(LBI), hwndLBV := ControlGetHwnd(LBV)
     DllCall("SendMessage", "Ptr",hwndLBI, "UInt",LB_SetColumnWidth, "Ptr",DllIW, "Ptr", 0)
@@ -249,7 +249,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
   }
 }
 
-PressH_getPickerLoc(x,y,BoxWDPI) { ; giver caret coordinates and picker box width, adjust the position of the picker to fit the screen and not overlap screen edges
+PressH_getPickerLoc(x,y,BoxWDPI) { ; given caret coordinates and picker box width, adjust the position of the picker to fit the screen and not overlap screen edges
   yOffP := yOffN := 0, symOff := 16
   dbgTT(4,BoxWDPI ' of ' A_ScreenWidth,t:=2)
   if (y    < symOff*8) { ; if too close to the top of the screen
