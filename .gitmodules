@@ -1,0 +1,4 @@
+[submodule "language-indicator"]
+	path = language-indicator
+	url = https://github.com/eugenesvk/language-indicator
+	branch = imp_mod
