@@ -680,6 +680,8 @@ class localeNLS_SubGroups { ; define the "LOCALE_..." constants
     ,'eng'                    	, 'LOCALE_SISO639LANGNAME2'      	;
     ,'English'                	, 'LOCALE_SENGLISHLANGUAGENAME'  	;
     ,'United States'          	, 'LOCALE_SENGLISHCOUNTRYNAME'   	;
+    ,'USA'                    	, 'LOCALE_SABBREVCTRYNAME'       	;
+    ,'US'                     	, 'LOCALE_SISO3166CTRYNAME'      	;
     ,'English (United States)'	, 'LOCALE_SENGLISHDISPLAYNAME'   	;
     ,'Deutsch'                	, 'LOCALE_SLOCALIZEDLANGUAGENAME'	;
     ,'Deutschland'            	, 'LOCALE_SLOCALIZEDCOUNTRYNAME' 	;
