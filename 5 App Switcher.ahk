@@ -112,7 +112,7 @@ SwapTwoAppWindows() { ; Instantly swap between the last 2 windows without showin
   }
 }
 
-AppWindowSwitcher(dir:=→) {
+AppWindowSwitcher(dir:=→) { ; Switch between windows of the same app
   isPrevStr	:= ["Prev","←",←] ; accepted arguments for directions
   isNextStr	:= ["Next","→",→]
   ;——————————————————————————————————————————————————
@@ -227,4 +227,124 @@ showWinZOrder(winTitleMatch:="", txt:="", skipEmtpy:=1) {
   _test .= "`n│_lastID=" _lastID "│" winA_title
   dbgTT(dbgMin:=0, Text:=_test , Time:=4,id:=rndid,X:=1550,Y:=850)
   return
+}
+
+
+<+>+1::Focus("prev")  	; Goes through all of the windows per monitor backwards
+<+>+2::Focus("next")  	; Goes through all of the windows per monitor forwards
+<+>+3::Focus("recent")	; Opens the last used window per monitor
+
+Focus(z_order) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
+  ;  1 first window in z-order
+  ; -1 last  window in z-order
+  ; "recent" Switch to the last used window
+  ; "next"   Iterate through all the windows forwards
+  ; "prev"   Iterate through all the windows backwards
+  Tooltip ; Reset Tooltip.
+
+  static arg_last	:= ""             	; Saves last z_order parameter passed.
+  static z       	:= 0              	; Saves last z_order. (Use arg_last to initialize)
+  windows        	:= AltTabWindows()	; Gather Alt-Tab window list
+  debug          	:= False
+
+  win_c := windows.length
+  if        (win_c == 0) { ; Do nothing if no windows are found
+    return 0
+  } else if (win_c == 1) { ; Sole window
+    WinActivate windows[1]
+    return      windows[1]
+  }
+
+  ; Check if the number of normal windows is at least 2. AlwaysOnTop windows are never activated since they are always on top
+  always_on_top := 0
+  for hwnd in windows {
+    if 0x8 & WinGetExStyle(hwnd) {
+      always_on_top += 1
+    }
+  }
+  if (win_c - always_on_top < 2) {
+    WinActivate(windows[-1]) ; AlwaysOnTop windows are listed first
+    return      windows[-1]
+  }
+
+  recent() { ; Switches to the most recent window. Ignores always on top windows, cause they're always on top
+    loop win_c { ; Search for the window that is next in the z_order after the current active window.
+      z := A_Index + 1
+    } until (WinActive('A') = windows[A_Index])
+    if (z > win_c) { ; no-break ; If the current window is not in the list, such as the desktop or another monitor... Get the second window that is not always on top.
+      loop win_c {
+        z := A_Index + 1
+      } until not (0x8 & WinGetExStyle(windows[A_Index]))
+    }
+    if (z > win_c) { ; no-break ; 0 windows or 1 window are caught in the beginning
+      debug := True
+    }
+  }
+  if (z_order = "recent") {
+    recent()
+  }
+
+  if   (z_order = "next") { ; Iterate through all the windows in a circular loop
+    if (z_order != arg_last || z > win_c) {
+      recent()
+    } else if (z < win_c) {
+      z++
+    } else if (z = win_c) {
+      ('After cycling through all the windows, repeat this step.')
+    }
+  }
+  if   (z_order = "prev") { ; Iterate through all the windows in a circular loop backwards
+    if (z_order != arg_last || z > win_c) {
+      recent() ;todo
+    } else if (z < win_c) {
+      z--
+    } else if (z = win_c) {
+      ('After cycling through all the windows, repeat this step.')
+    }
+  }
+  if (z_order ~= "^-?\d+$") { ; If z is a number. Can address elements in reverse: [-1] is the bottom element
+    z := z_order
+  }
+
+  if debug {
+    res := ""
+    fsp := (win_c>9)?" ":""
+    for i, v in windows {
+      pre := (i>9)?"":fsp
+      res .= pre i " " (WinGetTitle(v) || WinGetClass(v)) "`n"
+    }
+    return ToolTip(res)
+  }
+
+  arg_last := z_order
+  hwnd := hwnd ?? windows[z]
+  WinActivate("ahk_id" hwnd)
+
+  return hwnd
+}
+
+AltTabWindows() { ; modernized, original by ophthalmos autohotkey.com/boards/viewtopic.php?t=13288
+  static wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
+  static wsExToolWin	:= 0x00080	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
+  static GW_OWNER   	:=       4	; identifies as the owner window
+
+  DllCall("GetCursorPos", "uint64*", &point:=0) ; Get the current monitor the mouse cusor is in
+  hMonitor := DllCall("MonitorFromPoint", "uint64",point, "uint",0x2, "ptr")
+
+  AltTabList := []
+  DetectHiddenWindows False     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
+  for hwnd in WinGetList() {    ; gather a list of running programs
+    if hMonitor == DllCall("MonitorFromWindow", "ptr",hwnd, "uint",0x2, "ptr") { ; Check if the window is on the same monitor.
+      owner := DllCall("GetAncestor", "ptr",hwnd, "uint",GA_ROOTOWNER:=3, "ptr") ; Find the top-most owner of the child window
+      owner := owner || hwnd ; Above call could be zero.
+      if (DllCall("GetLastActivePopup", "ptr", owner) = hwnd) { ; Check to make sure that the active window is also the owner window.
+        es := WinGetExStyle(hwnd) ; Get window extended style
+        if (!(es & wsExToolWin)    ; appears on the Alt+Tab list
+          || (es & wsExAppWin )) { ; has a taskbar button
+          AltTabList.push(hwnd) ; ? not be a Windows 10 background app
+        }
+      }
+    }
+  }
+  return AltTabList
 }
