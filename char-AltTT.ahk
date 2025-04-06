@@ -18,23 +18,23 @@
 !+vk31::csub(intersperse([], Ch["QuotesS"],,1))   	;⌥⇧1​	vk31	⟶ Single Quotes
 !+vk32::csub(intersperse([], Ch["QuotesD"],,1))   	;⌥⇧2​	vk32	⟶ Double Quotes
 !+vk34::R:=isRu(),csub(intersperse([],Ch["Currency"],,1,R) "`n" intersperse(Ch["CurrLab" R], Ch["Currency" R]),'M') ;⌥⇧4​ vk34 ⟶ currency
-!+vk35::csub(intersperse([],Ch["Percent"],,1))                                  	;⇧⌥5​ 	vk35	⟶ Percent
-!+vk36::csub(intersperse(Ch["SupLab"],Ch["Superscript"],Ch["SupSp"],1),'M')     	;⇧⌥6​ 	vk36	⟶ Superscript
-!+vk37::csub(intersperse(Ch["SubLab"],Ch["Subscript"],Ch["SubSp"],1),'M')       	;⇧⌥7​ 	vk37	⟶ Subscript
-!+vk38::csub(intersperse([],Ch["Fractions"],Ch["FSp"],1),'M')                   	;⇧⌥8​ 	vk38	⟶ Fractions
-!+vk39::SendText("‹")                                                           	; ⌥9​ 	vk39	⟶ ‹
-!+vk30::SendText("›")                                                           	; ⌥0​ 	vk30	⟶ ›
-;!vk39::csub("")                                                                	; ⌥9​ 	vk39	⟶ SOMETHING
-;!vk30::csub("")                                                                	; ⌥0​ 	vk30	⟶ SOMETHING
-;!vkBD::csub(intersperse(Ch["DashLab"],Ch["Dash"],,1))                          	; ⌥-​ 	VKBD	⟶ Dashes
-;!vkBB::csub("1≈2≠")                                                            	; ⌥=​ 	VKBB	⟶ Equal signs
-!+r::csub(intersperse(Ch["ChecksLab"],Ch["Checks"]))                            	;⇧⌥r​ 	vk52	⟶ Misc
-!+q::csub(intersperse(Ch["XSymbolsLab"],Ch["XSymbols"],Ch["XSymSp"],1),'M')     	 ;⌥⇧q​	vk51	⟶ system
-!+a::csub(intersperse(Ch["ArrowsLab" isRu()], Ch["Arrows"], Ch["ArrowsSp"]),'M')	;⌥⇧a​ vk41 ⟶ Arrows
-!+t::csub(intersperse(Ch["MathLab"  isRu()],Ch["Math" ],Ch["MathSp" ],0),'M')   	;⌥⇧t​ math vk54
-!+y::csub(intersperse(Ch["Math2Lab" isRu()],Ch["Math2"],Ch["Math2Sp"],0),'M')   	;⌥⇧y​ math vk59
-!+d::csub(intersperse(Ch["WinFileLab"],Ch["WinFile"]))                          	;⌥⇧d	vk44	⟶ Illegal Filename Replacement
-!+b::csub(intersperse([],Ch["Bullet"],,1))                                      	;⌥⇧b	vk42	⟶ Bullet
+!+vk35::csub(intersperse([],Ch["Percent"],,1))        	;⇧⌥5​ 	vk35	⟶ Percent
+!+vk36::alt_tt_popup("Superscript")                   	;⇧⌥6​ 	vk36	⟶ Superscript
+!+vk37::alt_tt_popup("Subscript")                     	;⇧⌥7​ 	vk37	⟶ Subscript
+!+vk38::alt_tt_popup("Fractions")                     	;⇧⌥8​ 	vk38	⟶ Fractions
+!+vk39::SendText("‹")                                 	; ⌥9​ 	vk39	⟶ ‹
+!+vk30::SendText("›")                                 	; ⌥0​ 	vk30	⟶ ›
+;!vk39::csub("")                                      	; ⌥9​ 	vk39	⟶ SOMETHING
+;!vk30::csub("")                                      	; ⌥0​ 	vk30	⟶ SOMETHING
+;!vkBD::csub(intersperse(Ch["DashLab"],Ch["Dash"],,1))	; ⌥-​ 	VKBD	⟶ Dashes
+;!vkBB::csub("1≈2≠")                                  	; ⌥=​ 	VKBB	⟶ Equal signs
+!+r::csub(intersperse(Ch["ChecksLab"],Ch["Checks"]))  	;⇧⌥r​ 	vk52	⟶ Misc
+!+q::alt_tt_popup("XSymbols",1)                       	 ;⌥⇧q​	vk51	⟶ system
+!+a::alt_tt_popup("Arrows")                           	;⌥⇧a​ vk41 ⟶ Arrows
+!+t::alt_tt_popup("Math")                             	;⌥⇧t​ math vk54
+!+y::alt_tt_popup("Math2")                            	;⌥⇧y​ math vk59
+!+d::csub(intersperse(Ch["WinFileLab"],Ch["WinFile"]))	;⌥⇧d	vk44	⟶ Illegal Filename Replacement
+!+b::csub(intersperse([],Ch["Bullet"],,1))            	;⌥⇧b	vk42	⟶ Bullet
 !+k::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong) ;⌥⇧k​ VK4B ⟶ TypES with ⌥
 !+l::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong) ;⌥⇧l​ VK4C ⟶ TypES with ⌥⇧
 
