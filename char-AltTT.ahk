@@ -62,27 +62,29 @@ alt_tt_popup(name:="", pOffset:=0) {
   csub(intersperse(lbl, val, sep, pOffset,,, &splitMode), splitMode) ;
 }
 
-intersperse(pLabel, pVal, pSplit:=0, pOffset:=0, pLang:="En", &outMap:=Map()) { ;[a b]+[1 2]=[a1 b2]
-  ; insert newline splits at tSplit#s; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs when indexing a string by "char" cuts unicode chars in half
-  arComb := "", delim := "", AllKeys := Keyboard
-  if (pLang = "Ru") {  ; Use Russian layout for index values
-    AllKeys := KeyboardR
-  }
-  for ind,val in pVal {
-    if (HasValue(pSplit,ind) >0 ) {	; if Split hints array has this index value ...
-      delim := '`n'                	; use newline to split
-    } else {
-      delim := " "
-    }
-    if (ind > pLabel.Length) { ; use Full Keyboard for index when not enough Labels
-      lbl := AllKeys[ind+pOffset]
-      arComb := arComb . lbl . val . delim
-      outMap[lbl] := val
-    } else {
-      lbl := pLabel[ind]
-      arComb := arComb . lbl . val . delim
-      outMap[lbl] := val
-    }
+intersperse(pLabel, pVal, pSplit:=0, pOffset:=0, pLang:="En", &outMap:=Map(), &splitMode:="A") { ;[a b]+[1 2]=[a1 b2]
+  ; insert newline splits at tSplit#s or when encountering an empty "" string or  records separator
+  ; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs: indexing a string by "char" cuts unicode chars in half
+  ; splitMode is changed to "M"anual if any separator is encountered
+  arComb := ""
+  AllKeys := (pLang = "Ru") ? KeyboardR : Keyboard  ; Use language-specific layout for index values
+  iOff := 0
+  for i,val in pVal {
+    if ( val   	== rsep
+      || val   	== "") {
+      iOff--   	; allows specifying separator only in the values, but not the labels
+      splitMode	:="M"
+      delim    	:= "`n" ; split if index is in the values
+    } else if  	(HasValue(	pSplit,i)	> 0) {
+      splitMode	:="M"
+      delim    	:= "`n" ; split if index is in Split hints array
+    }          	else {
+      delim    	:= " "
+    }          	;
+    ii         	:= i + iOff
+    lbl        	:= (ii > pLabel.Length) ? AllKeys[ii+pOffset] : pLabel[ii] ; use Full Keyboard for index when not enough Labels
+    arComb     	.= lbl . val . delim
+    outMap[lbl]	:= val
   }
   return arComb
 }
