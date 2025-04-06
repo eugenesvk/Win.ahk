@@ -2,9 +2,8 @@
 
 HasValue(haystack, needle) { ; Checks if a value exists in an array
   ;FoundPos := HasValue(Haystack, Needle)
-  if !(IsObject(haystack)) {
-    return -1
-    ; throw ValueError("Bad haystack!", -1, haystack)
+  if !(IsObject(haystack)) { ; return -1
+    throw ValueError("Bad haystack!", -1, haystack)
   }
   for index, value in haystack
     if (value = needle)
