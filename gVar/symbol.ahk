@@ -13,7 +13,7 @@ loop 8 {
 
 #include <Array>
 
-;Custom special characters, use "" or rsep in values to signal ␤ (labels don't need to match it)
+;Custom special characters, use "" or ␞ in values to signal ␤ (labels don't need to match it)
   ;xLab - Labels, xLabR - Labels in Russian, xSp – Newline split positions, or use "" instead in values
   global Ch         	:= Map()
     Ch.CaseSense    	:= 0 ; make key matching case insensitive
