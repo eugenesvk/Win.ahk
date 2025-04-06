@@ -28,13 +28,13 @@
 ;!vk30::csub("")                                      	; ⌥0​ 	vk30	⟶ SOMETHING
 ;!vkBD::csub(intersperse(Ch["DashLab"],Ch["Dash"],,1))	; ⌥-​ 	VKBD	⟶ Dashes
 ;!vkBB::csub("1≈2≠")                                  	; ⌥=​ 	VKBB	⟶ Equal signs
-!+r::csub(intersperse(Ch["ChecksLab"],Ch["Checks"]))  	;⇧⌥r​ 	vk52	⟶ Misc
+!+r::alt_tt_popup("Checks")                           	;⇧⌥r​ 	vk52	⟶ Misc
 !+q::alt_tt_popup("XSymbols",1)                       	 ;⌥⇧q​	vk51	⟶ system
 !+a::alt_tt_popup("Arrows")                           	;⌥⇧a​ vk41 ⟶ Arrows
 !+t::alt_tt_popup("Math")                             	;⌥⇧t​ math vk54
 !+y::alt_tt_popup("Math2")                            	;⌥⇧y​ math vk59
-!+d::csub(intersperse(Ch["WinFileLab"],Ch["WinFile"]))	;⌥⇧d	vk44	⟶ Illegal Filename Replacement
-!+b::csub(intersperse([],Ch["Bullet"],,1))            	;⌥⇧b	vk42	⟶ Bullet
+!+d::alt_tt_popup("WinFile")                          	;⌥⇧d	vk44	⟶ Illegal Filename Replacement
+!+b::alt_tt_popup("Bullet",1)                         	;⌥⇧b	vk42	⟶ Bullet
 !+k::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong) ;⌥⇧k​ VK4B ⟶ TypES with ⌥
 !+l::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong) ;⌥⇧l​ VK4C ⟶ TypES with ⌥⇧
 
