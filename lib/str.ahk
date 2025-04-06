@@ -5,6 +5,32 @@ class helperString {
   static __new() { ; fill the map
     this.fillKeyList()
   }
+  static lstrip(&s) {
+    return NewStr := RegExReplace(s, "^\s*", "")
+  }
+  static file_full(&s) {
+    ; if RegExMatch(s, "^(\w:)\\(.+\\)*(.+)\.(.+)$" , &G) { ; fails with folders only
+      ; dbgtt(0,G[0] "`n1=" G[1] "`n2=" G[2] "`n3=" G[3] "`n4=" G[4],5)
+      ; 1 drive 2 Dir 3 File 4 Ext
+    if RegExMatch(s, "[^\/\\]+$" , &G) {
+      return G[0]
+    } else {
+      return ""
+    }
+  }
+  static file_name_(s) {
+    return RegExReplace(helperString.file_full(&s), "\.\w*$", "")
+  }
+  static file_name(&s) {
+    return RegExReplace(helperString.file_full(&s), "\.\w*$", "")
+  }
+  static file_ext(&s) {
+    if RegExMatch(s, "(\.)(\w*)$" , &G) {
+      return G[1]
+    } else {
+      return ""
+    }
+  }
   static remove_at_start(&where, what) {
     if what =  SubStr(where, 1,  StrLen(what)) { ; beginning matches
       where := SubStr(where, 1 + StrLen(what))   ; replace the beginning
