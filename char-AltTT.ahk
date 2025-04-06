@@ -141,18 +141,17 @@ csub(map,splitMode:="A",lineLen:=40,listenTimer:="") {
   ;}
 
   if (splitMode = "M") { ; Manual split mode, `n newline chars are inside map
-    Tooltip map
+    Tooltip(map)
   } else { ; Automatic split mode with map split by lineLen number of chars
     mapMulti	:= [] ; Tooltip map
     TTMulti 	:= "" ; Tooltip
-    Loops   	:= Round(StrLen(map)/lineLen) + 1
-    Loop Loops {
+    loop_c  	:= Round(StrLen(map)/lineLen) + 1
+    Loop loop_c {
       mapMulti.Push SubStr(map, 1+lineLen*(A_Index-1), lineLen)
       TTMulti .= mapMulti[A_Index] "`n"
     }
-    Tooltip Trim(TTMulti,"`n")
-  }
-  ; Read a single char with global ListenTimerShort if listenTimer is not set
+    Tooltip(Trim(TTMulti,"`n"))
+  } ; Read a single char with global ListenTimerShort if listenTimer is not set
   c := ListenChar(listenTimer="" ? ListenTimerShort : listenTimer)
   if (c) { ; char $c typed before timeout
     if (i := InStr(map, c, isCaSe:=true)) { ; Search $c in passed string $map
