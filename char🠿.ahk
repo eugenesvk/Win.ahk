@@ -102,32 +102,32 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       case  z⃣  :	char→sym(hk,'z',Dia['z'	],unset,unset,false) ;InStr(lbl🖰hide,'z'))
       case ⇧z  : 	char→sym(hk,'z',Dia['Z'	],unset,unset,false) ;InStr(lbl🖰hide,'z') & is∗)
       ; —————————— Alt symbols (math, currency etc.)
-      ;          	           hk  c  key_list        	 lblMap lblKey 🖰hide
-      case  b⃣   	: char→sym(hk,'b',Ch['Bullet'     	],unset,unset,false) ;InStr(lbl🖰hide,'b'))
-      case ⇧b    	: char→sym(hk,'b',Ch['Misc'       	],unset,unset,false) ;InStr(lbl🖰hide,'b') & is∗)
-      case  d⃣   	: char→sym(hk,'d',Ch['WinFile'    	],'Ch','WinFileLab')
-      case ⇧d    	: char→sym(hk,'d',Ch['WinFile'    	],'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'d') & is∗)
-      case v⁄    	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab')
-      case ⇧⁄    	: char→sym(hk,'/',Ch['WinFile'    	],'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'/') & is∗)
-      case  q⃣   	: char→sym(hk,'q',Ch['XSymbols'   	],'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,'q'))
-      case  p⃣   	: char→sym(hk,'p',Ch['Currency'   	],'Ch','CurrLab',false) ;InStr(lbl🖰hide,'p'))
-      case  x⃣   	: char→sym(hk,'x',Ch['Tech'       	],'Ch','TechLab',false) ;InStr(lbl🖰hide,'x'))
-      case  t⃣   	: char→sym(hk,'t',Ch['Math'       	],'Ch','MathLab',false) ;InStr(lbl🖰hide,'t'))
-      case ⇧f    	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset,false) ;InStr(lbl🖰hide,'f'))
-      case  f⃣   	: char→sym(hk,'f',Ch['Fractions'  	],unset,unset,false) ;InStr(lbl🖰hide,'f'))
-      case  v⃣   	: char→sym(hk,'v',Ch['Subscript'  	],'Ch','SubLab',false) ;InStr(lbl🖰hide,'v'))
-      case  g⃣   	: char→sym(hk,'g',Ch['Superscript'	],'Ch','SupLab',false) ;InStr(lbl🖰hide,'g'))
-      ;case  m⃣  	: char→sym(hk,'m',Ch['Dash'       	],Ch['DashLab'],'-',false) ;InStr(lbl🖰hide,''))
-      case v‐    	: char→sym(hk,'-',Ch['Dash'       	],'Ch','DashLab')
-      ;case  p⃣  	: char→sym(hk,'p',Ch['XSymbols'   	],'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,''))
-      case  r⃣   	: char→sym(hk,'r',Ch['Checks'     	],'Ch','ChecksLab',false) ;InStr(lbl🖰hide,'r'))
-      case  w⃣   	: char→sym(hk,'w',Ch['Arrows'     	],'Ch','ArrowsLab',false) ;InStr(lbl🖰hide,'w'))
-      case v‘    	: char→sym(hk, "'",Ch['QuotesS'   	],unset,unset)
-      case ⇧‘    	: char→sym(hk, "'",Ch['QuotesD'   	],unset,unset,false) ;InStr(lbl🖰hide,'`'') & is∗)
-      case ⇧ˋ    	: char→sym(hk,'``',Ch['Para'      	],unset,unset,false) ;InStr(lbl🖰hide,'``') & is∗)
-      case ⇧5    	: char→sym(hk,'5',Ch['Percent'    	],unset,unset,false) ;InStr(lbl🖰hide,'5') & is∗)
-      case ⇧4    	: char→sym(hk,'4',Ch['Currency'   	],unset,unset,false) ;InStr(lbl🖰hide,'4') & is∗)
-      case ⎈›⎇›␠⃣	: char→sym(hk,'␠',Ch['Space'      	],'Ch','SpaceLab2',false,false,false) ;
+      ;          	           hk  c  key_list         	 lblMap lblKey 🖰hide
+      case  b⃣   	: char→sym(hk,'b',ch␞('Bullet'     	),unset,unset,false) ;InStr(lbl🖰hide,'b'))
+      case ⇧b    	: char→sym(hk,'b',ch␞('Misc'       	),unset,unset,false) ;InStr(lbl🖰hide,'b') & is∗)
+      case  d⃣   	: char→sym(hk,'d',ch␞('WinFile'    	),'Ch','WinFileLab') ;
+      case ⇧d    	: char→sym(hk,'d',ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'d') & is∗)
+      case v⁄    	: char→sym(hk,'/',ch␞('WinFile'    	),'Ch','WinFileLab')
+      case ⇧⁄    	: char→sym(hk,'/',ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'/') & is∗)
+      case  q⃣   	: char→sym(hk,'q',ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,'q'))
+      case  p⃣   	: char→sym(hk,'p',ch␞('Currency'   	),'Ch','CurrLab',false) ;InStr(lbl🖰hide,'p'))
+      case  x⃣   	: char→sym(hk,'x',ch␞('Tech'       	),'Ch','TechLab',false) ;InStr(lbl🖰hide,'x'))
+      case  t⃣   	: char→sym(hk,'t',ch␞('Math'       	),'Ch','MathLab',false) ;InStr(lbl🖰hide,'t'))
+      case ⇧f    	: char→sym(hk,'f',ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
+      case  f⃣   	: char→sym(hk,'f',ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
+      case  v⃣   	: char→sym(hk,'v',ch␞('Subscript'  	),'Ch','SubLab',false) ;InStr(lbl🖰hide,'v'))
+      case  g⃣   	: char→sym(hk,'g',ch␞('Superscript'	),'Ch','SupLab',false) ;InStr(lbl🖰hide,'g'))
+      ;case  m⃣  	: char→sym(hk,'m',ch␞('Dash'       	),Ch['DashLab'],'-',false) ;InStr(lbl🖰hide,''))
+      case v‐    	: char→sym(hk,'-',ch␞('Dash'       	),'Ch','DashLab')
+      ;case  p⃣  	: char→sym(hk,'p',ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,''))
+      case  r⃣   	: char→sym(hk,'r',ch␞('Checks'     	),'Ch','ChecksLab',false) ;InStr(lbl🖰hide,'r'))
+      case  w⃣   	: char→sym(hk,'w',ch␞('Arrows'     	),'Ch','ArrowsLab',false) ;InStr(lbl🖰hide,'w'))
+      case v‘    	: char→sym(hk, "'",ch␞('QuotesS'   	),unset,unset)
+      case ⇧‘    	: char→sym(hk, "'",ch␞('QuotesD'   	),unset,unset,false) ;InStr(lbl🖰hide,'`'') & is∗)
+      case ⇧ˋ    	: char→sym(hk,'``',ch␞('Para'      	),unset,unset,false) ;InStr(lbl🖰hide,'``') & is∗)
+      case ⇧5    	: char→sym(hk,'5',ch␞('Percent'    	),unset,unset,false) ;InStr(lbl🖰hide,'5') & is∗)
+      case ⇧4    	: char→sym(hk,'4',ch␞('Currency'   	),unset,unset,false) ;InStr(lbl🖰hide,'4') & is∗)
+      case ⎈›⎇›␠⃣	: char→sym(hk,'␠',ch␞('Space'      	),'Ch','SpaceLab2',false,false,false) ;
     }
   }
   hkChar↓(hk_dirty) {
@@ -147,6 +147,17 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   }
 }
 
+ch␞(lbl) { ; remove ␞ from the list
+  arr_in := Ch[lbl]
+  arr_out := []
+  arr_out.Capacity := arr_in.Length
+  for val in arr_in {
+    if val != ␞ {
+      arr_out.push(val)
+    }
+  }
+  return arr_out
+}
 global keyOnHold := ''
 char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can␠ins:=true,blind_:=true) {
   global keyOnHold ; store info on which key is being held to avoid repeating it
