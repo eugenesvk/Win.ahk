@@ -180,12 +180,13 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
     Picker.SetFont("C" CharGUIFontColV " s" CharGUIFontSize " w400", CharGUIFontName)
     LBV := Picker.Add("ListBox", BoxVW BoxVR "AltSubmit vChoiceB" VXtra GuiOptX, colSymbol)
   } else { ; Horizontal alignment, 1. Value 2. Index (like in macOS)
-    BoxW   	:= CharGUIWidthColH * NuChars
+    CharW  	:= Min(CharGUIWidthColH, A_ScreenWidth / NuChars / DPI)
+    BoxW   	:= CharW * NuChars
+    BoxWDPI	:= CharW * NuChars * DPI ; actual Box width
     BoxIW  	:= BoxVW := " w" BoxW " "
     BoxIR  	:= BoxVR := " R" 1 " "
     VXtra  	:= " "
-    DllIW  	:= DllVW := CharGUIWidthColH*DPI ; column width passed via DllCall adjusted for DPI
-    BoxWDPI	:= CharGUIWidthColH * NuChars * DPI ; actual Box width
+    DllIW  	:= DllVW := CharW*DPI ; column width passed via DllCall adjusted for DPI
     ; get Window position relative to cursor
     static x,y
     if             pCaret = 1
