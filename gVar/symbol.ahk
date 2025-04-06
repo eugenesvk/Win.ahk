@@ -13,8 +13,8 @@ loop 8 {
 
 #include <Array>
 
-;Custom special characters, use "" or ␞ in values to signal ␤ (labels don't need to match it)
-  ;xLab - Labels, xLabR - Labels in Russian, xSp – Newline split positions, or use "" instead in values
+;Custom special characters, use ␞ in values to signal ␤ (labels don't need to match it)
+  ;xLab - Labels, xLabR - Labels in Russian, xSp – Newline split positions (or ␞)
   global Ch         	:= Map()
     Ch.CaseSense    	:= 0 ; make key matching case insensitive
     Ch["QuotesS"    	]:=["‹","›","‘","’","‚","‛"]                           	;' str→arrCh() ~10 times longer
@@ -52,7 +52,7 @@ loop 8 {
   ; global Ch["Math"]   	:= ["¬","∩","∪","∴","∵","∎","∞","×","−","±","≈","   ","√","∃","∀","π","∑","∂","∫","÷"]
   ; global Ch["MathLab"]	:= ["1","2","3","4","5","6","8","*","-","+","=","   ","q","e","a","g","s","d","i","/"]
   , Ch["MathS"          	]:=["¬","θ" ,"⇑","⇓","∗","⊂","⊃","⌈","⌉"                	,"⇒","ℚ","Ω","∃","ℝ","∴","Ψ","∪","∩","Θ","Π","⌊","⌋","∀","Σ","Δ","Φ","Γ","Λ"] ; tshorter Math ending with 1-0a-s to fit on screen for Press&Hold
-  , Ch["Math"           	]:=["¬","√" ,"θ","⇑","⇓","∞","∗","⊂","⊃"                	,"⌈","⌉","≝","⇒"	,␞
+  , Ch["Math"           	]:=["¬","√" ,"θ","⇑","⇓","∞","∗","⊂","⊃","⌈","⌉","≝","⇒"	,␞
     ,                   	    "ℚ","Ω","∃","ℝ","∴","Ψ","∪","∩","Θ","Π","⌊","⌋"     	,␞
     ,                   	    "∀","Σ","Δ","Φ","Γ","H","J","K","Λ","∈","｜"         	,␞
     ,                   	    "ℤ","Ξ","ℂ","∇","∵","ℕ","⋅","·","÷"                 	,␞
