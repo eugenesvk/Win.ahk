@@ -1,6 +1,7 @@
-﻿#Requires AutoHotKey 2.1-alpha.4
+﻿#Requires AutoHotKey 2.1-alpha.18
+; import "lib/Array" {HasValue,joinArr}
 
-HasValue(haystack, needle) { ; Checks if a value exists in an array
+export HasValue(haystack, needle) { ; Checks if a value exists in an array
   ;FoundPos := HasValue(Haystack, Needle)
   if !(IsObject(haystack)) {
     return -1
@@ -27,7 +28,7 @@ _ArrayForEach(this, func) { ; Applies a function to each key/value pair in the A
   }
 }
 
-joinArr(arrays*) {
+export joinArr(arrays*) {
   outArr := []
   for i,arr in arrays {
     if not type(arr) = 'Array' {
