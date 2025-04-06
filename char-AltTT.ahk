@@ -66,23 +66,29 @@ intersperse(pLabel, pVal, pSplit:=0, pOffset:=0, pLang:="En", &outMap:=Map(), &s
   ; insert newline splits at tSplit#s or when encountering an empty "" string or  records separator
   ; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs: indexing a string by "char" cuts unicode chars in half
   ; splitMode is changed to "M"anual if any separator is encountered
+  static seps := [␞,""]
   arComb := ""
   AllKeys := (pLang = "Ru") ? KeyboardR : Keyboard  ; Use language-specific layout for index values
-  iOff := 0
+  sep№ := 0 ; cumulative № of skips to adjust index position
   for i,val in pVal {
-    if ( val   	== rsep
-      || val   	== "") {
-      iOff--   	; allows specifying separator only in the values, but not the labels
+    no_lbl     	:= 0
+    if         	HasValue(seps  ,val) {
+      sep№--   	; allows specifying separator only in the values, but not the labels
       splitMode	:="M"
+      no_lbl   	:= 1
       delim    	:= "`n" ; split if index is in the values
-    } else if  	(HasValue(	pSplit,i)	> 0) {
+    } else if  	HasValue(pSplit,i) {
       splitMode	:="M"
       delim    	:= "`n" ; split if index is in Split hints array
-    }          	else {
+    } else     	{
       delim    	:= " "
     }          	;
-    ii         	:= i + iOff
-    lbl        	:= (ii > pLabel.Length) ? AllKeys[ii+pOffset] : pLabel[ii] ; use Full Keyboard for index when not enough Labels
+    ii         	:= i + sep№
+    if no_lbl  	{
+      lbl      	:= ""
+    } else     	{
+      lbl      	:= (ii > pLabel.Length) ? AllKeys[ii+pOffset] : pLabel[ii] ; use Full Keyboard for index when not enough Labels
+    }          	;
     arComb     	.= lbl . val . delim
     outMap[lbl]	:= val
   }
