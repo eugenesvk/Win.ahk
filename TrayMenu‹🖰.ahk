@@ -46,7 +46,7 @@ class TrayManager {
     this.trayMenu.Add("&R → Русский", MyCallbackRu)
     this.trayMenu.Add("&E → English", MyCallbackEn)
     this.trayMenu.Add("&L → Change"    , cbMenuLayoutSwitch)
-    this.trayMenu.SetIcon("&R → Русский", "img\lng-RU48.ico")
-    this.trayMenu.SetIcon("&E → English", "img\lng-US48.ico")
+    this.trayMenu.SetIcon("&R → Русский", "img\ru-RU.ico")
+    this.trayMenu.SetIcon("&E → English", "img\en-US.ico")
   }
 }

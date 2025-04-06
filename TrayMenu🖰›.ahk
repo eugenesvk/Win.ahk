@@ -11,8 +11,8 @@ initTrayMenu() {
   A_TrayMenu.Insert("&Suspend Hotkeys"	, "&F → Русский"	, MyCallbackRu)
   A_TrayMenu.Insert("&Suspend Hotkeys"	, "&В → English"	, MyCallbackEn)
   A_TrayMenu.Insert("&Suspend Hotkeys"	, ""            	,)
-  A_TrayMenu.SetIcon("&F → Русский"   	, "img\lng-RU48.ico")
-  A_TrayMenu.SetIcon("&В → English"   	, "img\lng-US48.ico")
+  A_TrayMenu.SetIcon("&F → Русский"   	, "img\ru-RU.ico")
+  A_TrayMenu.SetIcon("&В → English"   	, "img\en-US.ico")
 
   ; Rename defaults to make accelerator key more prominent
   A_TrayMenu.Rename("&Suspend Hotkeys"	, "&S Suspend Hotkeys")
