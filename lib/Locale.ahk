@@ -9,7 +9,10 @@ wapi	:= win32Constant ; various win32 API constants
 enU	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1) ; kbdus.dll
 ruU	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
 isRu() {
-  return (lyt.GetCurLayout() = ruU) ? 'Ru' : ''
+  return (lyt.GetCurLayout() = ruU) ? true : false
+  }
+lRu() {
+  return (lyt.GetCurLayout() = ruU) ? "Ru" : ""
   }
 cbMenuLayoutSwitch(ItemName, ItemPos, MyMenu) {
   LayoutSwitch()
