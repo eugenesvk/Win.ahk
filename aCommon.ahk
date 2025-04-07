@@ -13,6 +13,7 @@ ListLines 0                                  	; Potential performance boost
 SendMode("Event")                            	; avoid rehooking bugs
 SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
 ; SetTitleMatchMode(2)                       	; |2| win title can contain WinTitle anywhere inside it to be a match
+OnExit(mainExitFunc)
 
 ;Auto-Execute Section (AES), continues until Return, Exit, hotkey/hotstring label
 ;(1) AES code common to ALL macros
@@ -539,6 +540,9 @@ SetKeyDelay(-1, 0)                           	; NoDelay MinPressDuration
     } else {
       Suspend(1), WinEvent.Pause(1), Pause(1)
     }
+  }
+  mainExitFunc(ExitReason, ExitCode) {
+    WinEvent.Stop() ; evT:="Create"
   }
 
   ; !z:: ;;; temporary fast reloads
