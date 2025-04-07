@@ -2,3 +2,11 @@
 	path = language-indicator
 	url = https://github.com/eugenesvk/language-indicator
 	branch = imp_mod
+[submodule "lib/UIA"]
+	path = lib/UIA
+	url = https://github.com/eugenesvk/UIA-v2
+	branch = lib
+[submodule "lib/Acc"]
+	path = lib/Acc
+	url = https://github.com/eugenesvk/Acc-v2
+	branch = lib
