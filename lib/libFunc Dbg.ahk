@@ -21,7 +21,7 @@ log(dbgMin:=0, Text:="", fn:='',idTT:=0,X:=0,Y:=0) { ; print to debug, so leave 
     OutputDebug(Text (idTT?idTT ': ':'') (fn?' @' fn:''))
   }
 }
-dbgTT(dbgMin:=0, Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) { ;dbgTT(0,"",🕐:=1,id:=0,x:=-1,y:=-1)
+dbgTT(dbgMin:=0, Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) { ;(dbg<_d)?'':(dbgTT(0,"",🕐:=1,id:=0,x:=-1,y:=-1))
   if (dbg >= dbgMin) {
     TT(Text, Time,idTT,X,Y)
   }
