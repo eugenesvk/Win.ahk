@@ -444,6 +444,34 @@ class helperString {
     return {h:dbghook,p:dbghook, l:dbglogic}
   }
 
+  static ahk→modi_f(&k) { ; ahk combo to modifier flag
+    modi_f := 0
+    l:=1,r:=1 ; only check either if both explicit sides are missing
+    InStr(k,"<+"	) ? modi_f |= f‹⇧	: l:=0
+    InStr(k,">+"	) ? modi_f |= f⇧›	: r:=0
+    if !(l+r)   	{
+    InStr(k,"+" 	) ? modi_f |= f⇧	: ''
+    }
+    l:=1,r:=1
+    InStr(k,"<^"	) ? modi_f |= f‹⎈	: l:=0
+    InStr(k,">^"	) ? modi_f |= f⎈›	: r:=0
+    if !(l+r)   	{
+    InStr(k,"^" 	) ? modi_f |= f⎈	: ''
+    }
+    l:=1,r:=1
+    InStr(k,"<#"	) ? modi_f |= f‹◆	: l:=0
+    InStr(k,">#"	) ? modi_f |= f◆›	: r:=0
+    if !(l+r)   	{
+    InStr(k,"#" 	) ? modi_f |= f◆	: ''
+    }
+    l:=1,r:=1
+    InStr(k,"<!"	) ? modi_f |= f‹⎇	: l:=0
+    InStr(k,">!"	) ? modi_f |= f⎇›	: r:=0
+    if !(l+r)   	{
+    InStr(k,"!" 	) ? modi_f |= f⎇	: ''
+    }
+    return modi_f
+  }
   static whichModText(fmod) { ; convert mod flags into a string with 2 rows for left/right variants
     modTxt := '‹'
     modTxt .= (fmod & f‹⇧  	) ? '⇧'   	: '  ' ;left shift
@@ -462,6 +490,60 @@ class helperString {
     modTxt                 	.= '›'    	;
     modTxt .= (fmod & f🔢   	) ? '🔢'   	: ' ' ;num  lock
     return modTxt
+  }
+  static mod→str(fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
+    sm := '' ; ↓ 1 extra check to allow for sequential checks
+    sm .= (fm & f‹⇧  	) ? '‹'   	: '' ;left shift
+    sm .= (fm & f⇧   	) ? '⇧'   	: '' ;     shift
+    sm .= (fm & f⇧›  	) ? '›'   	: '' ;right shift
+    sm .= (fm & f‹⎈  	) ? '‹'   	: '' ;left ctrl
+    sm .= (fm & f⎈   	) ? '⎈'   	: '' ;     ctrl
+    sm .= (fm & f⎈›  	) ? '›'   	: '' ;right ctrl
+    sm .= (fm & f‹◆  	) ? '‹'   	: '' ;left super ❖◆ (win ⊞)
+    sm .= (fm & f◆   	) ? '◆'   	: '' ;     super ❖◆ (win ⊞)
+    sm .= (fm & f◆›  	) ? '›'   	: '' ;right super ❖◆ (win ⊞)
+    sm .= (fm & f‹⎇  	) ? '‹'   	: '' ;left alt
+    sm .= (fm & f⎇   	) ? '⎇'   	: '' ;     alt
+    sm .= (fm & f⎇›  	) ? '›'   	: '' ;right alt
+    sm .= (fm & f‹👍  	) ? '‹'   	: '' ;left Oyayubi 親指
+    sm .= (fm & f👍   	) ? '👍'   	: '' ;   Oyayubi
+    sm .= (fm & f👍›  	) ? '›'   	: '' ;right Oyayubi 親指
+    sm .= (fm & f⇪   	) ? '⇪'   	: '' ;caps lock
+    sm .= (fm & fkana	) ? 'kana'	: '' ;kana fかな
+    sm .= (fm & f🔢   	) ? '🔢'   	: '' ;num  lock
+    return sm
+  }
+  static mod→arr(fm) { ; convert mod flags into an array of strings
+    am := []
+    l:=            (fm & f‹⇧)
+    r:=            (fm & f⇧›)
+    m:=(l+r) ? 1 : (fm & f⇧ )
+    s:= (l?'‹':'') . (m?'⇧':'') . (r?'›':'')
+    am.push(s)
+    l:=            (fm & f‹⎈)
+    r:=            (fm & f⎈›)
+    m:=(l+r) ? 1 : (fm & f⎈ )
+    s:= (l?'‹':'') . (m?'⎈':'') . (r?'›':'')
+    am.push(s)
+    l:=            (fm & f‹◆)
+    r:=            (fm & f◆›)
+    m:=(l+r) ? 1 : (fm & f◆ )
+    s:= (l?'‹':'') . (m?'◆':'') . (r?'›':'')  ;❖◆ (win ⊞)
+    am.push(s)
+    l:=            (fm & f‹⎇)
+    r:=            (fm & f⎇›)
+    m:=(l+r) ? 1 : (fm & f⎇ )
+    s:= (l?'‹':'') . (m?'⎇':'') . (r?'›':'')
+    am.push(s)
+    l:=            (fm & f‹👍)
+    r:=            (fm & f👍›)
+    m:=(l+r) ? 1 : (fm & f👍 )
+    s:= (l?'‹':'') . (m?'👍':'') . (r?'›':'')
+    am.push(s)
+    am.push((fm & f⇪   ) ? '⇪' : '') ;caps lock
+    am.push((fm & fkana) ? 'kana' : '') ;kana fかな
+    am.push((fm & f🔢  ) ? '🔢' : '') ;num  lock
+    return am
   }
   static whichModTextLine(fmod) { ; convert mod flags into a single line string
     modTxt := ''
