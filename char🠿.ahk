@@ -77,55 +77,55 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       default  : return ; dbgtt(0,'nothing matched setChar🠿 hk=' . hk, 4) ;
       ; Hotkey created → key name and ordering of its modifier symbols gets fixed
       ; —————————— Diacritic hk  c  key_list lblMap lblKey 🖰hide
-      case  a⃣  :	char→sym(hk,'a',Dia['a'	],unset,unset,false) ;InStr(lbl🖰hide,'a'))
-      case ⇧a  : 	char→sym(hk,'a',Dia['A'	],unset,unset,false) ;InStr(lbl🖰hide,'a') & is∗)
-      case  c⃣  :	char→sym(hk,'c',Dia['c'	],unset,unset,false) ;InStr(lbl🖰hide,'c'))
-      case ⇧c  : 	char→sym(hk,'c',Dia['C'	],unset,unset,false) ;InStr(lbl🖰hide,'c') & is∗)
-      case  e⃣  :	char→sym(hk,'e',Dia['e'	],unset,unset,false) ;InStr(lbl🖰hide,'e'))
-      case ⇧e  : 	char→sym(hk,'e',Dia['E'	],unset,unset,false) ;InStr(lbl🖰hide,'e') & is∗)
-      case  i⃣  :	char→sym(hk,'i',Dia['i'	],unset,unset,false) ;InStr(lbl🖰hide,'i'))
-      case ⇧i  : 	char→sym(hk,'i',Dia['I'	],unset,unset,false) ;InStr(lbl🖰hide,'i') & is∗)
-      case  l⃣  :	char→sym(hk,'l',Dia['l'	],unset,unset,false) ;InStr(lbl🖰hide,'l'))
-      case ⇧l  : 	char→sym(hk,'l',Dia['L'	],unset,unset,false) ;InStr(lbl🖰hide,'l') & is∗)
-      case  n⃣  :	char→sym(hk,'n',Dia['n'	],unset,unset,false) ;InStr(lbl🖰hide,'n'))
-      case ⇧n  : 	char→sym(hk,'n',Dia['N'	],unset,unset,false) ;InStr(lbl🖰hide,'n') & is∗)
-      case  o⃣  :	char→sym(hk,'o',Dia['o'	],unset,unset,false) ;InStr(lbl🖰hide,'o'))
-      case ⇧o  : 	char→sym(hk,'o',Dia['O'	],unset,unset,false) ;InStr(lbl🖰hide,'o') & is∗)
-      case  s⃣  :	char→sym(hk,'s',Dia['s'	],unset,unset,false) ;InStr(lbl🖰hide,'s'))
-      case ⇧s  : 	char→sym(hk,'s',Dia['S'	],unset,unset,false) ;InStr(lbl🖰hide,'s') & is∗)
-      case  u⃣  :	char→sym(hk,'u',Dia['u'	],unset,unset,false) ;InStr(lbl🖰hide,'u'))
-      case ⇧u  : 	char→sym(hk,'u',Dia['U'	],unset,unset,false) ;InStr(lbl🖰hide,'u') & is∗)
-      case  y⃣  :	char→sym(hk,'y',Dia['y'	],unset,unset,false) ;InStr(lbl🖰hide,'y'))
-      case ⇧y  : 	char→sym(hk,'y',Dia['Y'	],unset,unset,false) ;InStr(lbl🖰hide,'y') & is∗)
-      case  z⃣  :	char→sym(hk,'z',Dia['z'	],unset,unset,false) ;InStr(lbl🖰hide,'z'))
-      case ⇧z  : 	char→sym(hk,'z',Dia['Z'	],unset,unset,false) ;InStr(lbl🖰hide,'z') & is∗)
+      case  a⃣  :	char→sym(hk,Dia['a'],unset,unset,false) ;InStr(lbl🖰hide,'a'))
+      case ⇧a  : 	char→sym(hk,Dia['A'],unset,unset,false) ;InStr(lbl🖰hide,'a') & is∗)
+      case  c⃣  :	char→sym(hk,Dia['c'],unset,unset,false) ;InStr(lbl🖰hide,'c'))
+      case ⇧c  : 	char→sym(hk,Dia['C'],unset,unset,false) ;InStr(lbl🖰hide,'c') & is∗)
+      case  e⃣  :	char→sym(hk,Dia['e'],unset,unset,false) ;InStr(lbl🖰hide,'e'))
+      case ⇧e  : 	char→sym(hk,Dia['E'],unset,unset,false) ;InStr(lbl🖰hide,'e') & is∗)
+      case  i⃣  :	char→sym(hk,Dia['i'],unset,unset,false) ;InStr(lbl🖰hide,'i'))
+      case ⇧i  : 	char→sym(hk,Dia['I'],unset,unset,false) ;InStr(lbl🖰hide,'i') & is∗)
+      case  l⃣  :	char→sym(hk,Dia['l'],unset,unset,false) ;InStr(lbl🖰hide,'l'))
+      case ⇧l  : 	char→sym(hk,Dia['L'],unset,unset,false) ;InStr(lbl🖰hide,'l') & is∗)
+      case  n⃣  :	char→sym(hk,Dia['n'],unset,unset,false) ;InStr(lbl🖰hide,'n'))
+      case ⇧n  : 	char→sym(hk,Dia['N'],unset,unset,false) ;InStr(lbl🖰hide,'n') & is∗)
+      case  o⃣  :	char→sym(hk,Dia['o'],unset,unset,false) ;InStr(lbl🖰hide,'o'))
+      case ⇧o  : 	char→sym(hk,Dia['O'],unset,unset,false) ;InStr(lbl🖰hide,'o') & is∗)
+      case  s⃣  :	char→sym(hk,Dia['s'],unset,unset,false) ;InStr(lbl🖰hide,'s'))
+      case ⇧s  : 	char→sym(hk,Dia['S'],unset,unset,false) ;InStr(lbl🖰hide,'s') & is∗)
+      case  u⃣  :	char→sym(hk,Dia['u'],unset,unset,false) ;InStr(lbl🖰hide,'u'))
+      case ⇧u  : 	char→sym(hk,Dia['U'],unset,unset,false) ;InStr(lbl🖰hide,'u') & is∗)
+      case  y⃣  :	char→sym(hk,Dia['y'],unset,unset,false) ;InStr(lbl🖰hide,'y'))
+      case ⇧y  : 	char→sym(hk,Dia['Y'],unset,unset,false) ;InStr(lbl🖰hide,'y') & is∗)
+      case  z⃣  :	char→sym(hk,Dia['z'],unset,unset,false) ;InStr(lbl🖰hide,'z'))
+      case ⇧z  : 	char→sym(hk,Dia['Z'],unset,unset,false) ;InStr(lbl🖰hide,'z') & is∗)
       ; —————————— Alt symbols (math, currency etc.)
-      ;          	           hk  c  key_list         	 lblMap lblKey 🖰hide
-      case  b⃣   	: char→sym(hk,'b',ch␞('Bullet'     	),unset,unset,false) ;InStr(lbl🖰hide,'b'))
-      case ⇧b    	: char→sym(hk,'b',ch␞('Misc'       	),unset,unset,false) ;InStr(lbl🖰hide,'b') & is∗)
-      case  d⃣   	: char→sym(hk,'d',ch␞('WinFile'    	),'Ch','WinFileLab') ;
-      case ⇧d    	: char→sym(hk,'d',ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'d') & is∗)
-      case v⁄    	: char→sym(hk,'/',ch␞('WinFile'    	),'Ch','WinFileLab')
-      case ⇧⁄    	: char→sym(hk,'/',ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'/') & is∗)
-      case  q⃣   	: char→sym(hk,'q',ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,'q'))
-      case  p⃣   	: char→sym(hk,'p',ch␞('Currency'   	),'Ch','CurrLab',false) ;InStr(lbl🖰hide,'p'))
-      case  x⃣   	: char→sym(hk,'x',ch␞('Tech'       	),'Ch','TechLab',false) ;InStr(lbl🖰hide,'x'))
-      case  t⃣   	: char→sym(hk,'t',ch␞('Math'       	),'Ch','MathLab',false) ;InStr(lbl🖰hide,'t'))
-      case ⇧f    	: char→sym(hk,'f',ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
-      case  f⃣   	: char→sym(hk,'f',ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
-      case  v⃣   	: char→sym(hk,'v',ch␞('Subscript'  	),'Ch','SubLab',false) ;InStr(lbl🖰hide,'v'))
-      case  g⃣   	: char→sym(hk,'g',ch␞('Superscript'	),'Ch','SupLab',false) ;InStr(lbl🖰hide,'g'))
-      ;case  m⃣  	: char→sym(hk,'m',ch␞('Dash'       	),Ch['DashLab'],'-',false) ;InStr(lbl🖰hide,''))
-      case v‐    	: char→sym(hk,'-',ch␞('Dash'       	),'Ch','DashLab')
-      ;case  p⃣  	: char→sym(hk,'p',ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,''))
-      case  r⃣   	: char→sym(hk,'r',ch␞('Checks'     	),'Ch','ChecksLab',false) ;InStr(lbl🖰hide,'r'))
-      case  w⃣   	: char→sym(hk,'w',ch␞('Arrows'     	),'Ch','ArrowsLab',false) ;InStr(lbl🖰hide,'w'))
-      case v‘    	: char→sym(hk, "'",ch␞('QuotesS'   	),unset,unset)
-      case ⇧‘    	: char→sym(hk, "'",ch␞('QuotesD'   	),unset,unset,false) ;InStr(lbl🖰hide,'`'') & is∗)
-      case ⇧ˋ    	: char→sym(hk,'``',ch␞('Para'      	),unset,unset,false) ;InStr(lbl🖰hide,'``') & is∗)
-      case ⇧5    	: char→sym(hk,'5',ch␞('Percent'    	),unset,unset,false) ;InStr(lbl🖰hide,'5') & is∗)
-      case ⇧4    	: char→sym(hk,'4',ch␞('Currency'   	),unset,unset,false) ;InStr(lbl🖰hide,'4') & is∗)
-      case ⎈›⎇›␠⃣	: char→sym(hk,'␠',ch␞('Space'      	),'Ch','SpaceLab2',false,false,false) ;
+      ;          	           hk  c  key_list     	 lblMap lblKey 🖰hide
+      case  b⃣   	: char→sym(hk,ch␞('Bullet'     	),unset,unset,false) ;InStr(lbl🖰hide,'b'))
+      case ⇧b    	: char→sym(hk,ch␞('Misc'       	),unset,unset,false) ;InStr(lbl🖰hide,'b') & is∗)
+      case  d⃣   	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab') ;
+      case ⇧d    	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'d') & is∗)
+      case v⁄    	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab')
+      case ⇧⁄    	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'/') & is∗)
+      case  q⃣   	: char→sym(hk,ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,'q'))
+      case  p⃣   	: char→sym(hk,ch␞('Currency'   	),'Ch','CurrLab',false) ;InStr(lbl🖰hide,'p'))
+      case  x⃣   	: char→sym(hk,ch␞('Tech'       	),'Ch','TechLab',false) ;InStr(lbl🖰hide,'x'))
+      case  t⃣   	: char→sym(hk,ch␞('Math'       	),'Ch','MathLab',false) ;InStr(lbl🖰hide,'t'))
+      case ⇧f    	: char→sym(hk,ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
+      case  f⃣   	: char→sym(hk,ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
+      case  v⃣   	: char→sym(hk,ch␞('Subscript'  	),'Ch','SubLab',false) ;InStr(lbl🖰hide,'v'))
+      case  g⃣   	: char→sym(hk,ch␞('Superscript'	),'Ch','SupLab',false) ;InStr(lbl🖰hide,'g'))
+      ;case  m⃣  	: char→sym(hk,ch␞('Dash'       	),Ch['DashLab'],'-',false) ;InStr(lbl🖰hide,''))
+      case v‐    	: char→sym(hk,ch␞('Dash'       	),'Ch','DashLab')
+      ;case  p⃣  	: char→sym(hk,ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,''))
+      case  r⃣   	: char→sym(hk,ch␞('Checks'     	),'Ch','ChecksLab',false) ;InStr(lbl🖰hide,'r'))
+      case  w⃣   	: char→sym(hk,ch␞('Arrows'     	),'Ch','ArrowsLab',false) ;InStr(lbl🖰hide,'w'))
+      case v‘    	: char→sym(hk,ch␞('QuotesS'    	),unset,unset)
+      case ⇧‘    	: char→sym(hk,ch␞('QuotesD'    	),unset,unset,false) ;InStr(lbl🖰hide,'`'') & is∗)
+      case ⇧ˋ    	: char→sym(hk,ch␞('Para'       	),unset,unset,false) ;InStr(lbl🖰hide,'``') & is∗)
+      case ⇧5    	: char→sym(hk,ch␞('Percent'    	),unset,unset,false) ;InStr(lbl🖰hide,'5') & is∗)
+      case ⇧4    	: char→sym(hk,ch␞('Currency'   	),unset,unset,false) ;InStr(lbl🖰hide,'4') & is∗)
+      case ⎈›⎇›␠⃣	: char→sym(hk,ch␞('Space'      	),'Ch','SpaceLab2',false,false,false) ;
     }
   }
   hkChar↓(hk_dirty) {
@@ -139,7 +139,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       ; Hotkey created → key name and ordering of its modifier symbols gets fixed
       ; —————————— Alt symbols (math, currency etc.)
       ;          	           hk  c  key_list  	 lblMap lblKey 🖰hide
-      case ⎈›⎇›␠⃣	: char→sym(hk,'␠',Ch['Space'	],'Ch','SpaceLab2',false,false,false) ;
+      case ⎈›⎇›␠⃣	: char→sym(hk,Ch['Space'	],'Ch','SpaceLab2',false,false,false) ;
       ;
     }
   }
@@ -157,7 +157,7 @@ ch␞(lbl) { ; remove ␞ from the list
   return arr_out
 }
 global keyOnHold := ''
-char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can␠ins:=true,blind_:=true) {
+char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can␠ins:=true,blind_:=true) {
   global keyOnHold ; store info on which key is being held to avoid repeating it
   static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
    , get⎀ 	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
@@ -171,7 +171,11 @@ char→sym(hk,c,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,ca
     lbl_translit.CaseSense	:= 0
   }
 
-  vkC := s.key→ahk(c) ; vkC := Format("vk{:X}",GetKeyVK(c)) bugs with locale
+  modi_f := s.ahk→modi_f(&hk)
+  s.parseKeyCombo(hk,&armod,&vkC)
+  c := GetKeyName(vkC)
+  ; vkC := s.key→ahk(c) ; vkC := Format("vk{:X}",GetKeyVK(c)) bugs with locale
+  ; dbgtt(0,"c = " c " vkC=" vkC " f=" modi_f,2) ;
   ; dbgTT(0,' hk=`t' hk '`nhkThis=`t' A_ThisHotkey '`nhkPrior=`t' A_PriorHotkey '`n kPrior=`t' A_PriorKey,t:=1)
   if keyOnHold == hk { ; previous key was the same, so we're KeyWaiting, don't repeat
     return
