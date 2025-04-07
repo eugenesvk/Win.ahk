@@ -24,8 +24,14 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
        asdfghjkl;
        zxcvbnm,.-=[]'\/`
       )"
+   , _d  := 0 ;
+   , _d1 := 1 ;
+   , _d2 := 2 ;
+   , _d3 := 3 ;
   local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
   sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
+  Trigger  := StrLower(pTrigger)
+  TriggerU := StrUpper(pTrigger)
 
   if lbl_cust.Count = 0 { ; can set case only on empty maps
     lbl_cust.CaseSense	:= 0
@@ -43,17 +49,26 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
     lbl_cust[sLng] := s.convert_lyt_arr(lbl_cust['en'],sLng,&ℯ:="")
   }
 
-  if IsSet(pLabel) { ; if passed (should be an array) create a local copy to avoid a bug:
+  AllKeys  := isRu() ? KeyboardRNoCap : KeyboardNoCap ; Use language-specific layout for index values
+  Labels := []
+  if IsSet(pLabel) && (Type(pLabel)="Array") { ; if array passed create a local copy to avoid a bug
     Labels := pLabel.Clone() ; if pTrigger='a' and matches/removes the first element of pLabel=['a','b'] subsequent calls would show pLabel as ['','b'] even when pTrigger is not 'a' anymore
-  } else {
-    if lbl_cust.Has(sLng) {
-      Labels := lbl_cust[sLng].Clone() ;  clone to avoid ↓ cutting lbl_en_arr instead of just Labels
-    } else {
-      Labels := lbl_cust['en'].Clone() ;  clone to avoid ↓ cutting lbl_en_arr instead of just Labels
+    missing := pChars.Length - Labels.Length
+    if        missing > 0 { ; add missing   labels
+      for c in AllKeys {
+        if !HasValue(pLabel, c) {
+          Labels.push(c)
+          missing -= 1
+          if missing <= 0 {
+            break
+          }
+        }
+      }
+    } else if missing < 0 { ; cut excessive labels
+      Labels.Capacity := pChars.Length
     }
-    Labels.Capacity := pChars.Length
   }
-  dbgTT(3,'pTrigger=' pTrigger ' pHorV=' pHorV ' pis␈=' pis␈ ' pCaret=' ((type(pCaret)='Array') ? (pCaret[1] '¦' pCaret[2]) : pCaret) ,t:=2) ;
+  (dbg<_d3)?'':(dbgTT(0,Trigger "¦" TriggerU "¦ pTrigger|U" pHorV "¦=pHorV ¦" pis␈ "¦=pis␈ pCaret=" ((type(pCaret)='Array') ? (pCaret[1] '¦' pCaret[2]) : pCaret) ,4)) ;🕐
 
   #MaxThreadsPerHotkey 1    ;;;
   global is␈ 	:= pis␈  	; Copy of parameter for another function
@@ -72,22 +87,10 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
   } else { ; default to Horizontal for all other values
     FlowDir := "+" LBS_MultiColumn
   }
-  pTriggerNo	:= Ord(StrLower(pTrigger))	; Numeric character code of the trigger key
-  GuiTitle  	:= "PressH: Select a special character"
+  GuiTitle	:= "PressH: Select a special character"
   if WinExist(GuiTitle) { ; show exisitng GUI (when minimized or 2 threads)
     WinActivate
     return
-  }
-
-  static lbl_sub     	:= Map() ; map to store substitute layout-specific labels to use when trigger key matches existing labels
-  if lbl_sub.Count   	= 0 { ; can set case only on empty maps
-    lbl_sub.CaseSense	:= 0
-  }
-  if not lbl_sub.Has('en') {
-    lbl_sub['en'] := 'zyxwvutsrqponmlkjihgfedcba123456789'
-  }
-  if not lbl_sub.Has('ru') {
-    lbl_sub['ru'] := 'яюэьыъщшчцхфутсрпонмлкйизжёедгвба123456789'
   }
 
   ; HotIfWinActive   	 GuiTitle    	; Catch Arrow hotkeys while GUI is active
@@ -112,55 +115,49 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
 
   CharChoice:= "", colIndex:=[], colSymbol:=[], skipLbl := 0
   NuChars := pChars.Length
-  For i in pChars {
-    colSymbol.Push(pChars[A_Index])
-    if (A_Index <= (9+26)) { ; 9numbers+26letters=35 symbols
-      symStart  	:= 97 ; start with Lowercase 'a'(#97)
-      LabelChInd	:= symStart+(A_Index-1)-9 ; ... after 9numbers
-    } else if (A_Index <= (9+26+16)) { ; +16 from 0x20–2F range = 51symbols
-      symStart  	:= 32 ; continue with Space(32), then Shift+# (#33)
-      LabelChInd	:= symStart+(A_Index-1)-35 ; ... after 35symbols
-      skipLblBk 	:= skipLbl ; don't skip invoking trigger in symbols
-      skipLbl   	:= 0 ; after z will be {, no need to adjust LabelChInd
-    } else {
-      skipLbl   	:= skipLblBk ; restore skipping invoking trigger
-      symStart  	:= 65 ; continue with Uppercase 'A'(#65)
-      LabelChInd	:= symStart+(A_Index-1)-51 ; ...after 51symbols
+  if Labels.Length > 0 { ; use manual labels
+    for i, c in pChars {
+      colSymbol.Push(pChars[i])
     }
-    if (LabelChInd = pTriggerNo) { ; if invoking trigger key matches the label key...
-      skipLbl := 1 ; ...skip it...
-    }
-    LabelChar	:= Chr(LabelChInd+skipLbl) ; ...by adding to the index
-    if (A_Index < 10) {
-      colIndex.Push(A_Index)
-    } else {
-      colIndex.Push(LabelChar)
-    }
-    ; Common character codes include 9 (tab), 10 (linefeed), 13 (carriage return), 32 (space), 48-57 (the digits 0-9), 65-90 (uppercase A-Z), and 97-122 (lowercase a-z)
-  }
-  if (Type(Labels)="Array") { ; use manual labels
-    if Labels.Length < pChars.Length { ; pad Labels' array if it's shorter to avoid a selection error for a non-existing label element
-      Loop (pChars.Length - Labels.Length) {
-        Labels.Push("")
-      }
-    } else if Labels.Length > pChars.Length {
-      Labels.Capacity := pChars.Length ; cut label's array if it's longer to avoid index error
-    }
-    pTriggerIndex := HasValue(Labels,pTrigger)
-    static labelSub := ' '
-    label_list := lbl_sub.Has(sLng) ? lbl_sub[sLng] : lbl_sub['en']
-    if (pTriggerIndex >0 ) {	; if Labels includes pTrigger ...
-      loop parse (labelSub . label_list) { ; loop through labels to see which one is free
-        if HasValue(Labels,A_LoopField) {
-          Continue
-        } else {
-          labelSub := A_LoopField
-          Labels[pTriggerIndex] := labelSub	; replace pTrigger with space (alt: "" since some labels use space)
-          Break
+    set_space := false
+    for i, l in Labels { ; remove trigger key
+      if ((l == Trigger)
+        ||(l == TriggerU)) {
+        if !set_space && (pTrigger != " ") { ; replace 1st dupe with space unless trigger is space
+          (dbg<_d3)?'':(dbgtt(0,"replaced dupe ¦" l "¦ with ¦␠¦",5))
+          set_space := true
+          Labels[i] := " "
+        } else { ; replace dupe with any unique letter remaining
+          for c in AllKeys {
+            if !HasValue(Labels, c) {
+              (dbg<_d3)?'':(dbgtt(0,"replaced dupe ¦" l "¦ with ¦" c "¦",5))
+              Labels[i] := c
+              break
+            }
+          }
         }
       }
     }
     colIndex := Labels
+  } else { ; automatic labels
+    i_off := 0
+    set_space := false
+    for i, c in pChars {
+      colSymbol.Push(pChars[i])
+      ii := i + i_off
+      LabelChar   := (ii > AllKeys.Length) ? "" : AllKeys[ii]
+      while ((LabelChar == Trigger )
+        ||   (LabelChar == TriggerU)) { ; skip lower/upper
+        i_off += 1, ii := i + i_off
+        if !set_space && (pTrigger != " ") { ; replace 1st dupe with space unless trigger is space
+          set_space := true
+          LabelChar := " "
+        } else {
+          LabelChar := (ii > AllKeys.Length) ? "" : AllKeys[ii]
+        }
+      } ; Common character codes include 9 (tab), 10 (linefeed), 13 (carriage return), 32 (space), 48-57 (the digits 0-9), 65-90 (uppercase A-Z), and 97-122 (lowercase a-z)
+      colIndex.Push(LabelChar)
+    }
   }
 
   ChoiceA := 0, ChoiceB := 0, LocLB := ""
