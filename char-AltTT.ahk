@@ -8,16 +8,17 @@ keysCsub() ;⎇K⃣  adds accent to the next key. /board/topic/27801-special-cha
 keysCsub() { ; longer (and dupe), but can use ⇧ and adds to help
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
+   , p    	:= helperPath
    , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
-  hk🛈("⇧⎇/​" 	,hkCSub,,Map("h","´ acute"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇``​"	,hkCSub,,Map("h","` grave"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇c​" 	,hkCSub,,Map("h","ˆ circumflex"      	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇u​" 	,hkCSub,,Map("h","¨ diaeresis/umlaut"	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇m​" 	,hkCSub,,Map("h","¯ macron"          	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇e​" 	,hkCSub,,Map("h","~ tilde"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇o​" 	,hkCSub,,Map("h","others"            	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇p​" 	,hkCSub,,Map("h","others2"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇/​" 	,hkCSub,,Map("h","´ acute"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇``​"	,hkCSub,,Map("h","` grave"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇c​" 	,hkCSub,,Map("h","ˆ circumflex"      	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇u​" 	,hkCSub,,Map("h","¨ diaeresis/umlaut"	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇m​" 	,hkCSub,,Map("h","¯ macron"          	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇e​" 	,hkCSub,,Map("h","~ tilde"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇o​" 	,hkCSub,,Map("h","others"            	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇p​" 	,hkCSub,,Map("h","others2"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
 }
 hkCsub(hk_dirty) {
   static k := helperString.key→ahk.Bind(helperString)
@@ -39,27 +40,28 @@ keysAltTT()
 keysAltTT() { ;⎇K⃣  various symbols in a popup panel
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
+   , p    	:= helperPath
    , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
-  hk🛈("‹⎇``​​"	,hkAltTT,,Map("h","Paragraphs"       	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇1​"  	,hkAltTT,,Map("h","Single Quotes"    	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇2​"  	,hkAltTT,,Map("h","Double Quotes"    	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇4​"  	,hkAltTT,,Map("h","currency"         	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇5​"  	,hkAltTT,,Map("h","Percent"          	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇6​"  	,hkAltTT,,Map("h","Superscript"      	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇7​"  	,hkAltTT,,Map("h","Subscript"        	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇8​"  	,hkAltTT,,Map("h","Fractions"        	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇9​"  	,hkAltTT,,Map("h","‹"                	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇0​"  	,hkAltTT,,Map("h","›"                	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇r​"  	,hkAltTT,,Map("h","Misc"             	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇q​"  	,hkAltTT,,Map("h","system"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇a​"  	,hkAltTT,,Map("h","Arrows"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇t​"  	,hkAltTT,,Map("h","Math"             	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇y​"  	,hkAltTT,,Map("h","Math"             	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇d​"  	,hkAltTT,,Map("h","Illegal Filenames"	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇b​"  	,hkAltTT,,Map("h","Bullet"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇k​"  	,hkAltTT,,Map("h","TypES with ⌥"     	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇l​"  	,hkAltTT,,Map("h","TypES with ⌥⇧"    	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("‹⎇``​​"	,hkAltTT,,Map("h","Paragraphs"       	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇1​"  	,hkAltTT,,Map("h","Single Quotes"    	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇2​"  	,hkAltTT,,Map("h","Double Quotes"    	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇4​"  	,hkAltTT,,Map("h","currency"         	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇5​"  	,hkAltTT,,Map("h","Percent"          	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇6​"  	,hkAltTT,,Map("h","Superscript"      	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇7​"  	,hkAltTT,,Map("h","Subscript"        	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇8​"  	,hkAltTT,,Map("h","Fractions"        	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇9​"  	,hkAltTT,,Map("h","‹"                	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇0​"  	,hkAltTT,,Map("h","›"                	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇r​"  	,hkAltTT,,Map("h","Misc"             	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇q​"  	,hkAltTT,,Map("h","system"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇a​"  	,hkAltTT,,Map("h","Arrows"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇t​"  	,hkAltTT,,Map("h","Math"             	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇y​"  	,hkAltTT,,Map("h","Math"             	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇d​"  	,hkAltTT,,Map("h","Illegal Filenames"	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇b​"  	,hkAltTT,,Map("h","Bullet"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇k​"  	,hkAltTT,,Map("h","TypES with ⌥"     	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇l​"  	,hkAltTT,,Map("h","TypES with ⌥⇧"    	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
 }
 hkAltTT(hk_dirty) {
   static k := helperString.key→ahk.Bind(helperString)
