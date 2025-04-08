@@ -8,6 +8,15 @@
 
 XButton2::	SendInput("{Backspace}"	) ; Set🖰G​4​ XButton2 ⟶␈
 XButton1::	SendInput("{Enter}"    	) ; Set🖰G​5​ XButton1 ⟶⏎
+; #HotIf WinActive("ahk_class ApplicationFrameWindow") And WinActive("ahk_exe ApplicationFrameHost.exe") And WinActive("Readiy") ;[App Readiy]
+;   XButton1::  SendInput '{Left}' ;[G6/G7] G700s mouse to ←→ (for switching to previous/next article)
+;   XButton2::  SendInput '{Right}'
+; #HotIf
+; #HotIf WinActive("ahk_group WinTerm") ; Windows Terminal
+;   XButton1::  SendInput '^+{Tab}' ;🖰G​7​  vk05 ⟶ ^⇧⭾ previous tab
+;   XButton2::  SendInput '^{Tab}'  ;🖰G​6   vk06 ⟶ ^⭾ next tab
+; #HotIf
+
 ; Tab Left/Right with mouse top 2 buttons on the left side
   #HotIf !WinActive("ahk_group Games")
   ; remap G7 mouse key to ❖ on hold (to use for AltDrag window functions)

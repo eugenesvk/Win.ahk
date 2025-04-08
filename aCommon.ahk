@@ -684,16 +684,6 @@ OnExit(mainExitFunc)
   !2::	SendInput '^{Tab}'
 #HotIf
 
-#HotIf WinActive("ahk_class ApplicationFrameWindow") And WinActive("ahk_exe ApplicationFrameHost.exe") And WinActive("Readiy") ;[App Readiy]
-  XButton1::	SendInput '{Left}' ;[G6/G7] G700s mouse to ←→ (for switching to previous/next article)
-  XButton2::	SendInput '{Right}'
-#HotIf
-
-#HotIf WinActive("ahk_group WinTerm") ; Windows Terminal
-  XButton1::	SendInput '^+{Tab}'	;🖰G​7​	vk05 ⟶ ^⇧⭾ previous tab
-  XButton2::	SendInput '^{Tab}' 	;🖰G​6 	vk06 ⟶ ^⭾ next tab
-#HotIf
-
 ; #HotIfWinActive ahk_exe EXCEL.EXE ;Ctrl⌥+←/→/↑/↓ Scroll Left/Right/Up/Down
 ;	^!Left::                              ; Scroll Left
 ;		SetScrollLockState(1)
