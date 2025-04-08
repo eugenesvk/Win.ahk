@@ -141,6 +141,11 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
     colIndex := Labels
   } else { ; automatic labels
     i_off := 0
+    if IsSet(pLabel) && (Type(pLabel)="String") {
+      if (i_found := HasValue(AllKeys, pLabel)) {
+        i_off := i_found - 1
+      }
+    }
     set_space := false
     for i, c in pChars {
       colSymbol.Push(pChars[i])
