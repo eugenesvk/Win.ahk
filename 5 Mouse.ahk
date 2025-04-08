@@ -6,8 +6,8 @@
   ^!WheelUp::   	SendInput '{PgUp}'	;⌥🖱↑​	vk9F ⟶ PgUp
   ^!WheelDown:: 	SendInput '{PgDn}'	;⌥🖱↓​	vk9E ⟶ PgDn
 
-XButton2::	SendInput("{Backspace}"	) ; Set🖰G​4​ XButton2 ⟶␈
-XButton1::	SendInput("{Enter}"    	) ; Set🖰G​5​ XButton1 ⟶⏎
+*XButton2::	SendInput("{Backspace}"	) ; Set🖰G​4​ XButton2 ⟶␈
+*XButton1::	SendInput("{Enter}"    	) ; Set🖰G​5​ XButton1 ⟶⏎
 ; #HotIf WinActive("ahk_class ApplicationFrameWindow") And WinActive("ahk_exe ApplicationFrameHost.exe") And WinActive("Readiy") ;[App Readiy]
 ;   XButton1::  SendInput '{Left}' ;[G6/G7] G700s mouse to ←→ (for switching to previous/next article)
 ;   XButton2::  SendInput '{Right}'
