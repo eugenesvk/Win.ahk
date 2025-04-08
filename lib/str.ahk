@@ -205,15 +205,26 @@ class helperString {
   }
 
   static ch→⇧(&c_in) { ; get shifted char, e.g., 1→!
+    return helperString.get_char(&c_in, f⇧)
+  }
+  static ch→name(&c_in) { ; get locale-specific char, e.g., q→q or q→й if Russian is active
+    return helperString.get_char(&c_in)
+  }
+  static get_char(&c_in, flag:=0) { ; get locale-specific char, e.g., q→q or q→й if Russian is active, ⇧Shifted is f⇧ is passed
+    static vk⇧ := 0x10 ; learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+      , key↓ := 0x80 ; 0b10000000 most-significant bit of a byte
     lpKeyState := Buffer(256,0), pwszBuff := Buffer(4)
-    NumPut("char",0x80, lpKeyState,0x10)
+    if flag = f⇧ {
+      NumPut("char",key↓, lpKeyState,vk⇧)
+    }
     HKL := lyt.GetCurLayout()
     len := DllCall("ToUnicodeEx" ; learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-tounicode
       ,"uint",GetKeyVK(c_in) ;←
       ,"uint",GetKeySC(c_in) ;←
       , "ptr",lpKeyState     ;←? ptr to 256-byte array that contains the current keyboard state
         ; Each element (byte) in the array contains the state of 1 key
-        ; If the high-order bit of a byte is set, the key is down. The low bit, if set, indicates that the key is toggled on. In this function, only the toggle bit of the CAPS LOCK key is relevant. The toggle state of the NUM LOCK and SCROLL LOCK keys is ignored. See GetKeyboardState for more info.
+        ; high-order bit of a byte if set: ↓key is down
+        ; low -order bit           if set:  key is toggled on (only relevant for ⇪ CAPS LOCK, Num/Scroll are ignored, see GetKeyboardState)
       , "ptr",pwszBuff     	;→
       , "int",pwszBuff.size	;←
       ,"uint",0            	;← wFlags
@@ -225,6 +236,7 @@ class helperString {
     }
     return StrGet(pwszBuff, len, "UTF-16")
   }
+
   static key→token(key_lbl) { ; key ; → ︔ token to be used in var names, leave other home row modes intact
     static K     	:= keyConstant , lbl := K._labels, token := K._ahk_token  ; various key name constants, gets vk code to avoid issues with another layout
       , lbl_token	:= Map()
