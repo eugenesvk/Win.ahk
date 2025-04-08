@@ -1,8 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.18
 
-global help_keys:=Map()
-help_keys.CaseSense := 0 ; make key matching case insensitive
-
 hk🛈(key, act, opt:="", help) { ; same as Builtin Hotkey, but can use ⇧ and add help message
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString

@@ -132,3 +132,6 @@ global getDefIMEWnd := DllCall("GetProcAddress", "Ptr",DllCall("GetModuleHandle"
   , s←             	:= "Left"	, s→	:= "Right"
   , s↓             	:= "Down"	, s↑	:= "Up"
   , ␞              	:= "" ; Record Separator Chr(0x001E)
+
+global help_keys := Map() ; List of registered keys
+help_keys.CaseSense := 0 ; make key matching case insensitive
