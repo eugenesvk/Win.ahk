@@ -73,6 +73,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     ; is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
+    global Ch
     Switch hk, 0 {
       default  : return ; dbgtt(0,'nothing matched setChar🠿 hk=' . hk, 4) ;
       ; Hotkey created → key name and ordering of its modifier symbols gets fixed
@@ -103,29 +104,29 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
       ;          	           hk  c  key_list     	 lblMap lblKey 🖰hide
       case  b⃣   	: char→sym(hk,ch␞('Bullet'     	),unset,unset,false) ;InStr(lbl🖰hide,'b'))
       case ⇧b    	: char→sym(hk,ch␞('Misc'       	),unset,unset,false) ;InStr(lbl🖰hide,'b') & is∗)
-      case  d⃣   	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab') ;
-      case ⇧d    	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'d') & is∗)
-      case v⁄    	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab')
-      case ⇧⁄    	: char→sym(hk,ch␞('WinFile'    	),'Ch','WinFileLab',false) ;InStr(lbl🖰hide,'/') & is∗)
-      case  q⃣   	: char→sym(hk,ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,'q'))
-      case  p⃣   	: char→sym(hk,ch␞('Currency'   	),'Ch','CurrLab',false) ;InStr(lbl🖰hide,'p'))
-      case  x⃣   	: char→sym(hk,ch␞('Tech'       	),'Ch','TechLab',false) ;InStr(lbl🖰hide,'x'))
-      case  t⃣   	: char→sym(hk,ch␞('Math'       	),'Ch','MathLab',false) ;InStr(lbl🖰hide,'t'))
+      case  d⃣   	: char→sym(hk,ch␞('WinFile'    	),&Ch,'WinFileLab') ;
+      case ⇧d    	: char→sym(hk,ch␞('WinFile'    	),&Ch,'WinFileLab',false) ;InStr(lbl🖰hide,'d') & is∗)
+      case v⁄    	: char→sym(hk,ch␞('WinFile'    	),&Ch,'WinFileLab')
+      case ⇧⁄    	: char→sym(hk,ch␞('WinFile'    	),&Ch,'WinFileLab',false) ;InStr(lbl🖰hide,'/') & is∗)
+      case  q⃣   	: char→sym(hk,ch␞('XSymbols'   	),&Ch,'XSymbolsLab',false) ;InStr(lbl🖰hide,'q'))
+      case  p⃣   	: char→sym(hk,ch␞('Currency'   	),&Ch,'CurrLab',false) ;InStr(lbl🖰hide,'p'))
+      case  x⃣   	: char→sym(hk,ch␞('Tech'       	),&Ch,'TechLab',false) ;InStr(lbl🖰hide,'x'))
+      case  t⃣   	: char→sym(hk,ch␞('Math'       	),&Ch,'MathLab',false) ;InStr(lbl🖰hide,'t'))
       case ⇧f    	: char→sym(hk,ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
       case  f⃣   	: char→sym(hk,ch␞('Fractions'  	),unset,unset,false) ;InStr(lbl🖰hide,'f'))
-      case  v⃣   	: char→sym(hk,ch␞('Subscript'  	),'Ch','SubLab',false) ;InStr(lbl🖰hide,'v'))
-      case  g⃣   	: char→sym(hk,ch␞('Superscript'	),'Ch','SupLab',false) ;InStr(lbl🖰hide,'g'))
+      case  v⃣   	: char→sym(hk,ch␞('Subscript'  	),&Ch,'SubLab',false) ;InStr(lbl🖰hide,'v'))
+      case  g⃣   	: char→sym(hk,ch␞('Superscript'	),&Ch,'SupLab',false) ;InStr(lbl🖰hide,'g'))
       ;case  m⃣  	: char→sym(hk,ch␞('Dash'       	),Ch['DashLab'],'-',false) ;InStr(lbl🖰hide,''))
-      case v‐    	: char→sym(hk,ch␞('Dash'       	),'Ch','DashLab')
-      ;case  p⃣  	: char→sym(hk,ch␞('XSymbols'   	),'Ch','XSymbolsLab',false) ;InStr(lbl🖰hide,''))
-      case  r⃣   	: char→sym(hk,ch␞('Checks'     	),'Ch','ChecksLab',false) ;InStr(lbl🖰hide,'r'))
-      case  w⃣   	: char→sym(hk,ch␞('Arrows'     	),'Ch','ArrowsLab',false) ;InStr(lbl🖰hide,'w'))
+      case v‐    	: char→sym(hk,ch␞('Dash'       	),&Ch,'DashLab')
+      ;case  p⃣  	: char→sym(hk,ch␞('XSymbols'   	),&Ch,'XSymbolsLab',false) ;InStr(lbl🖰hide,''))
+      case  r⃣   	: char→sym(hk,ch␞('Checks'     	),&Ch,'ChecksLab',false) ;InStr(lbl🖰hide,'r'))
+      case  w⃣   	: char→sym(hk,ch␞('Arrows'     	),&Ch,'ArrowsLab',false) ;InStr(lbl🖰hide,'w'))
       case v‘    	: char→sym(hk,ch␞('QuotesS'    	),unset,unset)
       case ⇧‘    	: char→sym(hk,ch␞('QuotesD'    	),unset,unset,false) ;InStr(lbl🖰hide,'`'') & is∗)
       case ⇧ˋ    	: char→sym(hk,ch␞('Para'       	),unset,unset,false) ;InStr(lbl🖰hide,'``') & is∗)
       case ⇧5    	: char→sym(hk,ch␞('Percent'    	),unset,unset,false) ;InStr(lbl🖰hide,'5') & is∗)
       case ⇧4    	: char→sym(hk,ch␞('Currency'   	),unset,unset,false) ;InStr(lbl🖰hide,'4') & is∗)
-      case ⎈›⎇›␠⃣	: char→sym(hk,ch␞('Space'      	),'Ch','SpaceLab2',false,false,false) ;
+      case ⎈›⎇›␠⃣	: char→sym(hk,ch␞('Space'      	),&Ch,'SpaceLab2',false,false,false) ;
     }
   }
   hkChar↓(hk_dirty) {
@@ -134,12 +135,13 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     ; flag := s.getKeyPrefixFlag(hk)
     ; is∗ := flag & f∗ ; any modifier allowed, so match both ‘a’ and ‘⇧a’
     ; is∗ := cfg🖰h['modiHide'] ; any modifier allowed, so match both ‘a’ and ‘⇧a’a
+    global Ch
     Switch hk, 0 {
       default  : return ; dbgtt(0,'nothing matched setChar🠿 hk=' . hk, 4) ;
       ; Hotkey created → key name and ordering of its modifier symbols gets fixed
       ; —————————— Alt symbols (math, currency etc.)
       ;          	           hk  c  key_list  	 lblMap lblKey 🖰hide
-      case ⎈›⎇›␠⃣	: char→sym(hk,Ch['Space'	],'Ch','SpaceLab2',false,false,false) ;
+      case ⎈›⎇›␠⃣	: char→sym(hk,Ch['Space'	],&Ch,'SpaceLab2',false,false,false) ;
       ;
     }
   }
@@ -157,7 +159,7 @@ ch␞(lbl) { ; remove ␞ from the list
   return arr_out
 }
 global keyOnHold := ''
-char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can␠ins:=true,blind_:=true) {
+char→sym(hk,key_list,&lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can␠ins:=true,blind_:=true) {
   global keyOnHold ; store info on which key is being held to avoid repeating it
   static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
    , get⎀ 	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
@@ -191,7 +193,7 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
         (dbg<_d3)?'':(dbgtt(_d3,c ((f⇧ & modi_f)?" ⇧" c⇧⸮:""),🕐:=5,,x:=0,y:=0))
         if    IsSet(lblMap)           	; Ch
           and IsSet(lblKey)           	; 'ArrowsLab'
-          and   %lblMap%.Has(lblKey) {	; 1a arguments are set and map has labels
+          and   lblMap.Has(lblKey) {	; 1a arguments are set and map has labels
           local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
           sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
           if lbl.Has(sLng)
@@ -199,19 +201,19 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
             c_lbl_pos := InStr(lbl[lyt_from],c⇧⸮) ; c=w, pos=2
             c_to := c_lbl_pos ? SubStr(lbl[sLng],c_lbl_pos,1) : c⇧⸮
             dbgTT(2,'c=' c ' c_to =‘' c_to '’ c_lbl_pos' c_lbl_pos, t:=2) ;
-            if %lblMap%.Has(lblKey sLng) { ; 3a map has labels for the target layout, use them
-                PressH_ChPick(key_list,%lblMap%[lblKey sLng],c_to,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab' 'Ru']	:= [ф,ц,в
+            if lblMap.Has(lblKey sLng) { ; 3a map has labels for the target layout, use them
+                PressH_ChPick(key_list,lblMap[lblKey sLng],c_to,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab' 'Ru']	:= [ф,ц,в
             } else { ; 3b no user labels, transliterate english ones and store in a static map for later retrieval
               if lbl_translit.Has(sLng) { ; 4a map contains cache of transliterated labels, use them
                 PressH_ChPick(key_list,lbl_translit[sLng]   ,c_to,'',[⎀←,⎀↑],pis␈,can␠ins)
               } else { ; 4b
-                arrout := s.convert_lyt_arr(%lblMap%[lblKey],sLng,&ℯ:="") ;
+                arrout := s.convert_lyt_arr(lblMap[lblKey],sLng,&ℯ:="") ;
                 lbl_translit[sLng] := arrout
                 PressH_ChPick(key_list,arrout               ,c_to,'',[⎀←,⎀↑],pis␈,can␠ins)
               }
             }
           } else { ; 2b return the original (en) labels
-                PressH_ChPick(key_list,%lblMap%[lblKey     ],c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab']	:= [a,w,d
+                PressH_ChPick(key_list,lblMap[lblKey     ],c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab']	:= [a,w,d
           }
         } else { ; 1b arguments not set or no labels in the map, return the original
                 PressH_ChPick(key_list,unset                ,c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins)
