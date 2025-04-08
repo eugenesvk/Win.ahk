@@ -160,6 +160,7 @@ ch␞(lbl) { ; remove ␞ from the list
 }
 global keyOnHold := ''
 char→sym(hk,key_list,&lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can␠ins:=true,blind_:=true) {
+  ; lblKey: when no Map given, used as the starting key in automatic label list so you can start from Qwe instead of `123
   global keyOnHold ; store info on which key is being held to avoid repeating it
   static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
    , get⎀ 	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
@@ -191,8 +192,8 @@ char→sym(hk,key_list,&lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can
       if get⎀(&⎀←,&⎀↑) { ; editable text (no point in showing a picker if the picked char can't be inserted
         c⇧⸮ := (f⇧ & modi_f) ? s.ch→⇧(&c) : c ; get shifted char if ⇧X combo triggered
         (dbg<_d3)?'':(dbgtt(_d3,c ((f⇧ & modi_f)?" ⇧" c⇧⸮:""),🕐:=5,,x:=0,y:=0))
-        if    IsSet(lblMap)           	; Ch
-          and IsSet(lblKey)           	; 'ArrowsLab'
+        if    IsSet(lblMap)         	; Ch
+          and IsSet(lblKey)         	; 'ArrowsLab'
           and   lblMap.Has(lblKey) {	; 1a arguments are set and map has labels
           local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
           sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
@@ -216,7 +217,11 @@ char→sym(hk,key_list,&lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can
                 PressH_ChPick(key_list,lblMap[lblKey     ],c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab']	:= [a,w,d
           }
         } else { ; 1b arguments not set or no labels in the map, return the original
-                PressH_ChPick(key_list,unset                ,c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins)
+          if IsSet(lblKey) && (Type(lblKey)="String") {
+                PressH_ChPick(key_list,lblKey               ,c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins)
+          } else {
+                PressH_ChPick(key_list,                     ,c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins)
+          }
         }
       } else { ;no ⎀
       }
