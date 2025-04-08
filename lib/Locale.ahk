@@ -5,9 +5,25 @@ wapi	:= win32Constant ; various win32 API constants
 
 ; HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Keyboard Layouts
 ; HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\Nls
-; NB! ↓ loads a layout, disable if you've removed this layout manually in Settings and don't need it to reappear!
-enU	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1) ; kbdus.dll
-ruU	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
+constLyt()
+constLyt() {
+  static _d := 3
+  global enU:=0, ruU:=0
+  ; NB! ↓ loads a layout, disable if you've removed this layout manually in Settings and don't need it to reappear!
+  ; enU	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1) ; kbdus.dll
+  ; ruU	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
+  ; ↓ use this instead as it doesn't load, not causing misc bugs
+  lyt_enabled := lyt.getlist() ; system loaded that are available in the language bar
+  for lytID, layout in lyt_enabled {
+    if layout['LangShort'] == "en" {
+      enU	:= layout['id']
+    }
+    if layout['LangShort'] == "ru" {
+      ruU	:= layout['id']
+    }
+  }
+  (dbg<_d)?'':(dbgTT(0,enU "en `n" ruU "ru `n",🕐:=1,id:=0,x:=-1,y:=-1))
+}
 isRu() {
   return (lyt.GetCurLayout() = ruU) ? true : false
   }
