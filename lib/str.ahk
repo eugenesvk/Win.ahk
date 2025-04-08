@@ -133,11 +133,11 @@ class helperString {
       or StrLen(modi) < 2 {
       throw ValueError("Input modifier should be a string of 2+ chars", -1, modi)
     }
-    side_in   	:= SubStr(modi,1,1)
-    , mod_in  	:= SubStr(modi,2)
+    side_in    	:= SubStr(modi,1,1)
+    , mod_in   	:= SubStr(modi,2)
     , side_outL	:= ''
     , side_outR	:= ''
-    , mod_out 	:= ''
+    , mod_out  	:= ''
     if        side_in = 'L' {
       side_outL	.= fmt = 'ahk' ? '<' : '‹'
     } else if side_in = 'R' {
