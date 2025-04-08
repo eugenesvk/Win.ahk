@@ -219,10 +219,10 @@ csub(map,splitMode:="A",lineLen:=40,listenTimer:="") {
   Return
 }
 
-ListenChar(listenT:=2) { ; Listen for 1 char and return it
-  ih := InputHook("L1 T" listenT "C") ; Listen for L1char, T2sec, Case sensitive
+ListenChar(🕐:=2) { ; Listen for 1 char and return it
+  ih := InputHook("L1 T" 🕐 "C") ; Listen for L1char, T2sec, Case sensitive
   ih.KeyOpt("{LWin}{RWin}{LAlt}{RAlt}{LCtrl}{RCtrl}{Esc}", "ES")  ; EndKeys (terminate the input) and Suppress (blocks) the key after processing
-  ih.KeyOpt("{Left}{Up}{Right}{Down}{BackSpace}", "E")  ; EndKeys (terminate the input)
+  ih.KeyOpt("{Left}{Up}{Right}{Down}{BackSpace}"         , "E" )  ; EndKeys (terminate the input)
   ih.Start()	; Starts collecting input
   ih.Wait() 	; Waits until the Input is terminated (InProgress is false)
   if (ih.EndReason != "Max") { ; Timed out without reaching typed char limit
