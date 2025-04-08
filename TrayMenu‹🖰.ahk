@@ -29,6 +29,12 @@ OnTrayClickLeft(wParam, lParam, nMsg, hwnd) {
 }
 ShowMenu(x?,y?) {
   static trayMan := TrayManager()
+    , lang := 'en'
+  lang_cur := lyt.GetLocaleName()
+  if lang != lang_cur {
+    trayMan.changeLang(lang, lang_cur)
+    lang  := lang_cur
+  }
   trayMan.trayMenu.Show(x?,y?)
 }
 
@@ -36,17 +42,26 @@ class TrayManager {
   __New() {
     this.trayMenu := Menu()
     ; dbgtt(0,"TrayManager New",5,5,0,0)
-    MyCallbackRu := cbMenuLayoutSwitchTgt.bind(,,,ruU)
-    MyCallbackEn := cbMenuLayoutSwitchTgt.bind(,,,enU)
-    this.trayMenu.Add("&Д → lng"    , cbMenuLayoutSwitch)
-    this.trayMenu.Add("&F → Русский", MyCallbackRu)
-    this.trayMenu.Add("&У → English", MyCallbackEn)
-    this.trayMenu.Add("&В → English", MyCallbackEn)
-    this.trayMenu.Add()
-    this.trayMenu.Add("&R → Русский", MyCallbackRu)
-    this.trayMenu.Add("&E → English", MyCallbackEn)
-    this.trayMenu.Add("&L → Change"    , cbMenuLayoutSwitch)
-    this.trayMenu.SetIcon("&R → Русский", "img\ru-RU.ico")
+    this.cbRu := cbMenuLayoutSwitchTgt.bind(,,,ruU)
+    this.cbEn := cbMenuLayoutSwitchTgt.bind(,,,enU)
+    this.trayMenu.Add("&E → English"	, this.cbEn)
+    this.trayMenu.Add("&R → Русский"	, this.cbRu)
+    this.trayMenu.Add(              	)
+    this.trayMenu.Add("&D → Change" 	, cbMenuLayoutSwitch)
     this.trayMenu.SetIcon("&E → English", "img\en-US.ico")
+    this.trayMenu.SetIcon("&R → Русский", "img\ru-RU.ico")
+  }
+  changeLang(old, new) {
+    if        old == "en" and new == "ru" {
+      this.trayMenu.Rename("&D → Change" 	,"&В → Сменить")
+      this.trayMenu.Rename("&E → English"	,"&У → English")
+      this.trayMenu.Rename("&R → Русский"	,"&К → Русский")
+    } else if old == "ru" and new == "en" {
+      this.trayMenu.Rename("&В → Сменить"	,"&D → Change" )
+      this.trayMenu.Rename("&У → English"	,"&E → English")
+      this.trayMenu.Rename("&К → Русский"	,"&R → Русский")
+    } else {
+      dbgtt(0, "✗ Unknown layout, only 'en' and 'ru' are supported")
+    }
   }
 }
