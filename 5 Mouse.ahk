@@ -6,6 +6,8 @@
   ^!WheelUp::   	SendInput '{PgUp}'	;⌥🖱↑​	vk9F ⟶ PgUp
   ^!WheelDown:: 	SendInput '{PgDn}'	;⌥🖱↓​	vk9E ⟶ PgDn
 
+XButton2::	SendInput("{Backspace}"	) ; Set🖰G​4​ XButton2 ⟶␈
+XButton1::	SendInput("{Enter}"    	) ; Set🖰G​5​ XButton1 ⟶⏎
 ; Tab Left/Right with mouse top 2 buttons on the left side
   #HotIf !WinActive("ahk_group Games")
   ; remap G7 mouse key to ❖ on hold (to use for AltDrag window functions)
