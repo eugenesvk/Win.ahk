@@ -10,3 +10,7 @@
 	path = lib/Acc
 	url = https://github.com/eugenesvk/Acc-v2
 	branch = lib
+[submodule "lib/Desc"]
+	path = lib/Desc
+	url = https://github.com/eugenesvk/AHK-v2-libraries
+	branch = lib
