@@ -68,7 +68,7 @@ PressH_ChPick(pChars, pLabel:=unset, pTrigger:="", pHorV:="", pCaret:=1, pis␈:
       Labels.Capacity := pChars.Length
     }
   }
-  (dbg<_d3)?'':(dbgTT(0,Trigger "¦" TriggerU "¦ pTrigger|U" pHorV "¦=pHorV ¦" pis␈ "¦=pis␈ pCaret=" ((type(pCaret)='Array') ? (pCaret[1] '¦' pCaret[2]) : pCaret) ,4)) ;🕐
+  (dbg<_d3)?'':(dbgTT(0,pTrigger "¦" Trigger "¦" TriggerU "¦ p|Trigger|U" pHorV "¦=pHorV ¦" pis␈ "¦=pis␈ pCaret=" ((type(pCaret)='Array') ? (pCaret[1] '¦' pCaret[2]) : pCaret) ,4)) ;🕐
 
   #MaxThreadsPerHotkey 1    ;;;
   global is␈ 	:= pis␈  	; Copy of parameter for another function
