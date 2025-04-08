@@ -20,18 +20,18 @@ XButton1::	SendInput("{Enter}"    	) ; Set🖰G​5​ XButton1 ⟶⏎
 ; Tab Left/Right with mouse top 2 buttons on the left side
   #HotIf !WinActive("ahk_group Games")
   ; remap G7 mouse key to ❖ on hold (to use for AltDrag window functions)
-  vk05::    	SendInput '{LWin Down}'	;🖰G6​	vk05 ⟶ ❖ when down
-  vk05 Up::{	                       	;🖰G6​	vk05 ⟶ 🖰G6​ when up
-    if (A_PriorKey="LControl") { ; should be vk9A vk9B (LMB/RMB), not sure why "LControl", maybe AltDrag passes it?
-      SendInput '{LWin Up}'
-    } else {
-      SendInput '{LWin Up}{vk05 Down}{vk05 Up}'
-    }
-    }
-  +XButton1::	SendInput '{LCtrl down}{LShift down}{Tab}{LShift up}{LCtrl up}'	;⇧G6​	vk05 ⟶ 000	()
-  +XButton2::	SendInput '{LCtrl down}{Tab}{LCtrl up}'                        	;⇧G7​	vk06 ⟶ 000	()
-  ^XButton1::	SendInput '{LCtrl down}{LShift down}{Tab}{LShift up}{LCtrl up}'	;^G6​	vk05 ⟶ 000	()
-  ^XButton2::	SendInput '{LCtrl down}{Tab}{LCtrl up}'                        	;^G7​	vk06 ⟶ 000	()
+  ; vk05::    	SendInput '{LWin Down}'	;🖰G6​	vk05 ⟶ ❖ when down
+  ; vk05 Up::{	                       	;🖰G6​	vk05 ⟶ 🖰G6​ when up
+  ;   if (A_PriorKey="LControl") { ; should be vk9A vk9B (LMB/RMB), not sure why "LControl", maybe AltDrag passes it?
+  ;     SendInput '{LWin Up}'
+  ;   } else {
+  ;     SendInput '{LWin Up}{vk05 Down}{vk05 Up}'
+  ;   }
+  ;   }
+  ; +XButton1::	SendInput '{LCtrl down}{LShift down}{Tab}{LShift up}{LCtrl up}'	;⇧G6​	vk05 ⟶ 000	()
+  ; +XButton2::	SendInput '{LCtrl down}{Tab}{LCtrl up}'                        	;⇧G7​	vk06 ⟶ 000	()
+  ; ^XButton1::	SendInput '{LCtrl down}{LShift down}{Tab}{LShift up}{LCtrl up}'	;^G6​	vk05 ⟶ 000	()
+  ; ^XButton2::	SendInput '{LCtrl down}{Tab}{LCtrl up}'                        	;^G7​	vk06 ⟶ 000	()
   #HotIf
 
 ; Scroll Left/Right with Shift+MouseWheel Up/Down
