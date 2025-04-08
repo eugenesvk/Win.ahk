@@ -165,7 +165,6 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
   ; if 🖰hide { ; hide a pointer if the same key is registered twice since only this function will be called
   ;   hk🖰PointerHide('') ; use hk function instead of 🖰PointerHide due to a bug in '🖰hide on 🖮'?
   ; }
-  ; dbgtt(0,'got char→sym hk`t=' hk ' `nkeyOnHold`t=' keyOnHold '`nvkC`t=' vkC, 3) ;
   static lbl_translit     	:= Map()
   if lbl_translit.Count   	= 0 { ; can set case only on empty maps
     lbl_translit.CaseSense	:= 0
@@ -174,6 +173,7 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
   modi_f := s.ahk→modi_f(&hk)
   s.parseKeyCombo(hk,&armod,&vkC)
   c := GetKeyName(vkC)
+  ; dbgtt(0,'got char→sym hk`t=' hk ' `nkeyOnHold`t=' keyOnHold '`nvkC`t=' vkC, 3) ;
   ; vkC := s.key→ahk(c) ; vkC := Format("vk{:X}",GetKeyVK(c)) bugs with locale
   ; dbgtt(0,"c = " c " vkC=" vkC " f=" modi_f,2) ;
   ; dbgTT(0,' hk=`t' hk '`nhkThis=`t' A_ThisHotkey '`nhkPrior=`t' A_PriorHotkey '`n kPrior=`t' A_PriorKey,t:=1)
@@ -186,6 +186,7 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
   if (KeyWait(vkC,TimerHold) = 0) {
     if keyOnHold == hk { ; (likely) no other key was pressed while this key was on hold
       if get⎀(&⎀←,&⎀↑) { ; editable text (no point in showing a picker if the picked char can't be inserted
+        c⇧⸮ := (f⇧ & modi_f) ? s.ch→⇧(&c) : c ; get shifted char if ⇧X combo triggered
         if    IsSet(lblMap)           	; Ch
           and IsSet(lblKey)           	; 'ArrowsLab'
           and   %lblMap%.Has(lblKey) {	; 1a arguments are set and map has labels
@@ -193,8 +194,8 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
           sLng	:= lyt.getLocaleInfo('en',idLang) ; en/ru/... format
           if lbl.Has(sLng)
             and not sLng = 'en' { ; 2a keyboard non-en labels (qwerty...) exist for the target layout
-            c_lbl_pos := InStr(lbl[lyt_from],c) ; c=w, pos=2
-            c_to := c_lbl_pos ? SubStr(lbl[sLng],c_lbl_pos,1) : c
+            c_lbl_pos := InStr(lbl[lyt_from],c⇧⸮) ; c=w, pos=2
+            c_to := c_lbl_pos ? SubStr(lbl[sLng],c_lbl_pos,1) : c⇧⸮
             dbgTT(2,'c=' c ' c_to =‘' c_to '’ c_lbl_pos' c_lbl_pos, t:=2) ;
             if %lblMap%.Has(lblKey sLng) { ; 3a map has labels for the target layout, use them
                 PressH_ChPick(key_list,%lblMap%[lblKey sLng],c_to,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab' 'Ru']	:= [ф,ц,в
@@ -208,10 +209,10 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
               }
             }
           } else { ; 2b return the original (en) labels
-                PressH_ChPick(key_list,%lblMap%[lblKey     ],c,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab']	:= [a,w,d
+                PressH_ChPick(key_list,%lblMap%[lblKey     ],c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins) ; Ch['ArrowsLab']	:= [a,w,d
           }
         } else { ; 1b arguments not set or no labels in the map, return the original
-                PressH_ChPick(key_list,unset                ,c,'',[⎀←,⎀↑],pis␈,can␠ins)
+                PressH_ChPick(key_list,unset                ,c⇧⸮,'',[⎀←,⎀↑],pis␈,can␠ins)
         }
       } else { ;no ⎀
       }
