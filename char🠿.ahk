@@ -162,6 +162,7 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
   static k	:= keyConstant._map, lbl := keyConstant._labels ; various key name constants, gets vk code to avoid issues with another layout
    , get⎀ 	:= win.get⎀.Bind(win), get⎀GUI	:= win.get⎀GUI.Bind(win), get⎀Acc := win.get⎀Acc.Bind(win)
    , s    	:= helperString
+   , _d3  	:= 3 ;
   ; if 🖰hide { ; hide a pointer if the same key is registered twice since only this function will be called
   ;   hk🖰PointerHide('') ; use hk function instead of 🖰PointerHide due to a bug in '🖰hide on 🖮'?
   ; }
@@ -187,6 +188,7 @@ char→sym(hk,key_list,lblMap:=unset,lblKey:=unset,🖰hide:=0,pis␈:=true,can�
     if keyOnHold == hk { ; (likely) no other key was pressed while this key was on hold
       if get⎀(&⎀←,&⎀↑) { ; editable text (no point in showing a picker if the picked char can't be inserted
         c⇧⸮ := (f⇧ & modi_f) ? s.ch→⇧(&c) : c ; get shifted char if ⇧X combo triggered
+        (dbg<_d3)?'':(dbgtt(_d3,c ((f⇧ & modi_f)?" ⇧" c⇧⸮:""),🕐:=5,,x:=0,y:=0))
         if    IsSet(lblMap)           	; Ch
           and IsSet(lblKey)           	; 'ArrowsLab'
           and   %lblMap%.Has(lblKey) {	; 1a arguments are set and map has labels
