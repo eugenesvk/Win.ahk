@@ -16,21 +16,135 @@ hk🛈(key, act, opt:="", help) { ; same as Builtin Hotkey, but can use ⇧ and 
   HotKey(k_ahk, act, opt)
 }
 
-get_help() { ; Show a listview with all the registered hk🛈 hotkeys and their help🛈
+get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hotkeys and their help🛈
   _d:=0
-  ; todo: add separate columns for modifier to make them sorted and a column for key
-  guiKeyHelp := Gui()
-  LV := guiKeyHelp.Add("ListView", "r20 w700", ["Key", "AHKey", "H", "File", "l№"])
-  LV.OnEvent("DoubleClick", LV_DoubleClick)  ; Notify the script whenever the user double clicks a row
-  for ahkey, help_map in help_keys {
+  guiM := Gui()
+  guiM := Gui("+Resize +MinSize854x480", t:="Registered Hotkeys")
+  guiM.BackColor := (gTheme = "Dark") ? "3E3E3E" : ""
+  guiM.MarginX := 0
+  guiM.MarginY := 0
+
+  guiM.SetFont("s10", "Segoe UI")
+  gap_top := 4
+  leftmost	:= "XM+2" ;px
+  topmost 	:= "YM+" gap_top ;px
+  ED_Opt  	:= leftmost " " topmost " w400" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
+  ED := guiM.AddEdit(ED_Opt)
+  ED.OnEvent("Change", LV_Search)
+  EM_SETCUEBANNER(ED, "Search…", 1)
+
+  gap_el := 5
+
+  guiM.SetFont("s10", "Segoe UI")
+  LV_Header	:= ["Key", "AHKey", "H", "File", "l№"]
+  LV_Opt   	:= leftmost " y+" gap_el " w830 r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
+  LV       	:= guiM.AddListView(LV_Opt, LV_Header)
+  LV.OnEvent("DoubleClick", cbLV_DoubleClick)  ; Notify the script whenever the user double clicks a row
+  for ahkey, help_map in help_keys { ; Add data
     LV.Add(, help_map["k"], ahkey, help_map["h"], help_map["f"], help_map["l№"])
   }
-  LV.ModifyCol()  ; Auto-size each column to fit its contents.
   ; LV.ModifyCol(2, "Integer")  ; for sorting purposes, indicate that column 2 is an integer
-  guiKeyHelp.Show() ; Display the window
+  ; todo: fails autosize, still get …
+  loop LV.GetCount("Col") {
+    LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
+  }
 
-  LV_DoubleClick(LV, RowNumber) { ; todo: open file/line number
+
+  guiM.OnEvent("Escape", (*) => guiM.Hide())
+  guiM.OnEvent("Size"  , cbGuiSize)
+  ; guiM.OnEvent("Close", (*) => ExitApp)
+  guiM.Show("AutoSize") ; Display the window
+  HideFocusBorder(guiM.Hwnd)
+
+  if   (VerCompare(A_OSVersion, "10.0.17763") >= 0) && (gTheme = "Dark") {
+    DWMWA_USE_IMMERSIVE_DARK_MODE := 19
+    if (VerCompare(A_OSVersion, "10.0.18985") >= 0) {
+      DWMWA_USE_IMMERSIVE_DARK_MODE := 20
+    }
+    DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", guiM.hWnd, "Int", DWMWA_USE_IMMERSIVE_DARK_MODE, "int*", true, "Int", 4)
+    SetExplorerTheme(LV.hWnd, "DarkMode_Explorer")
+  } else {
+    SetExplorerTheme(LV.hWnd)
+  }
+
+  ; Window Events
+  cbGuiSize(thisGui, MinMax, Width, Height) {
+    if (MinMax = -1) {
+      return
+    }
+    ED.Move(, , Width - 4             )
+    LV.Move(, , Width - 2, Height - gap_top - 30 - gap_el - 0)
+    LV.Redraw()
+  }
+
+  cbLV_DoubleClick(LV, RowNumber) { ; todo: open file/line number
     RowText := LV.GetText(RowNumber)  ; Get the text from the row's first field
     dbgTT(0, "Double-clicked row " RowNumber ". Text: '" RowText "'")
+  }
+
+  LV_Search(CtrlObj, *) {
+    static timer := LV_Search_Debounced.Bind()
+    SetTimer(timer, -400) ; updates the old timer
+    LV_Search_Debounced() {
+      dbgtt(0,"LV_Search_Debounced")
+      LV.Opt("-Redraw")
+      LV.Delete()
+      for ahkey, help_map in help_keys { ; Add data
+        IsFound := false
+        ; for i, v in DATA_TYPES[k] { ;if !(CtrlObj.Value) || (InStr(v, CtrlObj.Value))
+        v := help_map["h"]
+          try {
+            if (RegExMatch(v, "i)" CtrlObj.Value)) {
+              IsFound := true
+            }
+          }
+        ; }
+        if !(IsFound) {
+          continue
+        }
+        LV.Add(, help_map["k"], ahkey, help_map["h"], help_map["f"], help_map["l№"])
+      }
+    LV.Opt("+Redraw")
+    }
+  }
+
+
+  ; Messages
+  EM_SETCUEBANNER(handle, string, option := false) {
+    static ECM_FIRST       := 0x1500
+    static EM_SETCUEBANNER := ECM_FIRST + 1
+    SendMessage(EM_SETCUEBANNER, option, StrPtr(string), handle)
+  }
+
+  ; Functions
+  HideFocusBorder(wParam, lParam := "", Msg := "", hWnd := "") {
+    static Affected         := Map()
+    static WM_UPDATEUISTATE := 0x0128
+    static UIS_SET          := 1
+    static UISF_HIDEFOCUS   := 0x1
+    static SET_HIDEFOCUS    := UIS_SET << 16 | UISF_HIDEFOCUS
+    static init             := OnMessage(WM_UPDATEUISTATE, HideFocusBorder)
+
+    if (Msg = WM_UPDATEUISTATE) {
+      if (wParam = SET_HIDEFOCUS) {
+        Affected[hWnd] := true
+      } else if (Affected.Has(hWnd)) {
+        PostMessage(WM_UPDATEUISTATE, SET_HIDEFOCUS, 0,, "ahk_id " hWnd)
+      }
+    } else if (DllCall("user32\IsWindow", "Ptr", wParam, "UInt")) {
+      PostMessage(WM_UPDATEUISTATE, SET_HIDEFOCUS, 0,, "ahk_id " wParam)
+    }
+  }
+
+  SetExplorerTheme(handle, WindowTheme := "Explorer") {
+    if   (DllCall("GetVersion","UChar") > 5) {
+      VarSetStrCapacity(&ClassName, 1024)
+      if (DllCall("user32\GetClassName", "Ptr",handle, "Str",ClassName, "Int",512, "Int")) {
+        if (ClassName = "SysListView32") || (ClassName = "SysTreeView32") {
+          return !DllCall("uxtheme\SetWindowTheme", "Ptr",handle, "Str",WindowTheme, "Ptr", 0)
+        }
+      }
+    }
+    return false
   }
 }
