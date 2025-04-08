@@ -1,5 +1,5 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
-#include <keyHelp>	; List of all registered hotkeys with help
+#include <libFunc>	; List of all registered hotkeys with help
 
 ; #HotIf WinActive("ahk_class PX_WINDOW_CLASS") ; Or WinActive("ahk_class GxWindowClass")
 
@@ -9,6 +9,7 @@ keysCsub() { ; longer (and dupe), but can use ⇧ and adds to help
   static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s    	:= helperString
    , p    	:= helperPath
+   , hk🛈  	:= keyFunc.hk🛈
    , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
   hk🛈("⇧⎇/​" 	,hkCSub,,Map("h","´ acute"           	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
@@ -42,7 +43,9 @@ keysAltTT() { ;⎇K⃣  various symbols in a popup panel
    , s    	:= helperString
    , p    	:= helperPath
    , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
-   , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
+   , hk🛈  	:= keyFunc.hk🛈
+   , k→a  	:= s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
+
   hk🛈("‹⎇``​​"	,hkAltTT,,Map("h","Paragraphs"       	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇1​"  	,hkAltTT,,Map("h","Single Quotes"    	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇2​"  	,hkAltTT,,Map("h","Double Quotes"    	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))

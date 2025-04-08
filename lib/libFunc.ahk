@@ -156,6 +156,23 @@ class keyFunc {
       }
       return flag_mode
     }
+
+    this.hk🛈        := hk🛈
+    static hk🛈(key, act, opt:="", help) { ; same as Builtin Hotkey, but can use ⇧ and add help message
+      static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
+       , s    	:= helperString
+       , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
+       , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
+      k_ahk := k→a(key)
+      if help_keys.has(k_ahk) {
+        throw ValueError("Duplicate hotkey being registered!", -1, key " or " k_ahk)
+      } else {
+        help['k'] := key
+        help['vk'] := "x" ; todo: convert key to helper format automatically, no need to require explicit ⌥⇧c​
+        help_keys[k_ahk] := help
+      }
+      HotKey(k_ahk, act, opt)
+    }
   }
 }
 ; ————————————————————————— Functions —————————————————————————
