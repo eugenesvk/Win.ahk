@@ -505,27 +505,27 @@ class helperString {
     }
     return modi_f
   }
-  static whichModText(fmod) { ; convert mod flags into a string with 2 rows for left/right variants
-    modTxt := '‹'
-    modTxt .= (fmod & f‹⇧  	) ? '⇧'   	: '  ' ;left shift
-    modTxt .= (fmod & f‹⎈  	) ? '⎈'   	: '  ' ;left ctrl
-    modTxt .= (fmod & f‹◆  	) ? '◆'   	: '  ' ;left super ❖◆ (win ⊞)
-    modTxt .= (fmod & f‹⎇  	) ? '⎇'   	: '  ' ;left alt
-    modTxt .= (fmod & f‹👍  	) ? '👍'   	: '  ' ;left Oyayubi 親指
-    modTxt .= (fmod & f⇪   	) ? '⇪'   	: ' ' ;caps lock
-    modTxt .= (fmod & fkana	) ? 'kana'	: ' ' ;kana fかな
-    modTxt                 	.= '`n '  	;
-    modTxt .= (fmod & f⇧›  	) ? '⇧'   	: '  ' ;right shift
-    modTxt .= (fmod & f⎈›  	) ? '⎈'   	: '  ' ;right ctrl
-    modTxt .= (fmod & f◆›  	) ? '◆'   	: '  ' ;right super ❖◆ (win ⊞)
-    modTxt .= (fmod & f⎇›  	) ? '⎇'   	: '  ' ;right alt
-    modTxt .= (fmod & f👍›  	) ? '👍'   	: '  ' ;right Oyayubi 親指
-    modTxt                 	.= '›'    	;
-    modTxt .= (fmod & f⇪   	) ? '⇪'   	: ' ' ;caps   lock
-    modTxt .= (fmod & f🔢   	) ? '🔢'   	: ' ' ;num  lock
-    modTxt .= (fmod & f⇳🔒  	) ? '⇳🔒'  	: '' ;  scroll lock
-    modTxt .= (fmod & fkana	) ? 'kana'	: '' ;  kana fかな
-    return modTxt
+  static whichModText(fm) { ; convert mod flags into a string with 2 rows for left/right variants
+    sm := '‹'
+    sm .= (fm & f‹⇧  	) ? '⇧'   	: '  ' ;left shift
+    sm .= (fm & f‹⎈  	) ? '⎈'   	: '  ' ;left ctrl
+    sm .= (fm & f‹◆  	) ? '◆'   	: '  ' ;left super ❖◆ (win ⊞)
+    sm .= (fm & f‹⎇  	) ? '⎇'   	: '  ' ;left alt
+    sm .= (fm & f‹👍  	) ? '👍'   	: '  ' ;left Oyayubi 親指
+    sm .= (fm & f⇪   	) ? '⇪'   	: ' ' ;caps lock
+    sm .= (fm & fkana	) ? 'kana'	: ' ' ;kana fかな
+    sm               	.= '`n '  	;
+    sm .= (fm & f⇧›  	) ? '⇧'   	: '  ' ;right shift
+    sm .= (fm & f⎈›  	) ? '⎈'   	: '  ' ;right ctrl
+    sm .= (fm & f◆›  	) ? '◆'   	: '  ' ;right super ❖◆ (win ⊞)
+    sm .= (fm & f⎇›  	) ? '⎇'   	: '  ' ;right alt
+    sm .= (fm & f👍›  	) ? '👍'   	: '  ' ;right Oyayubi 親指
+    sm               	.= '›'    	;
+    sm .= (fm & f⇪   	) ? '⇪'   	: ' ' ;caps   lock
+    sm .= (fm & f🔢   	) ? '🔢'   	: ' ' ;num  lock
+    sm .= (fm & f⇳🔒  	) ? '⇳🔒'  	: '' ;  scroll lock
+    sm .= (fm & fkana	) ? 'kana'	: '' ;  kana fかな
+    return sm
   }
   static mod→str(fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
     sm := '' ; ↓ 1 extra check to allow for sequential checks
