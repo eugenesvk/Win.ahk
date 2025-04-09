@@ -167,6 +167,14 @@ class keyFunc {
       if help_keys.has(k_ahk) {
         throw ValueError("Duplicate hotkey being registered!", -1, key " or " k_ahk)
       } else {
+        s.parseKeyCombo(key,&modi_ahk_arr_short,&nonmod)
+        modi_only := modi_ahk_arr_short[1]
+        modi_arr := s.ahk→modi_arr(&modi_only) ;⇧⎈◆⎇
+        help['⇧'] := modi_arr[1]
+        help['⎈'] := modi_arr[2]
+        help['◆'] := modi_arr[3]
+        help['⎇'] := modi_arr[4]
+        help['c'] := nonmod
         help['k'] := key
         help['vk'] := "x" ; todo: convert key to helper format automatically, no need to require explicit ⌥⇧c​
         help_keys[k_ahk] := help
