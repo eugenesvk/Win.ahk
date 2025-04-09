@@ -173,9 +173,9 @@ class keyConstant {
     start	:= 0x30 ; VK_KEY_0	0x30 ('0')	0
     end  	:= 0x39 ; VK_KEY_9	0x39 ('9')	9
     loop (end - start + 1) {
-      i1           	:= A_Index
-      i0           	:= A_Index - 1
-      key_val_hex  	:= Format("{1:x}", start + i0)
+      i1            	:= A_Index
+      i0            	:= A_Index - 1
+      key_val_hex   	:= Format("{1:x}", start + i0)
       vk[i0]        	:= 'vk' . key_val_hex
       vk[String(i0)]	:= 'vk' . key_val_hex
     }
@@ -193,7 +193,7 @@ class keyConstant {
       vk[ru]         	:= 'vk' . key_val_hex
     }
 
-      vk['NONAME']  	:= 'vkFC'	; VK_NONAME  	0xFC	NoName
+      vk['NONAME']	:= 'vkFC'	; VK_NONAME	0xFC	NoName
 
       for key in ['ADD','🔢+','🔢₊'] {
       vk[key]	:= 'vk6B'	; VK_ADD	0x6B	Numpad +
@@ -391,7 +391,7 @@ class keyConstant {
     }
 
 
-      _left 	:= ['‹','<']
+    _left 	:= ['‹','<']
     _right	:= ['›','>']
     for key in ['SHIFT','⇧'] {
       for l in _left {
@@ -426,8 +426,8 @@ class keyConstant {
       }
     }
 
-      vk['BROWSER_HOME']     	:= 'vkAC'	; VK_BROWSER_HOME     	0xAC  	Browser Home
-    ;                     	         	Name                  	#Value	Description
+    vk['BROWSER_HOME']     	:= 'vkAC'	; VK_BROWSER_HOME     	0xAC  	Browser Home
+    ;                      	         	Name                  	#Value	Description
     vk['_none_']           	:= 'vkFF'	; VK__none_           	0xFF  	no VK mapping
     vk['ACCEPT']           	:= 'vk1E'	; VK_ACCEPT           	0x1E  	Accept
     vk['BROWSER_BACK']     	:= 'vkA6'	; VK_BROWSER_BACK     	0xA6  	Browser Back
