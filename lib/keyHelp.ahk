@@ -3,13 +3,16 @@
 get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hotkeys and their help🛈
   _d:=0
   guiM := Gui()
-  guiM := Gui("+Resize +MinSize854x480", t:="Registered Hotkeys")
+  guiOptChrome := "-Caption -Border -Resize -SysMenu"
+  guiM := Gui("+MinSize800x480 +DPIResize " guiOptChrome, t:="Registered Hotkeys")
+  ; MaximizeBox: Enables the maximize button in the title bar. This is also included as part of Resize below.
+  ; MinimizeBox (present by default): Enables the minimize button in the title bar.
   guiM.BackColor := (gTheme = "Dark") ? "3E3E3E" : ""
   guiM.MarginX := 0
   guiM.MarginY := 0
 
   guiM.SetFont("s10", "Segoe UI")
-  gap_top := 4
+  gap_top := 0
   leftmost	:= "XM+2" ;px
   topmost 	:= "YM+" gap_top ;px
   ED_Opt  	:= leftmost " " topmost " w400" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
@@ -17,27 +20,31 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   ED.OnEvent("Change", LV_Search)
   EM_SETCUEBANNER(ED, "Search…", 1)
 
-  gap_el := 5
+  gap_el := 0
 
   guiM.SetFont("s10", "Segoe UI")
-  LV_Header	:= ["Key", "AHKey", "H", "File", "l№"]
+  LV_Header	:= ["⇧","⎈","◆","⎇","K⃣", "AHK⃣", "H", "🔣", "File", "l№"]
   LV_Opt   	:= leftmost " y+" gap_el " w830 r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
   LV       	:= guiM.AddListView(LV_Opt, LV_Header)
   LV.OnEvent("DoubleClick", cbLV_DoubleClick)  ; Notify the script whenever the user double clicks a row
   for ahkey, help_map in help_keys { ; Add data
-    LV.Add(, help_map["k"], ahkey, help_map["h"], help_map["f"], help_map["l№"])
+    LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],help_map["c"], ahkey, help_map["h"], (help_map.Has("🔣")?help_map["🔣"]:""), help_map["f"], help_map["l№"])
   }
   ; LV.ModifyCol(2, "Integer")  ; for sorting purposes, indicate that column 2 is an integer
   ; todo: fails autosize, still get …
   loop LV.GetCount("Col") {
     LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
   }
+  LV.ModifyCol(1,31) ;fits ‹⎇› without …
+  LV.ModifyCol(2,31) ;
+  LV.ModifyCol(3,31) ;
+  LV.ModifyCol(4,31) ;
 
 
   guiM.OnEvent("Escape", (*) => guiM.Hide())
   guiM.OnEvent("Size"  , cbGuiSize)
   ; guiM.OnEvent("Close", (*) => ExitApp)
-  guiM.Show("AutoSize") ; Display the window
+  guiM.Show("AutoSize x10 y10") ; Display the window
   HideFocusBorder(guiM.Hwnd)
 
   if   (VerCompare(A_OSVersion, "10.0.17763") >= 0) && (gTheme = "Dark") {
@@ -86,7 +93,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
         if !(IsFound) {
           continue
         }
-        LV.Add(, help_map["k"], ahkey, help_map["h"], help_map["f"], help_map["l№"])
+        LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],help_map["c"], ahkey, help_map["h"], (help_map.Has("🔣")?help_map["🔣"]:""), help_map["f"], help_map["l№"])
       }
     LV.Opt("+Redraw")
     }
