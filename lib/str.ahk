@@ -528,57 +528,8 @@ class helperString {
     return sm
   }
   static mod→str(&fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
-    sm := ''
-    if (fm & f⇧) {       	 ;some shift
-      if (fm & f⇧) = f⇧ {	 ;any  = to exclude ⇧∀ matches any, including both (which ‹⇧›)
-        sm .= '⇧'        	;
-      } else {           	; doesn't match any, so safe to add ‹› sides if they exist (any=⇧ without sides)
-        sm .= (fm & f‹⇧  	) ? '‹'	: '' ;left
-        sm .= '⇧'        	;
-        sm .= (fm & f⇧›  	) ? '›'	: '' ;right
-      }
-    }
-    if (fm & f⎈) {       	 ;some ctrl
-      if (fm & f⎈) = f⎈ {	 ;any
-        sm .= '⎈'        	;
-      } else {
-        sm .= (fm & f‹⎈	) ? '‹'	: '' ;left
-        sm .= '⎈'      	;
-        sm .= (fm & f⎈›	) ? '›'	: '' ;right
-      }
-    }
-    if (fm & f◆) {       	 ;some super ❖◆ (win ⊞)
-      if (fm & f◆) = f◆ {	 ;any
-        sm .= '◆'        	;
-      } else {
-        sm .= (fm & f‹◆	) ? '‹'	: '' ;left
-        sm .= '◆'      	;
-        sm .= (fm & f◆›	) ? '›'	: '' ;right
-      }
-    }
-    if (fm & f⎇) {       	 ;some alt
-      if (fm & f⎇) = f⎇ {	 ;any
-        sm .= '⎇'        	;
-      } else {
-        sm .= (fm & f‹⎇	) ? '‹'	: '' ;left
-        sm .= '⎇'      	;
-        sm .= (fm & f⎇›	) ? '›'	: '' ;right
-      }
-    }
-    if (fm & f👍) {       	 ;some Oyayubi 親指
-      if (fm & f👍) = f👍 {	 ;any
-        sm .= '👍'        	;
-      } else {
-        sm .= (fm & f‹👍	) ? '‹'	: '' ;left
-        sm .= '👍'      	;
-        sm .= (fm & f👍›	) ? '›'	: '' ;right
-      }
-    }
-    sm .= (fm & f⇪   	) ? '⇪'   	: '' ;  caps   lock
-    sm .= (fm & f🔢   	) ? '🔢'   	: '' ;num    lock
-    sm .= (fm & f⇳🔒  	) ? '⇳🔒'  	: '' ;  scroll lock
-    sm .= (fm & fkana	) ? 'kana'	: '' ;  kana fかな
-    return sm
+    am := helperString.mod→arr(&fm)
+    return am.Join(delim:="")
   }
   static mod→arr(&fm) { ; convert mod flags into an array of strings ⇧⎈◆⎇👍 ⇪ 🔢 ⇳🔒 kana
     am := []
@@ -646,44 +597,6 @@ class helperString {
   static ahk→modi_arr(&k) { ; ahk combo to modifier array of strings
     modi_f := helperString.ahk→modi_f(&k)
     return helperString.mod→arr(&modi_f)
-  }
-  static whichModTextLine(fmod) { ; convert mod flags into a single line string
-    modTxt := ''
-    if (fmod & f⇧	) {
-      modTxt     	           .= '⇧'
-    } else       	{
-     (fmod & f‹⇧ 	) ? modTxt .= '‹⇧'	: ''
-     (fmod & f⇧› 	) ? modTxt .= '⇧›'	: ''
-    }
-    if (fmod & f⎈	) {
-      modTxt     	           .= '⎈'
-    } else       	{
-     (fmod & f‹⎈ 	) ? modTxt .= '‹⎈'	: ''
-     (fmod & f⎈› 	) ? modTxt .= '⎈›'	: ''
-    }
-    if (fmod & f◆	) {
-      modTxt     	           .= '◆'
-    } else       	{
-     (fmod & f‹◆ 	) ? modTxt .= '‹◆'	: ''
-     (fmod & f◆› 	) ? modTxt .= '◆›'	: ''
-    }
-    if (fmod & f⎇	) {
-      modTxt     	           .= '⎇'
-    } else       	{
-     (fmod & f‹⎇ 	) ? modTxt .= '‹⎇'	: ''
-     (fmod & f⎇› 	) ? modTxt .= '⎇›'	: ''
-    }
-    if (fmod & f👍	) {
-      modTxt     	           .= '👍'
-    } else       	{
-     (fmod & f‹👍 	) ? modTxt .= '‹👍'	: ''
-     (fmod & f👍› 	) ? modTxt .= '👍›'	: ''
-    }
-    modTxt .= ' '
-    ((fmod & fkana	) ? modTxt .= 'kana'	: '')
-    ((fmod & f⇪   	) ? modTxt .= '⇪'   	: '')
-    ((fmod & f🔢   	) ? modTxt .= '🔢'   	: '')
-    return modTxt
   }
 }
 
