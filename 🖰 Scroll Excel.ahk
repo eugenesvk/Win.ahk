@@ -1,5 +1,14 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
 ; Launch via a Non UIA enabled client otherwise Excel is inaccessible
+dbg                          	:= 0	; Level of debug verbosity (0-none)
+dbgT                         	:= 2	; Timer for dbg messages (seconds)
+USERPROFILE                  	:= EnvGet('userProfile')
+shell                        	:= ComObject("Shell.Application")
+A_HotkeyInterval             	:= 1000	; [2000]
+A_MaxHotkeysPerInterval      	:= 200 	; [70]
+CoordMode "ToolTip", "Screen"	; Place ToolTips at absolute screen coordinates
+CoordMode "Mouse",   "Screen"	; Mouse cursor: get absolute scren coordinates
+SetMouseDelay -1             	; [10]ms Delay after each mouse movement/click, -1=none
 
 TraySetIcon("./img/🖰Scroll Excel.ico",0) ; Scroll icons created by Swifticons - Flaticon (flaticon.com/free-icons/scroll)
 
@@ -17,16 +26,6 @@ TraySetIcon("./img/🖰Scroll Excel.ico",0) ; Scroll icons created by Swifticons
 #Include <libFunc Dbg>                     	; Functions: Debug
 #Include <Array>                           	; Array helpers
 #include <constKey>                        	; various key constants
-
-dbg                          	:= 0	; Level of debug verbosity (0-none)
-dbgT                         	:= 2	; Timer for dbg messages (seconds)
-USERPROFILE                  	:= EnvGet('userProfile')
-shell                        	:= ComObject("Shell.Application")
-A_HotkeyInterval             	:= 1000	; [2000]
-A_MaxHotkeysPerInterval      	:= 200 	; [70]
-CoordMode "ToolTip", "Screen"	; Place ToolTips at absolute screen coordinates
-CoordMode "Mouse",   "Screen"	; Mouse cursor: get absolute scren coordinates
-SetMouseDelay -1             	; [10]ms Delay after each mouse movement/click, -1=none
 
 ; Scroll Left/Right with Shift+MouseWheel Up/Down
 #HotIf WinActive("ahk_group ScrollH")
