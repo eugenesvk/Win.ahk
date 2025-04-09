@@ -521,7 +521,10 @@ class helperString {
     modTxt .= (fmod & f⎇›  	) ? '⎇'   	: '  ' ;right alt
     modTxt .= (fmod & f👍›  	) ? '👍'   	: '  ' ;right Oyayubi 親指
     modTxt                 	.= '›'    	;
+    modTxt .= (fmod & f⇪   	) ? '⇪'   	: ' ' ;caps   lock
     modTxt .= (fmod & f🔢   	) ? '🔢'   	: ' ' ;num  lock
+    modTxt .= (fmod & f⇳🔒  	) ? '⇳🔒'  	: '' ;  scroll lock
+    modTxt .= (fmod & fkana	) ? 'kana'	: '' ;  kana fかな
     return modTxt
   }
   static mod→str(fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
