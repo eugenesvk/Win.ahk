@@ -44,6 +44,9 @@ set_key_global() { ; register global variables
    , ⎇ := ⌥	    	:= "Alt"  	, ‹⎇ := ‹⌥	     	:= "LAlt"  	, ⎇› := ⌥›	     	:= "RAlt"
    , ☰:="AppsKey"
    , ∗:='*', ˜	:='~', ＄:='$'
+   , ‹␠1 := '‹⎈' , ‹␠2  := '‹⌥' , ‹␠3  := '‹◆'
+   ,  ␠›1:=  '⎈›',  ␠›2 :=  '⌥›',  ␠›3 := '☰'
+   , ⅋ := '&'
 }
 set_vk_global()
 set_vk_global() { ; register global variables in the format of q⃣  to a virtual key format for later use to avoid lookups and have shorter codes. When syntax doesn't allow, use v+unicode like v〔

@@ -21,9 +21,6 @@ global Keyboard 	:=["``","1","2","3","4","5","6","7","8","9","0","-","="	;1–13
   , KeyboardRNoCap := KeyboardR.Clone()
   ; separate symbols since CAPS in some contexts (like GUI list) aren't separated from lower case
   ; modifiers # to the left/right of spacebar (helpful var in case the keys get physically remapped in registry to custom modifiers)
-  , ‹␠1 := '‹⎈' , ‹␠2  := '‹⌥' , ‹␠3  := '‹◆'
-  ,  ␠›1:=  '⎈›',  ␠›2 :=  '⌥›',  ␠›3 := '☰'
-  , ⅋ := '&'
  ,ɵ1:=ɵ2:=ɵ3:=ɵ4:=ɵ5:=ɵ6:=ɵ7:=ɵ8:=0
 KeyboardNoCap .Capacity := 68
 KeyboardRNoCap.Capacity := 62
