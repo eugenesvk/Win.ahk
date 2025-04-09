@@ -527,59 +527,125 @@ class helperString {
     sm .= (fm & fkana	) ? 'kana'	: '' ;  kana fかな
     return sm
   }
-  static mod→str(fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
-    sm := '' ; ↓ 1 extra check to allow for sequential checks
-    sm .= (fm & f‹⇧  	) ? '‹'   	: '' ;left shift
-    sm .= (fm & f⇧   	) ? '⇧'   	: '' ;     shift
-    sm .= (fm & f⇧›  	) ? '›'   	: '' ;right shift
-    sm .= (fm & f‹⎈  	) ? '‹'   	: '' ;left ctrl
-    sm .= (fm & f⎈   	) ? '⎈'   	: '' ;     ctrl
-    sm .= (fm & f⎈›  	) ? '›'   	: '' ;right ctrl
-    sm .= (fm & f‹◆  	) ? '‹'   	: '' ;left super ❖◆ (win ⊞)
-    sm .= (fm & f◆   	) ? '◆'   	: '' ;     super ❖◆ (win ⊞)
-    sm .= (fm & f◆›  	) ? '›'   	: '' ;right super ❖◆ (win ⊞)
-    sm .= (fm & f‹⎇  	) ? '‹'   	: '' ;left alt
-    sm .= (fm & f⎇   	) ? '⎇'   	: '' ;     alt
-    sm .= (fm & f⎇›  	) ? '›'   	: '' ;right alt
-    sm .= (fm & f‹👍  	) ? '‹'   	: '' ;left Oyayubi 親指
-    sm .= (fm & f👍   	) ? '👍'   	: '' ;   Oyayubi
-    sm .= (fm & f👍›  	) ? '›'   	: '' ;right Oyayubi 親指
-    sm .= (fm & f⇪   	) ? '⇪'   	: '' ;caps lock
-    sm .= (fm & fkana	) ? 'kana'	: '' ;kana fかな
-    sm .= (fm & f🔢   	) ? '🔢'   	: '' ;num  lock
+  static mod→str(&fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
+    sm := ''
+    if (fm & f⇧) {       	 ;some shift
+      if (fm & f⇧) = f⇧ {	 ;any  = to exclude ⇧∀ matches any, including both (which ‹⇧›)
+        sm .= '⇧'        	;
+      } else {           	; doesn't match any, so safe to add ‹› sides if they exist (any=⇧ without sides)
+        sm .= (fm & f‹⇧  	) ? '‹'	: '' ;left
+        sm .= '⇧'        	;
+        sm .= (fm & f⇧›  	) ? '›'	: '' ;right
+      }
+    }
+    if (fm & f⎈) {       	 ;some ctrl
+      if (fm & f⎈) = f⎈ {	 ;any
+        sm .= '⎈'        	;
+      } else {
+        sm .= (fm & f‹⎈	) ? '‹'	: '' ;left
+        sm .= '⎈'      	;
+        sm .= (fm & f⎈›	) ? '›'	: '' ;right
+      }
+    }
+    if (fm & f◆) {       	 ;some super ❖◆ (win ⊞)
+      if (fm & f◆) = f◆ {	 ;any
+        sm .= '◆'        	;
+      } else {
+        sm .= (fm & f‹◆	) ? '‹'	: '' ;left
+        sm .= '◆'      	;
+        sm .= (fm & f◆›	) ? '›'	: '' ;right
+      }
+    }
+    if (fm & f⎇) {       	 ;some alt
+      if (fm & f⎇) = f⎇ {	 ;any
+        sm .= '⎇'        	;
+      } else {
+        sm .= (fm & f‹⎇	) ? '‹'	: '' ;left
+        sm .= '⎇'      	;
+        sm .= (fm & f⎇›	) ? '›'	: '' ;right
+      }
+    }
+    if (fm & f👍) {       	 ;some Oyayubi 親指
+      if (fm & f👍) = f👍 {	 ;any
+        sm .= '👍'        	;
+      } else {
+        sm .= (fm & f‹👍	) ? '‹'	: '' ;left
+        sm .= '👍'      	;
+        sm .= (fm & f👍›	) ? '›'	: '' ;right
+      }
+    }
+    sm .= (fm & f⇪   	) ? '⇪'   	: '' ;  caps   lock
+    sm .= (fm & f🔢   	) ? '🔢'   	: '' ;num    lock
+    sm .= (fm & f⇳🔒  	) ? '⇳🔒'  	: '' ;  scroll lock
+    sm .= (fm & fkana	) ? 'kana'	: '' ;  kana fかな
     return sm
   }
-  static mod→arr(fm) { ; convert mod flags into an array of strings
+  static mod→arr(&fm) { ; convert mod flags into an array of strings ⇧⎈◆⎇👍 ⇪ 🔢 ⇳🔒 kana
     am := []
-    l:=            (fm & f‹⇧)
-    r:=            (fm & f⇧›)
-    m:=(l+r) ? 1 : (fm & f⇧ )
-    s:= (l?'‹':'') . (m?'⇧':'') . (r?'›':'')
-    am.push(s)
-    l:=            (fm & f‹⎈)
-    r:=            (fm & f⎈›)
-    m:=(l+r) ? 1 : (fm & f⎈ )
-    s:= (l?'‹':'') . (m?'⎈':'') . (r?'›':'')
-    am.push(s)
-    l:=            (fm & f‹◆)
-    r:=            (fm & f◆›)
-    m:=(l+r) ? 1 : (fm & f◆ )
-    s:= (l?'‹':'') . (m?'◆':'') . (r?'›':'')  ;❖◆ (win ⊞)
-    am.push(s)
-    l:=            (fm & f‹⎇)
-    r:=            (fm & f⎇›)
-    m:=(l+r) ? 1 : (fm & f⎇ )
-    s:= (l?'‹':'') . (m?'⎇':'') . (r?'›':'')
-    am.push(s)
-    l:=            (fm & f‹👍)
-    r:=            (fm & f👍›)
-    m:=(l+r) ? 1 : (fm & f👍 )
-    s:= (l?'‹':'') . (m?'👍':'') . (r?'›':'')
-    am.push(s)
-    am.push((fm & f⇪   ) ? '⇪' : '') ;caps lock
-    am.push((fm & fkana) ? 'kana' : '') ;kana fかな
-    am.push((fm & f🔢  ) ? '🔢' : '') ;num  lock
+    sm := ''
+    if (fm & f⇧) {       	 ;some shift
+      if (fm & f⇧) = f⇧ {	 ;any  = to exclude ⇧∀ matches any, including both (which ‹⇧›)
+        sm := '⇧'        	;
+      } else {           	; doesn't match any, so safe to add ‹› sides if they exist (any=⇧ without sides)
+        sm := (fm & f‹⇧  	) ? '‹'	: '' ;left
+        sm .= '⇧'        	;
+        sm .= (fm & f⇧›  	) ? '›'	: '' ;right
+      }
+    }
+    am.push(sm)
+    sm := ''
+    if (fm & f⎈) {       	 ;some ctrl
+      if (fm & f⎈) = f⎈ {	 ;any
+        sm := '⎈'        	;
+      } else {
+        sm := (fm & f‹⎈	) ? '‹'	: '' ;left
+        sm .= '⎈'      	;
+        sm .= (fm & f⎈›	) ? '›'	: '' ;right
+      }
+    }
+    am.push(sm)
+    sm := ''
+    if (fm & f◆) {       	 ;some super ❖◆ (win ⊞)
+      if (fm & f◆) = f◆ {	 ;any
+        sm := '◆'        	;
+      } else {
+        sm := (fm & f‹◆	) ? '‹'	: '' ;left
+        sm .= '◆'      	;
+        sm .= (fm & f◆›	) ? '›'	: '' ;right
+      }
+    }
+    am.push(sm)
+    sm := ''
+    if (fm & f⎇) {       	 ;some alt
+      if (fm & f⎇) = f⎇ {	 ;any
+        sm := '⎇'        	;
+      } else {
+        sm := (fm & f‹⎇	) ? '‹'	: '' ;left
+        sm .= '⎇'      	;
+        sm .= (fm & f⎇›	) ? '›'	: '' ;right
+      }
+    }
+    am.push(sm)
+    sm := ''
+    if (fm & f👍) {       	 ;some Oyayubi 親指
+      if (fm & f👍) = f👍 {	 ;any
+        sm := '👍'        	;
+      } else {
+        sm := (fm & f‹👍	) ? '‹'	: '' ;left
+        sm .= '👍'      	;
+        sm .= (fm & f👍›	) ? '›'	: '' ;right
+      }
+    }
+    am.push(sm)
+    am.push((fm & f⇪   ) ? '⇪' : '')   	;  caps   lock
+    am.push((fm & f🔢  ) ? '🔢' : '')    	;num    lock
+    am.push((fm & f⇳🔒  ) ? '⇳🔒' : '')  	;  scroll lock
+    am.push((fm & fkana) ? 'kana' : '')	;  kana fかな
     return am
+  }
+  static ahk→modi_arr(&k) { ; ahk combo to modifier array of strings
+    modi_f := helperString.ahk→modi_f(&k)
+    return helperString.mod→arr(&modi_f)
   }
   static whichModTextLine(fmod) { ; convert mod flags into a single line string
     modTxt := ''
