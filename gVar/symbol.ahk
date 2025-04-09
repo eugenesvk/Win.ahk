@@ -29,6 +29,55 @@ loop 8 {
   ɵ%A_Index% := numFunc.ɵ(A_Index)
 }
 
+; Various key constants for more ergonomic input or avoiding keyboard layout issues in key definition
+set_flag_global()
+set_flag_global() { ; register global modifier flags
+  global ___ := 0
+  ;bitflags	;
+    , f∗   	:=    1     	;                1 any modifiers allowed
+    , f˜   	:=    2     	;             10 passthru native key
+    , f＄   	:=    4     	;            100 keyboard hook on
+  ;bitflags	modifier    	            left‹›right ‹›
+    , f⇧›  	:=   0x001  	;    0b                  1 0x    1      1 right  shift
+    , f‹⇧  	:=   0x002  	;    0b                 1  0x    2      2 left   shift
+    , f⎈›  	:=   0x004  	;    0b                1   0x    4      4 right  ctrl
+    , f‹⎈  	:=   0x008  	;    0b               1    0x    8      8 left   ctrl
+    , f◆›  	:=   0x010  	;    0b              1     0x   10     16 right  super ❖◆ (win ⊞)
+    , f‹◆  	:=   0x020  	;    0b             1      0x   20     32 left   super
+    , f⎇›  	:=   0x040  	;    0b            1       0x   40     64 right  alt
+    , f‹⎇  	:=   0x080  	;    0b           1        0x   80    128 left   alt
+    , f👍›  	:= 0x100    	;  0b          1         0x  100    256 right  Oyayubi 親指
+    , f‹👍  	:= 0x200    	;  0b         1          0x  200    512 left   Oyayubi
+    , f⇧   	:=  0x0403  	;    0b        1        11 0x  403   1027 any    shift (&f‹⇧› removes non⇧ mods)
+    , f⎈   	:=  0x080c  	;    0b       1       11   0x  80c   2060 any    ctrl
+    , f◆   	:=  0x1030  	;    0b      1      11     0x 1030   4144 any    super
+    , f⎇   	:=  0x20c0  	;    0b     1     11       0x 20c0   8384 any    alt
+    , f👍   	:=0x4300    	;  0b    1    11         0x 4300  17152 any    Oyayubi
+    , f‹⇧› 	:= f‹⇧|f⇧›  	;    0b                 11 0x    3      3 both   shift
+    , f‹⎈› 	:= f‹⎈|f⎈›  	;    0b               11   0x    c     12 both   ctrl
+    , f‹◆› 	:= f‹◆|f◆›  	;    0b             11     0x   30     48 both   super
+    , f‹⎇› 	:= f‹⎇|f⎇›  	;    0b           11       0x   c0    192 both   alt
+    , f‹👍› 	:= f‹👍|f👍›  	;0b         11         0x  300    768 both   Oyayubi
+    , f⇪   	:=   0x08000	  ;  0b   1                0x 8000  32768 caps   lock
+    , f🔢   	:= 0x10000  	;  0b  1                 0x10000  65536 num    lock
+    , f⇳🔒  	:=   0x20000	  ;  0b 1                  0x20000 131072 scroll lock
+    , fkana	:=   0x40000	  ;  0b1                   0x40000 262144 kana かな
+    , bit‹ := f‹⇧ | f‹⎈ | f‹◆ | f‹⎇ | f‹👍
+    , bit› := f⇧› | f⎈› | f◆› | f⎇› | f👍›
+}
+set_key_global()
+set_key_global() { ; register global variables
+  global ___ := 0
+   , ⇧     	    	:= "Shift"	, ‹⇧      	     	:= "LShift"	, ⇧›      	     	:= "RShift"
+   , ⎈ := ⌃	    	:= "Ctrl" 	, ‹⎈ := ‹⌃	     	:= "LCtrl" 	, ⎈› := ⌃›	     	:= "RCtrl"
+   , ◆ := ❖	:= ⌘	:= "LWin" 	, ‹◆ := ‹❖	:= ‹⌘	:= "LWin"  	, ◆› := ❖›	:= ⌘›	:= "RWin"
+   , ⎇ := ⌥	    	:= "Alt"  	, ‹⎇ := ‹⌥	     	:= "LAlt"  	, ⎇› := ⌥›	     	:= "RAlt"
+   , ☰:="AppsKey"
+   , ∗:='*', ˜	:='~', ＄:='$'
+   , ‹␠1 := '‹⎈' , ‹␠2  := '‹⌥' , ‹␠3  := '‹◆'
+   ,  ␠›1:=  '⎈›',  ␠›2 :=  '⌥›',  ␠›3 := '☰'
+   , ⅋ := '&'
+}
 #include <Array>
 
 ;Custom special characters, use ␞ in values to signal ␤ (labels don't need to match it)
