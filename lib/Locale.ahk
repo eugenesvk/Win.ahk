@@ -1,3 +1,4 @@
+#include <libFunc Dbg>	; Functions: Debug
 #include <Win>
 #include <constLocale>
 #include <constWin32alt>
