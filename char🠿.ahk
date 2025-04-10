@@ -16,15 +16,13 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
 
   HotIfWinActive("ahk_group PressnHold")
   ; `12345 67890 -=
-  ;⇧+   ++
-  ;  qwert yuiop []
-  ;  +++++ ++ ++
-  ;  asdfg hjkl; '\
-  ;  ++  +
-  ;⇧    +
-  ;  zxcvb nm,./
-  ;   ++++ +   +
-  ;⇧    +
+  ;          i   []
+  ;    df  hjkl; '\
+  ;  z      m,.
+  ;⇧ 123   67890 -=
+  ;⇧ qw rt   i p []
+  ;⇧   d g hjkl; '\
+  ;⇧  x     m,.
   loop parse "abce/nosuyz'" { ; ⇧🠿a​⇧🠿b​⇧🠿c​⇧🠿e​⇧🠿/​⇧🠿n​⇧🠿o​⇧🠿s​⇧🠿u​⇧🠿y​⇧🠿z​⇧🠿'​  ;;; remove z to test a bug with ‹⎈
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
