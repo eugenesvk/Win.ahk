@@ -1,44 +1,93 @@
 ﻿#Requires AutoHotKey 2.1-alpha.4
+#include <keyHelp>	; List of all registered hotkeys with help
+
 ; #HotIf WinActive("ahk_class PX_WINDOW_CLASS") ; Or WinActive("ahk_class GxWindowClass")
 
-;Alt+Key adds accent to the next key. /board/topic/27801-special-characters-osx-style
-!+vkBF::	csubA(Dia["´"])      	;⌥⇧/​	vkBF ⟶ ´ acute ?(using VK + scancode)
-!+vkC0::	csubA(Dia["``"])     	;⌥⇧`​	vkC0 ⟶ ` grave ?(using VK + scancode)
-!+c::   	csubA(Dia["ˆ"])      	;⌥⇧c​	vk43 ⟶ ˆ circumflex
-!+u::   	csubA(Dia["¨"])      	;⌥⇧u​	vk55 ⟶ ¨ diaeresis/umlaut
-!+m::   	csubA(Dia["¯"])      	;⌥⇧m​	vk4D ⟶ ¯ macron
-!+e::   	csubA(Dia["~"])      	;⌥⇧e​	vk55 ⟶ ~ tilde
-!+p::   	csubA(Dia["oth"])    	;⌥⇧p​	vk50 ⟶ others2 (must be unique letters)
-!+o::   	csub(Dia["oall"],'M')	;⌥⇧o​	vk4F ⟶ others
+; k​ zero-width space helps search the last key in source files, it's cleaned up on import
+keysCsub() ;⎇K⃣  adds accent to the next key. /board/topic/27801-special-characters-osx-style
+keysCsub() { ; longer (and dupe), but can use ⇧ and adds to help
+  static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
+   , s    	:= helperString
+   , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
+   , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
+  hk🛈("⇧⎇/​" 	,hkCSub,,Map("h","´ acute"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇``​"	,hkCSub,,Map("h","` grave"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇c​" 	,hkCSub,,Map("h","ˆ circumflex"      	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇u​" 	,hkCSub,,Map("h","¨ diaeresis/umlaut"	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇m​" 	,hkCSub,,Map("h","¯ macron"          	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇e​" 	,hkCSub,,Map("h","~ tilde"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇o​" 	,hkCSub,,Map("h","others"            	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇p​" 	,hkCSub,,Map("h","others2"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+}
+hkCsub(hk_dirty) {
+  static k := helperString.key→ahk.Bind(helperString)
+  hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first without ＄ ˜
+  Switch hk, 0 { ; Hotkey created → key name and ordering of its modifier symbols gets fixed
+    default  : return ; dbgtt(0,'nothing matched hkCsub hk=' . hk, 4)
+    case k("⇧⎇c" 	) : csubA(Dia["ˆ"])
+    case k("⇧⎇/" 	) : csubA(Dia["´"])
+    case k("⇧⎇``"	) : csubA(Dia["``"])
+    case k("⇧⎇u" 	) : csubA(Dia["¨"])
+    case k("⇧⎇m" 	) : csubA(Dia["¯"])
+    case k("⇧⎇e" 	) : csubA(Dia["~"])
+    case k("⇧⎇p" 	) : csubA(Dia["oth"])
+    case k("⇧⎇o" 	) : csub(Dia["oall"],'M')
+  }
+}
 
-; 13 offset starts with Qwerty instead of `
-; !vk34::                                       ;⌥4​ vk34 ⟶ Paragraphs
-; !+vk33::                                       ;⌥⇧3 vk33 ⟶ Paragraphs conflicts
-; !vk35::                                      ;⌥5 vk35 ⟶ Paragraphs
-<!vkC0::alt_tt_popup("Para"   ,13)	;⌥`​ vkC0 ⟶ Paragraphs
-!+vk31::alt_tt_popup("QuotesS",13)	;⌥⇧1​	vk31	⟶ Single Quotes
-!+vk32::alt_tt_popup("QuotesD",13)	;⌥⇧2​	vk32	⟶ Double Quotes
-!+vk34::R:=lRu(),csub(intersperse([],Ch["Currency"],,1) "`n" intersperse(Ch["CurrLab" R], Ch["Currency" R]),'M') ;⌥⇧4​ vk34 ⟶ currency
-!+vk35::alt_tt_popup("Percent",13) 	;⇧⌥5​	vk35	⟶ Percent
-!+vk36::alt_tt_popup("Superscript")	;⇧⌥6​	vk36	⟶ Superscript
-!+vk37::alt_tt_popup("Subscript")  	;⇧⌥7​	vk37	⟶ Subscript
-!+vk38::alt_tt_popup("Fractions")  	;⇧⌥8​	vk38	⟶ Fractions
-!+vk39::SendText("‹")              	; ⌥9​	vk39	⟶ ‹
-!+vk30::SendText("›")              	; ⌥0​	vk30	⟶ ›
-;!vk39::csub("")                   	; ⌥9​	vk39	⟶ SOMETHING
-;!vk30::csub("")                   	; ⌥0​	vk30	⟶ SOMETHING
-;!vkBD::alt_tt_popup("Dash",13)    	; ⌥-​	VKBD	⟶ Dashes
-;!vkBB::csub("1≈2≠")               	; ⌥=​	VKBB	⟶ Equal signs
-!+r::alt_tt_popup("Checks")        	;⇧⌥r​	vk52	⟶ Misc
-!+q::alt_tt_popup("XSymbols",1)    	;⌥⇧q​	vk51	⟶ system
-!+a::alt_tt_popup("Arrows")        	;⌥⇧a​	vk41	⟶ Arrows
-!+t::alt_tt_popup("Math")          	;⌥⇧t​ 	vk54 	⟶ Math
-!+y::alt_tt_popup("Math2")         	;⌥⇧y​ 	vk59 	⟶ Math
-!+d::alt_tt_popup("WinFile")       	;⌥⇧d	vk44	⟶ Illegal Filename Replacement
-!+b::alt_tt_popup("Bullet",13)     	;⌥⇧b	vk42	⟶ Bullet
-!+k::R:=lRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong) ;⌥⇧k​ VK4B ⟶ TypES with ⌥
-!+l::R:=lRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong) ;⌥⇧l​ VK4C ⟶ TypES with ⌥⇧
-
+keysAltTT()
+keysAltTT() { ;⎇K⃣  various symbols in a popup panel
+  static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
+   , s    	:= helperString
+   , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
+   , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
+  hk🛈("‹⎇``​​"	,hkAltTT,,Map("h","Paragraphs"       	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇1​"  	,hkAltTT,,Map("h","Single Quotes"    	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇2​"  	,hkAltTT,,Map("h","Double Quotes"    	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇4​"  	,hkAltTT,,Map("h","currency"         	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇5​"  	,hkAltTT,,Map("h","Percent"          	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇6​"  	,hkAltTT,,Map("h","Superscript"      	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇7​"  	,hkAltTT,,Map("h","Subscript"        	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇8​"  	,hkAltTT,,Map("h","Fractions"        	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇9​"  	,hkAltTT,,Map("h","‹"                	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇0​"  	,hkAltTT,,Map("h","›"                	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇r​"  	,hkAltTT,,Map("h","Misc"             	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇q​"  	,hkAltTT,,Map("h","system"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇a​"  	,hkAltTT,,Map("h","Arrows"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇t​"  	,hkAltTT,,Map("h","Math"             	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇y​"  	,hkAltTT,,Map("h","Math"             	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇d​"  	,hkAltTT,,Map("h","Illegal Filenames"	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇b​"  	,hkAltTT,,Map("h","Bullet"           	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇k​"  	,hkAltTT,,Map("h","TypES with ⌥"     	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇l​"  	,hkAltTT,,Map("h","TypES with ⌥⇧"    	,"f",s.file_name_(A_LineFile),"l№",A_LineNumber))
+}
+hkAltTT(hk_dirty) {
+  static k := helperString.key→ahk.Bind(helperString)
+  hk := StrReplace(StrReplace(hk_dirty,'~'),'$') ; other hotkeys may register first without ＄ ˜
+  Switch hk, 0 { ; Hotkey created → key name and ordering of its modifier symbols gets fixed
+    default  : return ; dbgtt(0,'nothing matched hkCsub hk=' . hk, 4)
+    ; 13 offset starts with Qwerty instead of `
+    case k("‹⎇``"	) : alt_tt_popup("Para"   ,13)
+    case k("⇧⎇1" 	) : alt_tt_popup("QuotesS",13)
+    case k("⇧⎇2" 	) : alt_tt_popup("QuotesD",13)
+    case k("⇧⎇4" 	) : R:=lRu(),csub(intersperse([],Ch["Currency"],,1) "`n" intersperse(Ch["CurrLab" R], Ch["Currency" R]),'M')
+    case k("⇧⎇5" 	) : alt_tt_popup("Percent",13)
+    case k("⇧⎇6" 	) : alt_tt_popup("Superscript")
+    case k("⇧⎇7" 	) : alt_tt_popup("Subscript")
+    case k("⇧⎇8" 	) : alt_tt_popup("Fractions")
+    case k("⇧⎇9" 	) : SendText("‹")
+    case k("⇧⎇0" 	) : SendText("›")
+    case k("⇧⎇r" 	) : alt_tt_popup("Checks")
+    case k("⇧⎇q" 	) : alt_tt_popup("XSymbols",1)
+    case k("⇧⎇a" 	) : alt_tt_popup("Arrows")
+    case k("⇧⎇t" 	) : alt_tt_popup("Math")
+    case k("⇧⎇y" 	) : alt_tt_popup("Math2")
+    case k("⇧⎇d" 	) : alt_tt_popup("WinFile")
+    case k("⇧⎇b" 	) : alt_tt_popup("Bullet",13)
+    case k("⇧⎇k" 	) : R:=lRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong)
+    case k("⇧⎇l" 	) : R:=lRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong)
+  }
+}
 alt_tt_popup(name:="", pOffset:=0) {
   i_val    	:= name ; Math2
   if       	Ch.has(i_val) {
