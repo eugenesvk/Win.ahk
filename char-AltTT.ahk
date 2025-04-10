@@ -38,6 +38,30 @@
 !+k::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong) ;⌥⇧k​ VK4B ⟶ TypES with ⌥
 !+l::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong) ;⌥⇧l​ VK4C ⟶ TypES with ⌥⇧
 
+alt_tt_popup(name:="", pOffset:=0) {
+  i_val    	:= name ; Math2
+  if       	Ch.has(i_val) {
+    val    	:= Ch[i_val]
+  } else   	{
+    return 	;
+  }        	;
+  i_lbl    	:= name . "Lab" isRu() ; Math2LabRu
+  if       	Ch.has(i_lbl) {
+    lbl    	:= Ch[i_lbl]
+  } else   	{
+    i_lbl  	:= name . "Lab" ; Math2Lab
+    if     	Ch.has(i_lbl) {
+      lbl  	:= Ch[i_lbl]
+    } else 	{
+      lbl  	:= []
+    }      	;
+  }        	;
+  i_sep    	:= name . "Sp" ; Math2Sp
+  sep      	:= Ch.has(i_sep) ? Ch[i_sep] : []
+  splitMode	:= (sep.Length > 0) ? "M" : "A"
+  csub(intersperse(lbl, val, sep, pOffset,,, &splitMode), splitMode) ;
+}
+
 intersperse(pLabel, pVal, pSplit:=0, pOffset:=0, pLang:="En", &outMap:=Map()) { ;[a b]+[1 2]=[a1 b2]
   ; insert newline splits at tSplit#s; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs when indexing a string by "char" cuts unicode chars in half
   arComb := "", delim := "", AllKeys := Keyboard
