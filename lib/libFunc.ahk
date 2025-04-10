@@ -213,7 +213,8 @@ class keyFunc {
       static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
        , s    	:= helperString
        , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
-       , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
+       , k→a  	:= s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
+       , chU  	:= keyCharNameU
       k_ahk := k→a(key)
       if help_keys.has(k_ahk) {
         throw ValueError("Duplicate hotkey being registered!", -1, key " or " k_ahk)
@@ -226,6 +227,19 @@ class keyFunc {
           }
         }
         modi_arr := s.modf→arr(&modi_flag) ;⇧⎈◆⎇
+        ;! too SLOW, fill before GUI is shown, not on startup
+        ; if help.Has('🔣') {
+        ;   _ch := ''
+        ;   Loop Parse, help['🔣'] {
+        ;     if (_chi := chU(A_LoopField)) {
+        ;       for repl in ['Latin ','Small ','Letter ','With '] {
+        ;         _chi := StrReplace(_chi,repl,'')
+        ;       }
+        ;       _ch .= _chi . ' ¦ '
+        ;     }
+        ;   }
+        ;   help['🔣name'] := StrLen(_ch) . " " . _ch
+        ; }
         help['⇧'] := modi_arr[1]
         help['⎈'] := modi_arr[2]
         help['◆'] := modi_arr[3]
