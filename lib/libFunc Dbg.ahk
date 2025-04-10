@@ -18,6 +18,9 @@ dbgMsg(dbgMin:=0, Text:="", Title:="", Options:="") {
 
 log(dbgMin:=0, Text:="", fn:='',idTT:=0,X:=0,Y:=0) { ; print to debug, so leave unused vars as well
   if (dbg >= dbgMin) {
+    if Type(Text) != "String" {
+      Text := Obj2Str(Text)
+    }
     OutputDebug(Text (idTT?idTT ': ':'') (fn?' @' fn:''))
   }
 }
@@ -53,6 +56,9 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
     ; log(0,' starting timer id ' id ' idTT=' idTT)
   }
 
+  if Type(Text) != "String" {
+    Text := Obj2Str(Text)
+  }
   try { ; sometimes get "Access is denied"
     MouseGetPos(&mX, &mY, &mWin, &mControl)
     ; mWin This optional parameter is the name of the variable in which to store the unique ID number of the window under the mouse cursor. If the window cannot be determined, this variable will be made blank.
