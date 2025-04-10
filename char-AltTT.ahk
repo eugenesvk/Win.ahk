@@ -47,9 +47,9 @@ keysAltTT() { ;⎇K⃣  various symbols in a popup panel
    , hk🛈  	:= keyFunc.hk🛈
    , k→a  	:= s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
 
-  hk🛈("‹⎇``​​"	,hkAltTT,,Map("h","Paragraphs"       	,"🔣",Ch["Subscript"  	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇1​"  	,hkAltTT,,Map("h","Single Quotes"    	,"🔣",Ch["Subscript"  	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇2​"  	,hkAltTT,,Map("h","Double Quotes"    	,"🔣",Ch["Subscript"  	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("‹⎇``​​"	,hkAltTT,,Map("h","Paragraphs"       	,"🔣",Ch["Para"       	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇1​"  	,hkAltTT,,Map("h","Single Quotes"    	,"🔣",Ch["QuotesS"    	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇2​"  	,hkAltTT,,Map("h","Double Quotes"    	,"🔣",Ch["QuotesD"    	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇4​"  	,hkAltTT,,Map("h","currency"         	,"🔣",Ch["currency"   	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇5​"  	,hkAltTT,,Map("h","Percent"          	,"🔣",Ch["Percent"    	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇6​"  	,hkAltTT,,Map("h","Superscript"      	,"🔣",Ch["Superscript"	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
