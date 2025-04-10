@@ -486,7 +486,7 @@ class helperString {
     return {h:dbghook,p:dbghook, l:dbglogic}
   }
 
-  static ahk→modi_f(&k) { ; ahk combo to modifier flag
+  static ahk→modi_f(&k) { ; ahk combo to modifier flag. does NOT ignore the last modifier in a modifier-only combo like ^! (without a non-modifier terminal key)
     modi_f := 0
     l:=1,r:=1 ; only check either if both explicit sides are missing
     InStr(k,"<+"	) ? modi_f |= f‹⇧	: l:=0
