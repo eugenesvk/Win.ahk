@@ -182,9 +182,14 @@ class keyFunc {
       if help_keys.has(k_ahk) {
         throw ValueError("Duplicate hotkey being registered!", -1, key " or " k_ahk)
       } else {
+        modi_flag := 0
         s.parseKeyCombo(key,&modi_ahk_arr_short,&nonmod)
-        modi_only := modi_ahk_arr_short[1]
-        modi_arr := s.ahk→modi_arr(&modi_only) ;⇧⎈◆⎇
+        loop modi_ahk_arr_short.Length - 1 { ; skip the last that's not a modifier, but a modi as terminal key
+          if s.modi_f_map.Has(modi_ahk_arr_short[A_Index]) {
+            modi_flag |= s.modi_f_map[modi_ahk_arr_short[A_Index]] ; + → ⇧
+          }
+        }
+        modi_arr := s.modf→arr(&modi_flag) ;⇧⎈◆⎇
         help['⇧'] := modi_arr[1]
         help['⎈'] := modi_arr[2]
         help['◆'] := modi_arr[3]
