@@ -86,13 +86,19 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
      , VK_DOWN  	:= 0x28
      , vkF      	:= GetKeyVK('F')
      , vkS      	:= GetKeyVK('S')
+    ; SoundBeep(0, 10) ; Suppress the beep
     if !(  wParam = vkF
-        || wParam = vkS)
-      || !GetKeyState('Ctrl', "P") {
+        || wParam = vkS) {
+      ; if !GetKeyState('Ctrl', "P") { ; limit to ⎈s ⎈f
+      ; dbgtt(0,ControlGetFocus("A") " ¦ " ED.HWND, 5,, 0,120)
       return
-    } else {
+    ; } else if (ControlGetFocus() = ED.HWND) { ; flashes on subsequent shows, for some reason can't find "A"
+      ; dbgtt(0,"already active", 5,, 0,220)
+      ; return
+    } else if !(ControlGetFocus() = ED.HWND) {
       ControlFocus(ED)
     }
+    ; ControlFocus(ED)
   }
   if   (VerCompare(A_OSVersion, "10.0.17763") >= 0) && (gTheme = "Dark") {
     DWMWA_USE_IMMERSIVE_DARK_MODE := 19
