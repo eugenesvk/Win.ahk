@@ -61,7 +61,7 @@ keysAltTT() { ;⎇K⃣  various symbols in a popup panel
   hk🛈("⇧⎇q​"  	,hkAltTT,,Map("h","system"           	,"🔣",Ch["XSymbols"   	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇a​"  	,hkAltTT,,Map("h","Arrows"           	,"🔣",Ch["Arrows"     	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇t​"  	,hkAltTT,,Map("h","Math"             	,"🔣",Ch["Math"       	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇y​"  	,hkAltTT,,Map("h","Math2"             	,"🔣",Ch["Math2"       	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇y​"  	,hkAltTT,,Map("h","Math2"            	,"🔣",Ch["Math2"      	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇d​"  	,hkAltTT,,Map("h","Illegal Filenames"	,"🔣",Ch["WinFile"    	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇b​"  	,hkAltTT,,Map("h","Bullet"           	,"🔣",Ch["Bullet"     	].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇k​"  	,hkAltTT,,Map("h","TypES with ⌥"     	,"🔣",""              	,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
