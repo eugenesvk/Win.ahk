@@ -289,6 +289,7 @@ class helperString {
      , modiArr := [] ; array [‹⇧ , LShift] (preserves insertion order)
      , modiMap := Map() ; map of ‹⇧ : LShift (NOT ordered, but useful for .Has method)
      , modi_ahk_map := Map() ; map of ahk full names to abbreviated names: LShift → <!
+     , modi_f_map := Map() ; map of ahk modi symbols to flags: <! → f‹⎇
      , modiMapTemplate := Map( ; helps generating the full map
       'Shift'	,['Shift', '⇧', 'Shift'    	,'+']   	, ; last values should be AHK abbreviations!
       'Ctrl' 	,['Ctrl' , '⎈' , '⌃'       	,'^' ]  	,
@@ -335,6 +336,14 @@ class helperString {
           this.modi_ahk_map[           modiNm]       := sym‹› . arrModi[-1] ; ⇧    → +
           this.modi_ahk_map[arLsideR . modi  ]       := sym‹› . arrModi[-1] ; Shift → +
         }
+        ; add flags
+        key  	:= arrModi[-1]
+        fvar 	:= 'f' .       arrModi[2]
+        f‹var	:= 'f' . '‹' . arrModi[2]
+        fvar›	:= 'f'       . arrModi[2] . '›'
+        this.modi_f_map[    key] := %fvar%
+        this.modi_f_map['<' key] := %f‹var%
+        this.modi_f_map['>' key] := %fvar›%
       }
       isInit := true
     }
