@@ -1,7 +1,7 @@
 #Requires AutoHotKey 2.1-alpha.4
 
 #include <UIA/Lib/UIA>
-#include <Acc>
+#include <Acc/Lib/Acc>
 #include <Acc2>
 #include <winapi Struct>
 #include <libFunc Dbg>	; Functions: Debug
