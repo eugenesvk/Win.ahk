@@ -41,6 +41,10 @@ shell	:= ComObject("Shell.Application") ;;; remove after loading form the main s
       &&A_PriorHotkey = '~*LCtrl up' { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
       dbgk := '✗' dbgk ' pre_hk=' A_PriorHotkey ' ¦k=' A_PriorKey ' 🕐' A_TimeSincePriorHotkey ;~*LCtrl up
       ; (dbg<_d)?'':dbgtt(_d,'fn@⭾Up blocking fn⭾↑ hk=' A_PriorHotkey ' prek=' A_PriorKey ' t=' A_TimeSincePriorHotkey,🕐:=5,i:=19,300,350)
+    } else if A_PriorKey = 'Tab' && A_TimeSincePriorHotkey < 220
+      &&      A_PriorHotkey = '+Tab' { ;try to block ⭾ on ⇧↓⭾↓⇧↑⭾↑ (see 'Shift+Tab Restore' below)
+      dbgk := '✗' dbgk ' pre_hk=' A_PriorHotkey ' ¦k=' A_PriorKey ' 🕐' A_TimeSincePriorHotkey ;~*LCtrl up
+      ; (dbg<_d)?'':dbgtt(_d,'fn@⭾Up blocking fn⭾↑ hk=' A_PriorHotkey ' prek=' A_PriorKey ' t=' A_TimeSincePriorHotkey,🕐:=5,i:=19,300,350)
     } else {
       SendInput '{Tab}' ; tab instead of tab up since ⭾↓ doesn't do anything it's a modifier now
       ; (dbg<_d)?'':dbgtt(_d,'fn@⭾Up sending fn⭾↑ hk=' A_PriorHotkey ' prek=' A_PriorKey ' t=' A_TimeSincePriorHotkey,🕐:=5,i:=19,300,400)
