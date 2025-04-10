@@ -78,6 +78,8 @@ OnExit(mainExitFunc)
 ; LWin & LAlt::SendInput('{LWin down}{LCtrl down}{Right down}{LWin up}{LCtrl up}{Right up}')
 
 ; ————————————————————————— Helpers —————————————————————————————
+  #include <keyHelp>	; List of all registered hotkeys with help
+  +^F1::get_help()
   *ScrollLock::ShowModStatus() ; 91  046  ScrollLock
   *CtrlBreak::ShowModStatus() ; 03  046  CtrlBreak
 ; ————————————————————————— Key changes —————————————————————————————
