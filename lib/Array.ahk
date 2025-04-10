@@ -41,3 +41,24 @@ export joinArr(arrays*) {
   }
   return outArr
 }
+
+Array.Prototype.DefineProp("🟰", {call:_Array🟰})
+_Array🟰(this, &arr2) { ; Compares each value pair to another
+  ; @returns true/false
+  if this.Length != arr2.Length {
+    return     false
+  } else {
+    for i, v in this {
+      if this[i] != arr2[i] {
+        return false
+      }
+    }
+  }
+  return       true
+}
+export is_arr🟰(&arr1, &arr2) { ;⊜
+  return arr1.🟰(&arr2)
+}
+export is_arr_eq(&arr1, &arr2) {
+  return arr1.🟰(&arr2)
+}
