@@ -286,21 +286,21 @@ class helperString {
   }
 
   static _ttt:=0
-     , modiArr := [] ; array [‹⇧ , LShift] (preserves insertion order)
-     , modiMap := Map() ; map of ‹⇧ : LShift (NOT ordered, but useful for .Has method)
-     , modi_ahk_map := Map() ; map of ahk full names to abbreviated names: LShift → <!
-     , modi_f_map := Map() ; map of ahk modi symbols to flags: <! → f‹⎇
-     , modiMapTemplate := Map( ; helps generating the full map
+    , modiArr := [] ; array [‹⇧ , LShift] (preserves insertion order)
+    , modiMap := Map() ; map of ‹⇧ : LShift (NOT ordered, but useful for .Has method)
+    , modi_ahk_map := Map() ; map of ahk full names to abbreviated names: LShift → <!
+    , modi_f_map := Map() ; map of ahk modi symbols to flags: <! → f‹⎇
+    , modiMapTemplate := Map( ; helps generating the full map
       'Shift'	,['Shift', '⇧', 'Shift'    	,'+']   	, ; last values should be AHK abbreviations!
       'Ctrl' 	,['Ctrl' , '⎈' , '⌃'       	,'^' ]  	,
       'Win'  	,['Win'  , '◆'  , '❖' , '⌘'	,'#']   	,
       'Alt'  	,['Alt'  , '⎇'  , '⌥'      	, '!'  ]	,
       )
-     , sideIndicTemplate	:= [Map('@L',Map('prefix','L', 'symbol',['‹','<'])) ; last values should be AHK abbreviations!
-       ,                	    Map('@R',Map('prefix','R', 'symbol',['›'])
-       ,                	        '@L',Map('prefix','R', 'symbol',[    '>'])) ; Autohotkey places right modifiers at the left side >!
-       ]
-     , all_whitespace := '[\p{Cf}\p{Z}\h\v]' ; remove whitespace and allow & in function names (cf-invisible formatting Z-ws or invis separator \h\v horizontal/vertical whitespace)
+    , sideIndicTemplate	:= [Map('@L',Map('prefix','L', 'symbol',['‹','<'])) ; last values should be AHK abbreviations!
+      ,                	    Map('@R',Map('prefix','R', 'symbol',['›'])
+      ,                	        '@L',Map('prefix','R', 'symbol',[    '>'])) ; Autohotkey places right modifiers at the left side >!
+      ]
+    , all_whitespace := '[\p{Cf}\p{Z}\h\v]' ; remove whitespace and allow & in function names (cf-invisible formatting Z-ws or invis separator \h\v horizontal/vertical whitespace)
   static fillKeyList() {
     static isInit := false
     if not isInit {
