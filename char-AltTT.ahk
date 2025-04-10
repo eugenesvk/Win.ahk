@@ -94,7 +94,7 @@ hkAltTT(hk_dirty) {
     case k("⇧⎇l" 	) : R:=lRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong)
   }
 }
-alt_tt_popup(name:="", pOffset:=0) {
+alt_tt_popup(name:="", pOffset:="``") {
   i_val    	:= name ; Math2
   if       	Ch.has(i_val) {
     val    	:= Ch[i_val]
@@ -118,13 +118,14 @@ alt_tt_popup(name:="", pOffset:=0) {
   csub(intersperse(lbl, val, sep, pOffset,, &splitMode), splitMode) ;
 }
 
-intersperse(pLabel, pVal, pSplit:=[], pOffset:=0, &outMap:=Map(), &splitMode:="A") { ;[a b]+[1 2]=[a1 b2]
+intersperse(pLabel, pVal, pSplit:=[], pOffset:="``", &outMap:=Map(), &splitMode:="A") { ;[a b]+[1 2]=[a1 b2]
   ; insert newline splits at tSplit#s or when encountering an empty "" string or  records separator
   ; pOffset labels to avoid e.g. ` in `12  outMap to preserve values as is since stringifying them can lead to bugs: indexing a string by "char" cuts unicode chars in half
   ; splitMode is changed to "M"anual if any separator is encountered
   arComb := ""
   AllKeys := isRu() ? KeyboardR : Keyboard  ; Use language-specific layout for index values
   sep№ := 0 ; cumulative № of skips to adjust index position
+  pOff_i := Max(0, HasValue(AllKeys,pOffset) - 1)
   for i,val in pVal {
     no_lbl     	:= 0
     if         	val = ␞ {
@@ -142,7 +143,7 @@ intersperse(pLabel, pVal, pSplit:=[], pOffset:=0, &outMap:=Map(), &splitMode:="A
     if no_lbl  	{
       lbl      	:= ""
     } else     	{
-      lbl      	:= (ii > pLabel.Length) ? AllKeys[ii+pOffset] : pLabel[ii] ; use Full Keyboard for index when not enough Labels
+      lbl      	:= (ii > pLabel.Length) ? AllKeys[ii+pOff_i] : pLabel[ii] ; use Full Keyboard for index when not enough Labels
     }          	;
     arComb     	.= lbl . val . delim
     outMap[lbl]	:= val
