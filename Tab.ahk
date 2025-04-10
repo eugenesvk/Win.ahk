@@ -37,11 +37,11 @@ shell	:= ComObject("Shell.Application") ;;; remove after loading form the main s
     ,dbgk := '↑⭾'
     isMod  := (dbg<_d)?'':anyMod(0)
     isModP := (dbg<_d)?'':anyMod(1)
-    if       (A_PriorKey  = 'Tab') && (A_TimeSincePriorHotkey < 120)
-      &&A_PriorHotkey = '~*LCtrl up' { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
+    if       (A_PriorKey  = 'Tab') && (!A_TimeSincePriorHotkey or A_TimeSincePriorHotkey < 120)
+      &&      A_PriorHotkey = '~*LCtrl up' { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
       dbgk := '✗' dbgk ' pre_hk=' A_PriorHotkey ' ¦k=' A_PriorKey ' 🕐' A_TimeSincePriorHotkey ;~*LCtrl up
       ; (dbg<_d)?'':dbgtt(_d,'fn@⭾Up blocking fn⭾↑ hk=' A_PriorHotkey ' prek=' A_PriorKey ' t=' A_TimeSincePriorHotkey,🕐:=5,i:=19,300,350)
-    } else if (A_PriorKey = 'Tab') && (A_TimeSincePriorHotkey < 220)
+    } else if (A_PriorKey = 'Tab') && (!A_TimeSincePriorHotkey or A_TimeSincePriorHotkey < 220)
       &&      A_PriorHotkey = '+Tab' { ;try to block ⭾ on ⇧↓⭾↓⇧↑⭾↑ (see 'Shift+Tab Restore' below)
       dbgk := '✗' dbgk ' pre_hk=' A_PriorHotkey ' ¦k=' A_PriorKey ' 🕐' A_TimeSincePriorHotkey ;~*LCtrl up
       ; (dbg<_d)?'':dbgtt(_d,'fn@⭾Up blocking fn⭾↑ hk=' A_PriorHotkey ' prek=' A_PriorKey ' t=' A_TimeSincePriorHotkey,🕐:=5,i:=19,300,350)
