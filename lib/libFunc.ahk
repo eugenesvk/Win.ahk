@@ -157,6 +157,21 @@ class keyFunc {
       return flag_mode
     }
 
+    this.keyNameU   := keyNameU
+    static keyNameU(char) { ; get unicode name for a char, eg, 'Infinity' for ∞, using the undocumented GetUName Windows API, only the 1st letter is used
+      static szWCh	:= 2 ; this is UTF-16, so double?
+        , sz0     	:= 1 ; null termination, though seems to work as is
+
+      fnAPI 	:= "getuname.dll\GetUName" ; undoc GetUName(int c, LPWSTR* name) used by charmap.exe to obtain (localized) name of a Unicode char
+      b     	:= Buffer(1,0)
+      chCode	:= Ord(char)
+      char№ 	:= DllCall(fnAPI, "Int",chCode, "Ptr",b, "Int") ; get needed buff size
+      bKeyNm	:= Buffer(szWCh * (sz0 + char№), 0)
+      char№ 	:= DllCall(fnAPI, "Int",chCode, "Ptr",bKeyNm)
+      keyNm 	:= StrGet(bKeyNm, "UTF-16")
+      return keyNm
+    }
+
     this.hk🛈        := hk🛈
     static hk🛈(key, act, opt:="", help) { ; same as Builtin Hotkey, but can use ⇧ and add help message
       static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
