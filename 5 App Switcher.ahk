@@ -1,5 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
 #include <constKey>                        	; various key constants
+#include <Array>                           	; Array helpers
 #include %A_scriptDir%\gVar\varWinGroup.ahk	; App groups for window matching
 #include %A_scriptDir%\gVar\isKey.ahk      	; track key status programmatically
 
@@ -234,76 +235,87 @@ showWinZOrder(winTitleMatch:="", txt:="", skipEmtpy:=1) {
 <+>+2::Focus("next")  	; Goes through all of the windows per monitor forwards
 <+>+3::Focus("recent")	; Opens the last used window per monitor
 
-Focus(z_order) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
+Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
   ;  1 first window in z-order
   ; -1 last  window in z-order
-  ; "recent" Switch to the last used window
-  ; "next"   Iterate through all the windows forwards
-  ; "prev"   Iterate through all the windows backwards
-  Tooltip ; Reset Tooltip.
+  ; "recent" Switch to  last used window
+  ; "next"   Iterate through all windows forwards
+  ; "prev"   Iterate through all windows backwards
+  static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
 
-  static arg_last	:= ""             	; Saves last z_order parameter passed.
-  static z       	:= 0              	; Saves last z_order. (Use arg_last to initialize)
-  windows        	:= AltTabWindows()	; Gather Alt-Tab window list
-  debug          	:= False
+  static _z_to	:= ""	; Last z_to parameter passed
+   , _zi      	:= 0 	; Last z (use _z_to to initialize)
+   , _win     	:= []	; Last z_to list to detect order changes made outside of this function
+   , _d       	:= 1
+   , _d1      	:= 1
+
+  windows	:= AltTabWindows()	; Gather Alt-Tab window list
+  debug  	:= False
+  (dbg<_d)?'':(dbgShowWinOrder⎇⭾(windows))
 
   win_c := windows.length
   if        (win_c == 0) { ; Do nothing if no windows are found
     return 0
   } else if (win_c == 1) { ; Sole window
-    WinActivate windows[1]
+    WinActivate(windows[1])
     return      windows[1]
   }
 
-  ; Check if the number of normal windows is at least 2. AlwaysOnTop windows are never activated since they are always on top
-  always_on_top := 0
+  win_c_top := 0 ; № normal win ≥ 2. AlwaysOnTop never activated since they are already active
   for hwnd in windows {
-    if 0x8 & WinGetExStyle(hwnd) {
-      always_on_top += 1
+    if wseTopMost & WinGetExStyle(hwnd) {
+      win_c_top += 1
     }
   }
-  if (win_c - always_on_top < 2) {
+  if (win_c - win_c_top < 2) {
     WinActivate(windows[-1]) ; AlwaysOnTop windows are listed first
     return      windows[-1]
   }
 
-  recent() { ; Switches to the most recent window. Ignores always on top windows, cause they're always on top
-    loop win_c { ; Search for the window that is next in the z_order after the current active window.
-      z := A_Index + 1
+  recent() { ; Switches to the most recent window. Ignore topmost (no need to switch to them, they're already on top)
+    loop win_c { ; Find window after active (in z_to)
+      _zi := A_Index + 1
     } until (WinActive('A') = windows[A_Index])
-    if (z > win_c) { ; no-break ; If the current window is not in the list, such as the desktop or another monitor... Get the second window that is not always on top.
+    if (_zi > win_c) { ; no-break ; If active window is not found (desktop or another monitor), get 2nd window (except topmost)
       loop win_c {
-        z := A_Index + 1
-      } until not (0x8 & WinGetExStyle(windows[A_Index]))
+        _zi := A_Index + 1
+      } until not (wseTopMost & WinGetExStyle(windows[A_Index]))
     }
-    if (z > win_c) { ; no-break ; 0 windows or 1 window are caught in the beginning
+    if (_zi > win_c) { ; no-break ; 0 windows or 1 window are caught in the beginning
       debug := True
     }
   }
-  if (z_order = "recent") {
+  if (z_to = "recent") {
     recent()
   }
 
-  if   (z_order = "next") { ; Iterate through all the windows in a circular loop
-    if (z_order != arg_last || z > win_c) {
+  dbgtxt := ""
+  if   (z_to = "next") { ; Iterate through all the windows in a circular loop
+    if (z_to != _z_to        	; changed direction
+      ||       _zi > win_c   	; index exceeds the available windows
+      || !_win.🟰(&windows)) {	; unexpected order change
+      (dbg<_d1)?'':(dbgtxt .= "recent (×next)" ((z_to != _z_to)?" Δz_to":'      ') ((_zi > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
       recent()
-    } else if (z < win_c) {
-      z++
-    } else if (z = win_c) {
+    } else if (_zi < win_c) {
+      (dbg<_d1)?'':(dbgtxt .= "zi++ (zi < win_c)")
+      _zi++
+    } else if (_zi = win_c) { ; move last to the top, shifting the stack down
+      (dbg<_d1)?'':(dbgtxt .= "zi== (zi = win_c)")
       ('After cycling through all the windows, repeat this step.')
     }
   }
-  if   (z_order = "prev") { ; Iterate through all the windows in a circular loop backwards
-    if (z_order != arg_last || z > win_c) {
+  (dbg<_d1)?'':(dbgtxt .= " ❖⇞" win_c_top)
+  if   (z_to = "prev") { ; Iterate through all the windows in a circular loop backwards
+    if (z_to != _z_to || _zi > win_c) {
       recent() ;todo
-    } else if (z < win_c) {
-      z--
-    } else if (z = win_c) {
+    } else if (_zi < win_c) {
+      _zi--
+    } else if (_zi = win_c) {
       ('After cycling through all the windows, repeat this step.')
     }
   }
-  if (z_order ~= "^-?\d+$") { ; If z is a number. Can address elements in reverse: [-1] is the bottom element
-    z := z_order
+  if (z_to ~= "^-?\d+$") { ; _zi = number. Can address elements in reverse: [-1] bottom
+    _zi := z_to
   }
 
   if debug {
@@ -313,12 +325,19 @@ Focus(z_order) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtop
       pre := (i>9)?"":fsp
       res .= pre i " " (WinGetTitle(v) || WinGetClass(v)) "`n"
     }
-    return ToolTip(res)
+    dbgTT(0, res, 🕐:=10)
+    return
   }
 
-  arg_last := z_order
-  hwnd := hwnd ?? windows[z]
-  WinActivate("ahk_id" hwnd)
+  db_hd := ((hwnd ?? "no")="no")?'✗':"✓"
+  (dbg<_d1)?'':(dbgtxt .= "`n" _zi " " db_hd " ¦ " _z_to "← →" z_to)
+  (dbg<_d1)?'':(dbgTT(0, dbgtxt, 🕐:=4, , x:=200,y:=_zi*24-47))
+  _z_to := z_to
+  hwnd := hwnd ?? windows[_zi] ;coalescing operator IsSet(A) || B
+  WinActivate("ahk_id " hwnd)
+  rm_win := windows.RemoveAt(_zi)
+  windows.InsertAt(1 + win_c_top, rm_win) ;1st = ApplicationManager_ImmersiveShellWindow
+  _win := windows
 
   return hwnd
 }
