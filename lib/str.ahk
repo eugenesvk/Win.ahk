@@ -536,11 +536,11 @@ class helperString {
     sm .= (fm & fkana	) ? 'kana'	: '' ;  kana fかな
     return sm
   }
-  static mod→str(&fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
-    am := helperString.mod→arr(&fm)
+  static modf→str(&fm) { ; convert mod flags into a condensed side-aware string: ‹⇧› for left+right shift
+    am := helperString.modf→arr(&fm)
     return am.Join(delim:="")
   }
-  static mod→arr(&fm) { ; convert mod flags into an array of strings ⇧⎈◆⎇👍 ⇪ 🔢 ⇳🔒 kana
+  static modf→arr(&fm) { ; convert mod flags into an ordered array of strings ⇧⎈◆⎇👍 ⇪ 🔢 ⇳🔒 kana
     am := []
     sm := ''
     if (fm & f⇧) {       	 ;some shift
@@ -605,7 +605,7 @@ class helperString {
   }
   static ahk→modi_arr(&k) { ; ahk combo to modifier array of strings
     modi_f := helperString.ahk→modi_f(&k)
-    return helperString.mod→arr(&modi_f)
+    return helperString.modf→arr(&modi_f)
   }
 }
 
