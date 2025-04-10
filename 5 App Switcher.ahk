@@ -20,11 +20,16 @@ myAltTab() { ; without sending ⎈↑ AppSwitcher becomes "sticky"
   isKey↓.⎇↹ := 1
   if        GetKeyState("Shift","P") { ; move ←
     SendEvent("{Blind}{LCtrl up}{LAlt down}{LShift down}" "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓‹⇧₊‹⎇⭾ ←¹")
+    ; SendEvent("{Blind}{LCtrl up}{LAlt down}{LShift down}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓‹⇧₊‹⎇ ←¹")
   } else if GetKeyState("Shift"    ) { ; move →
     SendEvent("{Blind}{LCtrl up}{LAlt down}{LShift up}"   "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇⭾ →²")
+    ; SendEvent("{Blind}{LCtrl up}{LAlt down}{LShift up}"  ) ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇ →²")
   } else {                             ; move →
     SendEvent("{Blind}{LCtrl up}{LAlt down}"              "{Tab}") ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇⭾ →³")
+    ; SendEvent("{Blind}{LCtrl up}{LAlt down}"             ) ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓   ‹⎇ →³")
   }
+  ; Sleep(10)
+  ; SendEvent("{Blind}{Tab down}{Tab up}")
   dbgtxt .= ' (isKey↓.⎇↹)'
   (dbg<_d)?'':(OutputDebug(dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc))
   ; (dbg<_d)?'':dbgtt(0,dbgtxt,'∞',4,0,A_ScreenHeight*.85)
