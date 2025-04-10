@@ -323,6 +323,19 @@ Focus(z_order) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtop
   return hwnd
 }
 
+dbgShowWinOrder⎇⭾(windows?) { ; show a tooltip with the list of windows in Alt-Tab order
+  ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
+  static _d	:= 0
+  if !IsSet(windows) {
+    windows	:= AltTabWindows()	; Gather Alt-Tab window list
+  }
+  win_titles := "" ; . WinGetClass(windows[1]) . '`n'
+  for w_id in windows {
+    win_titles .= SubStr(A_Index . " " . WinGetTitle("ahk_id " w_id), 1, 20) . "`n"
+  }
+  (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,,x:=0,y:=0))
+}
+
 AltTabWindows() { ; modernized, original by ophthalmos autohotkey.com/boards/viewtopic.php?t=13288
   static wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
   static wsExToolWin	:= 0x00080	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
