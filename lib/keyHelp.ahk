@@ -22,9 +22,13 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
 
   gap_el := 0
 
+  static sys := helperSystem
+  dpi🖥️	:= sys.getDPI🖥️(), dpi🖥️x:=dpi🖥️[1], dpi🖥️y:=dpi🖥️[2]	; 1) monitor dpi
+  dpi_f := dpi🖥️x / 96 ; 1.5
+
   guiM.SetFont("s10", "Segoe UI")
   LV_Header	:= ["⇧","⎈","◆","⎇","K⃣", "AHK⃣", "H", "🔣", "File", "l№"]
-  LV_Opt   	:= leftmost " y+" gap_el " w830 r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
+  LV_Opt   	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
   LV       	:= guiM.AddListView(LV_Opt, LV_Header)
   LV.OnEvent("DoubleClick", cbLV_DoubleClick)  ; Notify the script whenever the user double clicks a row
   for ahkey, help_map in help_keys { ; Add data
@@ -35,16 +39,16 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   loop LV.GetCount("Col") {
     LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
   }
-  LV.ModifyCol(1,31) ;fits ‹⎇› without …
-  LV.ModifyCol(2,31) ;
-  LV.ModifyCol(3,31) ;
-  LV.ModifyCol(4,31) ;
+  LV.ModifyCol(1,23) ;fits ‹⎈› without …
+  LV.ModifyCol(2,29) ;     ‹⎈›
+  LV.ModifyCol(3,29) ;     ‹◆›
+  LV.ModifyCol(4,31) ;     ‹⎇›
 
 
   guiM.OnEvent("Escape", (*) => guiM.Hide())
   guiM.OnEvent("Size"  , cbGuiSize)
   ; guiM.OnEvent("Close", (*) => ExitApp)
-  guiM.Show("AutoSize x10 y10") ; Display the window
+  guiM.Show("AutoSize x0 y0") ; Display the window
   HideFocusBorder(guiM.Hwnd)
 
   if   (VerCompare(A_OSVersion, "10.0.17763") >= 0) && (gTheme = "Dark") {
