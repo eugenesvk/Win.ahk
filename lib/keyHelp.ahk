@@ -37,12 +37,16 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   ; LV.ModifyCol(2, "Integer")  ; for sorting purposes, indicate that column 2 is an integer
   ; todo: fails autosize, still get …
   loop LV.GetCount("Col") {
+    if A_Index <= 4 or A_Index = 9 {
+      continue
+    }
     LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
   }
   LV.ModifyCol(1,23) ;fits ‹⎈› without …
   LV.ModifyCol(2,29) ;     ‹⎈›
   LV.ModifyCol(3,29) ;     ‹◆›
   LV.ModifyCol(4,31) ;     ‹⎇›
+  LV.ModifyCol(9,30) ; too huge of a field
 
 
   guiM.OnEvent("Escape", (*) => guiM.Hide())
@@ -81,23 +85,34 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
     static timer := LV_Search_Debounced.Bind()
     SetTimer(timer, -400) ; updates the old timer
     LV_Search_Debounced() {
-      dbgtt(0,"LV_Search_Debounced")
+      ; dbgtt(0,"LV_Search_Debounced")
       LV.Opt("-Redraw")
       LV.Delete()
-      for ahkey, help_map in help_keys { ; Add data
+      for ahkey, help_map in help_keys {
         IsFound := false
         ; for i, v in DATA_TYPES[k] { ;if !(CtrlObj.Value) || (InStr(v, CtrlObj.Value))
         v := help_map["h"]
+        try {
+          if (RegExMatch(v, "i)" CtrlObj.Value)) {
+            IsFound := true
+          }
+        }
+        if (help_map.Has("🔣name")) {
+          v := help_map["🔣name"]
           try {
             if (RegExMatch(v, "i)" CtrlObj.Value)) {
               IsFound := true
             }
           }
-        ; }
+        }
         if !(IsFound) {
           continue
         }
-        LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],help_map["c"], ahkey, help_map["h"], (help_map.Has("🔣")?help_map["🔣"]:""), help_map["f"], help_map["l№"])
+        LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
+          help_map["c"], ahkey, help_map["h"],
+         (help_map.Has("🔣")?help_map["🔣"]:""),
+         (help_map.Has("🔣name")?help_map["🔣name"]:""),
+          help_map["f"], help_map["l№"])
       }
     LV.Opt("+Redraw")
     }
