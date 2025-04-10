@@ -14,7 +14,7 @@ keysCsub() { ; longer (and dupe), but can use ⇧ and adds to help
    , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
   hk🛈("⇧⎇/​" 	,hkCSub,,Map("h","´ 1acute"           	,"🔣",Dia["´"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇``​"	,hkCSub,,Map("h","` 2grave"           	,"🔣",Dia["``"  	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇``​"	,hkCSub,,Map("h","`` 2grave"          	,"🔣",Dia["``"  	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇c​" 	,hkCSub,,Map("h","ˆ 3circumflex"      	,"🔣",Dia["ˆ"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇u​" 	,hkCSub,,Map("h","¨ 4diaeresis/umlaut"	,"🔣",Dia["¨"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
   hk🛈("⇧⎇m​" 	,hkCSub,,Map("h","¯ 5macron"          	,"🔣",Dia["¯"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
