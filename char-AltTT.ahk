@@ -11,32 +11,33 @@
 !+p::   	csubA(Dia["oth"])    	;⌥⇧p​	vk50 ⟶ others2 (must be unique letters)
 !+o::   	csub(Dia["oall"],'M')	;⌥⇧o​	vk4F ⟶ others
 
+; 13 offset starts with Qwerty instead of `
 ; !vk34::                                       ;⌥4​ vk34 ⟶ Paragraphs
 ; !+vk33::                                       ;⌥⇧3 vk33 ⟶ Paragraphs conflicts
 ; !vk35::                                      ;⌥5 vk35 ⟶ Paragraphs
-<!vkC0::csub(intersperse([], Ch["Para"],,,isRu()))	;⌥`​ vkC0 ⟶ Paragraphs
-!+vk31::csub(intersperse([], Ch["QuotesS"],,1))   	;⌥⇧1​	vk31	⟶ Single Quotes
-!+vk32::csub(intersperse([], Ch["QuotesD"],,1))   	;⌥⇧2​	vk32	⟶ Double Quotes
-!+vk34::R:=isRu(),csub(intersperse([],Ch["Currency"],,1,R) "`n" intersperse(Ch["CurrLab" R], Ch["Currency" R]),'M') ;⌥⇧4​ vk34 ⟶ currency
-!+vk35::csub(intersperse([],Ch["Percent"],,1))        	;⇧⌥5​ 	vk35	⟶ Percent
-!+vk36::alt_tt_popup("Superscript")                   	;⇧⌥6​ 	vk36	⟶ Superscript
-!+vk37::alt_tt_popup("Subscript")                     	;⇧⌥7​ 	vk37	⟶ Subscript
-!+vk38::alt_tt_popup("Fractions")                     	;⇧⌥8​ 	vk38	⟶ Fractions
-!+vk39::SendText("‹")                                 	; ⌥9​ 	vk39	⟶ ‹
-!+vk30::SendText("›")                                 	; ⌥0​ 	vk30	⟶ ›
-;!vk39::csub("")                                      	; ⌥9​ 	vk39	⟶ SOMETHING
-;!vk30::csub("")                                      	; ⌥0​ 	vk30	⟶ SOMETHING
-;!vkBD::csub(intersperse(Ch["DashLab"],Ch["Dash"],,1))	; ⌥-​ 	VKBD	⟶ Dashes
-;!vkBB::csub("1≈2≠")                                  	; ⌥=​ 	VKBB	⟶ Equal signs
-!+r::alt_tt_popup("Checks")                           	;⇧⌥r​ 	vk52	⟶ Misc
-!+q::alt_tt_popup("XSymbols",1)                       	 ;⌥⇧q​	vk51	⟶ system
-!+a::alt_tt_popup("Arrows")                           	;⌥⇧a​ vk41 ⟶ Arrows
-!+t::alt_tt_popup("Math")                             	;⌥⇧t​ math vk54
-!+y::alt_tt_popup("Math2")                            	;⌥⇧y​ math vk59
-!+d::alt_tt_popup("WinFile")                          	;⌥⇧d	vk44	⟶ Illegal Filename Replacement
-!+b::alt_tt_popup("Bullet",1)                         	;⌥⇧b	vk42	⟶ Bullet
-!+k::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong) ;⌥⇧k​ VK4B ⟶ TypES with ⌥
-!+l::R:=isRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong) ;⌥⇧l​ VK4C ⟶ TypES with ⌥⇧
+<!vkC0::alt_tt_popup("Para"   ,13)	;⌥`​ vkC0 ⟶ Paragraphs
+!+vk31::alt_tt_popup("QuotesS",13)	;⌥⇧1​	vk31	⟶ Single Quotes
+!+vk32::alt_tt_popup("QuotesD",13)	;⌥⇧2​	vk32	⟶ Double Quotes
+!+vk34::R:=lRu(),csub(intersperse([],Ch["Currency"],,1) "`n" intersperse(Ch["CurrLab" R], Ch["Currency" R]),'M') ;⌥⇧4​ vk34 ⟶ currency
+!+vk35::alt_tt_popup("Percent",13) 	;⇧⌥5​	vk35	⟶ Percent
+!+vk36::alt_tt_popup("Superscript")	;⇧⌥6​	vk36	⟶ Superscript
+!+vk37::alt_tt_popup("Subscript")  	;⇧⌥7​	vk37	⟶ Subscript
+!+vk38::alt_tt_popup("Fractions")  	;⇧⌥8​	vk38	⟶ Fractions
+!+vk39::SendText("‹")              	; ⌥9​	vk39	⟶ ‹
+!+vk30::SendText("›")              	; ⌥0​	vk30	⟶ ›
+;!vk39::csub("")                   	; ⌥9​	vk39	⟶ SOMETHING
+;!vk30::csub("")                   	; ⌥0​	vk30	⟶ SOMETHING
+;!vkBD::alt_tt_popup("Dash",13)    	; ⌥-​	VKBD	⟶ Dashes
+;!vkBB::csub("1≈2≠")               	; ⌥=​	VKBB	⟶ Equal signs
+!+r::alt_tt_popup("Checks")        	;⇧⌥r​	vk52	⟶ Misc
+!+q::alt_tt_popup("XSymbols",1)    	;⌥⇧q​	vk51	⟶ system
+!+a::alt_tt_popup("Arrows")        	;⌥⇧a​	vk41	⟶ Arrows
+!+t::alt_tt_popup("Math")          	;⌥⇧t​ 	vk54 	⟶ Math
+!+y::alt_tt_popup("Math2")         	;⌥⇧y​ 	vk59 	⟶ Math
+!+d::alt_tt_popup("WinFile")       	;⌥⇧d	vk44	⟶ Illegal Filename Replacement
+!+b::alt_tt_popup("Bullet",13)     	;⌥⇧b	vk42	⟶ Bullet
+!+k::R:=lRu(),csub(intersperse(Bir["1Lab"],Bir["1" R]) "`n" intersperse(Bir["QLab" R],Bir["Q" ]) "`n" intersperse(Bir["ALab" R],Bir["A" ]) "`n" intersperse(Bir["ZLab" R],Bir["Z" R]),'M',,ListenTimerLong) ;⌥⇧k​ VK4B ⟶ TypES with ⌥
+!+l::R:=lRu(),csub(intersperse(Bir["1Lab"],Bir["1s" ]) "`n" intersperse(Bir["QLab" R],Bir["Qs"]) "`n" intersperse(Bir["ALab" R],Bir["As"]) "`n" intersperse(Bir["ZLab" R],Bir["Zs" ]),'M',,ListenTimerLong) ;⌥⇧l​ VK4C ⟶ TypES with ⌥⇧
 
 alt_tt_popup(name:="", pOffset:=0) {
   i_val    	:= name ; Math2
