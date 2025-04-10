@@ -1,6 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
 
-#include <UIA>
+#include <UIA/Lib/UIA>
 #include <Acc>
 #include <Acc2>
 #include <winapi Struct>
