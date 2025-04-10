@@ -1,7 +1,9 @@
 #Requires AutoHotKey 2.1-alpha.18
 
 get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hotkeys and their help🛈
-  _d:=0
+  static is_init := false
+   , chU	:= keyFunc.keyCharNameU
+   , _d 	:= 0
   guiM := Gui()
   guiOptChrome := "-Caption -Border -Resize -SysMenu"
   guiM := Gui("+MinSize800x480 +DPIResize " guiOptChrome, t:="Registered Hotkeys")
@@ -27,12 +29,35 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   dpi_f := dpi🖥️x / 96 ; 1.5
 
   guiM.SetFont("s10", "Segoe UI")
-  LV_Header	:= ["⇧","⎈","◆","⎇","K⃣", "AHK⃣", "H", "🔣", "File", "l№"]
+  LV_Header	:= ["⇧","⎈","◆","⎇","K⃣", "AHK⃣", "H", "🔣", "Names","File", "l№"]
   LV_Opt   	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
   LV       	:= guiM.AddListView(LV_Opt, LV_Header)
   LV.OnEvent("DoubleClick", cbLV_DoubleClick)  ; Notify the script whenever the user double clicks a row
   for ahkey, help_map in help_keys { ; Add data
-    LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],help_map["c"], ahkey, help_map["h"], (help_map.Has("🔣")?help_map["🔣"]:""), help_map["f"], help_map["l№"])
+    if not is_init { ;
+      if help_map.Has('🔣') {
+        _ch := ''
+        Loop Parse, help_map['🔣'] {
+          ; dbgtt(0,A_LoopField,1)
+          if (_chi := chU(A_LoopField)) {
+            for repl in ['Latin ','Small ','Letter ','With '] {
+              _chi := StrReplace(_chi,repl,'')
+            }
+            _ch .= _chi . ' ¦ '
+          }
+        }
+        help_map['🔣name'] := StrLen(_ch) . " " . _ch
+      }
+    }
+
+    LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
+      help_map["c"], ahkey, help_map["h"],
+     (help_map.Has("🔣")?help_map["🔣"]:""),
+     (help_map.Has("🔣name")?help_map["🔣name"]:""),
+      help_map["f"], help_map["l№"])
+  }
+  if not is_init {
+    is_init := true
   }
   ; LV.ModifyCol(2, "Integer")  ; for sorting purposes, indicate that column 2 is an integer
   ; todo: fails autosize, still get …
