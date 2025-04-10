@@ -1,5 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
-#Include <constKey>	; various key constants
+#Include %A_scriptDir%\gVar\symbol.ahk	; Global vars (diacritic symbols and custom chars)
+#Include <constKey>                   	; various key constants
 ; —————————— String functions ——————————
 class helperPath { ; basic, not properly tested, e.g., \\c paths don't work
   static file_full(&s) {
