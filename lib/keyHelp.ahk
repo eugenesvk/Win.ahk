@@ -80,6 +80,20 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   guiM.Show("AutoSize x0 y0") ; Display the window
   HideFocusBorder(guiM.Hwnd)
 
+  OnMessage(WM_KEYDOWN:=0x100, KeyDown)
+  KeyDown(wParam, lParam, nmsg, hwnd) {
+    static VK_UP	:= 0x26
+     , VK_DOWN  	:= 0x28
+     , vkF      	:= GetKeyVK('F')
+     , vkS      	:= GetKeyVK('S')
+    if !(  wParam = vkF
+        || wParam = vkS)
+      || !GetKeyState('Ctrl', "P") {
+      return
+    } else {
+      ControlFocus(ED)
+    }
+  }
   if   (VerCompare(A_OSVersion, "10.0.17763") >= 0) && (gTheme = "Dark") {
     DWMWA_USE_IMMERSIVE_DARK_MODE := 19
     if (VerCompare(A_OSVersion, "10.0.18985") >= 0) {
