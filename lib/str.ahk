@@ -355,14 +355,13 @@ class helperString {
       ; ⇧⎈›a  >^+ vk41
     arrOut := []
     static isInit := false
-    key_combo := RegExReplace(key_combo,this.all_whitespace,'')
     this.fillKeyList()
 
-    key_combo_clean := key_combo ; save to later find the last modifier
-    ; Now parse the input key_combo
+    key_combo := RegExReplace(key_combo,this.all_whitespace,'')
+    ; key_combo_clean := key_combo ; save to later find the last modifier
 
-    match_map    	:= this.modiMap
-    modi_last_map	:= this.get_last_match_backwards(key_combo,&match_map)
+    ; Now parse the input key_combo
+    modi_last_map	:= this.get_last_match_backwards(key_combo,&this.modiMap)
     isLastMod    	:= modi_last_map['i']
     lastMod      	:= ""
     if isLastMod {
@@ -370,7 +369,7 @@ class helperString {
       lastMod  	:= modi_last_map['sub'] ; add it later, but always as a full substitute RCtrl
     }
 
-    outModi_ahk_arr_user := [] ; ‹⇧
+    ; outModi_ahk_arr_user := [] ; ‹⇧
     outModi_ahk_arr_full := [] ; LShift
     findModi(where) {
       for i, arr in this.modiArr {
@@ -406,7 +405,7 @@ class helperString {
       if  (got_modi := findModi(key_combo)) {
         modi_user    	:= got_modi[1]  ; ‹⇧
         modi_ahk_full	:= got_modi[2]  ; LShift
-        outModi_ahk_arr_user.Push(modi_user)
+        ; outModi_ahk_arr_user.Push(modi_user)
         outModi_ahk_arr_full.Push(modi_ahk_full)
         key_combo := StrReplace(key_combo, modi_user,'',,,1)
       } else {
