@@ -32,6 +32,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   LV_Header	:= ["⇧","⎈","◆","⎇","K⃣", "AHK⃣", "H", "🔣", "Names","File", "l№"]
   LV_Opt   	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
   LV       	:= guiM.AddListView(LV_Opt, LV_Header)
+  LV.Opt("-Redraw")
   LV.OnEvent("DoubleClick", cbLV_DoubleClick)  ; Notify the script whenever the user double clicks a row
   for ahkey, help_map in help_keys { ; Add data
     if not is_init { ;
@@ -79,6 +80,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   ; guiM.OnEvent("Close", (*) => ExitApp)
   guiM.Show("AutoSize x0 y0") ; Display the window
   HideFocusBorder(guiM.Hwnd)
+  LV.Opt("+Redraw")
 
   OnMessage(WM_KEYDOWN:=0x100, KeyDown)
   KeyDown(wParam, lParam, nmsg, hwnd) {
