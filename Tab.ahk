@@ -35,11 +35,10 @@ shell	:= ComObject("Shell.Application") ;;; remove after loading form the main s
     static _d := 1 ; 0 to hide tooltips, 1 to hide debug with dbg=0
     ,anyMod	:= keyFunc.anyMod
     ,dbgk := '↑⭾'
-    isMod := (dbg<_d)?'':anyMod(0)
+    isMod  := (dbg<_d)?'':anyMod(0)
     isModP := (dbg<_d)?'':anyMod(1)
-    if   A_PriorHotkey = '~*LCtrl up'
-      && A_PriorKey  = 'Tab'
-      && A_TimeSincePriorHotkey<120 { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
+    if  A_PriorKey       = 'Tab' && A_TimeSincePriorHotkey < 120
+      &&A_PriorHotkey = '~*LCtrl up' { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
       dbgk := '✗' dbgk ' pre_hk=' A_PriorHotkey ' ¦k=' A_PriorKey ' 🕐' A_TimeSincePriorHotkey ;~*LCtrl up
     } else {
       ; dbgtt(0,'✓' A_PriorHotkey ' ¦ ' A_PriorKey,🕐:=3,10,150,A_ScreenHeight*.9) ;~*LCtrl up
