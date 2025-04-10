@@ -157,8 +157,8 @@ class keyFunc {
       return flag_mode
     }
 
-    this.keyNameU   := keyNameU
-    static keyNameU(char) { ; get unicode name for a char, eg, 'Infinity' for ∞, using the undocumented GetUName Windows API, only the 1st letter is used
+    this.keyCharNameU   := keyCharNameU
+    static keyCharNameU(char) { ; get unicode name for a char, eg, 'Infinity' for ∞, using the undocumented GetUName Windows API, only the 1st letter is used
       static szWCh	:= 2 ; this is UTF-16, so double?
         , sz0     	:= 1 ; null termination, though seems to work as is
 
@@ -169,6 +169,41 @@ class keyFunc {
       bKeyNm	:= Buffer(szWCh * (sz0 + char№), 0)
       char№ 	:= DllCall(fnAPI, "Int",chCode, "Ptr",bKeyNm)
       keyNm 	:= StrGet(bKeyNm, "UTF-16")
+      return keyNm
+    }
+    this.keyCharNameC   := keyCharNameC
+    static keyCharNameC(char, ch_t:=0) { ; get unicode name for a char, eg, 'INFINITY' for ∞, for some reason dumb ALLCAPS format
+      static szWCh	:= 2 ; this is UTF-16, so double?
+        , sz0     	:= 1 ; null termination, though seems to work as is
+
+      fnAPI	:= "icuuc.dll\u_charName" ;
+      _bSz := 1 ;
+      _b    	:= Buffer(_bSz,0)
+      chCode	:= Ord(char)
+      pErr0 	:= 0 ; CAN'T reuse pErr0, can't overwrite
+      ; ch_t ; 0x24C2 ;UTF-16BE
+        ; 0 CIRCLED LATIN CAPITAL LETTER M	LAO LETTER LO LING
+        ; 2 CIRCLED LATIN CAPITAL LETTER M	2 LAO LETTER LO LING
+        ; 3                               	3 LAO LETTER RO
+        ; 1,4 empty
+        ; U_UNICODE_CHAR_NAME     	Unicode character name (Name property)
+        ;×U_UNICODE_10_CHAR_NAME  	The Unicode_1_Name property value which is of little practical value. Beginning with ICU 49, ICU APIs return an empty string for this name choice. Deprecated: ICU 49
+        ; U_EXTENDED_CHAR_NAME    	Standard or synthetic character name
+        ; U_CHAR_NAME_ALIAS       	Corrected name from NameAliases.txt
+        ;×U_CHAR_NAME_CHOICE_COUNT	One more than the highest normal UCharNameChoice value. Deprecated: ICU 58 The numeric value may change over time, see ICU ticket #12420
+
+      char№ 	:= DllCall(fnAPI, "Int",chCode,"Int",ch_t,"Ptr",_b,"Int",_bSz,"Ptr*",&pErr0,"Int")
+      pErr  	:= 0
+      bSz   	:= sz0 + char№
+      bKeyNm	:= Buffer(bSz, 0)
+      retlen	:= DllCall(fnAPI
+        ,"Int",chCode ; UChar32 is a signed 32-bit integer (same as int32_t)
+        ,"Int",ch_t	; enum UCharNameChoice
+        ,"Ptr",bKeyNm    	;
+        ,"Int",bSz       	;int32_t
+        ,"Ptr*",&pErr
+        ,"Int") ; ret
+      keyNm := StrGet(bKeyNm, "UTF-8")
       return keyNm
     }
 
