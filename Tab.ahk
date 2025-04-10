@@ -40,9 +40,10 @@ shell	:= ComObject("Shell.Application") ;;; remove after loading form the main s
     if  A_PriorKey       = 'Tab' && A_TimeSincePriorHotkey < 120
       &&A_PriorHotkey = '~*LCtrl up' { ;try to block ⭾ on ⎈↓⭾↓⎈↑⭾↑
       dbgk := '✗' dbgk ' pre_hk=' A_PriorHotkey ' ¦k=' A_PriorKey ' 🕐' A_TimeSincePriorHotkey ;~*LCtrl up
+      ; (dbg<_d)?'':dbgtt(_d,'fn@⭾Up blocking fn⭾↑ hk=' A_PriorHotkey ' prek=' A_PriorKey ' t=' A_TimeSincePriorHotkey,🕐:=5,i:=19,300,350)
     } else {
-      ; dbgtt(0,'✓' A_PriorHotkey ' ¦ ' A_PriorKey,🕐:=3,10,150,A_ScreenHeight*.9) ;~*LCtrl up
-      SendInput '{Tab}'
+      SendInput '{Tab}' ; tab instead of tab up since ⭾↓ doesn't do anything it's a modifier now
+      ; (dbg<_d)?'':dbgtt(_d,'fn@⭾Up sending fn⭾↑ hk=' A_PriorHotkey ' prek=' A_PriorKey ' t=' A_TimeSincePriorHotkey,🕐:=5,i:=19,300,400)
     }
     dbgk .= isMod ' ' isModP ;
     (dbg<_d)?'':(log(0,dbgk)), (dbg<_d+1)?'':(dbgtt(0,dbgk,🕐:=3,9,95,A_ScreenHeight*.9))
