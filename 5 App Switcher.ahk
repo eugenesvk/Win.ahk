@@ -340,7 +340,7 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
 
   db_hd := ((hwnd ?? "no")="no")?'✗':"✓"
   (dbg<_d1)?'':(dbgtxt .= "`n" _zi " " db_hd " ¦ " _z_to "← →" z_to)
-  (dbg<_d1)?'':(dbgTT(0, dbgtxt, 🕐:=4, , x:=200,y:=_zi*24-47))
+  (dbg<_d1)?'':(dbgTT(0, dbgtxt, 🕐:=4, , x:=200,y:=Max(0,_zi*24-47)))
   _z_to := z_to
   hwnd := hwnd ?? windows[_zi] ;coalescing operator IsSet(A) || B
   WinActivate("ahk_id " hwnd)
