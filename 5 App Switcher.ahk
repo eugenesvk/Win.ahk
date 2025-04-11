@@ -331,6 +331,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
         ('After cycling through all the windows, repeat this step.')
       }
     }
+    (dbg<_d1)?'':(dbgtxt .= " ❖⇞" win_c_top)
   }
 
   if debug {
