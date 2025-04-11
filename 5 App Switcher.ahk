@@ -292,37 +292,39 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
       debug := True
     }
   }
-  if (z_to = "recent") {
-    recent()
-  }
-
-  dbgtxt := ""
-  if   (z_to = "next") { ; Iterate through all the windows in a circular loop
-    if (z_to != _z_to        	; changed direction
-      ||       _zi > win_c   	; index exceeds the available windows
-      || !_win.🟰(&windows)) {	; unexpected order change
-      (dbg<_d1)?'':(dbgtxt .= "recent (×next)" ((z_to != _z_to)?" Δz_to":'      ') ((_zi > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
+  if (z_to ~= "^-?\d+$") { ; z_to = number, use it directly. Can address elements in reverse: [-1] bottom
+    abs_zi := (z_to>=0) ? z_to : z_to + win_c ; convert -1 to last (absolute win list coords)
+    _zi := Min(win_c, Max(1, abs_zi)) ; avoid invalid indices
+    (dbg<_d1)?'':(dbgtxt .= _zi " manual")
+  } else {
+    if (z_to = "recent") {
       recent()
-    } else if (_zi < win_c) {
-      (dbg<_d1)?'':(dbgtxt .= "zi++ (zi<win_c)")
-      _zi++
-    } else if (_zi = win_c) { ; move last to the top, shifting the stack down
-      (dbg<_d1)?'':(dbgtxt .= "zi== (zi=win_c)")
-      ('After cycling through all the windows, repeat this step.')
     }
-  }
-  (dbg<_d1)?'':(dbgtxt .= " ❖⇞" win_c_top)
-  if   (z_to = "prev") { ; Iterate through all the windows in a circular loop backwards
-    if (z_to != _z_to || _zi > win_c) {
-      recent() ;todo
-    } else if (_zi < win_c) {
-      _zi--
-    } else if (_zi = win_c) {
-      ('After cycling through all the windows, repeat this step.')
+
+    if   (z_to = "next") { ; Iterate through all the windows in a circular loop
+      if (z_to != _z_to        	; changed direction
+        ||       _zi > win_c   	; index exceeds the available windows
+        || !_win.🟰(&windows)) {	; unexpected order change
+        (dbg<_d1)?'':(dbgtxt .= "recent (×next)" ((z_to != _z_to)?" Δz_to":'      ') ((_zi > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
+        recent()
+      } else if (_zi < win_c) {
+        (dbg<_d1)?'':(dbgtxt .= "zi++ (zi<win_c)")
+        _zi++
+      } else if (_zi = win_c) { ; move last to the top, shifting the stack down
+        (dbg<_d1)?'':(dbgtxt .= "zi== (zi=win_c)")
+        ('After cycling through all the windows, repeat this step.')
+      }
     }
-  }
-  if (z_to ~= "^-?\d+$") { ; _zi = number. Can address elements in reverse: [-1] bottom
-    _zi := z_to
+    (dbg<_d1)?'':(dbgtxt .= " ❖⇞" win_c_top)
+    if   (z_to = "prev") { ; Iterate through all the windows in a circular loop backwards
+      if (z_to != _z_to || _zi > win_c) {
+        recent() ;todo
+      } else if (_zi < win_c) {
+        _zi--
+      } else if (_zi = win_c) {
+        ('After cycling through all the windows, repeat this step.')
+      }
+    }
   }
 
   if debug {
