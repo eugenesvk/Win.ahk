@@ -352,7 +352,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   return hwnd
 }
 
-dbgShowWinOrder⎇⭾(windows?) { ; show a tooltip with the list of windows in Alt-Tab order
+dbgShowWinOrder⎇⭾(&windows?) { ; show a tooltip with the list of windows in Alt-Tab order
   ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
    , _d	:= 0
