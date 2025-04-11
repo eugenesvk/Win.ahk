@@ -263,7 +263,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   windows	:= AltTabWindows()	; Gather Alt-Tab window list
   debug  	:= False
   dbgtxt 	:= ""
-  (dbg<_d)?'':(dbgShowWinOrder⎇⭾(windows))
+  (dbg<_d)?'':(dbgShowWinZOrder(windows))
 
   win_c := windows.length
   if        (win_c == 0) { ; Do nothing if no windows are found
@@ -335,7 +335,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   }
 
   if debug {
-    dbgShowWinOrder⎇⭾(&windows)
+    dbgShowWinZOrder(&windows)
     return
   }
 
@@ -352,7 +352,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   return hwnd
 }
 
-dbgShowWinOrder⎇⭾(&windows?) { ; show a tooltip with the list of windows in Alt-Tab order
+dbgShowWinZOrder(&windows?) { ; show a tooltip with the list of windows in Z-order
   ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
    , _d	:= 0
