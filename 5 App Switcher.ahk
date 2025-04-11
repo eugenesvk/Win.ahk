@@ -256,6 +256,7 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
 
   windows	:= AltTabWindows()	; Gather Alt-Tab window list
   debug  	:= False
+  dbgtxt 	:= ""
   (dbg<_d)?'':(dbgShowWinOrder⎇⭾(windows))
 
   win_c := windows.length
@@ -272,7 +273,8 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
       win_c_top += 1
     }
   }
-  if (win_c - win_c_top < 2) {
+  win_c_nontop := win_c - win_c_top
+  if (win_c_nontop < 2) {
     WinActivate(windows[-1]) ; AlwaysOnTop windows are listed first
     return      windows[-1]
   }
@@ -302,10 +304,10 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
       (dbg<_d1)?'':(dbgtxt .= "recent (×next)" ((z_to != _z_to)?" Δz_to":'      ') ((_zi > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
       recent()
     } else if (_zi < win_c) {
-      (dbg<_d1)?'':(dbgtxt .= "zi++ (zi < win_c)")
+      (dbg<_d1)?'':(dbgtxt .= "zi++ (zi<win_c)")
       _zi++
     } else if (_zi = win_c) { ; move last to the top, shifting the stack down
-      (dbg<_d1)?'':(dbgtxt .= "zi== (zi = win_c)")
+      (dbg<_d1)?'':(dbgtxt .= "zi== (zi=win_c)")
       ('After cycling through all the windows, repeat this step.')
     }
   }
@@ -341,7 +343,7 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
   hwnd := hwnd ?? windows[_zi] ;coalescing operator IsSet(A) || B
   WinActivate("ahk_id " hwnd)
   rm_win := windows.RemoveAt(_zi)
-  windows.InsertAt(1 + win_c_top, rm_win) ;1st = ApplicationManager_ImmersiveShellWindow
+  windows.InsertAt(1 + win_c_top, rm_win) ;insert after topmost
   _win := windows
 
   return hwnd
