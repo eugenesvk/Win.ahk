@@ -381,20 +381,53 @@ AltTabWindows() { ; modernized, original by ophthalmos autohotkey.com/boards/vie
   DllCall("GetCursorPos", "uint64*", &point:=0) ; Get the current monitor the mouse cusor is in
   hMonitor := DllCall("MonitorFromPoint", "uint64",point, "uint",0x2, "ptr")
 
+  static exclude_Class := [
+    "Progman",
+    "Windows.UI.Core.CoreWindow", ; WP Core Frame
+    "CEF-OSC-WIDGET",
+    "ApplicationManager_ImmersiveShellWindow", ; desktop
+    "WorkerW","Shell_TrayWnd" ; explorer.exe
+  ]
+  static exclude_path := [
+    "C:\Windows\System32\wscript.exe",
+  ]
+  static exclude_exe := [
+  ]
+
   AltTabList := []
-  DetectHiddenWindows False     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
+  detect_backup := DetectHiddenWindows(False)     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
   for hwnd in WinGetList() {    ; gather a list of running programs
-    if hMonitor == DllCall("MonitorFromWindow", "ptr",hwnd, "uint",0x2, "ptr") { ; Check if the window is on the same monitor.
+    if hMonitor == DllCall("MonitorFromWindow", "ptr",hwnd, "uint",0x2, "ptr") { ; Check if the window is on the same monitor
       owner := DllCall("GetAncestor", "ptr",hwnd, "uint",GA_ROOTOWNER:=3, "ptr") ; Find the top-most owner of the child window
       owner := owner || hwnd ; Above call could be zero.
-      if (DllCall("GetLastActivePopup", "ptr", owner) = hwnd) { ; Check to make sure that the active window is also the owner window.
-        es := WinGetExStyle(hwnd) ; Get window extended style
-        if (!(es & wsExToolWin)    ; appears on the Alt+Tab list
-          || (es & wsExAppWin )) { ; has a taskbar button
-          AltTabList.push(hwnd) ; ? not be a Windows 10 background app
-        }
+      if not (DllCall("GetLastActivePopup", "ptr",owner) = hwnd) { ; Active window is also the owner
+        continue
+      }
+      if not DllCall("GetWindowTextLength","Ptr",hwnd) { ;has_text
+        continue
+      }
+      win_cls := WinGetClass(hwnd)
+      if HasValue(exclude_Class, win_cls) { ;bad_cls
+        continue
+      }
+      if InStr(SubStr(win_cls,1,23), 'imestatuspop_classname{') { ;bad_cls
+        continue
+      }
+      if HasValue(exclude_path, WinGetProcessPath(hwnd)) { ;bad_path
+        continue
+      }
+      ; if HasValue(exclude_exe , WinGetProcessName(hwnd)) { ; bad_exe
+        ; continue
+      ; }
+      wse := WinGetExStyle(hwnd)
+      if (!(wse & wsExToolWin)   	; appears on the Alt+Tab list
+        or (wse & wsExAppWin )) {	; has a taskbar button
+        AltTabList.push(hwnd) ; ? not be a Windows 10 background app
       }
     }
+  }
+  if detect_backup != False {
+    DetectHiddenWindows detect_backup
   }
   return AltTabList
 }
