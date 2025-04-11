@@ -254,6 +254,11 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
    , _win     	:= []	; Last z_to list to detect order changes made outside of this function
    , _d       	:= 1
    , _d1      	:= 1
+  if        z_to = "↑" { ; canonicalize to avoid _z_to != z_to fails just because of a different format
+    z_to := "prev"
+  } else if z_to = "↓" {
+    z_to := "next"
+  }
 
   windows	:= AltTabWindows()	; Gather Alt-Tab window list
   debug  	:= False
