@@ -240,12 +240,13 @@ showWinZOrder(winTitleMatch:="", txt:="", skipEmtpy:=1) {
 <+>+2::Focus("next")  	; Goes through all of the windows per monitor forwards
 <+>+3::Focus("recent")	; Opens the last used window per monitor
 
-Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
-  ;  1 first window in z-order
-  ; -1 last  window in z-order
-  ; "recent" Switch to  last used window
-  ; "next"   Iterate through all windows forwards
-  ; "prev"   Iterate through all windows backwards
+Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
+  ;  1 first	window in z-order
+  ; -1 last 	window in z-order
+  ;  5      	window in z-order (clamped by 1/window count)
+  ; recent  	Switch to  last used window
+  ;↓ next   	Iterate through all windows forwards
+  ;↑ prev   	Iterate through all windows backwards
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
 
   static _z_to	:= ""	; Last z_to parameter passed
@@ -301,7 +302,7 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
       recent()
     }
 
-    if   (z_to = "next") { ; Iterate through all the windows in a circular loop
+    if   (z_to = "next") || (z_to = "↓") { ; Iterate through all the windows in a circular loop
       if (z_to != _z_to        	; changed direction
         ||       _zi > win_c   	; index exceeds the available windows
         || !_win.🟰(&windows)) {	; unexpected order change
@@ -316,7 +317,7 @@ Focus(z_to) { ; written by iseahound 2022-09-16 autohotkey.com/boards/viewtopic.
       }
     }
     (dbg<_d1)?'':(dbgtxt .= " ❖⇞" win_c_top)
-    if   (z_to = "prev") { ; Iterate through all the windows in a circular loop backwards
+    if   (z_to = "prev") || (z_to = "↑") { ; Iterate through all the windows in a circular loop backwards
       if (z_to != _z_to || _zi > win_c) {
         recent() ;todo
       } else if (_zi < win_c) {
