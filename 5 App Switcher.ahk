@@ -334,13 +334,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   }
 
   if debug {
-    res := ""
-    fsp := (win_c>9)?" ":""
-    for i, v in windows {
-      pre := (i>9)?"":fsp
-      res .= pre i " " (WinGetTitle(v) || WinGetClass(v)) "`n"
-    }
-    dbgTT(0, res, 🕐:=10)
+    dbgShowWinOrder⎇⭾(&windows)
     return
   }
 
