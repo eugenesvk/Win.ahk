@@ -3,6 +3,7 @@
 #include <Array>                           	; Array helpers
 #include %A_scriptDir%\gVar\varWinGroup.ahk	; App groups for window matching
 #include %A_scriptDir%\gVar\isKey.ahk      	; track key status programmatically
+#include <Win>                             	; win status
 
 ; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window.
 #HotIf WinExist("ahk_group AltTabWindow")
