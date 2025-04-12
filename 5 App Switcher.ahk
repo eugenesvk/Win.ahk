@@ -267,9 +267,9 @@ showWinZOrder(winTitleMatch:="", txt:="", skipEmtpy:=1) {
 }
 
 
-<+>+1::Focus("prev")  	; Goes through all of the windows per monitor backwards
-<+>+2::Focus("next")  	; Goes through all of the windows per monitor forwards
-<+>+3::Focus("recent")	; Opens the last used window per monitor
+<+>+1::Focus("up"  ) ; Goes through all of the windows per monitor backwards
+<+>+2::Focus("down"  ) ; Goes through all of the windows per monitor forwards
+<+>+3::Focus("recent") ; Opens the last used window per monitor
 
 Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
   ;  1 first	window in z-order
