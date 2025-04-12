@@ -15,7 +15,9 @@ hkmyAltTab(hk) {
   myAltTab()
 }
 myAltTab() { ; without sending ⎈↑ AppSwitcher becomes "sticky"
-  static _d := 0
+  static _:=0
+   ,_d 	:= 0
+   ,_d1	:= 1
   (dbg<_d)?'':(🕐1 := A_TickCount)
   SetKeyDelay(-1)
   isKey↓.⎇↹ := 1
@@ -32,6 +34,7 @@ myAltTab() { ; without sending ⎈↑ AppSwitcher becomes "sticky"
   ; Sleep(10)
   ; SendEvent("{Blind}{Tab down}{Tab up}")
   dbgtxt .= ' (isKey↓.⎇↹)'
+  (dbg<_d1)?'':ShowModStatus() ;;; text bug with Tab key getting stuck
   (dbg<_d)?'':(OutputDebug(dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc))
   ; (dbg<_d)?'':dbgtt(0,dbgtxt,'∞',4,0,A_ScreenHeight*.85)
 }
@@ -72,7 +75,9 @@ setAppSwitcher() {
 #HotIf WinActive("ahk_group ⌥⭾AppSwitcher") ; BUG autohotkey.com/boards/viewtopic.php?f=82&t=120739 Invoking ShiftAltTab changes direction for regular Alt+Tab
 ; #HotIf WinActive("ahk_exe explorer.exe ahk_class MultitaskingViewFrame")
   LControl & q::{
-    static _d := 0
+    static _:=0
+     ,_d 	:= 0
+     ,_d1	:= 1
     (dbg<_d)?'':(🕐1 := A_TickCount)
     SetKeyDelay(-1)
     isKey↓.⎇q := 1
@@ -84,6 +89,7 @@ setAppSwitcher() {
       Send("{LAlt down}{LShift down}{Tab}")   ,(dbg<_d)?'':(🕐2 := A_TickCount, dbgtxt:="↓‹⇧‹⎇⭾ ←³")
     }
     dbgtxt .= ' (isKey↓.⎇q)'
+    (dbg<_d1)?'':ShowModStatus() ;;; text bug with Tab key getting stuck
     (dbg<_d)?'':(OutputDebug(dbgtxt format(" 🕐Δ{:.3f}",🕐2-🕐1) ' ' 🕐2 ' @' A_ThisFunc))
     ; KeyWait("LCtrl") ;
     ; SendEvent('{LAlt down}+{Tab}')
