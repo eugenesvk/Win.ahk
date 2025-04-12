@@ -368,15 +368,21 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
       } else if (_zi = win_c) { ; move last to the top, shifting the stack down. Repeat after cycling through all the windows
         (dbg<_d1)?'':(dbgtxt .= "zi== (№" _zi "=" win_c "❖)")
       }
-    }
-    (dbg<_d1)?'':(dbgtxt .= " ❖⇞" win_c_top)
-    if   (z_to = "prev") || (z_to = "↑") { ; Iterate through all the windows in a circular loop backwards
-      if (z_to != _z_to || _zi > win_c) {
-        recent() ;todo
-      } else if (_zi < win_c) {
-        _zi--
-      } else if (_zi = win_c) {
-        ('After cycling through all the windows, repeat this step.')
+    } else if (z_to  = "up") { ; Iterate through all the windows in a circular loop backwards
+      if ( ( (_z_to != "down") ;  change direction doesn't matter??? todo check of prev() is bugge
+          && (_z_to != "up")) ; other than ±1 cycling
+        ||       _zi < 1       	; index below the available windows
+        || !_win.🟰(&windows)) {	; unexpected order change
+        (dbg<_d1)?'':(dbgtxt .= "up (×reset)" (((_z_to != "down")&&(_z_to != "up"))?" Δz_to":'      ') ((_zi < 1)?" zi<1":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
+        prev()
+      } else if (_z_to = "down") and (_zi = win_c) {
+        (dbg<_d1)?'':(dbgtxt .= "recent (№" _zi ">" win_c "❖)")
+        recent()
+      } else if (_zi > win_c_top + 2) {
+        (dbg<_d1)?'':(dbgtxt .= "zi== (№" _zi ">" win_c_top + 2 "❖⇞+1)")
+      } else if (_zi <= win_c_top + 2) { ; skip topmost
+        (dbg<_d1)?'':(dbgtxt .= "last (" _zi "≤" win_c_top + 2 "❖⇞+1)")
+        _zi := win_c ; last/bottom. Repeats after cycling through all the windows
       }
     }
     (dbg<_d1)?'':(dbgtxt .= " ❖" win_c "⇞" win_c_top)
