@@ -198,7 +198,31 @@ winTop(win_id) {
   WinActivate(         "ahk_id " win_id)
 }
 
-dbgShowWinZOrder() {
+dbgShowWinZOrder(&windows?) { ; show a tooltip with the list of windows in Z-order
+  ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
+  static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
+   , _d	:= 0
+  if !IsSet(windows) {
+    windows	:= AltTabWindows()	; Gather Alt-Tab window list
+  }
+  win_titles := "" ; . WinGetClass(windows[1]) . '`n'
+  nsp := ''
+  loop StrLen(windows.Length) - 1 {
+    nsp .= ' '
+  }
+  nsp := windows.Length > 9 ? ' ' : ''
+  for i, w_id in windows {
+    w_name := WinGetTitle("ahk_id " w_id) || '🅲' WinGetClass("ahk_id " w_id)
+    win_titles .= (wseTopMost & WinGetExStyle(w_id)) ? '⇞' : ' '
+    win_titles .= i <= 9 ? nsp : ''
+    win_titles .= A_Index . " " . SubStr(w_name,1,30)
+    win_titles .= win.is_cloaked(w_id)?'👓':''
+    win_titles .= win.is_invisible(w_id)?'🕶':''
+    win_titles .= "`n"
+  }
+  (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,,x:=0,y:=0))
+}
+dbgShowWinZOrder2() {
   winA_id    	:= WinGetID(         "A")
   winA_proc  	:= WinGetProcessName("A")
   winA_cls   	:= WinGetClass(      "A")
@@ -351,27 +375,6 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   _win := windows
 
   return hwnd
-}
-
-dbgShowWinZOrder(&windows?) { ; show a tooltip with the list of windows in Z-order
-  ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
-  static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
-   , _d	:= 0
-  if !IsSet(windows) {
-    windows	:= AltTabWindows()	; Gather Alt-Tab window list
-  }
-  win_titles := "" ; . WinGetClass(windows[1]) . '`n'
-  nsp := ''
-  loop StrLen(windows.Length) - 1 {
-    nsp .= ' '
-  }
-  nsp := windows.Length > 9 ? ' ' : ''
-  for i, w_id in windows {
-    win_titles .= (wseTopMost & WinGetExStyle(w_id)) ? '⇞' : ' '
-    win_titles .= i < 9 ? nsp : ''
-    win_titles .= SubStr(A_Index . " " . WinGetTitle("ahk_id " w_id), 1, 20) . "`n"
-  }
-  (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,,x:=0,y:=0))
 }
 
 AltTabWindows() { ; modernized, original by ophthalmos autohotkey.com/boards/viewtopic.php?t=13288
