@@ -323,6 +323,30 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
       debug := True
     }
   }
+  prev() { ; Switches to prev window
+    loop win_c { ; Find window before active
+      _zi := A_Index - 1
+    } until (WinActive('A') = windows[A_Index])
+      (dbg<_d1)?'':(dbgtxt .= "prev()₁¦" _zi)
+    if (_zi > win_c - 1) { ; no-break ; active window is not found (desktop/another monitor), get 2nd window (except topmost)
+      loop win_c {
+        _zi := A_Index - 1
+      } until not (wseTopMost & WinGetExStyle(windows[A_Index]))
+      (dbg<_d1)?'':(dbgtxt .= " ₂¦ " _zi)
+    }
+    if (_zi > win_c - 1) { ; no-break ; 0 windows or 1 window are caught in the beginning
+      debug := True
+      (dbg<_d1)?'':(dbgtxt .= " ₃¦ " _zi)
+    }
+    if (_zi < 1 ) { ; wrap to win_c absolute order (from first to last)
+      _zi += win_c
+      (dbg<_d1)?'':(dbgtxt .= " ₄¦ " _zi)
+    }
+    if (_zi <= win_c_nontop ) { ; ignore topmost windows, so switch to last
+      _zi := win_c
+      (dbg<_d1)?'':(dbgtxt .= " ₅¦ " _zi)
+    }
+  }
   if (z_to ~= "^-?\d+$") { ; z_to = number, use it directly. Can address elements in reverse: [-1] bottom
     abs_zi := (z_to>=0) ? z_to : z_to + win_c ; convert -1 to last (absolute win list coords)
     _zi := Min(win_c, Max(1, abs_zi)) ; avoid invalid indices
