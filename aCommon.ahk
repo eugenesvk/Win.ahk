@@ -206,6 +206,8 @@ OnExit(mainExitFunc)
   !+vkBB::  	SendInput '{U+00B1}'	;⌥⇧=​ 	vkBB ⟶ ± plus-minus              	  B1
   <+3::     	SendInput '{U+0023}'	;‹⇧3​ 	vk33 ⟶ # US number-sign          	  23
   >+3::     	SendInput '{U+2116}'	; ⇧›3​	vk33 ⟶ № RU Numero Sign          	2116
+  <+4::     	SendInput '{U+0024}'	;‹⇧4​ 	vk34 ⟶ $ US Dollar sign          	  24
+  >+4::     	SendInput '{U+20bd}'	; ⇧›4​	vk34 ⟶ ₽ RU Ruble sign           	20bd
   ;{U+nnnn}→SendInput() or WM_CHAR is used to send the char and the current Send mode has no effect. Characters sent this way usually do not trigger shortcut keys or hotkeys.
 
   ;;; currently there is no universal way to get TextEdit property, need to test with UIautomation how to limit
