@@ -209,7 +209,7 @@ dbgShowWinZOrder(&windows?) { ; show a tooltip with the list of windows in Z-ord
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
    , _d	:= 0
   if !IsSet(windows) {
-    windows	:= AltTabWindows()	; Gather Alt-Tab window list
+    windows	:= WinZOrder()	; Gather Alt-Tab window list
   }
   win_titles := "" ; . WinGetClass(windows[1]) . '`n'
   nsp := ''
@@ -291,7 +291,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
     z_to := "down"
   }
 
-  windows	:= AltTabWindows()	; Gather Alt-Tab window list
+  windows	:= WinZOrder()	; Gather window list (Z-order, topmost have no recent sorting)
   debug  	:= False
   dbgtxt 	:= ""
   (dbg<_d)?'':(dbgShowWinZOrder(windows))
@@ -412,7 +412,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   return hwnd
 }
 
-AltTabWindows() { ; modernized, original by ophthalmos autohotkey.com/boards/viewtopic.php?t=13288
+WinZOrder() { ; Window list, Z-order, but ✗ topmost have no recent sorting, modernized, original by ophthalmos autohotkey.com/boards/viewtopic.php?t=13288
   static wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
   static wsExToolWin	:= 0x00080	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
   static GW_OWNER   	:=       4	; identifies as the owner window
@@ -433,7 +433,7 @@ AltTabWindows() { ; modernized, original by ophthalmos autohotkey.com/boards/vie
   static exclude_exe := [
   ]
 
-  AltTabList := []
+  WinZList := []
   detect_backup := DetectHiddenWindows(False)     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
   for hwnd in WinGetList() {    ; gather a list of running programs
     if hMonitor == DllCall("MonitorFromWindow", "ptr",hwnd, "uint",0x2, "ptr") { ; Check if the window is on the same monitor
@@ -461,12 +461,12 @@ AltTabWindows() { ; modernized, original by ophthalmos autohotkey.com/boards/vie
       wse := WinGetExStyle(hwnd)
       if (!(wse & wsExToolWin)   	; appears on the Alt+Tab list
         or (wse & wsExAppWin )) {	; has a taskbar button
-        AltTabList.push(hwnd) ; ? not be a Windows 10 background app
+        WinZList.push(hwnd) ; ? not be a Windows 10 background app
       }
     }
   }
   if detect_backup != False {
     DetectHiddenWindows detect_backup
   }
-  return AltTabList
+  return WinZList
 }
