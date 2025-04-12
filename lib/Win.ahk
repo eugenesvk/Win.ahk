@@ -269,6 +269,30 @@ class win {
   static is_invisible(win_id) {
     return not win.is_visible(win_id)
   }
+
+  static is_alt_tab(win_id) {
+    static wsExAppWin	:= 0x40000   	; has a taskbar button                WS_EX_APPWINDOW
+     , wsExToolWin   	:= 0x00080   	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
+     , wsExNoActivate	:= 0x08000000	; does not become foreground when the user clicks it.
+     , GW_OWNER      	:=       4   	; identifies as the owner window
+    if win.is_invisible(win_id) {
+      return false
+    }
+    if win.is_cloaked(win_id) {
+      return false
+    }
+    wse := WinGetExStyle(win_id)
+    if (wse & wsExAppWin) {
+      return true
+    }
+    if (wse & wsExToolWin) {
+      return false
+    }
+    if (wse & wsExNoActivate) {
+      return false
+    }
+    return true
+  }
 }
 
 getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to active window
