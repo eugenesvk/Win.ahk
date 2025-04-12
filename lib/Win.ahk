@@ -246,6 +246,29 @@ class win {
     🖥️w↕    	:= 🖥️w↓ - 🖥️w↑
     return isMon
   }
+  static is_cloaked(win_id) { ;Invisible Win10 Background App Window
+    ; DWMWA_CLOAKED: If the window is cloaked, the following values explain why:
+    ; 1 window was cloaked by its owner application    	DWM_CLOAKED_APP
+    ; 2 window was cloaked by the Shell                	DWM_CLOAKED_SHELL
+    ; 4 cloak value was inherited from its owner window	DWM_CLOAKED_INHERITED
+    result := 0
+    cloakedVal := Buffer(A_PtrSize, 0) ; DWMWA_CLOAKED := 14
+    hr := DllCall("DwmApi\DwmGetWindowAttribute"
+      , "Ptr",win_id
+      ,"UInt",14
+      , "Ptr",cloakedVal
+      ,"UInt",A_PtrSize)
+    if !hr { ; returns S_OK (which is zero) on success. Otherwise, it returns an HRESULT error code
+      result := NumGet(cloakedVal,"ptr")
+    }
+    return result ? true : false
+  }
+  static is_visible(win_id) {
+    return DllCall("IsWindowVisible", "Ptr",win_id)
+  }
+  static is_invisible(win_id) {
+    return not win.is_visible(win_id)
+  }
 }
 
 getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to active window
