@@ -270,8 +270,8 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   ; -1 last 	window in z-order
   ;  5      	window in z-order (clamped by 1/window count)
   ; recent  	Switch to  last used window
-  ;↓ next   	Iterate through all windows forwards
-  ;↑ prev   	Iterate through all windows backwards
+  ;↑ up     	Iterate through all windows backwards (revert down or from oldest to recent)
+  ;↓ down   	Iterate through all windows down      (revert up   or from recent to oldest)
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
 
   static _z_to	:= ""	; Last z_to parameter passed
@@ -280,9 +280,9 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
    , _d       	:= 1
    , _d1      	:= 1
   if        z_to = "↑" { ; canonicalize to avoid _z_to != z_to fails just because of a different format
-    z_to := "prev"
+    z_to := "up"
   } else if z_to = "↓" {
-    z_to := "next"
+    z_to := "down"
   }
 
   windows	:= AltTabWindows()	; Gather Alt-Tab window list
@@ -332,18 +332,17 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
       recent()
     }
 
-    if   (z_to = "next") || (z_to = "↓") { ; Iterate through all the windows in a circular loop
-      if (z_to != _z_to        	; changed direction
+    if        (z_to  = "down") { ; Iterate through all the windows in a circular loop
+      if (    _z_to != z_to ; change direction
         ||       _zi > win_c   	; index exceeds the available windows
         || !_win.🟰(&windows)) {	; unexpected order change
-        (dbg<_d1)?'':(dbgtxt .= "recent (×next)" ((z_to != _z_to)?" Δz_to":'      ') ((_zi > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
+        (dbg<_d1)?'':(dbgtxt .= "recent (×down)" (((_z_to != "down")&&(_z_to != "up"))?" Δz_to":'      ') ((_zi > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
         recent()
       } else if (_zi < win_c) {
         (dbg<_d1)?'':(dbgtxt .= "zi++ (zi<win_c)")
         _zi++
-      } else if (_zi = win_c) { ; move last to the top, shifting the stack down
-        (dbg<_d1)?'':(dbgtxt .= "zi== (zi=win_c)")
-        ('After cycling through all the windows, repeat this step.')
+      } else if (_zi = win_c) { ; move last to the top, shifting the stack down. Repeat after cycling through all the windows
+        (dbg<_d1)?'':(dbgtxt .= "zi== (№" _zi "=" win_c "❖)")
       }
     }
     (dbg<_d1)?'':(dbgtxt .= " ❖⇞" win_c_top)
