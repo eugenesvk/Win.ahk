@@ -100,6 +100,7 @@ OnExit(mainExitFunc)
 ; RAlt::Send '{' A_priorkey '}' ; Repeat Key, bind to Thumb
 
 
+  ^!Insert::Run(A_WinDir '\System32\Taskmgr.exe',,'/7') ; Task manager or Send('+^{Esc}')
   ; Mask single Alt manually to avoid Menu autohotkey.com/boards/viewtopic.php?t=13587
   ; ~Alt::Send '{Blind}{vkE8}'	;
   ~*Alt::Send '{Blind}{vkE8}' 	; + blocks Shift+AltDown/Up from opening a menu
