@@ -44,22 +44,22 @@ class TrayManager {
     ; dbgtt(0,"TrayManager New",5,5,0,0)
     this.cbRu := cbMenuLayoutSwitchTgt.bind(,,,ruU)
     this.cbEn := cbMenuLayoutSwitchTgt.bind(,,,enU)
-    this.trayMenu.Add("&E → English"	, this.cbEn)
-    this.trayMenu.Add("&R → Русский"	, this.cbRu)
+    this.trayMenu.Add("&D → English"	, this.cbEn)
+    this.trayMenu.Add("&F → Русский"	, this.cbRu)
     this.trayMenu.Add(              	)
-    this.trayMenu.Add("&D → Change" 	, cbMenuLayoutSwitch)
-    this.trayMenu.SetIcon("&E → English", "img\en-US.ico")
-    this.trayMenu.SetIcon("&R → Русский", "img\ru-RU.ico")
+    this.trayMenu.Add("&G → Change" 	, cbMenuLayoutSwitch)
+    this.trayMenu.SetIcon("&D → English", "img\en-US.ico")
+    this.trayMenu.SetIcon("&F → Русский", "img\ru-RU.ico")
   }
   changeLang(old, new) {
     if        old == "en" and new == "ru" {
-      this.trayMenu.Rename("&D → Change" 	,"&В → Сменить")
-      this.trayMenu.Rename("&E → English"	,"&У → English")
-      this.trayMenu.Rename("&R → Русский"	,"&К → Русский")
+      this.trayMenu.Rename("&D → English"	,"&В → English")
+      this.trayMenu.Rename("&F → Русский"	,"&А → Русский")
+      this.trayMenu.Rename("&G → Change" 	,"&П → Сменить")
     } else if old == "ru" and new == "en" {
-      this.trayMenu.Rename("&В → Сменить"	,"&D → Change" )
-      this.trayMenu.Rename("&У → English"	,"&E → English")
-      this.trayMenu.Rename("&К → Русский"	,"&R → Русский")
+      this.trayMenu.Rename("&В → English"	,"&D → English")
+      this.trayMenu.Rename("&А → Русский"	,"&F → Русский")
+      this.trayMenu.Rename("&П → Сменить"	,"&G → Change" )
     } else {
       dbgtt(0, "✗ Unknown layout, only 'en' and 'ru' are supported")
     }
