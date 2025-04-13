@@ -7,7 +7,7 @@ A_MenuMaskKey := "vkE8"                      	; vkE8=unassigned. Stop sending LC
 ; SetCapsLockState "AlwaysOff"               	; [CapsLock] disable
 InstallKeybdHook(Install:=true, Force:=false)	; Install hook even if nothing uses it (can view recent keys)
 #UseHook True                                	; Any keyboard hotkeys use hook
-KeyHistory(500)                              	; Limit history to last X (need >10 for Hyper) ;;; temp
+KeyHistory(25)                               	; Limit history to last X (need >10 for Hyper) ;;; temp
 ListLines 0                                  	; Potential performance boost
 ; SendMode("Input")                          	; blocks interspersion, useful for sending long test, but requires hook reinstall, which takes time and can bug other things, see autohotkey.com/boards/viewtopic.php?f=96&t=127074&p=562790. Superior speed and reliability. SendPlay for games to emulate keystrokes. Too fast for GUI selection of Diacritics, use SendInput individually
 SendMode("Event")                            	; avoid rehooking bugs
