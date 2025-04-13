@@ -38,6 +38,8 @@ A collection of Windows extensions written in
   - [Tab](<./Tab.ahk>) convert <kbd>⭾</kbd> into a prefix key and use <kbd>⭾</kbd><kbd>1</kbd>...<kbd>8</kbd> to navigate to favorite folders in a file manager or use it as a substitute for <kbd>❖</kbd><kbd>x</kbd> shortcuts
   - [9 ‹␠1 as ⎇](<./9 ‹␠1 as ⎇.ahk>) restore physical <kbd>⎇</kbd> (mapped to <kbd>⎈</kbd> via SharpKeys registry override) as <kbd>⎇</kbd> (e.g., <kbd>⎈</kbd><kbd>f4</kbd>→ <kbd>⎇</kbd><kbd>f4</kbd>)
   - [8 Language](<./8 Language.ahk>) remap <kbd>⎇</kbd><kbd>⇪</kbd> to keyboard layout switching (with workarounds around various window types)
+  - [TrayMenu‹🖰](<./TrayMenu‹🖰.ahk>) adds custom left-click tray icon menu that after 200ms (to allow for the default double-click to continue working) opens a language change menu with language-specific accelerator keys so you can use the same physical keys regardless of the currently active layout
+  - [TrayMenu🖰›](<./TrayMenu🖰›.ahk>) adds the same thing to the default right context menu, also making accelerator keys more prominent
 
 ### Libraries
 Library files in `/lib` used only when function by the same name is called
