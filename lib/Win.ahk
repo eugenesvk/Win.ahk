@@ -391,6 +391,16 @@ class win {
     }
     return WinZList
   }
+
+  static Peek(on) { ; ◆, Win peek suppresses artifical ◆ events, so sending ◆, doesn't work
+    ; autohotkey.com/boards/viewtopic.php?f=76&t=15189&p=77163&hilit=peek+desktop+comma#p77163
+    static dwmapi := 0, dwmpeek := 0
+    if !dwmapi {
+      dwmapi  := DllCall("LoadLibrary"   , "str","dwmapi.dll",             "ptr")
+      dwmpeek := DllCall("GetProcAddress", "ptr", dwmapi     , "ptr",113,  "ptr")
+    }
+    DllCall(dwmpeek, "int",on, "ptr",0, "ptr",0, "uint",1, "ptr",0)
+  }
 }
 
 getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to active window
