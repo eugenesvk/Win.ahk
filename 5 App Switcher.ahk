@@ -394,7 +394,7 @@ Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/bo
 win_active_list(ord⎇⭾:=true) { ; Window list, Z-order or Alt-Tab order
   ; ✗ Z-order: topmost have no recent sorting, minimized "lose" their recency status, get dumped to the bottom
   ; added ⎇⭾ to iseahound's autohotkey.com/boards/viewtopic.php?f=83&t=108531 (based on ophthalmos' autohotkey.com/boards/viewtopic.php?t=13288)
-  static _d:=0, _d1:=0, _d2:=2
+  static _d:=0, _d1:=1, _d2:=2
 
   WinZList := win.get_switcher_list_z_order()
 
