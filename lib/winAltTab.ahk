@@ -10,6 +10,7 @@
 class WinAltTab {
   static History := [] ; deduped list of activated window IDs, most recent at the bottom
    , max_history	:= 1000
+   , is_init    	:= false
    , cbFunc     	:= []     	; win event callback to allow freeing them later
    , hooks      	:= []     	;
    , wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
@@ -18,7 +19,14 @@ class WinAltTab {
    , EVENT_SYSTEM_FOREGROUND:=3, EVENT_OBJECT_UNCLOAKED:=32792, WINEVENT_OUTOFCONTEXT:=0
 
   static __new() {
-    this.History.capacity := this.max_history
+    if not this.is_init { ; prefill history with the ~order from current z-order windows
+      this.History.capacity := this.max_history
+      this.is_init	:= true
+      win_z_order := win.get_switcher_list_z_order()
+      loop win_z_order.Length { ; history is stored in most recent at the bottom
+        this.History.push(win_z_order[-A_Index])
+      }
+    }
   }
 
   static cbProcEvHook(hook, event, hwnd, objectid, childid, threadid, timestamp) {
