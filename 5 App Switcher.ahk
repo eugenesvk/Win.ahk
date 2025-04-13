@@ -241,7 +241,7 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true, exe:=false) { ; show a tooltip w
     nsp .= ' '
   }
   nsp := windows.Length > 9 ? ' ' : ''
-  max_width 	:= 30
+  max_width	:= 30
   for i, w_id in windows {
     txt_i 	:= ''
     w_name	:= ''
