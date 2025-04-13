@@ -1,5 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
 
+#include <libFunc Dbg>   	; Functions: Debug
 #include <libFunc Native>	; Functions: Native
 #include <constKey>      	; various key constants
 #include <str>           	; string helper functions
