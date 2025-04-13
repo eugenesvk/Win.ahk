@@ -11,11 +11,8 @@ class WinAltTab {
   static History := [] ; deduped list of activated window IDs, most recent at the bottom
    , max_history	:= 1000
    , is_init    	:= false
-   , cbFunc     	:= []     	; win event callback to allow freeing them later
-   , hooks      	:= []     	;
-   , wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
-   , wsExToolWin	:= 0x00080	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
-   , GW_OWNER   	:=       4	; identifies as the owner window
+   , cbFunc     	:= []	; win event callback to allow freeing them later
+   , hooks      	:= []	;
    , EVENT_SYSTEM_FOREGROUND:=3, EVENT_OBJECT_UNCLOAKED:=32792, WINEVENT_OUTOFCONTEXT:=0
 
   static __new() {
