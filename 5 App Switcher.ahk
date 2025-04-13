@@ -411,6 +411,10 @@ win_active_list(ord⎇⭾:=true) { ; Window list, Z-order or Alt-Tab order
     (dbg<_d2)?'':(dbgTT(0, win_z_c "`nin History", 🕐:=1, , x:=A_ScreenWidth-50,y:=0))
     moved_i := []
     moved_c := 0
+    try {
+      winA_id	:= WinGetID("A")
+      WinAltTab.winHistory_add(winA_id) ; record active window in history (just in case)
+    }
     loop WinAltTab.History.Length {
       win_id := WinAltTab.History[-A_Index] ; most recent
       if (i_found := WinZList.IndexOf(win_id, 1)) { ; move
