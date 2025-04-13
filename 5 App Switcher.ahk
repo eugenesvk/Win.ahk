@@ -14,10 +14,14 @@ WinAltTab.set_hooks() ; start collecting activated windows history
 #z::Focus("up"       	) ;Goes through all of the windows per monitor backwards
 #x::Focus("down"     	) ;Goes through all of the windows per monitor forwards
 #e::#x ; restore open start menu
+!#i::dbg_win_active_list()
 
-!#i::dbg_win_active_list(,ord⎇⭾:=true)
-^F3::dbg_win_active_list(,ord⎇⭾:=true)
-!F3::dbg_win_active_list(,ord⎇⭾:=true)
+; debug
+; F1::Focus("up"  	) ;Goes through all of the windows per monitor backwards
+; F2::Focus("down"	) ;Goes through all of the windows per monitor forwards
+; F3::dbg_win_active_list(,,exe:=true)
+; ^F3::dbg_win_active_list()
+; !F3::dbg_win_active_list()
 
 #HotIf WinExist("ahk_group AltTabWindow")
 ; ~*Esc::Send "{Alt up}"  ; When the menu is cancelled, release the Alt key automatically
