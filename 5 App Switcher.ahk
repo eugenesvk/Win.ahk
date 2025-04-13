@@ -419,7 +419,7 @@ win_active_list(ord⎇⭾:=true) { ; Window list, Z-order or Alt-Tab order
     }
     remain := win_z_c - moved_c ; moved_i.Length
     if (remain > 0) { ; not all active windows are in the list, push them to the end of the list
-      (dbg<_d)?'':(dbgTT(0, remain " windows remaining", 🕐:=1, , x:=0,y:=0))
+      (dbg<_d1)?'':(dbgTT(0, remain " windows remaining", 🕐:=1))
       loop WinZList.Length {
         if moved_i.IndexOf(A_Index) { ; moved earlier, skip
           continue
