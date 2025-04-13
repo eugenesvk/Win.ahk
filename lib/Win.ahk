@@ -276,8 +276,9 @@ class win {
     return not win.is_visible(win_id)
   }
 
-  static is_alt_tab(win_id) {
-    if win.is_invisible(win_id) {
+  static is_alt_tab(win_id, ex_invis:=true) {
+    ; ex_invis False allows NOT excluding invisible windows, usefulfor checks on process creation when a window is not yet visible
+    if ex_invis and win.is_invisible(win_id) {
       return false
     }
     if win.is_cloaked(win_id) {
