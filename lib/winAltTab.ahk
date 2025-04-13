@@ -76,7 +76,7 @@ class WinAltTab {
     }
   }
 
-  static winHistory_add(win_id) { ;
+  static winHistory_add(win_id, ex_invis:=true) { ;
     static _d := 0, _d1 := 1, _d2 := 2
     (dbg<_d2)?'':(dbgTT(0,win_id,🕐:=1,id:=0,x:=0,y:=50))
     ; win_id = win.GetCoreWindow(win_id) ; hosted window in case of UWP host
