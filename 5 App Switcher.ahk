@@ -246,7 +246,7 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true, exe:=false) { ; show a tooltip w
     txt_i .= "`n"
     win_titles .= txt_i
   }
-  (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,,x:=0,y:=0))
+  (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,i:=15,x:=0,y:=0))
 }
 
 Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
