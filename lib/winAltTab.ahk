@@ -38,7 +38,7 @@ class WinAltTab {
     switch (event)  {
       case this.EVENT_SYSTEM_FOREGROUND:
         ; dbgtt(0,"this.EVENT_SYSTEM_FOREGROUND",2,, x:=0,y:=0)
-        winAct(hwnd)
+        winAct(win_id, ex_invis:=false)
       case this.EVENT_OBJECT_UNCLOAKED:
         ; dbgtt(0,"this.EVENT_OBJECT_UNCLOAKED",2,, x:=0,y:=0)
         winAct(hwnd)
@@ -62,8 +62,8 @@ class WinAltTab {
    }
 
 
-  static onShellWinActivated(win_id) {
-    WinAltTab.winHistory_add(win_id)
+  static onShellWinActivated(win_id, ex_invis:=true) {
+    WinAltTab.winHistory_add(win_id, ex_invis)
   }
 
   static win_history_trim() { ; trims history if it exceeds max_history by removing the first 25%
