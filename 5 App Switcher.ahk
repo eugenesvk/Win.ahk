@@ -285,6 +285,9 @@ Focus(dir) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php
   } else if dir = "down" {
     dir := "↓"
   }
+  if dir = "get_wcon" {
+    return _wcon
+  }
 
   windows	:= win_active_list(ord⎇⭾:=true)	; Gather window list in ⎇⭾ order
   debug  	:= False
