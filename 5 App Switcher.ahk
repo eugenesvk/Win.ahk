@@ -9,8 +9,8 @@
 WinAltTab.set_hooks() ; start collecting activated windows history
 ; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window.
 #HotIf WinExist("ahk_group AltTabWindow")
-; ~*Esc::Send "{Alt up}"  ; When the menu is cancelled, release the Alt key automatically.
-*Esc::Send "{Esc}{Alt up}"  ; Without tilde (~), Escape would need to be sent.
+; ~*Esc::Send "{Alt up}"  ; When the menu is cancelled, release the Alt key automatically
+*Esc::Send "{Esc}{Alt up}"  ; Without tilde (~), Escape would need to be sent
 #HotIf
 
 hkmyAltTab(hk) {
@@ -46,7 +46,7 @@ myAltTab() { ; without sending ⎈↑ AppSwitcher becomes "sticky"
 ; #vk4b::AppWindowSwitcher(→)	;  ❖​	k​  ⟶ Switch to Next     App's Window (↑ Z-order)
 ; #vk4a::AppWindowSwitcher(←)	;  ❖​	j​  ⟶ Switch to Previous App's Window (↓ Z-order)
 ; #vk49::SwapTwoAppWindows() 	;  ❖​	i​  ⟶ Switch between 2   App's Windows
-; +#vk49::dbgShowWinZOrder() 	;  ❖​	i​  ⟶ Switch between 2   App's Windows
+; +#vk49::dbg_win_active_list() 	;  ❖​	i​  ⟶ Switch between 2   App's Windows
 ; ↑ shorter, but to avoid i18n layout issues need(?) to use VKs :(
 ; ↓ can use variables in key names, e.g. have dynamic modifiers that are easier to update if hardware is changed
 setAppSwitcher()
@@ -69,7 +69,7 @@ setAppSwitcher() {
       case s.key→ahk('  ❖​ k​')	: AppWindowSwitcher(→)	;   ...    to Next     App's Window (↑ Z-order)
       case s.key→ahk('  ❖​ j​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
       case s.key→ahk('  ❖​ i​')	: SwapTwoAppWindows() 	;   ...    between 2   App's Windows
-      ; case s.key→ahk('❖​ i​')	: dbgShowWinZOrder()  	;   ...    between 2   App's Windows
+      ; case s.key→ahk('❖​ i​')	: dbg_win_active_list()  	;   ...    between 2   App's Windows
     }
   }
 }
@@ -99,7 +99,7 @@ setAppSwitcher() {
 #HotIf
 
 #HotIf WinActive("ahk_exe explorer.exe ahk_class MultitaskingViewFrame")
-  ; !vk49::dbgShowWinZOrder()	;  ❖​	i  ⟶ Switch between the last 2 Windows of the same App
+  ; !vk49::dbg_win_active_list()	;  ❖​	i  ⟶ Switch between the last 2 Windows of the same App
   ; LAlt & q::ShiftAltTab    	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
   ; LAlt & q::ShiftAltTab    	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
   ; !vk51::+!Tab             	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
@@ -206,12 +206,12 @@ winTop(win_id) {
   WinActivate(         "ahk_id " win_id)
 }
 
-dbgShowWinZOrder(&windows?) { ; show a tooltip with the list of windows in Z-order
+dbg_win_active_list(&windows?, ord⎇⭾:=true) { ; show a tooltip with the list of windows in Z-order
   ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
    , _d	:= 0
   if !IsSet(windows) {
-    windows	:= WinZOrder()	; Gather Alt-Tab window list
+    windows	:= win_active_list(ord⎇⭾)	; Gather Alt-Tab / Z-Ordered window list
   }
   win_titles := "" ; . WinGetClass(windows[1]) . '`n'
   nsp := ''
