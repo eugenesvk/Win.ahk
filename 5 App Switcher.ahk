@@ -1,4 +1,11 @@
 #Requires AutoHotKey 2.1-alpha.4
+if (!A_IsCompiled && A_LineFile == A_ScriptFullPath) { ;Standalone
+  ; msgbox("File not #included `nA_LineFile`t" A_LineFile "`nA_ScriptFullPath`t" A_ScriptFullPath)
+  #include %A_scriptDir%\AES.ahk        	; common AHK parameters
+  #include %A_scriptDir%\gVar\var.ahk   	; Global vars
+  #Include %A_scriptDir%\gVar\symbol.ahk	; Global vars (diacritic symbols and custom chars)
+}
+
 #include <constKey>                        	; various key constants
 #include <Array>                           	; Array helpers
 #include %A_scriptDir%\gVar\varWinGroup.ahk	; App groups for window matching
