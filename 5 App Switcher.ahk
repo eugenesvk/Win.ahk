@@ -230,44 +230,6 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true) { ; show a tooltip with the list
   }
   (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,,x:=0,y:=0))
 }
-dbgShowWinZOrder2() {
-  winA_id    	:= WinGetID(         "A")
-  winA_proc  	:= WinGetProcessName("A")
-  winA_cls   	:= WinGetClass(      "A")
-  winA_procID	:= WinGetPID(        "A")
-  if winA_proc = "explorer.exe" { ; Explorer needs an extra condition to only count actual File Explorer windows
-    winTitleMatch	:= "ahk_pid " winA_procID " ahk_class " winA_cls
-  } else {
-    winTitleMatch	:= "ahk_pid " winA_procID
-  }
-  winIDs	:= WinGetList(winTitleMatch)
-
-  _test	:= "winA_proc="  . winA_proc
-  _test	.= "`nwinTitle=" . winTitleMatch
-  showWinZOrder(winTitleMatch, _test)
-  return
-}
-showWinZOrder(winTitleMatch:="", txt:="", skipEmtpy:=1) {
-  _test 	:= txt
-  winIDs	:= WinGetList(winTitleMatch)
-  _test .= "│id" "`t│title="
-  for this_id in winIDs {
-    winA_title	:= WinGetTitle(this_id)
-    if (skipEmtpy = 1) and (winA_title = "") {
-    } else {
-      _test .= "`n│" this_id "`t│" winA_title
-    }
-  }
-  ; winA_title	:= WinGetTitle(winNext_id)
-  ; _test .= "`n│next_id=" winNext_id "│title=" winA_title
-  rndid := Round(Random(1,20))
-  _lastID := winIDs[-1]
-  winA_title	:= WinGetTitle(_lastID)
-  _test .= "`n│_lastID=" _lastID "│" winA_title
-  dbgTT(dbgMin:=0, Text:=_test , Time:=4,id:=rndid,X:=1550,Y:=850)
-  return
-}
-
 
 <+>+1::Focus("up"  ) ; Goes through all of the windows per monitor backwards
 <+>+2::Focus("down"  ) ; Goes through all of the windows per monitor forwards
