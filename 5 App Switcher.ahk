@@ -26,7 +26,8 @@ WinAltTab.set_hooks() ; start collecting activated windows history
 ; debug
 ; F1::Focus("up"  	) ;Goes through all of the windows per monitor backwards
 ; F2::Focus("down"	) ;Goes through all of the windows per monitor forwards
-; F3::dbg_win_active_list(,,exe:=true)
+; F3::dbg_win_active_list(,,exe:=true) ; recently activated window list
+; F4::dbg_win_active_list(&wcon:=Focus('get_wcon'),,exe:=true) ; "constant" window list
 ; ^F3::dbg_win_active_list()
 ; !F3::dbg_win_active_list()
 
@@ -63,12 +64,12 @@ myAltTab() { ; without sending ⎈↑ AppSwitcher becomes "sticky"
   ; (dbg<_d)?'':dbgtt(0,dbgtxt,'∞',4,0,A_ScreenHeight*.85)
 }
 
-; +#Tab::AppWindowSwitcher(→)	;⇧❖​ 	⭾​ ⟶ Switch to Next     App's Window (↑ Z-order)
-; #Tab:: AppWindowSwitcher(←)	;  ❖​	⭾​ ⟶ Switch to Previous App's Window (↓ Z-order)
-; #vk4b::AppWindowSwitcher(→)	;  ❖​	k​  ⟶ Switch to Next     App's Window (↑ Z-order)
-; #vk4a::AppWindowSwitcher(←)	;  ❖​	j​  ⟶ Switch to Previous App's Window (↓ Z-order)
-; #vk49::SwapTwoAppWindows() 	;  ❖​	i​  ⟶ Switch between 2   App's Windows
-; +#vk49::dbg_win_active_list() 	;  ❖​	i​  ⟶ Switch between 2   App's Windows
+; +#Tab::AppWindowSwitcher(→)  	;⇧❖​ 	⭾​ ⟶ Switch to Next     App's Window (↑ Z-order)
+; #Tab:: AppWindowSwitcher(←)  	;  ❖​	⭾​ ⟶ Switch to Previous App's Window (↓ Z-order)
+; #vk4b::AppWindowSwitcher(→)  	;  ❖​	k​  ⟶ Switch to Next     App's Window (↑ Z-order)
+; #vk4a::AppWindowSwitcher(←)  	;  ❖​	j​  ⟶ Switch to Previous App's Window (↓ Z-order)
+; #vk49::SwapTwoAppWindows()   	;  ❖​	i​  ⟶ Switch between 2   App's Windows
+; +#vk49::dbg_win_active_list()	;  ❖​	i​  ⟶ Switch between 2   App's Windows
 ; ↑ shorter, but to avoid i18n layout issues need(?) to use VKs :(
 ; ↓ can use variables in key names, e.g. have dynamic modifiers that are easier to update if hardware is changed
 setAppSwitcher()
@@ -84,14 +85,14 @@ setAppSwitcher() {
     Switch ThisHotkey  {
       default  : return
       ; default  : msgbox('nothing matched AppSwitcher ThisHotkey=' . ThisHotkey)
-      case s.key→ahk('  ❖​ ⭾​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
-      case s.key→ahk('  ❖​ q​')	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
-      case s.key→ahk('⇧ ❖​ ⭾​')	: AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
-      case s.key→ahk('⇧ ❖​ q​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
-      case s.key→ahk('  ❖​ k​')	: AppWindowSwitcher(→)	;   ...    to Next     App's Window (↑ Z-order)
-      case s.key→ahk('  ❖​ j​')	: AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order)
-      case s.key→ahk('  ❖​ i​')	: SwapTwoAppWindows() 	;   ...    between 2   App's Windows
-      ; case s.key→ahk('❖​ i​')	: dbg_win_active_list()  	;   ...    between 2   App's Windows
+      case s.key→ahk('  ❖​ ⭾​')	: AppWindowSwitcher(←) 	;   ...    to Previous App's Window (↓ Z-order)
+      case s.key→ahk('  ❖​ q​')	: AppWindowSwitcher(→) 	; Switch to Next     App's Window (↑ Z-order)
+      case s.key→ahk('⇧ ❖​ ⭾​')	: AppWindowSwitcher(→) 	; Switch to Next     App's Window (↑ Z-order)
+      case s.key→ahk('⇧ ❖​ q​')	: AppWindowSwitcher(←) 	;   ...    to Previous App's Window (↓ Z-order)
+      case s.key→ahk('  ❖​ k​')	: AppWindowSwitcher(→) 	;   ...    to Next     App's Window (↑ Z-order)
+      case s.key→ahk('  ❖​ j​')	: AppWindowSwitcher(←) 	;   ...    to Previous App's Window (↓ Z-order)
+      case s.key→ahk('  ❖​ i​')	: SwapTwoAppWindows()  	;   ...    between 2   App's Windows
+      ; case s.key→ahk('❖​ i​')	: dbg_win_active_list()	;   ...    between 2   App's Windows
     }
   }
 }
@@ -122,12 +123,12 @@ setAppSwitcher() {
 
 #HotIf WinActive("ahk_exe explorer.exe ahk_class MultitaskingViewFrame")
   ; !vk49::dbg_win_active_list()	;  ❖​	i  ⟶ Switch between the last 2 Windows of the same App
-  ; LAlt & q::ShiftAltTab    	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
-  ; LAlt & q::ShiftAltTab    	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
-  ; !vk51::+!Tab             	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
-  ; !vk51::!Left             	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
-  ; LAlt & vk51::            	ShiftAltTab
-  ; LAlt & Tab::             	AltTab
+  ; LAlt & q::ShiftAltTab       	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
+  ; LAlt & q::ShiftAltTab       	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
+  ; !vk51::+!Tab                	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
+  ; !vk51::!Left                	;  ⌥​	q  ⟶ Switch to Next window (← in the switcher)
+  ; LAlt & vk51::               	ShiftAltTab
+  ; LAlt & Tab::                	AltTab
   ; !4::MsgBox "You pressed Alt+4 in AppSwitcher"
   !q::Send('{Blind}+{Tab}')
   ; *F1::Send "{Alt down}{tab}" ; Asterisk is required in this case.
