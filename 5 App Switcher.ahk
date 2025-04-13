@@ -218,7 +218,6 @@ winTop(win_id) {
 }
 
 dbg_win_active_list(&windows?, ord⎇⭾:=true, exe:=false) { ; show a tooltip with the list of windows in Z-order
-  ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
    , _d	:= 0
   if !IsSet(windows) {
