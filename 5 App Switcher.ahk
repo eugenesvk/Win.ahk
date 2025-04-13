@@ -383,11 +383,15 @@ Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/bo
   return hwnd
 }
 
-WinZOrder() { ; Window list, Z-order, but ✗ topmost have no recent sorting, modernized, original by ophthalmos autohotkey.com/boards/viewtopic.php?t=13288
-  static wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
-  static wsExToolWin	:= 0x00080	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
-  static GW_OWNER   	:=       4	; identifies as the owner window
+win_active_list(ord⎇⭾:=true) { ; Window list, Z-order or Alt-Tab order
+  ; ✗ Z-order: topmost have no recent sorting, minimized "lose" their recency status, get dumped to the bottom
+  ; added ⎇⭾ to iseahound's autohotkey.com/boards/viewtopic.php?f=83&t=108531 (based on ophthalmos' autohotkey.com/boards/viewtopic.php?t=13288)
+  static _d:=0, _d2:=2
+   , wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
+   , wsExToolWin	:= 0x00080	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
+   , GW_OWNER   	:=       4	; identifies as the owner window
 
+  ; todo: ↓ needed? wingetlist should already get current monitor's?
   DllCall("GetCursorPos", "uint64*", &point:=0) ; Get the current monitor the mouse cusor is in
   hMonitor := DllCall("MonitorFromPoint", "uint64",point, "uint",0x2, "ptr")
 
@@ -403,9 +407,9 @@ WinZOrder() { ; Window list, Z-order, but ✗ topmost have no recent sorting, mo
   ]
   static exclude_exe := [
   ]
+  detect_backup := DetectHiddenWindows(False)     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
 
   WinZList := []
-  detect_backup := DetectHiddenWindows(False)     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
   for hwnd in WinGetList() {    ; gather a list of running programs
     if hMonitor == DllCall("MonitorFromWindow", "ptr",hwnd, "uint",0x2, "ptr") { ; Check if the window is on the same monitor
       owner := DllCall("GetAncestor", "ptr",hwnd, "uint",GA_ROOTOWNER:=3, "ptr") ; Find the top-most owner of the child window
@@ -439,5 +443,36 @@ WinZOrder() { ; Window list, Z-order, but ✗ topmost have no recent sorting, mo
   if detect_backup != False {
     DetectHiddenWindows detect_backup
   }
-  return WinZList
+  if not ord⎇⭾ {
+    return WinZList
+  } else {
+    win_ord := [] ; ↓ sort WinZList according to recency stored at WinAltTab.History
+    win_z_c := WinZList.Length
+    (dbg<_d2)?'':(dbgTT(0, win_z_c "`nin History", 🕐:=1, , x:=A_ScreenWidth-50,y:=0))
+    moved_i := []
+    moved_c := 0
+    loop WinAltTab.History.Length {
+      win_id := WinAltTab.History[-A_Index] ; most recent
+      if (i_found := WinZList.IndexOf(win_id, 1)) { ; move
+        win_ord.push(win_id)
+        moved_i.push(i_found)
+        moved_c += 1
+        if moved_c = win_z_c {
+          break
+        }
+      }
+    }
+    remain := win_z_c - moved_c ; moved_i.Length
+    if (remain > 0) { ; not all active windows are in the list, push them to the end of the list
+      (dbg<_d)?'':(dbgTT(0, remain " windows remaining", 🕐:=1, , x:=0,y:=0))
+      loop WinZList.Length {
+        if moved_i.IndexOf(A_Index) { ; moved earlier, skip
+          continue
+        } else { ; new index, push to the end
+          win_ord.push(WinZList[A_Index])
+        }
+      }
+    }
+    return win_ord
+  }
 }
