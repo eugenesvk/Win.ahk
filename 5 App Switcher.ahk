@@ -4,7 +4,9 @@
 #include %A_scriptDir%\gVar\varWinGroup.ahk	; App groups for window matching
 #include %A_scriptDir%\gVar\isKey.ahk      	; track key status programmatically
 #include <Win>                             	; win status
+#include <winAltTab>                       	; Activated windows history in AltTab order
 
+WinAltTab.set_hooks() ; start collecting activated windows history
 ; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window.
 #HotIf WinExist("ahk_group AltTabWindow")
 ; ~*Esc::Send "{Alt up}"  ; When the menu is cancelled, release the Alt key automatically.
