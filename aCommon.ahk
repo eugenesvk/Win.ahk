@@ -633,7 +633,7 @@ OnExit(mainExitFunc)
   ;^Left::  SendInput '{LCtrl down}{LShift down}{Tab}{LShift up}{LCtrl up}'
   ;^Right:: SendInput '{LCtrl down}{Tab}{LCtrl up}'
   ;#Left::  SendInput '{LCtrl down}{LShift down}{Tab}{LShift up}{LCtrl up}'
-  ; F1::AppWindowSwitcher(←)	;   ...    to Previous App's Window (↓ Z-order) ; bug in opus, can't rebind f2 inline rename
+  ; F1::AppWindowSwitcher(←)	;   ...  to Previous App's Window (↓ Z-order) ; bug in opus, can't rebind f2 inline rename
   ; F2::AppWindowSwitcher(→)	; Switch to Next     App's Window (↑ Z-order)
 #HotIf
 #HotIf WinActive("ahk_class dopus.lister")	; only in Opus Directory
