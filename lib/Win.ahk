@@ -6,6 +6,12 @@
 #include <winapi Struct>
 #include <libFunc Dbg>	; Functions: Debug
 class win {
+  static wsExAppWin 	:= 0x40000   	; has a taskbar button                WS_EX_APPWINDOW
+    , wsExToolWin   	:= 0x00080   	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
+    , wsExNoActivate	:= 0x08000000	; does not become foreground when the user clicks it.
+    , GA_ROOTOWNER  	:=       3   	;
+    , GW_OWNER      	:=       4   	; identifies as the owner window
+
   static is⎀(&⎀←,&⎀↑,&⎀↔:=0,&⎀↕:=0) { ; true if caret is visible even if text isn't editable
     return win.isget⎀(true,&⎀←,&⎀↑,&⎀↔,&⎀↕)
   }
@@ -271,10 +277,6 @@ class win {
   }
 
   static is_alt_tab(win_id) {
-    static wsExAppWin	:= 0x40000   	; has a taskbar button                WS_EX_APPWINDOW
-     , wsExToolWin   	:= 0x00080   	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
-     , wsExNoActivate	:= 0x08000000	; does not become foreground when the user clicks it.
-     , GW_OWNER      	:=       4   	; identifies as the owner window
     if win.is_invisible(win_id) {
       return false
     }
@@ -282,13 +284,13 @@ class win {
       return false
     }
     wse := WinGetExStyle(win_id)
-    if (wse & wsExAppWin) {
+    if (wse & this.wsExAppWin) {
       return true
     }
-    if (wse & wsExToolWin) {
+    if (wse & this.wsExToolWin) {
       return false
     }
-    if (wse & wsExNoActivate) {
+    if (wse & this.wsExNoActivate) {
       return false
     }
     return true
