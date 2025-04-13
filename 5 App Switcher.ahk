@@ -268,6 +268,8 @@ Focus(dir) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php
   ; recent  	Switch to  last used window
   ;↑ up     	Iterate through all windows backwards (revert down or from oldest to recent)
   ;↓ down   	Iterate through all windows down      (revert up   or from recent to oldest)
+    ; Both commands wrap at list beginning/end, and repeating the same command follows the same list ignoring changes due to intermediate window activations, so it's similar to continuing to press ⭾ when the app switcher is active.
+  ; get_wcon	Returns the constant window list used for continuing sequence for debugging
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
 
   static _d := 1 , _d1 := 1, _d2 := 2
