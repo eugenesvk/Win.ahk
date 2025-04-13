@@ -249,30 +249,30 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true, exe:=false) { ; show a tooltip w
   (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,i:=15,x:=0,y:=0))
 }
 
-Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
-  ;  1 first	window in ≝⎇⭾ or z-order
-  ; -1 last 	window in ≝⎇⭾ or z-order
-  ;  5      	window in ≝⎇⭾ or z-order (clamped by 1/window count)
+Focus(dir) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
+  ;  1 first	window in ≝⎇⭾r
+  ; -1 last 	window in ≝⎇⭾r
+  ;  5      	window in ≝⎇⭾r (clamped by 1/window count)
   ; recent  	Switch to  last used window
   ;↑ up     	Iterate through all windows backwards (revert down or from oldest to recent)
   ;↓ down   	Iterate through all windows down      (revert up   or from recent to oldest)
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
 
-  static _z_to	:= ""	; Last z_to parameter passed
-   , _zi      	:= 0 	; Last z (use _z_to to initialize)
-   , _win     	:= []	; Last z_to list to detect order changes made outside of this function
-   , _d       	:= 1
-   , _d1      	:= 1
-  if        z_to = "↑" { ; canonicalize to avoid _z_to != z_to fails just because of a different format
-    z_to := "up"
-  } else if z_to = "↓" {
-    z_to := "down"
+  static _d := 1 , _d1 := 1, _d2 := 2
+   , _dir 	:= ""	; Last dir parameter passed
+   , _i   	:= 0 	; Last index
+   , _win 	:= []	; Last dir list to detect order changes made outside of this function
+   , _wcon	:= []	; Last dir list in constant order to simplify index ±, resets if _win changes
+  if        dir = "up" { ; canonicalize to avoid _dir != dir fails just because of a different format
+    dir := "↑"
+  } else if dir = "down" {
+    dir := "↓"
   }
 
-  windows	:= win_active_list(ord⎇⭾)	; Gather window list (Z-order, topmost have no recent sorting)
+  windows	:= win_active_list(ord⎇⭾:=true)	; Gather window list in ⎇⭾ order
   debug  	:= False
   dbgtxt 	:= ""
-  (dbg<_d)?'':(dbg_win_active_list(windows,ord⎇⭾))
+  (dbg<_d2)?'':(dbg_win_active_list(windows,ord⎇⭾:=true,exe:=true))
 
   win_c := windows.length
   if        (win_c == 0) { ; Do nothing if no windows are found
@@ -282,112 +282,118 @@ Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/bo
     return      windows[1]
   }
 
-  win_c_top := 0 ; № normal win ≥ 2. AlwaysOnTop never activated since they are already active
-  for hwnd in windows {
-    if wseTopMost & WinGetExStyle(hwnd) {
-      win_c_top += 1
-    }
-  }
-  win_c_nontop := win_c - win_c_top
-  if (win_c_nontop < 2) {
-    WinActivate(windows[-1]) ; AlwaysOnTop windows are listed first
-    return      windows[-1]
-  }
-
   recent() { ; Switches to the most recent window. Ignore topmost (no need to switch to them, they're already on top)
-    loop win_c { ; Find window after active (in z_to)
-      _zi := A_Index + 1
+    loop win_c { ; Find window after active (in dir)
+      _i := A_Index + 1
     } until (WinActive('A') = windows[A_Index])
-    if (_zi > win_c) { ; no-break ; If active window is not found (desktop or another monitor), get 2nd window (except topmost)
+    if (_i > win_c) { ; no-break ; If active window is not found (desktop or another monitor), get 2nd window (except topmost)
       loop win_c {
-        _zi := A_Index + 1
+        _i := A_Index + 1
       } until not (wseTopMost & WinGetExStyle(windows[A_Index]))
     }
-    if (_zi > win_c) { ; no-break ; 0 windows or 1 window are caught in the beginning
+    if (_i > win_c) { ; no-break ; 0 windows or 1 window are caught in the beginning
       debug := True
     }
   }
   prev() { ; Switches to prev window
     loop win_c { ; Find window before active
-      _zi := A_Index - 1
+      _i := A_Index - 1
     } until (WinActive('A') = windows[A_Index])
-      (dbg<_d1)?'':(dbgtxt .= "prev()₁¦" _zi)
-    if (_zi > win_c - 1) { ; no-break ; active window is not found (desktop/another monitor), get 2nd window (except topmost)
+      (dbg<_d1)?'':(dbgtxt .= "prev()₁¦" _i)
+    if (_i > win_c - 1) { ; no-break ; active window is not found (desktop/another monitor), get 2nd window (except topmost)
       loop win_c {
-        _zi := A_Index - 1
+        _i := A_Index - 1
       } until not (wseTopMost & WinGetExStyle(windows[A_Index]))
-      (dbg<_d1)?'':(dbgtxt .= " ₂¦ " _zi)
+      (dbg<_d1)?'':(dbgtxt .= " ₂¦ " _i)
     }
-    if (_zi > win_c - 1) { ; no-break ; 0 windows or 1 window are caught in the beginning
+    if (_i > win_c - 1) { ; no-break ; 0 windows or 1 window are caught in the beginning
       debug := True
-      (dbg<_d1)?'':(dbgtxt .= " ₃¦ " _zi)
+      (dbg<_d1)?'':(dbgtxt .= " ₃¦ " _i)
     }
-    if (_zi < 1 ) { ; wrap to win_c absolute order (from first to last)
-      _zi += win_c
-      (dbg<_d1)?'':(dbgtxt .= " ₄¦ " _zi)
+    if (_i < 1 ) { ; wrap to win_c absolute order (from first to last)
+      _i += win_c
+      (dbg<_d1)?'':(dbgtxt .= " ₄¦ " _i)
     }
-    if (_zi <= win_c_nontop ) { ; ignore topmost windows, so switch to last
-      _zi := win_c
-      (dbg<_d1)?'':(dbgtxt .= " ₅¦ " _zi)
+    if (_i <= win_c ) { ; so switch to last
+      _i := win_c
+      (dbg<_d1)?'':(dbgtxt .= " ₅¦ " _i)
     }
   }
-  if (z_to ~= "^-?\d+$") { ; z_to = number, use it directly. Can address elements in reverse: [-1] bottom
-    abs_zi := (z_to>=0) ? z_to : z_to + win_c ; convert -1 to last (absolute win list coords)
-    _zi := Min(win_c, Max(1, abs_zi)) ; avoid invalid indices
-    (dbg<_d1)?'':(dbgtxt .= _zi " manual")
+  if (dir ~= "^-?\d+$") { ; dir = number, use it directly. Can address elements in reverse: [-1] bottom
+    is_reordered := true
+    abs_zi := (dir>=0) ? dir : dir + win_c ; convert -1 to last (absolute win list coords)
+    _i := Min(win_c, Max(1, abs_zi)) ; avoid invalid indices
+    (dbg<_d1)?'':(dbgtxt .= _i " manual")
   } else {
-    if (z_to = "recent") {
+    if (dir = "recent") {
       recent()
     }
 
-    if        (z_to  = "down") { ; Iterate through all the windows in a circular loop
-      if (    _z_to != z_to ; change direction
-        ||       _zi > win_c   	; index exceeds the available windows
-        || !_win.🟰(&windows)) {	; unexpected order change
-        (dbg<_d1)?'':(dbgtxt .= "recent (×down)" (((_z_to != "down")&&(_z_to != "up"))?" Δz_to":'      ') ((_zi > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
+    is_reordered := not _win.🟰(&windows) ;
+    if is_reordered { ;unexpected order change
+      _wcon := windows.clone()
+    }
+    if        (dir  = "↓") { ; Iterate through all the windows in a circular loop
+      if (    _dir != dir ; change direction
+        ||       _i > win_c	; index exceeds the available windows
+        || is_reordered) {
+        (dbg<_d1)?'':(dbgtxt .= "recent (×reset↓)" (((_dir != "↓")&&(_dir != "↑"))?" Δz_to":'      ') ((_i > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
+        is_reordered := true
         recent()
-      } else if (_zi < win_c) {
-        (dbg<_d1)?'':(dbgtxt .= "zi++ (zi<win_c)")
-        _zi++
-      } else if (_zi = win_c) { ; move last to the top, shifting the stack down. Repeat after cycling through all the windows
-        (dbg<_d1)?'':(dbgtxt .= "zi== (№" _zi "=" win_c "❖)")
+      } else {
+        if _i >= win_c { ; wrap
+          (dbg<_d1)?'':(dbgtxt .= "i++ ⮔")
+          _i := Mod(_i + 1, win_c)
+        } else {
+          (dbg<_d1)?'':(dbgtxt .= "i++  ")
+          _i++
+        }
       }
-    } else if (z_to  = "up") { ; Iterate through all the windows in a circular loop backwards
-      if ( ( (_z_to != "down") ;  change direction doesn't matter??? todo check of prev() is bugge
-          && (_z_to != "up")) ; other than ±1 cycling
-        ||       _zi < 1       	; index below the available windows
-        || !_win.🟰(&windows)) {	; unexpected order change
-        (dbg<_d1)?'':(dbgtxt .= "up (×reset)" (((_z_to != "down")&&(_z_to != "up"))?" Δz_to":'      ') ((_zi < 1)?" zi<1":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
+    } else if (dir  = "↑") { ; Iterate through all the windows in a circular loop backwards
+      if ( ( (_dir != "↓") ;  change direction doesn't matter??? todo check of prev() is bugge
+          && (_dir != "↑")) ; other than ±1 cycling
+        ||       _i < 1   	; index below the available windows
+        || is_reordered) {	;
+        is_reordered := true
+        (dbg<_d1)?'':(dbgtxt .= "prev (×reset↑)" (((_dir != "↓")&&(_dir != "↑"))?" Δz_to":'      ') ((_i < 1)?" zi<1":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
         prev()
-      } else if (_z_to = "down") and (_zi = win_c) {
-        (dbg<_d1)?'':(dbgtxt .= "recent (№" _zi ">" win_c "❖)")
-        recent()
-      } else if (_zi > win_c_top + 2) {
-        (dbg<_d1)?'':(dbgtxt .= "zi== (№" _zi ">" win_c_top + 2 "❖⇞+1)")
-      } else if (_zi <= win_c_top + 2) { ; skip topmost
-        (dbg<_d1)?'':(dbgtxt .= "last (" _zi "≤" win_c_top + 2 "❖⇞+1)")
-        _zi := win_c ; last/bottom. Repeats after cycling through all the windows
+      } else {
+        if _i < 2 { ; wrap
+          (dbg<_d1)?'':(dbgtxt .= "i−− ⮔")
+          _i := _i + win_c - 1
+        } else {
+          _i--
+          (dbg<_d1)?'':(dbgtxt .= "i−−  ")
+        }
+        if _i > win_c { ; wrap just in case, though shouldn't be needed
+          _i := Mod(win_c, _i)
+        }
       }
     }
-    (dbg<_d1)?'':(dbgtxt .= " ❖" win_c "⇞" win_c_top)
+    (dbg<_d1)?'':(dbgtxt .= " ❖" win_c)
   }
 
   if debug {
-    dbg_win_active_list(&windows,ord⎇⭾)
+    dbg_win_active_list(&windows,ord⎇⭾:=true,exe:=true)
     return
   }
 
-  db_hd := ((hwnd ?? "no")="no")?'✗':"✓"
-  (dbg<_d1)?'':(dbgtxt .= "`n" _zi " " db_hd " ¦ " _z_to "← →" z_to)
-  (dbg<_d1)?'':(dbgTT(0, dbgtxt, 🕐:=4, , x:=313,y:=Max(0,_zi*24-47)))
-  _z_to := z_to
-  hwnd := hwnd ?? windows[_zi] ;coalescing operator IsSet(A) || B
-  WinActivate("ahk_id " hwnd)
-  rm_win := windows.RemoveAt(_zi)
-  windows.InsertAt(1 + win_c_top, rm_win) ;insert after topmost
+  (dbg<_d1)?'':(dbgtxt .= "`n" _i " ¦ " _dir " " dir)
+  (dbg<_d1)?'':(dbgTT(0, dbgtxt, 🕐:=4,i:=19, x:=313,y:=Max(0,_i*24-47)))
+  if is_reordered {
+    win_id := windows[_i]
+    i_cur := _i
+  } else {
+    win_id := _wcon[_i]
+    i_cur := windows.IndexOf(win_id)
+  }
+  WinActivate("ahk_id " win_id)
+  rm_win := windows.RemoveAt(i_cur)
+  windows.InsertAt(1, rm_win)
+  _dir := dir
   _win := windows
 
-  return hwnd
+  return win_id
 }
 
 win_active_list(ord⎇⭾:=true) { ; Window list, Z-order or Alt-Tab order
