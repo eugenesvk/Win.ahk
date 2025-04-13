@@ -244,7 +244,10 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true, exe:=false) { ; show a tooltip w
   max_width 	:= 30
   for i, w_id in windows {
     txt_i 	:= ''
+    w_name	:= ''
+    try   	{
     w_name	:= WinGetTitle("ahk_id " w_id) || '🅲' WinGetClass("ahk_id " w_id)
+    }     	;
     txt_i 	.= (wseTopMost & WinGetExStyle(w_id)) ? '⇞' : ' '
     txt_i 	.= i <= 9 ? nsp : ''
     txt_i 	.= A_Index . " " . SubStr(w_name,1,max_width)
