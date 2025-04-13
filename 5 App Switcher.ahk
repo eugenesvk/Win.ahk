@@ -386,63 +386,10 @@ Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/bo
 win_active_list(ord⎇⭾:=true) { ; Window list, Z-order or Alt-Tab order
   ; ✗ Z-order: topmost have no recent sorting, minimized "lose" their recency status, get dumped to the bottom
   ; added ⎇⭾ to iseahound's autohotkey.com/boards/viewtopic.php?f=83&t=108531 (based on ophthalmos' autohotkey.com/boards/viewtopic.php?t=13288)
-  static _d:=0, _d2:=2
-   , wsExAppWin 	:= 0x40000	; has a taskbar button                WS_EX_APPWINDOW
-   , wsExToolWin	:= 0x00080	; does not appear on the Alt-Tab list WS_EX_TOOLWINDOW
-   , GW_OWNER   	:=       4	; identifies as the owner window
+  static _d:=0, _d1:=0, _d2:=2
 
-  ; todo: ↓ needed? wingetlist should already get current monitor's?
-  DllCall("GetCursorPos", "uint64*", &point:=0) ; Get the current monitor the mouse cusor is in
-  hMonitor := DllCall("MonitorFromPoint", "uint64",point, "uint",0x2, "ptr")
+  WinZList := win.get_switcher_list_z_order()
 
-  static exclude_Class := [
-    "Progman",
-    "Windows.UI.Core.CoreWindow", ; WP Core Frame
-    "CEF-OSC-WIDGET",
-    "ApplicationManager_ImmersiveShellWindow", ; desktop
-    "WorkerW","Shell_TrayWnd" ; explorer.exe
-  ]
-  static exclude_path := [
-    "C:\Windows\System32\wscript.exe",
-  ]
-  static exclude_exe := [
-  ]
-  detect_backup := DetectHiddenWindows(False)     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
-
-  WinZList := []
-  for hwnd in WinGetList() {    ; gather a list of running programs
-    if hMonitor == DllCall("MonitorFromWindow", "ptr",hwnd, "uint",0x2, "ptr") { ; Check if the window is on the same monitor
-      owner := DllCall("GetAncestor", "ptr",hwnd, "uint",GA_ROOTOWNER:=3, "ptr") ; Find the top-most owner of the child window
-      owner := owner || hwnd ; Above call could be zero.
-      if not (DllCall("GetLastActivePopup", "ptr",owner) = hwnd) { ; Active window is also the owner
-        continue
-      }
-      if not DllCall("GetWindowTextLength","Ptr",hwnd) { ;has_text
-        continue
-      }
-      win_cls := WinGetClass(hwnd)
-      if HasValue(exclude_Class, win_cls) { ;bad_cls
-        continue
-      }
-      if InStr(SubStr(win_cls,1,23), 'imestatuspop_classname{') { ;bad_cls
-        continue
-      }
-      if HasValue(exclude_path, WinGetProcessPath(hwnd)) { ;bad_path
-        continue
-      }
-      ; if HasValue(exclude_exe , WinGetProcessName(hwnd)) { ; bad_exe
-        ; continue
-      ; }
-      wse := WinGetExStyle(hwnd)
-      if (!(wse & wsExToolWin)   	; appears on the Alt+Tab list
-        or (wse & wsExAppWin )) {	; has a taskbar button
-        WinZList.push(hwnd) ; ? not be a Windows 10 background app
-      }
-    }
-  }
-  if detect_backup != False {
-    DetectHiddenWindows detect_backup
-  }
   if not ord⎇⭾ {
     return WinZList
   } else {

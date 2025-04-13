@@ -293,6 +293,102 @@ class win {
     }
     return true
   }
+
+  static get_switcher_list_z_order(xusr_cls?, xusr_path?, xusr_exe?) { ; Get a list of windows in Z-Order, exclude non app switcher
+    static _d:=0, _d1:=1, _d2:=2
+
+    ; todo: ↓ needed? wingetlist should already get current monitor's?
+    DllCall("GetCursorPos", "uint64*", &point:=0) ; Get the current monitor the mouse cusor is in
+    hMonitor := DllCall("MonitorFromPoint", "uint64",point, "uint",0x2, "ptr")
+    if IsSet(xusr_cls ) and not Type(xusr_cls )="Array" {
+      xusr_cls := unset
+      (dbg<_d)?'':(dbgTT(0, "✗ xusr_cls must be an Array, not " Type(xusr_cls), 🕐:=1))
+    }
+    if IsSet(xusr_path) and not Type(xusr_path)="Array" {
+      xusr_path := unset
+      (dbg<_d)?'':(dbgTT(0, "✗ xusr_path must be an Array, not " Type(xusr_path), 🕐:=1))
+    }
+    if IsSet(xusr_exe ) and not Type(xusr_exe )="Array" {
+      xusr_exe := unset
+      (dbg<_d)?'':(dbgTT(0, "✗ xusr_exe must be an Array, not " Type(xusr_exe), 🕐:=1))
+    }
+
+    static exclude_cls := [
+      "Progman",
+      "Windows.UI.Core.CoreWindow", ; WP Core Frame
+      "CEF-OSC-WIDGET",
+      "ApplicationManager_ImmersiveShellWindow", ; desktop
+      "WorkerW","Shell_TrayWnd" ; explorer.exe
+    ]
+    static exclude_path := [
+      "C:\Windows\System32\wscript.exe",
+    ]
+    static exclude_exe := [
+    ]
+    detect_backup := DetectHiddenWindows(False)     ; makes IsWindowVisible and DWMWA_CLOAKED unnecessary in subsequent call to WinGetList()
+
+    WinZList := []
+    for win_id in WinGetList() {    ; gather a list of running programs
+      if hMonitor == DllCall("MonitorFromWindow", "ptr",win_id, "uint",0x2, "ptr") { ; Check if the window is on the same monitor
+        owner := DllCall("GetAncestor", "ptr",win_id, "uint",this.GA_ROOTOWNER, "ptr") ; Find the top-most owner of the child window
+        owner := owner || win_id ; Above call could be zero
+        if not (DllCall("GetLastActivePopup", "ptr",owner) = win_id) { ; Active window is also the owner
+          continue
+        }
+        if not DllCall("GetWindowTextLength","Ptr",win_id) { ;has_text
+          continue
+        }
+        try { ; Exclude windows by class
+          win_cls := WinGetClass(win_id)
+          if HasValue(exclude_cls, win_cls) { ;bad_cls
+            continue
+          }
+          if IsSet(xusr_cls) and HasValue(xusr_cls, win_cls) {
+            continue
+          }
+          if InStr(SubStr(win_cls,1,23), 'imestatuspop_classname{') {
+            continue
+          }
+        }
+        try { ; Exclude windows by process path
+          win_path := WinGetProcessPath(win_id)
+          if HasValue(exclude_path, win_path) {
+            continue
+          }
+          if IsSet(xusr_path) and HasValue(xusr_path, win_path) {
+            continue
+          }
+        }
+        if IsSet(xusr_exe) { ; Exclude windows by process name
+          try {
+            win_exe := WinGetProcessName(win_id)
+            if HasValue(xusr_exe , WinGetProcessName(win_id)) { ; bad_exe
+              continue
+            }
+          }
+        }
+        ; if HasValue(exclude_exe , WinGetProcessName(win_id)) { ; bad_exe
+          ; continue
+        ; }
+
+        wse := WinGetExStyle(win_id) ; Exclude windows by style
+        if (wse & this.wsExNoActivate) {
+          continue
+        }
+        if (wse & this.wsExAppWin    ) {	; has a taskbar button, so force-add it
+          WinZList.push(win_id) ; ? not be a Windows 10 background app
+        }
+        if (wse & this.wsExToolWin   ) { ; doesn't appears on the Alt+Tab list
+          continue
+        }
+        WinZList.push(win_id)
+      }
+    }
+    if detect_backup != False {
+      DetectHiddenWindows detect_backup
+    }
+    return WinZList
+  }
 }
 
 getWinID(winIDarg:='',h:=true) { ; verify that passed id exists, fallback to active window
