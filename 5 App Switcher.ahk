@@ -217,7 +217,7 @@ winTop(win_id) {
   WinActivate(         "ahk_id " win_id)
 }
 
-dbg_win_active_list(&windows?, ord⎇⭾:=true) { ; show a tooltip with the list of windows in Z-order
+dbg_win_active_list(&windows?, ord⎇⭾:=true, exe:=false) { ; show a tooltip with the list of windows in Z-order
   ; W11? includes topmost 1 ApplicationManager_ImmersiveShellWindow
   static wseTopMost := 0x00000008 ; Window should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
    , _d	:= 0
@@ -230,14 +230,22 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true) { ; show a tooltip with the list
     nsp .= ' '
   }
   nsp := windows.Length > 9 ? ' ' : ''
+  max_width 	:= 30
   for i, w_id in windows {
-    w_name := WinGetTitle("ahk_id " w_id) || '🅲' WinGetClass("ahk_id " w_id)
-    win_titles .= (wseTopMost & WinGetExStyle(w_id)) ? '⇞' : ' '
-    win_titles .= i <= 9 ? nsp : ''
-    win_titles .= A_Index . " " . SubStr(w_name,1,30)
-    win_titles .= win.is_cloaked(w_id)?'👓':''
-    win_titles .= win.is_invisible(w_id)?'🕶':''
-    win_titles .= "`n"
+    txt_i 	:= ''
+    w_name	:= WinGetTitle("ahk_id " w_id) || '🅲' WinGetClass("ahk_id " w_id)
+    txt_i 	.= (wseTopMost & WinGetExStyle(w_id)) ? '⇞' : ' '
+    txt_i 	.= i <= 9 ? nsp : ''
+    txt_i 	.= A_Index . " " . SubStr(w_name,1,max_width)
+    txt_i 	.= win.is_cloaked(w_id)?'👓':''
+    txt_i 	.= win.is_invisible(w_id)?'🕶':''
+    if exe {
+      w_exe	:= exe?RegExReplace(WinGetProcessName("ahk_id " w_id), "\.exe$"):''
+      txt_i	:= Format("{:-" max_width + 5 "}`t¦ ", txt_i) ; pad to ~align in columns
+      txt_i .= w_exe
+    }
+    txt_i .= "`n"
+    win_titles .= txt_i
   }
   (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,,x:=0,y:=0))
 }
