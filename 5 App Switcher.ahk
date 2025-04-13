@@ -7,7 +7,18 @@
 #include <winAltTab>                       	; Activated windows history in AltTab order
 
 WinAltTab.set_hooks() ; start collecting activated windows history
-; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window.
+; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window
+<+>+1::Focus("up"    	) ;Goes through all of the windows per monitor backwards
+<+>+2::Focus("down"  	) ;Goes through all of the windows per monitor forwards
+<+>+3::Focus("recent"	) ;Opens the last used window per monitor
+#z::Focus("up"       	) ;Goes through all of the windows per monitor backwards
+#x::Focus("down"     	) ;Goes through all of the windows per monitor forwards
+#e::#x ; restore open start menu
+
+!#i::dbg_win_active_list(,ord⎇⭾:=true)
+^F3::dbg_win_active_list(,ord⎇⭾:=true)
+!F3::dbg_win_active_list(,ord⎇⭾:=true)
+
 #HotIf WinExist("ahk_group AltTabWindow")
 ; ~*Esc::Send "{Alt up}"  ; When the menu is cancelled, release the Alt key automatically
 *Esc::Send "{Esc}{Alt up}"  ; Without tilde (~), Escape would need to be sent
@@ -230,10 +241,6 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true) { ; show a tooltip with the list
   }
   (dbg<_d)?'':(dbgTT(0,win_titles,🕐:=5,,x:=0,y:=0))
 }
-
-<+>+1::Focus("up"  ) ; Goes through all of the windows per monitor backwards
-<+>+2::Focus("down"  ) ; Goes through all of the windows per monitor forwards
-<+>+3::Focus("recent") ; Opens the last used window per monitor
 
 Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
   ;  1 first	window in ≝⎇⭾ or z-order
