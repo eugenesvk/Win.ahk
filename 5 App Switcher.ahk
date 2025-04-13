@@ -235,10 +235,10 @@ dbg_win_active_list(&windows?, ord⎇⭾:=true) { ; show a tooltip with the list
 <+>+2::Focus("down"  ) ; Goes through all of the windows per monitor forwards
 <+>+3::Focus("recent") ; Opens the last used window per monitor
 
-Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
-  ;  1 first	window in z-order
-  ; -1 last 	window in z-order
-  ;  5      	window in z-order (clamped by 1/window count)
+Focus(z_to, ord⎇⭾:=true) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php?f=83&t=108531
+  ;  1 first	window in ≝⎇⭾ or z-order
+  ; -1 last 	window in ≝⎇⭾ or z-order
+  ;  5      	window in ≝⎇⭾ or z-order (clamped by 1/window count)
   ; recent  	Switch to  last used window
   ;↑ up     	Iterate through all windows backwards (revert down or from oldest to recent)
   ;↓ down   	Iterate through all windows down      (revert up   or from recent to oldest)
@@ -255,10 +255,10 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
     z_to := "down"
   }
 
-  windows	:= WinZOrder()	; Gather window list (Z-order, topmost have no recent sorting)
+  windows	:= win_active_list(ord⎇⭾)	; Gather window list (Z-order, topmost have no recent sorting)
   debug  	:= False
   dbgtxt 	:= ""
-  (dbg<_d)?'':(dbgShowWinZOrder(windows))
+  (dbg<_d)?'':(dbg_win_active_list(windows,ord⎇⭾))
 
   win_c := windows.length
   if        (win_c == 0) { ; Do nothing if no windows are found
@@ -359,7 +359,7 @@ Focus(z_to) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.ph
   }
 
   if debug {
-    dbgShowWinZOrder(&windows)
+    dbg_win_active_list(&windows,ord⎇⭾)
     return
   }
 
