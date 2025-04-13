@@ -26,8 +26,8 @@ class WinAltTab {
     }
   }
 
-  static cbProcEvHook(hook, event, hwnd, objectid, childid, threadid, timestamp) {
-    ; handle hook, u32 event, handle hwnd, i32 objectid, i32 childid, u32 threadid, u32 timestamp
+  static cbProcEvHook(hook, event, win_id, objectid, childid, threadid, timestamp) {
+    ; handle hook, u32 event, handle win_id, i32 objectid, i32 childid, u32 threadid, u32 timestamp
     ; static constT := 'embed' ;embed mmap
      ; , winAPI                 	:= winAPIconst_loader.load(constT)
      ; , cC                     	:= winAPI.getKey_Any .Bind(winAPI)
@@ -40,8 +40,8 @@ class WinAltTab {
         ; dbgtt(0,"this.EVENT_SYSTEM_FOREGROUND",2,, x:=0,y:=0)
         winAct(win_id, ex_invis:=false)
       case this.EVENT_OBJECT_UNCLOAKED:
-        ; dbgtt(0,"this.EVENT_OBJECT_UNCLOAKED",2,, x:=0,y:=0)
-        winAct(hwnd)
+        ; dbgtt(0,"this.EVENT_OBJECT_UNCLOAKED" ,2,, x:=0,y:=0)
+        winAct(win_id, ex_invis:=true)
     }
   }
 
