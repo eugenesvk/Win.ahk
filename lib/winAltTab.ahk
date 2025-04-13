@@ -1,5 +1,6 @@
 #Requires AutoHotKey 2.1-alpha
 
+#include <Desc\lib\Array> ;
 #include <libFunc Dbg>	; Functions: Debug
 #include <Win>        	; win status
 
