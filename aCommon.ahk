@@ -103,7 +103,7 @@ OnExit(mainExitFunc)
      , hkSend := keyFunc.hkSend, hkSendI := keyFunc.hkSendI, hkSendC := keyFunc.hkSendC
 
     blind := '{Blind}#' ; with modifiers, exclude self from Blind commands
-    loop parse "1234567890wcrt;" { ; '1cdefghiklmpx0-=,.' ❖2​  vk32 ⟶ #2
+    loop parse "1234567890wrt;" { ; '1cdefghiklmpx0-=,.' ❖2​  vk32 ⟶ #2
       hkSendC('$#' vk[A_LoopField], blind '{' vk[A_LoopField] '}')
     }
 
