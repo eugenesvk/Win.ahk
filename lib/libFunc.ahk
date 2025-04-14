@@ -213,10 +213,14 @@ class keyFunc {
     static hk🛈(key, act, opt:="", help) { ; same as Builtin Hotkey, but can use ⇧ and add help message
       static k	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
        , s    	:= helperString
-       , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
        , k→a  	:= s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
        , chU  	:= keyCharNameU
       k_ahk := k→a(key)
+      for i_pre in ["$","~"] {
+        if InStr(SubStr(key,1,2), i_pre) {
+          key := StrReplace(key, i_pre)
+        }
+      }
       if help_keys.has(k_ahk) {
         throw ValueError("Duplicate hotkey being registered!", -1, key " or " k_ahk)
       } else {
