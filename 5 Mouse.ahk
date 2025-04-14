@@ -48,12 +48,31 @@
     Direction  	:= "L" 	; [L]  Scroll            |L|eft    / |R|ight
     ScrollHUnit	:= "Pg"	; [Pg] Move scrollbar by |Pg| page / |L|ine 'Rep' # of times
     Rep        	:=  1  	; [1]  Scroll speed multiplier with scrollbar (natural number)
-    WheelHMult 	:=  1  	; [1]    ...                   with mouse Wheel
+    WheelHMult 	:=  2  	; [1]    ...                   with mouse Wheel
     MSOMult    	:=  1  	; [1]    ...                   for  MS Office (natural number)
-    ScrollHCombo(Direction, ScrollHUnit,Rep, WheelHMult, MSOMult)
+    static _d:=0,_d1:=1,_d2:=2
+     , debuff := 70 ; don't send too many messages too fast as otherwise queue will fill up and continue to execute even after you stop moving the mouse wheel
+     , last_tick := A_TickCount
+     , WheelTime := 500	; when to reset counting autohotkey.com/board/topic/6292-send-mouse-scrolls-to-window-under-mouse/page-2
+    if (A_TickCount - last_tick) > debuff {
+      last_tick := A_TickCount
+      ScrollHCombo(Direction, ScrollHUnit,Rep, WheelHMult, MSOMult)
+    } else {
+      ; (dbg<_d2)?'':(dbgTT(0,"too fast, skipping",🕐:=1,id:=0,x:=-1,y:=-1))
+      return
+    }
     }
   ~LShift & WheelDown::{ ; Scroll right (on Hover)
-    ScrollHCombo("R", "Pg",Rep:=1, WheelHMult:=1, MSOMult:=1)
+    static _d:=0,_d1:=1,_d2:=2
+     , debuff := 70 ; don't send too many messages too fast as otherwise queue will fill up and continue to execute even after you stop moving the mouse wheel
+     , last_tick := A_TickCount
+    if (A_TickCount - last_tick) > debuff {
+      last_tick := A_TickCount
+      ScrollHCombo("R", "Pg",Rep:=1, WheelHMult:=2, MSOMult:=1)
+    } else {
+      ; (dbg<_d2)?'':(dbgTT(0,"too fast, skipping",🕐:=1,id:=0,x:=-1,y:=-1))
+      return
+    }
     }
   ; ~LShift & WheelLeft ; moved to PC-only @aWin.ahk due to conflict with Bootcamp
   #HotIf
