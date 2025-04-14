@@ -138,23 +138,27 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
       LV.Opt("-Redraw")
       LV.Delete()
       for ahkey, help_map in help_keys {
-        IsFound := false
+        IsFound := CtrlObj.Value ? false : true ; don't search when value is empty
         ; for i, v in DATA_TYPES[k] { ;if !(CtrlObj.Value) || (InStr(v, CtrlObj.Value))
         v := help_map["h"]
-        try {
-          if (RegExMatch(v, "i)" CtrlObj.Value)) {
-            IsFound := true
-          }
-        }
-        if (help_map.Has("🔣name")) {
-          v := help_map["🔣name"]
+        if not IsFound {
           try {
             if (RegExMatch(v, "i)" CtrlObj.Value)) {
               IsFound := true
             }
           }
         }
-        if !(IsFound) {
+        if not IsFound {
+          if (help_map.Has("🔣name")) {
+            v := help_map["🔣name"]
+            try {
+              if (RegExMatch(v, "i)" CtrlObj.Value)) {
+                IsFound := true
+              }
+            }
+          }
+        }
+        if not IsFound {
           continue
         }
         LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
