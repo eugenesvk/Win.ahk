@@ -284,7 +284,11 @@ class win {
     if win.is_cloaked(win_id) {
       return false
     }
-    wse := WinGetExStyle(win_id)
+    try {
+      wse := WinGetExStyle(win_id)
+    } catch Error as e {
+      return false
+    }
     if (wse & this.wsExAppWin) {
       return true
     }
