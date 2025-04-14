@@ -353,16 +353,13 @@ Focus(dir) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php
       recent()
     }
 
-    is_reordered := not _win.🟰(&windows) ;
-    if is_reordered { ;unexpected order change
-      _wcon := windows.clone()
-    }
+    is± := (_dir = "↓")  ; increment in order, not absolute index (direction change doesn't matter)
+      or   (_dir = "↑")
+    is_reordered := not _win.🟰(&windows) or not is±
+
     if        (dir  = "↓") { ; Iterate through all the windows in a circular loop
-      if (    _dir != dir ; change direction
-        ||       _i > win_c	; index exceeds the available windows
-        || is_reordered) {
+      if (is_reordered) {
         (dbg<_d1)?'':(dbgtxt .= "recent (×reset↓)" (((_dir != "↓")&&(_dir != "↑"))?" Δz_to":'      ') ((_i > win_c)?" zi>№❖":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
-        is_reordered := true
         recent()
       } else {
         if _i >= win_c { ; wrap
@@ -374,17 +371,13 @@ Focus(dir) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php
         }
       }
     } else if (dir  = "↑") { ; Iterate through all the windows in a circular loop backwards
-      if ( ( (_dir != "↓") ;  change direction doesn't matter??? todo check of prev() is bugge
-          && (_dir != "↑")) ; other than ±1 cycling
-        ||       _i < 1   	; index below the available windows
-        || is_reordered) {	;
-        is_reordered := true
+      if (is_reordered) {
         (dbg<_d1)?'':(dbgtxt .= "prev (×reset↑)" (((_dir != "↓")&&(_dir != "↑"))?" Δz_to":'      ') ((_i < 1)?" zi<1":'      ') ((!_win.🟰(&windows))?" Δ❖order ":''))
         prev()
       } else {
         if _i < 2 { ; wrap
           (dbg<_d1)?'':(dbgtxt .= "i−− ⮔")
-          _i := _i + win_c - 1
+          _i := _i - 1 + win_c
         } else {
           _i--
           (dbg<_d1)?'':(dbgtxt .= "i−−  ")
@@ -405,6 +398,7 @@ Focus(dir) { ; original iseahound 2022-09-16 autohotkey.com/boards/viewtopic.php
   (dbg<_d1)?'':(dbgtxt .= "`n" _i " ¦ " _dir " " dir)
   (dbg<_d1)?'':(dbgTT(0, dbgtxt, 🕐:=4,i:=19, x:=313,y:=Max(0,_i*24-47)))
   if is_reordered {
+    _wcon := windows.clone()
     win_id := windows[_i]
     i_cur := _i
   } else {
