@@ -173,6 +173,14 @@ class helperString {
     if not ((kT="sc") or (kT="vk")) {
       throw ValueError("Parameter #2 invalid, key type should be either ‘vk’ or ‘sc’", -1)
     }
+    pre := ''
+    key_combo := RegExReplace(key_combo,this.all_whitespace,'')
+    for i_pre in ["$","~"] {
+      if InStr(SubStr(key_combo,1,2), i_pre) {
+        pre .= i_pre
+        key_combo := StrReplace(key_combo, i_pre)
+      }
+    }
     modi_ahk_arr_full := this.parseKeyCombo(key_combo,&modi_ahk_arr_short:=[],&nonmod:="")
     modi_ahk_s := ""
     for modi in modi_ahk_arr_short {
@@ -180,7 +188,7 @@ class helperString {
     }
     sep := (sep = '&') ? ' & ' : sep ; add spaces
     if        SubStr(nonmod,1,2) = kT { ; key already passed in its ahk form, passthru
-      return modi_ahk_s . sep .      nonmod
+      return pre . modi_ahk_s . sep .      nonmod
     } else if StrLen(nonmod) > 0 {
       if not lng = 'en'
         and %kT%.Has(lng)
@@ -190,12 +198,12 @@ class helperString {
         key_ahk := %kT%.Get(     nonmod,'')
       }
       if isSend {
-        return key_ahk='' ? '' : modi_ahk_s . '{' . key_ahk . '}'
+        return key_ahk='' ? pre . '' : pre . modi_ahk_s . '{' . key_ahk . '}'
       } else {
-        return key_ahk='' ? '' : modi_ahk_s . sep . key_ahk
+        return key_ahk='' ? pre . '' : pre . modi_ahk_s . sep . key_ahk
       }
     } else {
-        return modi_ahk_s
+        return pre . modi_ahk_s
     }
   }
   static key→send(key_combo,kT:='vk',sep:='',lng:='en',isSend:=true) {
