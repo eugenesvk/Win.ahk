@@ -60,7 +60,7 @@ LayoutSwitch(target?) {
   ; SendInput '{LWin Down}{Space}{LWin Up}'
   local curlayout := lyt.GetCurLayout(&lytPhys, &idLang)
   local targetWin := "A" ; Active window to PostMsg to, need to be changed for '#32770' class (dialog window)
-  if WinActive("ahk_class #32770") {  ; dialog window class requires sending a message to the active window via ControlGetFocus
+  if WinActive("ahk_class #32770") or WinActive("ahk_class Shell_TrayWnd") {  ; dialog/taskbar window class requires sending a message to the active window via ControlGetFocus
     targetWin := ControlGetFocus(targetWin) ; Window Control with the keyboard focus, if any
   }
   ishidden_old := DetectHiddenWindows(true) ; avoid not being able to find target window if it's a tray app
