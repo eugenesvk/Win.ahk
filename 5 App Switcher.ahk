@@ -14,11 +14,11 @@ if (!A_IsCompiled && A_LineFile == A_ScriptFullPath) { ;Standalone
 #include <winAltTab>                       	; Activated windows history in AltTab order
 
 WinAltTab.set_hooks() ; start collecting activated windows history
-#z::Focus("down"  	) ;Goes through all of the windows per monitor backwards
-#x::Focus("up"    	) ;Goes through all of the windows per monitor forwards
+#z::Focus("down"  	) ; open more recent window per monitor (↓ recency ordered list; repeatable/wraps)
+#x::Focus("up"    	) ; open less recent window per monitor (↑ …)
 #c::Focus("recent"	) ;Opens the last used window per monitor
 #e::#x ; restore open start menu
-#a::SendInput("{Blind}"  "!{Esc}")
+#a::SendInput("{Blind}"  "!{Esc}") ; does NOT open minimized
 #s::SendInput("{Blind}" "+!{Esc}")
 #o::#a ; restore open tray sys icons
 !#i::dbg_win_active_list(,,exe:=true) ; recently activated window list
