@@ -14,14 +14,12 @@ if (!A_IsCompiled && A_LineFile == A_ScriptFullPath) { ;Standalone
 #include <winAltTab>                       	; Activated windows history in AltTab order
 
 WinAltTab.set_hooks() ; start collecting activated windows history
-; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window
-<+>+1::Focus("up"    	) ;Goes through all of the windows per monitor backwards
-<+>+2::Focus("down"  	) ;Goes through all of the windows per monitor forwards
-<+>+3::Focus("recent"	) ;Opens the last used window per monitor
-#z::Focus("up"       	) ;Goes through all of the windows per monitor backwards
-#x::Focus("down"     	) ;Goes through all of the windows per monitor forwards
+#z::Focus("up"    	) ;Goes through all of the windows per monitor backwards
+#x::Focus("down"  	) ;Goes through all of the windows per monitor forwards
+#s::Focus("recent"	) ;Opens the last used window per monitor
 #e::#x ; restore open start menu
-!#i::dbg_win_active_list()
+!#i::dbg_win_active_list(,,exe:=true) ; recently activated window list
++#i::dbg_win_active_list(&wcon:=Focus('get_wcon'),,exe:=true) ; "constant" window list
 
 ; debug
 ; F1::Focus("up"  	) ;Goes through all of the windows per monitor backwards
@@ -31,6 +29,7 @@ WinAltTab.set_hooks() ; start collecting activated windows history
 ; ^F3::dbg_win_active_list()
 ; !F3::dbg_win_active_list()
 
+; !F2::Send "{Alt up}"  ; Release the Alt key, which activates the selected window
 #HotIf WinExist("ahk_group AltTabWindow")
 ; ~*Esc::Send "{Alt up}"  ; When the menu is cancelled, release the Alt key automatically
 *Esc::Send "{Esc}{Alt up}"  ; Without tilde (~), Escape would need to be sent
