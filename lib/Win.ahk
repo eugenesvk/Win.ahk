@@ -299,10 +299,6 @@ class win {
 
   static get_switcher_list_z_order(xusr_cls?, xusr_path?, xusr_exe?) { ; Get a list of windows in Z-Order, exclude non app switcher
     static _d:=0, _d1:=1, _d2:=2
-
-    ; todo: ↓ needed? wingetlist should already get current monitor's?
-    DllCall("GetCursorPos", "uint64*", &point:=0) ; Get the current monitor the mouse cusor is in
-    hMonitor := DllCall("MonitorFromPoint", "uint64",point, "uint",0x2, "ptr")
     if IsSet(xusr_cls ) and not Type(xusr_cls )="Array" {
       xusr_cls := unset
       (dbg<_d)?'':(dbgTT(0, "✗ xusr_cls must be an Array, not " Type(xusr_cls), 🕐:=1))
@@ -315,6 +311,9 @@ class win {
       xusr_exe := unset
       (dbg<_d)?'':(dbgTT(0, "✗ xusr_exe must be an Array, not " Type(xusr_exe), 🕐:=1))
     }
+
+    DllCall("GetCursorPos", "uint64*", &point:=0) ; Monitor where the mouse pointer is
+    hMonitor := DllCall("MonitorFromPoint", "uint64",point, "uint",0x2, "ptr")
 
     static exclude_cls := [
       "Progman",
