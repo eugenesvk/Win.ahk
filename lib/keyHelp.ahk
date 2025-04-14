@@ -29,7 +29,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   dpi_f := dpi🖥️x / 96 ; 1.5
 
   guiM.SetFont("s10", "Segoe UI")
-  LV_Header	:= ["⇧","⎈","◆","⎇","K⃣", "AHK⃣", "H", "🔣", "Names","File", "l№"]
+  LV_Header	:= ["⇧","⎈","◆","⎇","K⃣","🅃", "AHK⃣", "H", "🔣", "Names","File", "l№"]
   LV_Opt   	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
   LV       	:= guiM.AddListView(LV_Opt, LV_Header)
   LV.Opt("-Redraw")
@@ -52,7 +52,9 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
     }
 
     LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
-      help_map["c"], ahkey, help_map["h"],
+      help_map["c"],
+     (help_map.Has("t")?help_map["t"]:""),
+      ahkey, help_map["h"],
      (help_map.Has("🔣")?help_map["🔣"]:""),
      (help_map.Has("🔣name")?help_map["🔣name"]:""),
       help_map["f"], help_map["l№"])
@@ -63,7 +65,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   ; LV.ModifyCol(2, "Integer")  ; for sorting purposes, indicate that column 2 is an integer
   ; todo: fails autosize, still get …
   loop LV.GetCount("Col") {
-    if A_Index <= 4 or A_Index = 9 {
+    if A_Index <= 4 or A_Index = 10 {
       continue
     }
     LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
@@ -72,7 +74,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   LV.ModifyCol(2,29) ;     ‹⎈›
   LV.ModifyCol(3,29) ;     ‹◆›
   LV.ModifyCol(4,31) ;     ‹⎇›
-  LV.ModifyCol(9,30) ; too huge of a field
+  LV.ModifyCol(10,30) ; too huge of a field
 
 
   guiM.OnEvent("Escape", (*) => guiM.Hide())
@@ -156,7 +158,9 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
           continue
         }
         LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
-          help_map["c"], ahkey, help_map["h"],
+          help_map["c"],
+         (help_map.Has("t")?help_map["t"]:""),
+          ahkey, help_map["h"],
          (help_map.Has("🔣")?help_map["🔣"]:""),
          (help_map.Has("🔣name")?help_map["🔣name"]:""),
           help_map["f"], help_map["l№"])
