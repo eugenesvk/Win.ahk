@@ -47,6 +47,13 @@ A collection of Windows extensions written in
 
 ### Libraries
 Library files in `/lib` used only when function by the same name is called
+- [keyHelp](<./keyHelp.ahk>) provides a rudimentary searchable (AHK regex) GUI table to find various symbols your script keybinds insert by their unicode names. To enable it keybinds must be registered with the `hk🛈` function with the list of symbols passed as one of the arguments. So instead of a simple
+  - `!+a::alt_tt_popup("Arrows")` you'd need to convert to using [Hotkey](https://www.autohotkey.com/docs/v2/lib/Hotkey.htm) syntax with callbacks and matches: 
+  - `hk🛈("⇧⎇a"	,hkAltTT,,Map("h","Arrows",  "🔣",Ch["Arrows"].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))`
+    …
+    `case k("⇧⎇a"	):alt_tt_popup("Arrows")` 
+  - But on the bright side you could use much more readable `⇧⎇a` vs `+!a` format (see [char-AltTT](<./char-AltTT.ahk>) as an example)
+  ![KeyHelp](./img/KeyHelp.png)
 - [constTypES](<./lib/constTypES.ahk>) definition for the [TypES](https://github.com/eugenesvk/kbdLayout-Mac) typographical layout
 - [constWin32](<./lib/constWin32.ahk>) get any Windows API constant by name (full and short) (external dll/data)
   - [winAPIconst_embed.dll](https://github.com/eugenesvk/winAPIconst/releases) with data embedded
@@ -68,6 +75,7 @@ Library files in `/lib` used only when function by the same name is called
   - `GroupHasWin` check if the specified group contains the specified window (quasi-boolean)
   - [libFunc Scroll](<./lib/libFunc Scroll.ahk>) `ScrollHCombo` horizontal scroll, picking the working sub-function depending on the window/app since ther isn't a single universal horizontal scrolling method. Unfortunately, with 'UIA' enabled fails with COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452)
   - [libFunc Dbg](<./lib/libFunc Dbg.ahk>) `dbgTT` debugging tooltip that only shows if a global `dbg` var is set above a threshold, also with posion/timer arguments, less intrusive than a typical message box (though `dbgMsg` is also there)
+  - `hk🛈` to fill key help table (see [keyHelp](<./keyHelp.ahk>))
 - Enumerate all conhosts and tries to find the one that maps to our console window (external) [getconkbl.dll](github.com/Elfy/getconkbl)
 - UI Automation (external) [UIA v2](https://github.com/Descolada/UIA-v2/raw/main/Lib/UIA.ahk)
 
@@ -119,5 +127,6 @@ You can also change the keys that trigger hiding the pointer by adjusting the `k
 ## Known issues
   - Horizontal scrolling fails with 'UIA' enabled AutoHotkey and COM (Word/Excel...) due to some weird permissions mismatch [src](autohotkey.com/boards/viewtopic.php?p=432502#p432452), use [🖰Scroll Excel](<./🖰Scroll Excel.ahk>)
   - `🖰hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the [standalone version](https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd)
+  - First `keyHelp` table generation might be noticeably slow with many symbols (likely search as well)
 
 ## Credits
