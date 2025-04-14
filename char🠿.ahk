@@ -9,6 +9,8 @@ setChar🠿()
 setChar🠿() { ; hold key to select a symbol from a popup menu
   static k     	:= keyConstant._map ; various key name constants, gets vk code to avoid issues with another layout
    , s         	:= helperString
+   , p         	:= helperPath
+   , hk🛈       	:= keyFunc.hk🛈
    , pre       	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    ; , lbl🖰hide	:= ''
    ; , cfg🖰h   	:= cfg🖰convert()
@@ -27,9 +29,20 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
-  loop parse "qwpxtvg-r" { ; 🠿q​🠿w​🠿p​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod h for exit insert mode
-    HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
-  }
+  ; loop parse "qwpxtvg-r" { ; 🠿q​🠿w​🠿p​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod h for exit insert mode
+  ;   HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
+  ; }
+  pfn := p.fname_(A_LineFile)
+  hk🛈(pre "q​"	,hkChar🠿,"T2",Map("h","XSymbols"   	,"🔣",ch␞('XSymbols'   	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "w​"	,hkChar🠿,"T2",Map("h","Arrows"     	,"🔣",ch␞('Arrows'     	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "p​"	,hkChar🠿,"T2",Map("h","Currency"   	,"🔣",ch␞('Currency'   	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "x​"	,hkChar🠿,"T2",Map("h","Tech"       	,"🔣",ch␞('Tech'       	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "t​"	,hkChar🠿,"T2",Map("h","Math"       	,"🔣",ch␞('Math'       	).Join("" ) ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "v​"	,hkChar🠿,"T2",Map("h","Subscript"  	,"🔣",ch␞('Subscript'  	).Join("" ) ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "g​"	,hkChar🠿,"T2",Map("h","Superscript"	,"🔣",ch␞('Superscript'	).Join("" ) ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "r​"	,hkChar🠿,"T2",Map("h","Checks"     	,"🔣",ch␞('Checks'     	).Join("" ) ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "-​"	,hkChar🠿,"T2",Map("h","dash"       	,"🔣",ch␞('Dash'       	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+
   loop parse "``45" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
     HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
   }
