@@ -49,10 +49,10 @@ A collection of Windows extensions written in
 Library files in `/lib` used only when function by the same name is called
 - [keyHelp](<./keyHelp.ahk>) provides a rudimentary searchable (AHK regex) GUI table to find various symbols your script keybinds insert by their unicode names. To enable it keybinds must be registered with the `hk🛈` function with the list of symbols passed as one of the arguments. So instead of a simple
   - `!+a::alt_tt_popup("Arrows")` you'd need to convert to using [Hotkey](https://www.autohotkey.com/docs/v2/lib/Hotkey.htm) syntax with callbacks and matches: 
-  - `hk🛈("⇧⎇a"	,hkAltTT,,Map("h","Arrows",  "🔣",Ch["Arrows"].Join(delim:="") ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))`
-    …
+  - `hk🛈("⇧⎇a",hkAltTT,,Map("h","Arrows",  "🔣",Ch["Arrows"].Join(delim:="")  ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))`<br>
+    …<br>
     `case k("⇧⎇a"	):alt_tt_popup("Arrows")` 
-  - But on the bright side you could use much more readable `⇧⎇a` vs `+!a` format (see [char-AltTT](<./char-AltTT.ahk>) as an example)
+  - But on the bright side you could use a fancier `⇧⎇a` vs `+!a` format (see [char-AltTT](<./char-AltTT.ahk>) as an example)
   ![KeyHelp](./img/KeyHelp.png)
 - [constTypES](<./lib/constTypES.ahk>) definition for the [TypES](https://github.com/eugenesvk/kbdLayout-Mac) typographical layout
 - [constWin32](<./lib/constWin32.ahk>) get any Windows API constant by name (full and short) (external dll/data)
