@@ -25,8 +25,8 @@ WinAltTab.set_hooks() ; start collecting activated windows history
 +#i::dbg_win_active_list(&wcon:=Focus('get_wcon'),,exe:=true) ; "constant" window list
 
 ; debug
-; F1::Focus("down"  	) ; open more recent window per monitor (↓ recency ordered list; repeatable/wraps)
-; F2::Focus("up"    	) ; open less recent window per monitor (↑ …)
+; F1::Focus("down"	) ; open more recent window per monitor (↓ recency ordered list; repeatable/wraps)
+; F2::Focus("up"  	) ; open less recent window per monitor (↑ …)
 ; F3::dbg_win_active_list(,,exe:=true) ; recently activated window list
 ; F4::dbg_win_active_list(&wcon:=Focus('get_wcon'),,exe:=true) ; "constant" window list
 ; ^F3::dbg_win_active_list()
