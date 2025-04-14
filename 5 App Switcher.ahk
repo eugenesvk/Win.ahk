@@ -180,6 +180,8 @@ AppWindowSwitcher(dir:=→) { ; Switch between windows of the same app
     winA_cls   	:= WinGetClass(      "A")
   } catch TargetError as e {
     return
+  } catch Error as e {
+    return
   }
 
   ; dbgtt(0,winA_proc . " ¦ " . winA_procP . " ¦ " . winA_cls . " ¦ " . winA_procID,t:=5)
