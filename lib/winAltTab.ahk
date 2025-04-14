@@ -92,7 +92,6 @@ class WinAltTab {
       return
     }
     ; 'win_id' is new, validate and add it. Only cheap basic checks since this list is only for ordering, full checks will be done before actual use
-    wse := WinGetExStyle(win_id)
     if not win.is_alt_tab(win_id, ex_invis) {
       (dbg<_d2)?'':(dbgTT(0,"not ⎇⭾" win_id,🕐:=1,id:=0,x:=0,y:=50))
       return
