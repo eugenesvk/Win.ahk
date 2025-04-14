@@ -32,7 +32,7 @@ A collection of Windows extensions written in
     - left-hand: <kbd>⎇</kbd> <kbd>1</kbd>...<kbd>5</kbd>...<kbd>z</kbd>...<kbd>b</kbd>
 #### Window management
   - [5 App Switcher](<./5 App Switcher.ahk>) with its `Focus` function allows switching windows in the most recent order as in the default <Alt><Tab> app switcher (not Z-order, which always keeps topmost windows on top regardless of their recent activation order etc.). This is useful for short jumps by 1-2 windows back/forth without a flash of the default Alt-Tab App Switcher and without having to patch it to delay its appearance (and without an extra step of activating minimized windows that <kbd>⎇</kbd><kbd>⎋</kbd> requires)
-    - ≝keys are <kbd>❖</kbd><kbd>z</kbd> / <kbd>❖</kbd><kbd>x</kbd> to move up/down (where up is the most recent window). Both commands wrap at list beginning/end, and repeating the same command follows the same list ignoring changes due to intermediate window activations, so it's similar to continuing to press <kbd>Tab</kbd> when the app switcher is active, just without the app switcher.
+    - ≝keys are <kbd>❖</kbd><kbd>x</kbd> / <kbd>❖</kbd><kbd>z</kbd> to move up/down (where up is the most recent window). Both commands wrap at list beginning/end, and repeating the same command follows the same list ignoring changes due to intermediate window activations, so it's similar to continuing to press <kbd>Tab</kbd> when the app switcher is active, just without the app switcher.
 
 #### Mouse
   - [5 Mouse](<./5 Mouse.ahk>) e.g., scroll ←→ with <kbd>⇧</kbd><kbd>🖱↑</kbd>/<kbd>🖱↓</kbd> (MouseWheel)
