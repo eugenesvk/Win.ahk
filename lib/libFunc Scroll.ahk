@@ -51,16 +51,18 @@ ScrollHCombo(Direction:="L", ScrollHUnit:="Pg",Rep:=1, WheelHMult:=1, MSOMult:=1
 }
 ScrollWheelH(winID, ctrlID, Direction, wParam, lParam) {
   global msgWheelH, WheelDelta
+  static _d:=0,_d1:=1,_d2:=2
 
-  if not winID                                   ; No Window given
+  if not winID { ; No Window given
     return
-  dbgTxt	:= winID "=winID`n" ctrlID "=ctrlID`n" Direction "=Direction`n" Format("0x{:x}", wParam) "=wParam`n" Format("0x{:x}", lParam) "=lParam"
-  errDir	:= "WARNING! Wrong Direction`n" Direction " given, but should be`nL or`nR"
-  dbgTT(  dbgMin:=2, Text:=dbgTxt, Time:=2,id:=3,x:=1550,y:=850)
-  if (Direction!="L") and (Direction!="R")
-    dbgTT(dbgMin:=0, Text:=errDir, Time:=4,id:=2,x:=-1  ,y:=-1)
-  if (Direction="L")
+  }
+  (dbg<_d2)?'':(dbgTT(0,dbgTxt:=winID "=winID`n" ctrlID "=ctrlID`n" Direction "=Direction`n" Format("0x{:x}", wParam) "=wParam`n" Format("0x{:x}", lParam) "=lParam", 🕐:=2,_i:=3,x:=1550,y:=850))
+  if        (Direction!=="L") and (Direction!=="R") {
+    errDir := "WARNING! Wrong Direction`n" Direction " given, but should be`nL or`nR"
+    dbgTT(0, Text:=errDir, Time:=4,id:=2,x:=-1  ,y:=-1)
+  } else if (Direction =="L") {
     wParam := -wParam
+  }
   if not ctrlID {
     PostMessage(msgWheelH, wParam, lParam,       , winID)
   } else {
