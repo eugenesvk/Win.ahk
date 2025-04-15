@@ -215,6 +215,7 @@ class keyFunc {
        , s    	:= helperString
        , k→a  	:= s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
        , chU  	:= keyCharNameU
+       , chC  	:= keyCharNameC
       k_ahk := k→a(key)
       for i_pre in ["$","~"] {
         if InStr(SubStr(key,1,2), i_pre) {
@@ -236,7 +237,11 @@ class keyFunc {
         ; if help.Has('🔣') {
         ;   _ch := ''
         ;   Loop Parse, help['🔣'] {
-        ;     if (_chi := chU(A_LoopField)) {
+        ;     _chi := chU(A_LoopField)
+        ;     if _chi == 'Undefined' {
+        ;       _chi := chC(A_LoopField)
+        ;     }
+        ;     if _chi {
         ;       for repl in ['Latin ','Small ','Letter ','With '] {
         ;         _chi := StrReplace(_chi,repl,'')
         ;       }
