@@ -5,6 +5,7 @@ class guiKeyHelp {
     static _d:=0, _d1:=1, _d2:=2, _d3:=3
      , is_init := false
      , chU	:= keyFunc.keyCharNameU
+     , chC	:= keyFunc.keyCharNameC
 
     guiOptChrome := "-Caption -Border -Resize -SysMenu"
     guiM := Gui("+MinSize800x480 +DPIResize " guiOptChrome, t:="Registered Hotkeys")
@@ -41,7 +42,11 @@ class guiKeyHelp {
           _ch := ''
           Loop Parse, help_map['🔣'] {
             ; dbgtt(0,A_LoopField,1)
-            if (_chi := chU(A_LoopField)) {
+            _chi := chU(A_LoopField)
+            if _chi == 'Undefined' {
+              _chi := chC(A_LoopField)
+            }
+            if _chi {
               for repl in ['Latin ','Small ','Letter ','With '] {
                 _chi := StrReplace(_chi,repl,'')
               }
