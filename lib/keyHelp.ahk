@@ -148,6 +148,9 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
         try {
           if (RegExMatch(v, "i)" ED.Value)) {
             IsFound := true
+            (dbg<_d3)?'':(dbgTT(0,"🔍H found ¦" ED.Value "¦",🕐:=3,id:=4))
+          } else {
+            (dbg<_d3)?'':(dbgTT(0,"✗H ¦" ED.Value "¦",🕐:=3,id:=4))
           }
         }
       }
@@ -157,6 +160,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
           try {
             if (RegExMatch(v, "i)" ED.Value)) {
               IsFound := true
+              (dbg<_d3)?'':(dbgTT(0,"🔍Name found ¦" ED.Value "¦",🕐:=3,id:=5))
             }
           }
         }
