@@ -1,0 +1,29 @@
+name: Compile with ahk2exe
+on:
+  push:
+    tags:
+      - '[0-9]+\.[0-9]+\.[0-9]+-?\w*'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2 24-12
+        with:
+          persist-credentials: false
+      - name: Build with latest AutoHotkey release
+        uses: benmusson/ahk2exe-action@5831750d8310c55877c0072b731366378f5f2d96 #git 25-04 (v1.1.0+)
+        with:
+          in            : ./🖰 hide on 🖮_launch.ahk
+          out           : ./exe/🖰hide on 🖮.exe
+          icon          : ./img/🖰hide on 🖮.ico
+          target        : x64
+          compression   : upx
+          # ahk-repo      : AutoHotkey/AutoHotkey
+          ahk-tag       : v2.1-alpha.18 # 25-04 #≝latest da0a168198886972934f17dd47edd1ff1585d4d4
+          github-token  : ${{ secrets.GITHUB_TOKEN }}
+          # ahk2exe-repo  : AutoHotkey/Ahk2Exe
+          ahk2exe-tag   : Ahk2Exe1.1.37.02a0a # 25-04 ≝latest 6b0bf24aef4ae21ef118e13086a7a39e90f7162d
+          # upx-repo      : UPX/UPX
+          upx-tag       : v5.0.0 # 25-04 ≝latest 8bf49aa4f23a71d42c6ffb065afe3a65d49aef88
