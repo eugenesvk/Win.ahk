@@ -136,34 +136,34 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   LV_Search(CtrlObj, *) {
     static timer := LV_Search_Debounced.Bind()
     SetTimer(timer, -400) ; updates the old timer
-    LV_Search_Debounced() {
-      ; dbgtt(0,"LV_Search_Debounced")
-      LV.Opt("-Redraw")
-      LV.Delete()
-      for ahkey, help_map in help_keys {
-        IsFound := CtrlObj.Value ? false : true ; don't search when value is empty
-        ; for i, v in DATA_TYPES[k] { ;if !(CtrlObj.Value) || (InStr(v, CtrlObj.Value))
-        v := help_map["h"]
-        if not IsFound {
+  }
+  LV_Search_Debounced() {
+    LV.Opt("-Redraw")
+    LV.Delete()
+    for ahkey, help_map in help_keys {
+      IsFound := ED.Value ? false : true ; don't search when value is empty
+      ; for i, v in DATA_TYPES[k] { ;if !(ED.Value) || (InStr(v, ED.Value))
+      v := help_map["h"]
+      if not IsFound {
+        try {
+          if (RegExMatch(v, "i)" ED.Value)) {
+            IsFound := true
+          }
+        }
+      }
+      if not IsFound {
+        if (help_map.Has("🔣name")) {
+          v := help_map["🔣name"]
           try {
-            if (RegExMatch(v, "i)" CtrlObj.Value)) {
+            if (RegExMatch(v, "i)" ED.Value)) {
               IsFound := true
             }
           }
         }
-        if not IsFound {
-          if (help_map.Has("🔣name")) {
-            v := help_map["🔣name"]
-            try {
-              if (RegExMatch(v, "i)" CtrlObj.Value)) {
-                IsFound := true
-              }
-            }
-          }
-        }
-        if not IsFound {
-          continue
-        }
+      }
+      if not IsFound {
+        continue
+      }
       LV.Add(,help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
         help_map["c"],
        (help_map.Has("t"    	)?help_map["t"    	]:""),
