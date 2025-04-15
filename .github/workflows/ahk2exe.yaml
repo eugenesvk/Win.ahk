@@ -1,8 +1,8 @@
 name: Compile with ahk2exe
 on:
-  push:
-    tags:
-      - '[0-9]+\.[0-9]+\.[0-9]+-?\w*'
+  # push:
+  #   tags:
+  #     - '[0-9]+\.[0-9]+\.[0-9]+-?\w*'
   workflow_dispatch:
 jobs:
   build:
