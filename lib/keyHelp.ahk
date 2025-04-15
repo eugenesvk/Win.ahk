@@ -270,8 +270,18 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
    , guiM := guiC.g
    , ED := guiC.ED
    , LV := guiC.LV
+   ; , constT := 'embed' ;embed mmap
+   ; , winAPI	:= winAPIconst_loader.load(constT)
+   ; , cC    	:= winAPI.getKey_Any.Bind(winAPI)
+   ; , EM_SETSEL := cC("EM_SETSEL")
+   , EM_SETSEL  := 177
+
   guiM.Show("AutoSize x0 y0") ; Display the window
   guiKeyHelp.HideFocusBorder(guiM.Hwnd)
+  ; Focus search box and select previous query
+  ControlFocus(guiC.ED)
+  PostMessage(EM_SETSEL, 0, -1,, guiC.ED)
+
 
   if   (VerCompare(A_OSVersion, "10.0.17763") >= 0) && (gTheme = "Dark") {
       DWMWA_USE_IMMERSIVE_DARK_MODE := 19
