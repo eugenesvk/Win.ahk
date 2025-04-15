@@ -3,7 +3,7 @@
 get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hotkeys and their help🛈
   static is_init := false
    , chU	:= keyFunc.keyCharNameU
-   , _d 	:= 0
+   , _d:=0, _d1:=1, _d2:=2, _d3:=3
   guiM := Gui()
   guiOptChrome := "-Caption -Border -Resize -SysMenu"
   guiM := Gui("+MinSize800x480 +DPIResize " guiOptChrome, t:="Registered Hotkeys")
@@ -29,7 +29,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   dpi_f := dpi🖥️x / 96 ; 1.5
 
   guiM.SetFont("s10", "Segoe UI")
-  LV_Header	:= ["⇧","⎈","◆","⎇","K⃣","🅃", "AHK⃣", "H", "🔣", "Names","File", "l№"]
+  LV_Header	:= ["⇧","⎈","◆","⎇","K⃣","🅃", "AHK⃣", "🔍H", "🔣", "🔍Names","File", "l№"]
   LV_Opt   	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
   LV       	:= guiM.AddListView(LV_Opt, LV_Header)
   LV.Opt("-Redraw")
