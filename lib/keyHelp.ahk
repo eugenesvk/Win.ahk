@@ -140,14 +140,19 @@ class guiKeyHelp {
       if pre="," and StrLen(ED.Value) >= 2 {
         re_query := SubStr(ED.Value,2)
         queryT := "literal"
-        IsFound := re_query ? false : true ; don't search when value is empty
+        if not ED.re_query { ; don't search when value is empty
+          return
+        }
       } else {
-        IsFound := ED.Value ? false : true ; don't search when value is empty
+        if not ED.Value { ; don't search when value is empty
+          return
+        }
         re_query := StrSplit(ED.Value, delim:=[" ","`t"], " `t")
         queryT := "word"
       }
       ; (dbg<_d3)?'':(dbgTT(0,"LV_Search_Debounced re_query ¦" Obj2Str(re_query) "¦ of ¦" queryT "¦ ED.Value=¦" ED.Value "¦",🕐:=2,id:=4))
       for ahkey, help_map in help_keys {
+        IsFound := false
         if not IsFound {
           v := help_map["h"]
           if queryT == "literal" {
