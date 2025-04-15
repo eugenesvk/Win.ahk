@@ -20,7 +20,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
   ED_Opt  	:= leftmost " " topmost " w400" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
   ED := guiM.AddEdit(ED_Opt)
   ED.OnEvent("Change", LV_Search)
-  EM_SETCUEBANNER(ED, "Search…", 1)
+  EM_SETCUEBANNER(ED, "Search Re…  ≝word-based   ,comma prefix=phrase", 1)
 
   gap_el := 0
 
@@ -142,25 +142,54 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
     LV.Delete()
     for ahkey, help_map in help_keys {
       IsFound := ED.Value ? false : true ; don't search when value is empty
-      ; for i, v in DATA_TYPES[k] { ;if !(ED.Value) || (InStr(v, ED.Value))
-      v := help_map["h"]
+      pre := SubStr(ED.Value,1,1)
+      if pre="," and StrLen(ED.Value) >= 2 {
+        re_query := SubStr(ED.Value,2)
+        queryT := "literal"
+      } else {
+        re_query := StrSplit(ED.Value, delim:=[" ","`t"], " `t")
+        queryT := "word"
+      }
       if not IsFound {
+        v := help_map["h"]
         try {
-          if (RegExMatch(v, "i)" ED.Value)) {
-            IsFound := true
-            (dbg<_d3)?'':(dbgTT(0,"🔍H found ¦" ED.Value "¦",🕐:=3,id:=4))
-          } else {
-            (dbg<_d3)?'':(dbgTT(0,"✗H ¦" ED.Value "¦",🕐:=3,id:=4))
+          if queryT == "literal" {
+            if (RegExMatch(v, "i)" re_query)) {
+              IsFound := true
+              (dbg<_d3)?'':(dbgTT(0,"🔍H found re_lit ¦" re_query "¦",🕐:=3,id:=4))
+            } else {
+              (dbg<_d3)?'':(dbgTT(0,"✗H re_lit ¦" re_query "¦",🕐:=3,id:=4))
+            }
+          } else if queryT == "word" {
+            for w in re_query {
+              if (RegExMatch(v, "i)" w)) {
+                IsFound := true
+                (dbg<_d3)?'':(dbgTT(0,"🔍H found re_ω ¦" re_query "¦",🕐:=3,id:=4))
+                break
+              }
+            }
           }
         }
       }
       if not IsFound {
         if (help_map.Has("🔣name")) {
           v := help_map["🔣name"]
-          try {
-            if (RegExMatch(v, "i)" ED.Value)) {
-              IsFound := true
-              (dbg<_d3)?'':(dbgTT(0,"🔍Name found ¦" ED.Value "¦",🕐:=3,id:=5))
+          if queryT == "literal" {
+            try {
+              if (RegExMatch(v, "i)" re_query)) {
+                IsFound := true
+                (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_lit ¦" ED.Value "¦",🕐:=3,id:=5))
+              }
+            }
+          } else if queryT == "word" {
+            for w in re_query {
+              try {
+                if (RegExMatch(v, "i)" w)) {
+                  IsFound := true
+                  (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_ω ¦" ED.Value "¦",🕐:=3,id:=5))
+                  break
+                }
+              }
             }
           }
         }
