@@ -140,7 +140,7 @@ class guiKeyHelp {
       if pre="," and StrLen(ED.Value) >= 2 {
         re_query := SubStr(ED.Value,2)
         queryT := "literal"
-        if not ED.re_query { ; don't search when value is empty
+        if not re_query { ; don't search when value is empty
           return
         }
       } else {
