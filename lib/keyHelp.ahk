@@ -154,9 +154,9 @@ class guiKeyHelp {
             try {
               if (RegExMatch(v, "i)" re_query)) {
                 IsFound := true
-                (dbg<_d3)?'':(dbgTT(0,"🔍H found re_lit ¦" re_query "¦",🕐:=3,id:=4))
+                (dbg<_d3)?'':(dbgTT(0,"🔍H found re_lit ¦" re_query "¦ in ¦" v "¦",🕐:=3))
               } else {
-                (dbg<_d3)?'':(dbgTT(0,"✗H re_lit ¦" re_query "¦",🕐:=3,id:=4))
+                (dbg<_d3)?'':(dbgTT(0,"✗H re_lit ¦" re_query "¦ in ¦" v "¦",🕐:=3))
               }
             }
           } else if queryT == "word" {
@@ -164,7 +164,7 @@ class guiKeyHelp {
               for w in re_query {
                 if (RegExMatch(v, "i)" w)) {
                   IsFound := true
-                  (dbg<_d3)?'':(dbgTT(0,"🔍H found re_ω ¦" w "¦ in ¦" v "¦",🕐:=3,id:=4))
+                  (dbg<_d3)?'':(dbgTT(0,"🔍H found re_ω ¦" w "¦ in ¦" v "¦",🕐:=3))
                   break
                 }
               }
@@ -178,7 +178,7 @@ class guiKeyHelp {
               try {
                 if (RegExMatch(v, "i)" re_query)) {
                   IsFound := true
-                  (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_lit ¦" re_query "¦",🕐:=3,id:=5))
+                  (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_lit ¦" re_query "¦ in ¦" v "¦",🕐:=3))
                 }
               }
             } else if queryT == "word" {
@@ -186,7 +186,7 @@ class guiKeyHelp {
                 try {
                   if (RegExMatch(v, "i)" w)) {
                     IsFound := true
-                    (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_ω ¦" w "¦",🕐:=3,id:=5))
+                    (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_ω ¦" w "¦ in ¦" v "¦",🕐:=3))
                     break
                   }
                 }
