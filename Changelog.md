@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/compare/0.0.3-mhide...mhide_kbd
+[unreleased]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/compare/0.0.4-mhide...mhide_kbd
 ## [Unreleased]
 <!-- - __Added__ -->
   <!-- + :sparkles:  -->
@@ -21,6 +21,9 @@ All notable changes to this project will be documented in this file
 <!-- - __Security__ -->
   <!-- + :lock:  -->
   <!-- vulnerabilities -->
+
+[0.0.4-mhide]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.4-mhide
+## [0.0.4-mhide]
 - __Changed__
   + add a space in `🖰 hide on 🖮` to allow matching on `hide` in some launchers
   + add a mousegetpos error handler
