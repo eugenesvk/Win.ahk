@@ -73,7 +73,7 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
     }
     LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
   }
-  LV.ModifyCol(1,23) ;fits ‹⎈› without …
+  LV.ModifyCol(1,23) ;fits ‹⇧› without …
   LV.ModifyCol(2,29) ;     ‹⎈›
   LV.ModifyCol(3,29) ;     ‹◆›
   LV.ModifyCol(4,31) ;     ‹⎇›
@@ -108,11 +108,11 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
     ; ControlFocus(ED)
   }
   if   (VerCompare(A_OSVersion, "10.0.17763") >= 0) && (gTheme = "Dark") {
-    DWMWA_USE_IMMERSIVE_DARK_MODE := 19
+      DWMWA_USE_IMMERSIVE_DARK_MODE := 19
     if (VerCompare(A_OSVersion, "10.0.18985") >= 0) {
       DWMWA_USE_IMMERSIVE_DARK_MODE := 20
     }
-    DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", guiM.hWnd, "Int", DWMWA_USE_IMMERSIVE_DARK_MODE, "int*", true, "Int", 4)
+    DllCall("dwmapi\DwmSetWindowAttribute", "Ptr",guiM.hWnd, "Int",DWMWA_USE_IMMERSIVE_DARK_MODE, "int*",true, "Int",4)
     SetExplorerTheme(LV.hWnd, "DarkMode_Explorer")
   } else {
     SetExplorerTheme(LV.hWnd)
