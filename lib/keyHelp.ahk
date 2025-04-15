@@ -51,13 +51,16 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
       }
     }
 
-    LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
+    LV.Add(,help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
       help_map["c"],
-     (help_map.Has("t")?help_map["t"]:""),
-      ahkey, help_map["h"],
-     (help_map.Has("🔣")?help_map["🔣"]:""),
-     (help_map.Has("🔣name")?help_map["🔣name"]:""),
-      help_map["f"], help_map["l№"])
+     (help_map.Has("t"    	)?help_map["t"    	]:""),
+      ahkey               	                  	,
+     (help_map.Has("h"    	)?help_map["h"    	]:""),
+     (help_map.Has("🔣"    	)?help_map["🔣"    	]:""),
+     (help_map.Has("🔣name"	)?help_map["🔣name"	]:""),
+     (help_map.Has("f"    	)?help_map["f"    	]:""),
+     (help_map.Has("l№"   	)?help_map["l№"   	]:""),
+    )
   }
   if not is_init {
     is_init := true
@@ -161,16 +164,18 @@ get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hot
         if not IsFound {
           continue
         }
-        LV.Add(, help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
-          help_map["c"],
-         (help_map.Has("t")?help_map["t"]:""),
-          ahkey, help_map["h"],
-         (help_map.Has("🔣")?help_map["🔣"]:""),
-         (help_map.Has("🔣name")?help_map["🔣name"]:""),
-          help_map["f"], help_map["l№"])
-      }
-    LV.Opt("+Redraw")
+      LV.Add(,help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
+        help_map["c"],
+       (help_map.Has("t"    	)?help_map["t"    	]:""),
+        ahkey               	                  	,
+       (help_map.Has("h"    	)?help_map["h"    	]:""),
+       (help_map.Has("🔣"    	)?help_map["🔣"    	]:""),
+       (help_map.Has("🔣name"	)?help_map["🔣name"	]:""),
+       (help_map.Has("f"    	)?help_map["f"    	]:""),
+       (help_map.Has("l№"   	)?help_map["l№"   	]:""),
+      )
     }
+    LV.Opt("+Redraw")
   }
 
 
