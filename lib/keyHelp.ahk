@@ -147,7 +147,13 @@ class guiKeyHelp {
         if not ED.Value { ; don't search when value is empty
           return
         }
-        re_query := StrSplit(ED.Value, delim:=[" ","`t"], " `t")
+        re_query_s := StrSplit(ED.Value, delim:=[" ","`t"], " `t")
+        re_query := []
+        for w in re_query_s { ; remove empty
+          if w {
+            re_query.push(w)
+          }
+        }
         queryT := "word"
       }
       ; (dbg<_d3)?'':(dbgTT(0,"LV_Search_Debounced re_query ¦" Obj2Str(re_query) "¦ of ¦" queryT "¦ ED.Value=¦" ED.Value "¦",🕐:=2,id:=4))
@@ -167,7 +173,7 @@ class guiKeyHelp {
           } else if queryT == "word" {
             try {
               for w in re_query {
-                if (RegExMatch(v, "i)" w)) {
+                if w and (RegExMatch(v, "i)" w)) {
                   IsFound := true
                   (dbg<_d3)?'':(dbgTT(0,"🔍H found re_ω ¦" w "¦ in ¦" v "¦",🕐:=3))
                   break
@@ -189,7 +195,7 @@ class guiKeyHelp {
             } else if queryT == "word" {
               for w in re_query {
                 try {
-                  if (RegExMatch(v, "i)" w)) {
+                  if w and (RegExMatch(v, "i)" w)) {
                     IsFound := true
                     (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_ω ¦" w "¦ in ¦" v "¦",🕐:=3))
                     break
