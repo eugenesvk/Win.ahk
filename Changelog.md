@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file
   <!-- vulnerabilities -->
 - __Changed__
   + add a space in `🖰 hide on 🖮` to allow matching on `hide` in some launchers
+  + add a mousegetpos error handler
 
 [0.0.3-mhide]: https://github.com/eugenesvk/Win.ahk/tree/mhide_kbd/tag/0.0.3-mhide
 ## [0.0.3-mhide]
