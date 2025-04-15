@@ -567,14 +567,14 @@ app🖰Pointer(OnOff := '', is🖰vis := '') { ; create our own gui element, mak
    , _dl	:= 3 ; dbg level for logs
   if not isInit {
     isInit := true
-    guiBlankChild.NewTitle := "🖰hide on 🖮"
+    guiBlankChild.NewTitle := "🖰 hide on 🖮"
   }
 
 
   if not WinExist(guiID) { ; our gui element is destroyed, eg, by closing of the original window it's a child of
     guiBlankChild	:= Gui(guiopt)
     guiID        	:= WinGetID(guiBlankChild)
-    guiBlankChild.NewTitle := "🖰hide on 🖮"
+    guiBlankChild.NewTitle := "🖰 hide on 🖮"
     (dbg<min(_d,_dl))?'':(guiT:=SubStr(guiID?WinGetTitle(guiID):'',-20), m:="recreated GUI `n" guiT, dbgtt(0,m,_t,5,x,0), log(_dl,m ' 🕐' preciseTΔ(),,5))
   }
   guiOwner_pre := getWinID_Owner(guiID)
