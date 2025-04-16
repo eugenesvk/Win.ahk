@@ -239,40 +239,44 @@ class guiKeyHelp {
       LV.Delete()
       (dbg<_d3)?'':(dbgTT(0,ED.Value "¦ LV_Search_Debounced ED.Value",🕐:=1,id:=19,0,90))
       pre := SubStr(ED.Value,1,1)
+      skip_all := false
       if pre="," {
         if StrLen(ED.Value) < 2 {
-          return
-        }
-        re_query := SubStr(ED.Value,2)
-        queryT := "literal"
-        if not re_query { ; don't search when value is empty
-          return
+          skip_all := true
+        } else {
+          re_query := SubStr(ED.Value,2)
+          queryT := "literal"
+          if not re_query { ; don't search when value is empty
+            skip_all := true
+          }
         }
       } else if pre="."{
         if StrLen(ED.Value) < 2 {
-          return
-        }
-        re_query := SubStr(ED.Value,2)
-        queryT := "fuzzy"
-        if not re_query { ; don't search when value is empty
-          return
+          skip_all := true
+        } else {
+          re_query := SubStr(ED.Value,2)
+          queryT := "fuzzy"
+          if not re_query { ; don't search when value is empty
+            skip_all := true
+          }
         }
       } else {
         if not ED.Value { ; don't search when value is empty
-          return
-        }
-        re_query_s := StrSplit(ED.Value, delim:=[" ","`t"], " `t")
-        re_query := []
-        for w in re_query_s { ; remove empty
-          if w {
-            re_query.push(w)
+          skip_all := true
+        } else {
+          re_query_s := StrSplit(ED.Value, delim:=[" ","`t"], " `t")
+          re_query := []
+          for w in re_query_s { ; remove empty
+            if w {
+              re_query.push(w)
+            }
           }
+          queryT := "word"
         }
-        queryT := "word"
       }
       ; (dbg<_d3)?'':(dbgTT(0,"LV_Search_Debounced re_query ¦" Obj2Str(re_query) "¦ of ¦" queryT "¦ ED.Value=¦" ED.Value "¦",🕐:=2,id:=4))
       for ahkey, help_map in help_keys {
-        IsFound := false
+        IsFound := skip_all ? true : false
         if not IsFound {
           v := help_map["h"]
           if queryT == "literal" {
