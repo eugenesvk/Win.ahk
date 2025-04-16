@@ -124,8 +124,11 @@ class guiKeyHelp {
       LV.Redraw()
     }
     cbLV_DoubleClick(LV, RowNumber) { ; todo: open file/line number
-      RowText := LV.GetText(RowNumber)  ; Get the text from the row's first field
-      (dbg<_d1)?'':(dbgTT(0,"Double-clicked row " RowNumber ". Text: '" RowText "'",🕐:=1))
+      i_key := (dbg<_d1)?"🔣":"🔍Names"
+      i_col := this.LV_Header.Indexof(i_key)
+      RowText := LV.GetText(RowNumber, i_col)  ; Get the text from the row's first field
+      A_Clipboard := RowText
+      (dbg<_d1)?'':(dbgTT(0,"Double-clicked row " RowNumber ", copied ‘" i_key "’ col" . i_col . " text to clipboard: '" RowText "'",🕐:=1))
     }
     LV_Search(CtrlObj, *) {
       static timer := LV_Search_Debounced.Bind()
