@@ -4,11 +4,12 @@
 
 #include <FuzzSift>
 class guiKeyHelp {
-  __new(gTheme:="light") { ; get all vars and store their values in this.Varname as well ‘m’ map, and add aliases
+  __new(gTheme:="light", text_ed:="sublime_text.exe", jump2ln:=true) { ; get all vars and store their values in this.Varname as well ‘m’ map, and add aliases
     static _d:=0, _d1:=1, _d2:=2, _d3:=3
      , is_init := false
      , chU	:= keyFunc.keyCharNameU
      , chC	:= keyFunc.keyCharNameC
+    is_path_full := RegExMatch(text_ed, "i)^`"?(([a-zA-Z]:[\\/]?)|((\.\.)?[\\/])|([\\/]{2})).*")
 
     guiOptChrome := "-Caption -Border -Resize -SysMenu"
     guiM := Gui("+MinSize800x480 +DPIResize " guiOptChrome, t:="Registered Hotkeys")
@@ -146,10 +147,17 @@ class guiKeyHelp {
       ; If the mouse is over the header, show the tooltip
       if (🖰y >= hdRect.↑ && 🖰y <= hdRect.↓) {
         col_i_cur := guiF.lvSubitemHitTest(hWndLV)
-        col_i_tgt := (dbg<_d1) ? c🔣 : c🔍Names
-        if col_i_cur = col_i_tgt {
+        ; col_i_tgt := (dbg<_d1) ? c🔣 : c🔍Names
+        ; if col_i_cur = col_i_tgt {
+        if col_i_cur > 0 {
           col_rect := guiF.lvGetHeaderItemRect(hWndLV, col_i_cur)
-          ToolTip("🖰 double click on a row to copy this column's content",col_rect.← + 40,col_rect.↓)
+          if        col_i_cur = cFile {
+            ToolTip("2⋅🖰 to open",col_rect.←,col_rect.↑)
+          } else if col_i_cur = cl№ {
+            ToolTip("2⋅🖰 to open",col_rect.←,col_rect.↑)
+          } else if col_i_cur > 0 {
+            ToolTip("2⋅🖰 to 📋copy",col_rect.←,col_rect.↑)
+          }
         } else {
           ToolTip
         }
@@ -178,12 +186,44 @@ class guiKeyHelp {
       LV.Move(, , Width - 2, Height - gap_top - 30 - gap_el - 0)
       LV.Redraw()
     }
-    cbLV_DoubleClick(LV, RowNumber) { ; todo: open file/line number
+    cbLV_DoubleClick(LV, row№) { ; todo: open file/line number
+      static F:=nativeFunc
       i_key := (dbg<_d1)?"🔣":"🔍Names"
-      i_col := this.LV_Header.IndexOf(i_key)
-      RowText := LV.GetText(RowNumber, i_col)  ; Get the text from the row's first field
-      A_Clipboard := RowText
-      (dbg<_d1)?'':(dbgTT(0,"Double-clicked row " RowNumber ", copied ‘" i_key "’ col" . i_col . " text to clipboard: '" RowText "'",🕐:=1))
+      hWndLV := ControlGetHwnd(LV)  ; Handle of the ListView
+      col№ := guiF.lvSubitemHitTest(hWndLV)
+      if col№ = 0 {
+        col№ := this.LV_Header.IndexOf(i_key)
+      }
+      if col№ = cFile or col№ = cl№ {
+        colSym := LV_Header[col№]
+        fname := LV.GetText(row№, cFile)
+        line  := LV.GetText(row№, cl№)
+        fpath_l := A_ScriptDir "\" fname ".ahk" (jump2ln ? ":" line : "")
+        if is_path_full {
+          exe_path := text_ed
+        } else {
+          exe_path := ""
+          for got_exe_path in [
+            F.get_exe_path_app_cli_reg(text_ed),
+            F.get_exe_path_env_var(    text_ed)] {
+            if got_exe_path {
+              exe_path := got_exe_path
+              break
+            }
+          }
+        }
+        if exe_path {
+          Run(exe_path . ' ' . fpath_l, A_ScriptDir)
+          (dbg<_d1)?'':(dbgTT(0,"2·🖰 row" row№ " col" . col№ . ", opening file`n" fpath_l,🕐:=2))
+        } else {
+          (dbg<_d1)?'':(dbgTT(0,"2·🖰 row" row№ " col" . col№ . ", editor not found to open file`n" fpath_l,🕐:=2))
+        }
+      } else {
+        colSym := LV_Header[col№]
+        RowText := LV.GetText(row№, col№)  ; Get the text from the row's first field
+        A_Clipboard := RowText
+        (dbg<_d1)?'':(dbgTT(0,"2·🖰 row" row№ " col" . col№ ", copied ‘" colSym "’ . text to 📋:`n" RowText,🕐:=1))
+      }
     }
     LV_Search(CtrlObj, *) {
       static timer := LV_Search_Debounced.Bind()
