@@ -139,11 +139,11 @@ Sift_Ngram_Compare(&Hay, &Needle) {
   Match := 0
   for gram, Needle_Count in Needle {
     Needle_Total += Needle_Count
-    if Hay.has(gram) {
+    if Hay.has(gram) { ;;; v1 doesn't have this check, how come grams is guaranteed to be there???
       Match += (Hay[gram] > Needle_Count ? Needle_Count : Hay[gram])
     }
   }
-  return Match / Needle_Total
+  return Needle_Total ? Match / Needle_Total : 0
 }
 
 Sift_Ngram_Matrix(&Data,  n := 3) {
