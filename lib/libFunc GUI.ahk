@@ -1,8 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.4
 
-#include <libFunc Dbg>   	; Functions: Debug
-#include <libFunc Native>	; Functions: Native
-
 class guiF {
   static _:=0
    , LVM_GETHEADER := 0x101F
