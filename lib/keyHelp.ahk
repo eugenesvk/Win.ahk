@@ -1,5 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.18
 
+#include <FuzzSift>
 class guiKeyHelp {
   __new(gTheme:="light") { ; get all vars and store their values in this.Varname as well ‘m’ map, and add aliases
     static _d:=0, _d1:=1, _d2:=2, _d3:=3
@@ -22,7 +23,7 @@ class guiKeyHelp {
     ED_Opt  	:= leftmost " " topmost " w400" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
     ED := guiM.AddEdit(ED_Opt)
     ED.OnEvent("Change", LV_Search)
-    guiKeyHelp.EM_SETCUEBANNER(ED, "Search Re…  ≝word-based   ,comma prefix=phrase", 1)
+    guiKeyHelp.EM_SETCUEBANNER(ED, "Search Re…  ≝word-based   ,comma prefix=phrase  .dot prefix=fuzzy", 1)
 
     gap_el := 0
 
@@ -133,13 +134,28 @@ class guiKeyHelp {
     }
 
     LV_Search_Debounced() {
+      static fuzzyΔ := 0.5 ; ≝.7 min Fuzzy match coefficient, 1=prefect, 0=no match
+       , ng_sz := 3 ;Ngram Size ≝3 length of Ngram used. 3=trigram
+
       LV.Opt("-Redraw")
       LV.Delete()
       (dbg<_d3)?'':(dbgTT(0,ED.Value "¦ LV_Search_Debounced ED.Value",🕐:=1,id:=19,0,90))
       pre := SubStr(ED.Value,1,1)
-      if pre="," and StrLen(ED.Value) >= 2 {
+      if pre="," {
+        if StrLen(ED.Value) < 2 {
+          return
+        }
         re_query := SubStr(ED.Value,2)
         queryT := "literal"
+        if not re_query { ; don't search when value is empty
+          return
+        }
+      } else if pre="."{
+        if StrLen(ED.Value) < 2 {
+          return
+        }
+        re_query := SubStr(ED.Value,2)
+        queryT := "fuzzy"
         if not re_query { ; don't search when value is empty
           return
         }
@@ -180,6 +196,16 @@ class guiKeyHelp {
                 }
               }
             }
+          } else if queryT == "fuzzy" {
+            ; try { ; ;;; disable for now to track bugs
+              fuzz_res := Sift_Ngram(&v, &re_query, fuzzyΔ, &hm:=false, ng_sz, fmt:="S`n")
+              if fuzz_res.Length > 0 {
+                IsFound := true
+                (dbg<_d2)?'':(dbgTT(0,"🔍H found re_fuzz " fuzz_res[1]["Delta"] " ¦" re_query "¦ in ¦" v "¦",🕐:=3))
+              } else {
+                (dbg<_d2)?'':(dbgTT(0,"✗H re_fuzz ¦" re_query "¦ in ¦" v "¦",🕐:=3))
+              }
+            ; }
           }
         }
         if not IsFound {
@@ -202,6 +228,16 @@ class guiKeyHelp {
                   }
                 }
               }
+            } else if queryT == "fuzzy" {
+              ; try {
+                fuzz_res := Sift_Ngram(&v, &re_query, fuzzyΔ, &hm:=false, ng_sz, fmt:="S`n")
+                if fuzz_res.Length > 0 {
+                  IsFound := true
+                  (dbg<_d2)?'':(dbgTT(0,"🔍Name found re_fuzz " fuzz_res[1]["Delta"] " ¦" re_query "¦ in ¦" v "¦",🕐:=3))
+                } else {
+                  ; (dbg<_d2)?'':(dbgTT(0,"✗🔍Name re_fuzz " fuzz_res[1]["Delta"] " ¦" re_query "¦ in ¦" v "¦",🕐:=3))
+                }
+              ; }
             }
           }
         }
@@ -224,6 +260,7 @@ class guiKeyHelp {
     this.g := guiM
     this.ED := ED
     this.LV := LV
+    this.LV_Header := LV_Header
   }
 
 
@@ -271,7 +308,7 @@ class guiKeyHelp {
 
 get_help(gTheme:="light") { ; Show a listview with all the registered hk🛈 hotkeys and their help🛈
   static is_init := false
-   , _d:=0, _d1:=1, _d2:=2, _d3:=0
+   , _d:=0, _d1:=1, _d2:=2, _d3:=3
    , guiC := guiKeyHelp(gTheme)
    , guiM := guiC.g
    , ED := guiC.ED
