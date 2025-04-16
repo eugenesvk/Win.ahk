@@ -126,7 +126,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     Switch hk, 0 {
       default  : return ; dbgtt(0,'nothing matched setChar🠿 hk=' . hk, 4) ;
       ; Hotkey created → key name and ordering of its modifier symbols gets fixed
-      ; —————————— Diacritic hk  c  key_list lblMap lblKey 🖰hide
+      ; —————————— Diacritic hk  key_list lblMap lblKey 🖰hide
       case  a⃣  :	char→sym(hk,Dia['a'],unset,unset,false) ;InStr(lbl🖰hide,'a'))
       case ⇧a  : 	char→sym(hk,Dia['A'],unset,unset,false) ;InStr(lbl🖰hide,'a') & is∗)
       case  c⃣  :	char→sym(hk,Dia['c'],unset,unset,false) ;InStr(lbl🖰hide,'c'))
