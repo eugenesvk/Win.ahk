@@ -148,7 +148,8 @@ class guiKeyHelp {
         col_i_cur := guiF.lvSubitemHitTest(hWndLV)
         col_i_tgt := (dbg<_d1) ? c🔣 : c🔍Names
         if col_i_cur = col_i_tgt {
-          ToolTip("🖰 double click on a row to copy this column's content",🖰x+40)
+          col_rect := guiF.lvGetHeaderItemRect(hWndLV, col_i_cur)
+          ToolTip("🖰 double click on a row to copy this column's content",col_rect.← + 40,col_rect.↓)
         } else {
           ToolTip
         }
