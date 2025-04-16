@@ -96,4 +96,52 @@ class nativeFunc {
     }
     DllCall("GlobalFree", "ptr",p)
   }
+
+  static get_exe_path_app_path_reg(exe) {  ; returns "quoted" path, names to paths via App Paths registry key
+    static reg_path := "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\"
+    for reg_p in [reg_path . exe, reg_path . exe . ".exe"] {
+      vPath := ""
+      try {
+        ; dbgtt(0,reg_p, 3)
+        vPath := RegRead(reg_p)
+      } catch OSError as e {
+        ; dbgTT(0, "OSError: " . e.message . "`n" . e.file . ":" . e.line, 3)
+      }
+      if vPath {
+        return '"' . vPath . '"'
+      }
+    }
+  }
+
+  static get_exe_path_app_cli_reg(exe) { ; returns "quoted" path, names to command-line strings via Applications registry key
+    static reg_path_pre := "HKEY_CLASSES_ROOT\Applications\", reg_path_pos := "\shell\open\command"
+     , re_first_path := "(`"[^`"]+`").*"
+    for reg_p in [reg_path_pre . exe . reg_path_pos, reg_path_pre . exe . ".exe" . reg_path_pos] {
+      vPath := ""
+      try {
+        vPath := RegRead(reg_p)
+      } catch OSError as e {
+        ; dbgTT(0, "OSError: " . e.message . "`n" . e.file . ":" . e.line, 3)
+      }
+      if vPath {
+        if RegExMatch(vPath, re_first_path, &path_match) {
+          return path_match[1]
+        }
+      }
+    }
+  }
+
+
+  static get_exe_path_env_var(exe) { ; returns "quoted" path, too many exist checks?
+    for reg_p in ["\" . exe, "\" . exe . ".exe"] {
+      path := EnvGet("Path")
+      Loop Parse, path, ";" {
+        vPath := A_LoopField . "\" . exe
+        if FileExist(vPath) {
+          dbgtt(0, "Found " . vPath)
+          return '"' . vPath . '"'
+        }
+      }
+    }
+  }
 }
