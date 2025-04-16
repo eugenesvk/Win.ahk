@@ -7,6 +7,7 @@ class guiF {
   static _:=0
    , LVM_GETHEADER := 0x101F
    , LVM_SUBITEMHITTEST := 0x1039
+   , HDM_GETITEMRECT := 0x1207
 
   static lvGetHeaderRect(hWndLV) { ; Get the header rectangle (left, top, right, bottom)
     ; Send the message to get the header handle
@@ -24,6 +25,23 @@ class guiF {
     hdRect.h := hdRect.↓ - hdRect.↑
     return hdRect
   }
+  static lvGetHeaderItemRect(hWndLV,item_i) { ; Get header's item rectangle (left, top, right, bottom)
+    ; Send the message to get the header handle
+    hWndHeader := DllCall("SendMessage", "Ptr",hWndLV, "UInt",this.LVM_GETHEADER, "UInt",0, "Ptr",0, "Ptr")
+    ; Get the header item rectangle (in screen coordinates)
+    headerItemRect := Buffer(16,0) ; sizeof(RECT) = 16
+    res_ := DllCall("SendMessage", "Ptr",hWndHeader, "UInt",this.HDM_GETITEMRECT, "UInt",item_i-1, "Ptr",headerItemRect, "Ptr")
+    ; Get the position of the rectangle
+    hditemRect := {}
+    hditemRect.← := NumGet(headerItemRect,  0, "int") ; always 0 in own client coord?
+    hditemRect.↑ := NumGet(headerItemRect,  4, "int")
+    hditemRect.→ := NumGet(headerItemRect,  8, "int")
+    hditemRect.↓ := NumGet(headerItemRect, 12, "int")
+    hditemRect.w := hditemRect.→ - hditemRect.←
+    hditemRect.h := hditemRect.↓ - hditemRect.↑
+    return hditemRect
+  }
+
   static lvSubitemHitTest(hLV) { ; hLV - ListView's HWND
     POINT := Buffer(8, 0)
     DllCall("User32.dll\GetCursorPos"  , "Ptr",POINT) ; Pointer position in screen coordinates
