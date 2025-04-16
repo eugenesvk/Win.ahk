@@ -33,8 +33,21 @@ class guiKeyHelp {
 
     guiM.SetFont("s10", "Segoe UI")
     LV_Header	:= ["⇧","⎈","◆","⎇","K⃣","🅃", "AHK⃣", "🔍H", "🔣", "🔍Names","File", "l№"]
-    LV_Opt   	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
-    LV       	:= guiM.AddListView(LV_Opt, LV_Header)
+    static _:=0
+     , c⇧     	:=LV_Header.IndexOf("⎈")
+     , c⎈     	:=LV_Header.IndexOf("⎈")
+     , c◆     	:=LV_Header.IndexOf("◆")
+     , c⎇     	:=LV_Header.IndexOf("⎇")
+     , cK⃣    	:=LV_Header.IndexOf("K⃣")
+     , c🅃     	:=LV_Header.IndexOf("🅃")
+     , cAHK⃣  	:=LV_Header.IndexOf("AHK⃣")
+     , c🔍H    	:=LV_Header.IndexOf("🔍H")
+     , c🔣     	:=LV_Header.IndexOf("🔣")
+     , c🔍Names	:=LV_Header.IndexOf("🔍Names")
+     , cFile  	:=LV_Header.IndexOf("File")
+     , cl№    	:=LV_Header.IndexOf("l№")
+    LV_Opt    	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
+    LV        	:= guiM.AddListView(LV_Opt, LV_Header)
     LV.Opt("-Redraw")
     LV.OnEvent("DoubleClick", cbLV_DoubleClick)  ; Notify the script whenever the user double clicks a row
     for ahkey, help_map in help_keys { ; Add data
@@ -80,11 +93,11 @@ class guiKeyHelp {
       }
       LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
     }
-    LV.ModifyCol(1,23) ;fits ‹⇧› without …
-    LV.ModifyCol(2,29) ;     ‹⎈›
-    LV.ModifyCol(3,29) ;     ‹◆›
-    LV.ModifyCol(4,31) ;     ‹⎇›
-    LV.ModifyCol(10,30) ; too huge of a field
+    LV.ModifyCol(c⇧,23) ;fits ‹⇧› without …
+    LV.ModifyCol(c⎈,29) ;     ‹⎈›
+    LV.ModifyCol(c◆,29) ;     ‹◆›
+    LV.ModifyCol(c⎇,31) ;     ‹⎇›
+    LV.ModifyCol(c🔍Names,30) ; too huge of a field
 
 
     guiM.OnEvent("Escape", (*) => guiM.Hide())
@@ -125,7 +138,7 @@ class guiKeyHelp {
     }
     cbLV_DoubleClick(LV, RowNumber) { ; todo: open file/line number
       i_key := (dbg<_d1)?"🔣":"🔍Names"
-      i_col := this.LV_Header.Indexof(i_key)
+      i_col := this.LV_Header.IndexOf(i_key)
       RowText := LV.GetText(RowNumber, i_col)  ; Get the text from the row's first field
       A_Clipboard := RowText
       (dbg<_d1)?'':(dbgTT(0,"Double-clicked row " RowNumber ", copied ‘" i_key "’ col" . i_col . " text to clipboard: '" RowText "'",🕐:=1))
