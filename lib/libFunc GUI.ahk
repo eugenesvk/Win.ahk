@@ -13,9 +13,8 @@ class guiF {
     hWndHeader := DllCall("SendMessage", "Ptr",hWndLV, "UInt",this.LVM_GETHEADER, "UInt",0, "Ptr",0, "Ptr")
     ; Get the header rectangle (in screen coordinates)
     headerRect := Buffer(16,0) ; sizeof(RECT) = 16
-    DllCall("GetClientRect", "Ptr",hWndHeader, "Ptr",headerRect)
     DllCall("GetClientRect", "ptr",hWndHeader, "ptr",headerRect)
-    ; Adjust the position of the rectangle to the header area
+    ; Get the position of the rectangle
     hdRect := {}
     hdRect.← := NumGet(headerRect,  0, "int") ; always 0 in own client coord
     hdRect.↑ := NumGet(headerRect,  4, "int")
