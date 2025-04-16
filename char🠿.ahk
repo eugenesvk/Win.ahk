@@ -15,6 +15,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
    ; , lbl🖰hide	:= ''
    ; , cfg🖰h   	:= cfg🖰convert()
   ; getKeys🖰hide(&lbl🖰hide) ; these hdotkeys override '🖰hide on 🖮', so we need to invoke pointer hiding here
+  pfn := p.fname_(A_LineFile)
 
   HotIfWinActive("ahk_group PressnHold")
   ; `12345 67890 -=
@@ -25,14 +26,39 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   ;⇧ qw rt   i p []
   ;⇧   d g hjkl; '\
   ;⇧  x     m,.
-  loop parse "abce/nosuyz'" { ; ⇧🠿a​⇧🠿b​⇧🠿c​⇧🠿e​⇧🠿/​⇧🠿n​⇧🠿o​⇧🠿s​⇧🠿u​⇧🠿y​⇧🠿z​⇧🠿'​  ;;; remove z to test a bug with ‹⎈
-    HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
-    HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
-  }
+  ; loop parse "abce/nosuyz'" { ; ⇧🠿a​⇧🠿b​⇧🠿c​⇧🠿e​⇧🠿/​⇧🠿n​⇧🠿o​⇧🠿s​⇧🠿u​⇧🠿y​⇧🠿z​⇧🠿'​  ;;; remove z to test a bug with ‹⎈
+  ;   HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
+  ;   HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
+  ; }
+  hk🛈(pre "a​" 	,hkChar🠿,"T2",Map("h","Diacritics a"	,"t","🠿" ,"🔣",Dia['a'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "c​" 	,hkChar🠿,"T2",Map("h","Diacritics c"	,"t","🠿" ,"🔣",Dia['c'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "e​" 	,hkChar🠿,"T2",Map("h","Diacritics e"	,"t","🠿" ,"🔣",Dia['e'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "n​" 	,hkChar🠿,"T2",Map("h","Diacritics n"	,"t","🠿" ,"🔣",Dia['n'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "o​" 	,hkChar🠿,"T2",Map("h","Diacritics o"	,"t","🠿" ,"🔣",Dia['o'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "s​" 	,hkChar🠿,"T2",Map("h","Diacritics s"	,"t","🠿" ,"🔣",Dia['s'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "u​" 	,hkChar🠿,"T2",Map("h","Diacritics u"	,"t","🠿" ,"🔣",Dia['u'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "y​" 	,hkChar🠿,"T2",Map("h","Diacritics y"	,"t","🠿" ,"🔣",Dia['y'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "z​" 	,hkChar🠿,"T2",Map("h","Diacritics z"	,"t","🠿" ,"🔣",Dia['z'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧a​"	,hkChar🠿,"T2",Map("h","Diacritics A"	,"t","🠿" ,"🔣",Dia['A'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧c​"	,hkChar🠿,"T2",Map("h","Diacritics C"	,"t","🠿" ,"🔣",Dia['C'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧e​"	,hkChar🠿,"T2",Map("h","Diacritics E"	,"t","🠿" ,"🔣",Dia['E'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧n​"	,hkChar🠿,"T2",Map("h","Diacritics N"	,"t","🠿" ,"🔣",Dia['N'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧o​"	,hkChar🠿,"T2",Map("h","Diacritics O"	,"t","🠿" ,"🔣",Dia['O'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧s​"	,hkChar🠿,"T2",Map("h","Diacritics S"	,"t","🠿" ,"🔣",Dia['S'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧u​"	,hkChar🠿,"T2",Map("h","Diacritics U"	,"t","🠿" ,"🔣",Dia['U'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧y​"	,hkChar🠿,"T2",Map("h","Diacritics Y"	,"t","🠿" ,"🔣",Dia['Y'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧z​"	,hkChar🠿,"T2",Map("h","Diacritics Z"	,"t","🠿" ,"🔣",Dia['Z'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+
+  hk🛈(pre "'​" 	,hkChar🠿,"T2",Map("h","QuotesS"	,"t","🠿" ,"🔣",ch␞('QuotesS'	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧'​"	,hkChar🠿,"T2",Map("h","QuotesD"	,"t","🠿" ,"🔣",ch␞('QuotesD'	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "/​" 	,hkChar🠿,"T2",Map("h","WinFile"	,"t","🠿" ,"🔣",ch␞('WinFile'	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧/​"	,hkChar🠿,"T2",Map("h","WinFile"	,"t","🠿" ,"🔣",ch␞('WinFile'	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "b​" 	,hkChar🠿,"T2",Map("h","Bullet" 	,"t","🠿" ,"🔣",ch␞('Bullet' 	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧b​"	,hkChar🠿,"T2",Map("h","Misc"   	,"t","🠿" ,"🔣",ch␞('Misc'   	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+
   ; loop parse "qwpxtvg-r" { ; 🠿q​🠿w​🠿p​🠿x​🠿t​🠿v​🠿g​🠿-​🠿r​ f used for home row mod h for exit insert mode
   ;   HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
   ; }
-  pfn := p.fname_(A_LineFile)
   hk🛈(pre "q​"	,hkChar🠿,"T2",Map("h","XSymbols"   	,"t","🠿" ,"🔣",ch␞('XSymbols'   	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "w​"	,hkChar🠿,"T2",Map("h","Arrows"     	,"t","🠿" ,"🔣",ch␞('Arrows'     	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "p​"	,hkChar🠿,"T2",Map("h","Currency"   	,"t","🠿" ,"🔣",ch␞('Currency'   	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
@@ -43,13 +69,19 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   hk🛈(pre "r​"	,hkChar🠿,"T2",Map("h","Checks"     	,"t","🠿" ,"🔣",ch␞('Checks'     	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "-​"	,hkChar🠿,"T2",Map("h","dash"       	,"t","🠿" ,"🔣",ch␞('Dash'       	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
 
-  loop parse "``45" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
-    HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
-  }
-  loop parse "␠" { ; ⎈›⎇›␠​​ ⟶ various space symbols	(x) ;
-    ; HotKey(pre s.key→ahk('⎈›⎇›' k[A_LoopField]), hkChar🠿, "T2")
-    HotKey(pre s.key→ahk('⎈›⎇›' k[A_LoopField]), hkChar↓, "T2") ;;; todo make it work on press, need to rewrite logic in the function below that hkChar↓ calls
-  }
+  ; loop parse "``45" { ; ⇧🠿`​⇧🠿4​⇧🠿5​⇧🠿f​
+    ; HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
+  ; }
+  hk🛈(pre "⇧``​"	,hkChar🠿,"T2",Map("h","Para"    	,"t","🠿" ,"🔣",ch␞('Para'    	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧4​" 	,hkChar🠿,"T2",Map("h","Currency"	,"t","🠿" ,"🔣",ch␞('Currency'	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧5​" 	,hkChar🠿,"T2",Map("h","Percent" 	,"t","🠿" ,"🔣",ch␞('Percent' 	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
+
+  ; loop parse "␠" { ; ⎈›⎇›␠​​ ⟶ various space symbols	(x) ;
+  ;   ; HotKey(pre s.key→ahk('⎈›⎇›' k[A_LoopField]), hkChar🠿, "T2")
+  ;   HotKey(pre s.key→ahk('⎈›⎇›' k[A_LoopField]), hkChar↓, "T2") ;;; todo make it work on press, need to rewrite logic in the function below that hkChar↓ calls
+  ; }
+  hk🛈(pre "⎈›⎇›␠"	,hkChar↓,"T2",Map("h","Space"	,"t","🠿" ,"🔣",Ch['Space'	].Join("") ,"f",pfn,"l№",A_LineNumber))
+
   HotIf
   WinActive_Not(active, not_active*) { ; = #Hotif WinActive("ahk_group PressnHold") and !WinActive("ahk_group Browser")
     if     WinActive(active) {
@@ -64,20 +96,24 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
     }
   }
   HotIf (*) => WinActive_Not("ahk_group PressnHold", "ahk_group Browser") ; exclude Vivaldi to allow using vimium jkl;
-  loop parse "l" { ; ⇧🠿l​
-    HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
-    HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
-  }
+  ; loop parse "l" { ; ⇧🠿l​
+    ; HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
+    ; HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
+  ; }
+  hk🛈(pre "l​" 	,hkChar🠿,"T2",Map("h","Diacritics l"	,"t","🠿" ,"🔣",Dia['l'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "⇧l​"	,hkChar🠿,"T2",Map("h","Diacritics L"	,"t","🠿" ,"🔣",Dia['L'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
   HotIf
   HotIf (*) => WinActive_Not("ahk_group PressnHold", "ahk_group Browser") ; exclude Vivaldi to allow using vimium jkl;
-  loop parse "i" { ; ⇧🠿i​
-    HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
-  }
+  ; loop parse "i" { ; ⇧🠿i​
+    ; HotKey(pre s.key→ahk('⇧' k[A_LoopField]), hkChar🠿, "T2")
+  ; }
+  hk🛈(pre "⇧i​"	,hkChar🠿,"T2",Map("h","Diacritics i"	,"t","🠿" ,"🔣",Dia['I'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
   HotIf
   HotIf (*) => WinActive_Not("ahk_group PressnHold", "ahk_group Browser","ahk_exe sublime_text.exe") ; exclude Vivaldi to allow using vimium jkl; and Sublime to allow 'i' to exit Insert
-  loop parse "i" { ;  🠿i​
-    HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
-  }
+  ; loop parse "i" { ;  🠿i​
+  ;   HotKey(pre s.key→ahk(    k[A_LoopField]), hkChar🠿, "T2")
+  ; }
+  hk🛈(pre "i​"	,hkChar🠿,"T2",Map("h","Diacritics i"	,"t","🠿" ,"🔣",Dia['i'	].Join(" ") ,"f",pfn,"l№",A_LineNumber))
   HotIf
   ; blind_ := false
   hkChar🠿(hk_dirty) {
