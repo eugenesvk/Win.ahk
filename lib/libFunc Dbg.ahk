@@ -1,5 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.4
-#include <libFunc>	; General set of functions
+#include <libFunc>    	; General set of functions
+#include <libFunc GUI>	; Functions: GUI
 ; ————————————————————————— Debugging Functions —————————————————————————
 ShowModStatus() { ; show a tooltip with the status of "physical" (inputhook's view) and logical modifiers
   static K 	:= keyConstant , vk := K._map, sc := K._mapsc  ; various key name constants, gets vk code to avoid issues with another layout
@@ -43,7 +44,8 @@ dbgTL(dbgMin:=0, Text:="", named?) { ; show tooltip and print to debug
 }
 TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
   static id_last := 0, id_max := 20
-  , timers := Map()
+   , timers := Map()
+   , FFToolTip := guiF.FFToolTip.Bind(guiF)
   if idTT = 0 { ; no id given, increase by 1 to have multiple calls have different ids
     (id_last>=id_max) ? id_last:=1 : id_last+=1 ; reset id over max
     id := id_last
@@ -84,13 +86,13 @@ TT(Text:="", Time:= .5,idTT:=0,X:=-1,Y:=-1) {
            "SubStr:" SubStr("o200", 2) )
   if        (X>=0
           && Y>=0) {
-    ToolTip(Text, X             , Y             ,id)
+    FFToolTip(Text, X             , Y             ,id)
   } else if (X>=0) {
-    ToolTip(Text, X             ,mY+stepY*(id-1),id)
+    FFToolTip(Text, X             ,mY+stepY*(id-1),id)
   } else if (Y>=0) {
-    ToolTip(Text,mX+stepX*(id-1), Y             ,id)
+    FFToolTip(Text,mX+stepX*(id-1), Y             ,id)
   } else {
-    ToolTip(Text,mX+stepX*(id-1),mY+stepY*(id-1),id)
+    FFToolTip(Text,mX+stepX*(id-1),mY+stepY*(id-1),id)
   }
   if Text != ''{
     if not Time = '∞' {
@@ -389,6 +391,7 @@ Str2Object(Input){
 }
 Obj_Gui(Array, ParentID := "") { ; Displays the content of the variable autohotkey.com/boards/viewtopic.php?f=83&t=103437
   static ogcTreeView
+   , FFToolTip := guiF.FFToolTip.Bind(guiF)
   if !ParentID {
     myGui := Gui()
     myGui.Opt("+Resize")
@@ -521,8 +524,8 @@ Obj_Gui(Array, ParentID := "") { ; Displays the content of the variable autohotk
   }
 
   Tooltip2(Text := "", X := "", Y := "", WhichToolTip := "") {
-    ToolTip(Text, X, Y, WhichToolTip)
-    SetTimer () => ToolTip(), -3000
+    FFToolTip(Text, X, Y, WhichToolTip)
+    SetTimer () => FFToolTip(), -3000
   }
 }
 EditGui(Input){
