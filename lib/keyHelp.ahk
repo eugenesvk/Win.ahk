@@ -1,5 +1,7 @@
 #Requires AutoHotKey 2.1-alpha.18
 
+#include <libFunc GUI>	; Functions: GUI
+
 #include <FuzzSift>
 class guiKeyHelp {
   __new(gTheme:="light") { ; get all vars and store their values in this.Varname as well ‘m’ map, and add aliases
@@ -132,6 +134,38 @@ class guiKeyHelp {
         ControlFocus(ED)
       }
       ; ControlFocus(ED)
+    }
+
+    OnMessage(0x200, cbMouseMove) ;WM_MOUSEMOVE
+    cbMouseMove(wParam, lParam, nmsg, hwnd) {
+      🖰x :=  lParam        & 0xFFFF
+      🖰y := (lParam >> 16) & 0xFFFF
+      ; Check if the mouse is over the ListView header
+      hWndLV := ControlGetHwnd(LV)  ; Handle of the ListView
+      hdRect := guiF.lvGetHeaderRect(hWndLV)
+      ; If the mouse is over the header, show the tooltip
+      if (🖰y >= hdRect.↑ && 🖰y <= hdRect.↓) {
+        col_i_cur := guiF.lvSubitemHitTest(hWndLV)
+        col_i_tgt := (dbg<_d1) ? c🔣 : c🔍Names
+        if col_i_cur = col_i_tgt {
+          ToolTip("🖰 double click on a row to copy this column's content",🖰x+40)
+        } else {
+          ToolTip
+        }
+      } else {
+        ToolTip
+      }
+      ; if (🖰x >= hdRect.← && 🖰x <= (hdRect.→ - 500)&&
+      ;     🖰y >= hdRect.↑ && 🖰y <= hdRect.↓) {
+      ;   ToolTip(hdRect.← "← "
+      ;     .     hdRect.→ "→`t"
+      ;     .     hdRect.→ - hdRect.← "w`n"
+      ;     .     hdRect.↑ "↑ "
+      ;     .     hdRect.↓ "↓`t"
+      ;     .     hdRect.↓ - hdRect.↑ "h")
+      ; } else {
+      ;   ToolTip
+      ; }
     }
 
     ; Window Events
