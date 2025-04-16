@@ -135,7 +135,7 @@ class guiKeyHelp {
 
     LV_Search_Debounced() {
       static fuzzyΔ := 0.5 ; ≝.7 min Fuzzy match coefficient, 1=prefect, 0=no match
-       , ng_sz := 3 ;Ngram Size ≝3 length of Ngram used. 3=trigram
+       , ng_sz := 3 ; Ngram Size ≝3 length of Ngram used. 3=trigram
 
       LV.Opt("-Redraw")
       LV.Delete()
