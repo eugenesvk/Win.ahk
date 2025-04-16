@@ -9,6 +9,7 @@ class guiKeyHelp {
      , is_init := false
      , chU	:= keyFunc.keyCharNameU
      , chC	:= keyFunc.keyCharNameC
+     , FFToolTip := guiF.FFToolTip.Bind(guiF)
     is_path_full := RegExMatch(text_ed, "i)^`"?(([a-zA-Z]:[\\/]?)|((\.\.)?[\\/])|([\\/]{2})).*")
 
     guiOptChrome := "-Caption -Border -Resize -SysMenu"
@@ -112,7 +113,7 @@ class guiKeyHelp {
     ; guiM.Show("AutoSize x0 y0") ; Display the window
     LV.Opt("+Redraw")
     cbEscape(*) {
-      ToolTip ; in case was hovering over listview header
+      FFToolTip() ; in case was hovering over listview header
       guiM.Hide()
     }
 
@@ -152,28 +153,28 @@ class guiKeyHelp {
         if col_i_cur > 0 {
           col_rect := guiF.lvGetHeaderItemRect(hWndLV, col_i_cur)
           if        col_i_cur = cFile {
-            ToolTip("2⋅🖰 to open",col_rect.←,col_rect.↑)
+            FFToolTip("2⋅🖰 to open",col_rect.←,col_rect.↑)
           } else if col_i_cur = cl№ {
-            ToolTip("2⋅🖰 to open",col_rect.←,col_rect.↑)
+            FFToolTip("2⋅🖰 to open",col_rect.←,col_rect.↑)
           } else if col_i_cur > 0 {
-            ToolTip("2⋅🖰 to 📋copy",col_rect.←,col_rect.↑)
+            FFToolTip("2⋅🖰 to 📋copy",col_rect.←,col_rect.↑)
           }
         } else {
-          ToolTip
+          FFToolTip()
         }
       } else {
-        ToolTip
+        FFToolTip()
       }
       ; if (🖰x >= hdRect.← && 🖰x <= (hdRect.→ - 500)&&
       ;     🖰y >= hdRect.↑ && 🖰y <= hdRect.↓) {
-      ;   ToolTip(hdRect.← "← "
+      ;   FFToolTip(hdRect.← "← "
       ;     .     hdRect.→ "→`t"
       ;     .     hdRect.→ - hdRect.← "w`n"
       ;     .     hdRect.↑ "↑ "
       ;     .     hdRect.↓ "↓`t"
       ;     .     hdRect.↓ - hdRect.↑ "h")
       ; } else {
-      ;   ToolTip
+      ;   FFToolTip()
       ; }
     }
 
