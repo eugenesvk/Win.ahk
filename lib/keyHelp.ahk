@@ -46,8 +46,10 @@ class guiKeyHelp {
      , c🔍Names	:=LV_Header.IndexOf("🔍Names")
      , cFile  	:=LV_Header.IndexOf("File")
      , cl№    	:=LV_Header.IndexOf("l№")
-    LV_Opt    	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
-    LV        	:= guiM.AddListView(LV_Opt, LV_Header)
+    static LVS_EX_DOUBLEBUFFER :=0x10000
+    LV_Opt	:= leftmost " y+" gap_el " w" A_ScreenWidth/dpi_f " r20" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
+     . " LV" LVS_EX_DOUBLEBUFFER ; Paints via double-buffering, which reduces flicker, also enables alpha-blended marquee selection on systems where it is supported
+    LV	:= guiM.AddListView(LV_Opt, LV_Header)
     LV.Opt("-Redraw")
     LV.OnEvent("DoubleClick", cbLV_DoubleClick)  ; Notify the script whenever the user double clicks a row
     for ahkey, help_map in help_keys { ; Add data
