@@ -1,6 +1,10 @@
 #Requires AutoHotKey 2.1-alpha.18
 #include <Locale>
 
+; Language-independent &Accelerators by renaming menu items before each Show
+  ; is there a better way? autohotkey.com/boards/viewtopic.php?f=82&t=136663
+; Separate single and double click action
+
 OnMessage(0x404, OnTrayClickLeft)
 OnTrayClickLeft(wParam, lParam, nMsg, hwnd) {
   static ‹🖰№ := 0, 🖰x := 0, 🖰y := 0
