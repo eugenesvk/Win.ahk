@@ -102,11 +102,16 @@ class guiKeyHelp {
     LV.ModifyCol(c🔍Names,30) ; too huge of a field
 
 
-    guiM.OnEvent("Escape", (*) => guiM.Hide())
+    ; guiM.OnEvent("Escape", (*) => guiM.Hide())
+    guiM.OnEvent("Escape", cbEscape)
     guiM.OnEvent("Size"  , cbGuiSize)
     ; guiM.OnEvent("Close", (*) => ExitApp)
     ; guiM.Show("AutoSize x0 y0") ; Display the window
     LV.Opt("+Redraw")
+    cbEscape(*) {
+      ToolTip ; in case was hovering over listview header
+      guiM.Hide()
+    }
 
     OnMessage(WM_KEYDOWN:=0x100, KeyDown)
     KeyDown(wParam, lParam, nmsg, hwnd) {
