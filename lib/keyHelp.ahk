@@ -126,6 +126,10 @@ class guiKeyHelp {
        , VK_DOWN  	:= 0x28
        , vkF      	:= GetKeyVK('F')
        , vkS      	:= GetKeyVK('S')
+      hWndLV := ControlGetHwnd(LV)  ; Handle of the ListView
+      if not hWndLV == hwnd {
+        return
+      }
       ; SoundBeep(0, 10) ; Suppress the beep
       if !(  wParam = vkF
           || wParam = vkS) {
@@ -143,10 +147,13 @@ class guiKeyHelp {
 
     OnMessage(0x200, cbMouseMove) ;WM_MOUSEMOVE
     cbMouseMove(wParam, lParam, nmsg, hwnd) {
+      hWndLV := ControlGetHwnd(LV)  ; Handle of the ListView
+      if not hWndLV == hwnd {
+        return
+      }
       🖰x :=  lParam        & 0xFFFF
       🖰y := (lParam >> 16) & 0xFFFF
       ; Check if the mouse is over the ListView header
-      hWndLV := ControlGetHwnd(LV)  ; Handle of the ListView
       hdRect := guiF.lvGetHeaderRect(hWndLV)
       ; If the mouse is over the header, show the tooltip
       if (🖰y >= hdRect.↑ && 🖰y <= hdRect.↓) {
