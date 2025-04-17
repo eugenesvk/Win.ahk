@@ -56,11 +56,12 @@ For a standalone use: double-click on [🖰 hide on 🖮_launch](<./🖰 hide on
 To use with your existing AutoHotkey scripts: the import should do the trick
 
 ## Known issues
-  - Changing GUI element owner to AHK breaks modifiers, requiring adding sleep(1) https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123412
-  - BUT this workaround prevents getting mouse pointer status correctly https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123908
-    - potential workaround is to move pointer status check earlier
+  - Changing GUI element owner to AHK breaks modifiers, requiring adding sleep(1) [forum issue](https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123412)
+  - BUT this workaround prevents getting mouse pointer status correctly [forum issue](https://www.autohotkey.com/boards/viewtopic.php?f=82&t=123908)
+    _Workaround_ (potential) is to move pointer status check earlier
   - `displayCounter` sometimes misbehaves and goes below -1, not sure whether whether this has any negative effects
-  - `🖰 hide on 🖮` with `limit2text` enabled may take ~0.3sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps. Workaround: use the standalone version [🖰 hide on 🖮_launch](<./🖰 hide on 🖮_launch.ahk>)
+  - `🖰 hide on 🖮` with `limit2text` enabled may take **~0.3**sec in some apps to determine whether the text cursor is in a text field due to using accessibility frameworks for such determination, and this might have a negative affect on other timing-sensitive typing hotkeys like modtaps.
+    _Workaround_: use the standalone version [🖰 hide on 🖮_launch](<./🖰 hide on 🖮_launch.ahk>)
 
 ## Credits
   - [Windows-Cursor-Hider](https://github.com/Stefan-Z-Camilleri-zz/Windows-Cursor-Hider) the old simpler v1 version of the same idea
