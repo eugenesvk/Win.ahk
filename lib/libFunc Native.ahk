@@ -97,6 +97,21 @@ class nativeFunc {
     DllCall("GlobalFree", "ptr",p)
   }
 
+  static get_pid_path_wmi(pid) {  ; returns "quoted" path, window get path/command line via WinGet / WMI object
+    oWMI := ComObjGet("winmgmts:") ;SWbemServicesEx  Win32_Process class - Windows applications | Microsoft Docs  docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-process
+    oQueryEnum := oWMI.ExecQuery("Select * from Win32_Process where ProcessId=" pid)._NewEnum() ; SWbemObjectSet → enum
+    if oQueryEnum(&oProcess) { ; Get first matching process
+      ; list of properties: learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-process
+      wmiPPath	:= oProcess.ExecutablePath
+      vCmdLn  	:= oProcess.CommandLine
+    }
+    oWMI := oQueryEnum := oProcess := ""
+    ; dbgtt(0, "Win32_Process`nwmiPath`t= " wmiPPath "`nCmdLn`t= " vCmdLn, 4)
+    if wmiPPath {
+      return '"' . wmiPPath . '"'
+    }
+  }
+
   static get_exe_path_app_path_reg(exe) {  ; returns "quoted" path, names to paths via App Paths registry key
     static reg_path := "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\"
     for reg_p in [reg_path . exe, reg_path . exe . ".exe"] {
