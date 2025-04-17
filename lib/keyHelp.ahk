@@ -27,7 +27,7 @@ class guiKeyHelp {
     ED_Opt  	:= leftmost " " topmost " w400" ((gTheme = "Dark") ? " cD9D9D9 Background5B5B5B" : "")
     ED := guiM.AddEdit(ED_Opt)
     ED.OnEvent("Change", LV_Search)
-    guiKeyHelp.EM_SETCUEBANNER(ED, "Search Re…  ≝word-based   ,comma prefix=phrase  .dot prefix=fuzzy", 1)
+    guiKeyHelp.EM_SETCUEBANNER(ED, "Search 𝕽𝔢…  ≝word-based   ,comma prefix=phrase  .dot prefix=fuzzy", 1)
 
     gap_el := 0
 
