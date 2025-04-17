@@ -36,7 +36,7 @@ class guiKeyHelp {
     dpi_f := dpi🖥️x / 96 ; 1.5
 
     guiM.SetFont("s10", "Segoe UI")
-    LV_Header	:= ["⇧","⎈","◆","⎇","K⃣","🅃", "AHK⃣", "🔍H", "🔣", "🔍Names","File", "l№"]
+    LV_Header	:= ["⇧","⎈","◆","⎇","K⃣","🅃", "AHK⃣", "🔍H", "🔣", "🔍🔖", "🔍Names","File", "l№"]
     static _:=0
      , c⇧     	:=LV_Header.IndexOf("⎈")
      , c⎈     	:=LV_Header.IndexOf("⎈")
@@ -47,6 +47,7 @@ class guiKeyHelp {
      , cAHK⃣  	:=LV_Header.IndexOf("AHK⃣")
      , c🔍H    	:=LV_Header.IndexOf("🔍H")
      , c🔣     	:=LV_Header.IndexOf("🔣")
+     , c🔍🔖     	:=LV_Header.IndexOf("🔍🔖")
      , c🔍Names	:=LV_Header.IndexOf("🔍Names")
      , cFile  	:=LV_Header.IndexOf("File")
      , cl№    	:=LV_Header.IndexOf("l№")
@@ -83,6 +84,7 @@ class guiKeyHelp {
         ahkey               	                  	,
        (help_map.Has("h"    	)?help_map["h"    	]:""),
        (help_map.Has("🔣"    	)?help_map["🔣"    	]:""),
+       (help_map.Has("🔖s"    	)?help_map["🔖s"   	]:""),
        (help_map.Has("🔣name"	)?help_map["🔣name"	]:""),
        (help_map.Has("f"    	)?help_map["f"    	]:""),
        (help_map.Has("l№"   	)?help_map["l№"   	]:""),
@@ -94,7 +96,7 @@ class guiKeyHelp {
     ; LV.ModifyCol(2, "Integer")  ; for sorting purposes, indicate that column 2 is an integer
     ; todo: fails autosize, still get …
     loop LV.GetCount("Col") {
-      if A_Index <= 4 or A_Index = 10 {
+      if A_Index <= c⎇ or A_Index = c🔍🔖 or A_Index = c🔍Names {
         continue
       }
       LV.ModifyCol(A_Index, "AutoHdr") ; auto-size column to fit max(contents, header text)
@@ -103,6 +105,7 @@ class guiKeyHelp {
     LV.ModifyCol(c⎈,29) ;     ‹⎈›
     LV.ModifyCol(c◆,29) ;     ‹◆›
     LV.ModifyCol(c⎇,31) ;     ‹⎇›
+    LV.ModifyCol(c🔍🔖,30) ; too huge of a field
     LV.ModifyCol(c🔍Names,30) ; too huge of a field
 
 
@@ -189,7 +192,7 @@ class guiKeyHelp {
     }
     cbLV_DoubleClick(LV, row№) { ; todo: open file/line number
       static F:=nativeFunc
-      i_key := (dbg<_d1)?"🔣":"🔍Names"
+      i_key := (dbg<_d1)?"🔣":"🔍Names" ; fallback
       hWndLV := ControlGetHwnd(LV)  ; Handle of the ListView
       col№ := guiF.lvSubitemHitTest(hWndLV)
       if col№ = 0 {
@@ -280,7 +283,7 @@ class guiKeyHelp {
         IsFound := skip_all ? true : false
         if not IsFound {
           v := help_map["h"]
-          if queryT == "literal" {
+          if        queryT == "literal" {
             try {
               if (RegExMatch(v, "i)" re_query)) {
                 IsFound := true
@@ -345,6 +348,47 @@ class guiKeyHelp {
           }
         }
         if not IsFound {
+          if (help_map.Has("🔖")) {
+            v := help_map["🔖"]
+            if queryT        == "literal" {
+              for tag in v {
+                try {
+                  if (RegExMatch(tag, "i)" re_query)) {
+                    IsFound := true
+                    (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_lit ¦" re_query "¦ in ¦" v "¦",🕐:=3))
+                    break
+                  }
+                }
+              }
+            } else if queryT == "word" {
+              for tag in v {
+                for w in re_query {
+                  try {
+                    if w and (RegExMatch(tag, "i)" w)) {
+                      IsFound := true
+                      (dbg<_d3)?'':(dbgTT(0,"🔍Name found re_ω ¦" w "¦ in ¦" v "¦",🕐:=3))
+                      break 2
+                    }
+                  }
+                }
+              }
+            } else if queryT == "fuzzy" {
+              for tag in v {
+                ; try {
+                  fuzz_res := Sift_Ngram(&tag, &re_query, fuzzyΔ, &hm:=false, ng_sz, fmt:="S`n")
+                  if fuzz_res.Length > 0 {
+                    IsFound := true
+                    (dbg<_d2)?'':(dbgTT(0,"🔍Name found re_fuzz " fuzz_res[1]["Delta"] " ¦" re_query "¦ in ¦" v "¦",🕐:=3))
+                    break
+                  } else {
+                    ; (dbg<_d2)?'':(dbgTT(0,"✗🔍Name re_fuzz " fuzz_res[1]["Delta"] " ¦" re_query "¦ in ¦" v "¦",🕐:=3))
+                  }
+                ; }
+              }
+            }
+          }
+        }
+        if not IsFound {
           continue
         }
         LV.Add(,help_map["⇧"],help_map["⎈"],help_map["◆"],help_map["⎇"],
@@ -353,6 +397,7 @@ class guiKeyHelp {
           ahkey               	                  	,
          (help_map.Has("h"    	)?help_map["h"    	]:""),
          (help_map.Has("🔣"    	)?help_map["🔣"    	]:""),
+         (help_map.Has("🔖s"   	)?help_map["🔖s"   	]:""),
          (help_map.Has("🔣name"	)?help_map["🔣name"	]:""),
          (help_map.Has("f"    	)?help_map["f"    	]:""),
          (help_map.Has("l№"   	)?help_map["l№"   	]:""),
