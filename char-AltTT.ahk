@@ -13,14 +13,14 @@ keysCsub() { ; longer (and dupe), but can use ⇧ and adds to help
    , hk🛈  	:= keyFunc.hk🛈
    , pre  	:= '$~' ; use $kbd hook and don't ~block input to avoid typing lag
    , k→a := s.key→ahk.Bind(helperString)  ; ⎇⇧c or !+c ⟶ !+vk43
-  hk🛈("⇧⎇/​" 	,hkCSub,,Map("h","´ 1acute"           	,"🔣",Dia["´"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇``​"	,hkCSub,,Map("h","`` 2grave"          	,"🔣",Dia["``"  	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇c​" 	,hkCSub,,Map("h","ˆ 3circumflex"      	,"🔣",Dia["ˆ"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇u​" 	,hkCSub,,Map("h","¨ 4diaeresis/umlaut"	,"🔣",Dia["¨"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇m​" 	,hkCSub,,Map("h","¯ 5macron"          	,"🔣",Dia["¯"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇e​" 	,hkCSub,,Map("h","~ tilde"            	,"🔣",Dia["~"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇o​" 	,hkCSub,,Map("h","others"             	,"🔣",Dia["oth" 	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
-  hk🛈("⇧⎇p​" 	,hkCSub,,Map("h","others2"            	,"🔣",Dia["oall"	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇/​" 	,hkCSub,,Map("h","´ acute"           	,"🔣",Dia["´"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇``​"	,hkCSub,,Map("h","`` grave"          	,"🔣",Dia["``"  	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇c​" 	,hkCSub,,Map("h","ˆ circumflex"      	,"🔣",Dia["ˆ"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇u​" 	,hkCSub,,Map("h","¨ diaeresis/umlaut"	,"🔣",Dia["¨"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇m​" 	,hkCSub,,Map("h","¯ macron"          	,"🔣",Dia["¯"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇e​" 	,hkCSub,,Map("h","~ tilde"           	,"🔣",Dia["~"   	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇o​" 	,hkCSub,,Map("h","others"            	,"🔣",Dia["oth" 	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
+  hk🛈("⇧⎇p​" 	,hkCSub,,Map("h","others2"           	,"🔣",Dia["oall"	] ,"f",p.fname_(A_LineFile),"l№",A_LineNumber))
 }
 hkCsub(hk_dirty) {
   static k := helperString.key→ahk.Bind(helperString)
