@@ -63,7 +63,7 @@ setChar🠿() { ; hold key to select a symbol from a popup menu
   hk🛈(pre "w​"	,hkChar🠿,"T2",Map("h","Arrows"     	,"t","🠿" ,"🔣",ch␞('Arrows'     	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "p​"	,hkChar🠿,"T2",Map("h","Currency"   	,"t","🠿" ,"🔣",ch␞('Currency'   	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "x​"	,hkChar🠿,"T2",Map("h","Tech"       	,"t","🠿" ,"🔣",ch␞('Tech'       	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
-  hk🛈(pre "t​"	,hkChar🠿,"T2",Map("h","Math"       	,"t","🠿" ,"🔣",ch␞('Math'       	).Join("" ) ,"f",pfn,"l№",A_LineNumber))
+  hk🛈(pre "t​"	,hkChar🠿,"T2",Map("h","Math"       	,"t","🠿" ,"🔣",ch␞('Math'       	).Join("" ) ,"🔖",Ch["Math🔖"],"🔖s",Ch["Math🔖"].Join(" "),"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "v​"	,hkChar🠿,"T2",Map("h","Subscript"  	,"t","🠿" ,"🔣",ch␞('Subscript'  	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "g​"	,hkChar🠿,"T2",Map("h","Superscript"	,"t","🠿" ,"🔣",ch␞('Superscript'	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
   hk🛈(pre "r​"	,hkChar🠿,"T2",Map("h","Checks"     	,"t","🠿" ,"🔣",ch␞('Checks'     	).Join(" ") ,"f",pfn,"l№",A_LineNumber))
