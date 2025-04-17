@@ -84,7 +84,7 @@ class guiKeyHelp {
         ahkey               	                  	,
        (help_map.Has("h"    	)?help_map["h"    	]:""),
        (help_map.Has("🔣"    	)?help_map["🔣"    	]:""),
-       (help_map.Has("🔖s"    	)?help_map["🔖s"   	]:""),
+       (help_map.Has("🔖s"   	)?help_map["🔖s"   	]:""),
        (help_map.Has("🔣name"	)?help_map["🔣name"	]:""),
        (help_map.Has("f"    	)?help_map["f"    	]:""),
        (help_map.Has("l№"   	)?help_map["l№"   	]:""),
